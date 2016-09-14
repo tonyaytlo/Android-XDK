@@ -1,5 +1,67 @@
 # Atlas Android
 
+## 0.3.0
+
+### Features
+  * Support for Identities
+
+### Migration Guide
+
+`Participant` and `ParticipantProvider` classes have been removed as `Identity` objects now contain user data.
+
+#### `AtlasAddressBar`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+  * `getSelectedParticipants()` now returns a set of `Identity` objects rather than user IDs.
+  * `setSelectedParticipants()` now takes a set of `Identity` objects as an argument rather than user IDs.
+  * `OnParticipantSelectionChangeListener.onParticipantSelectionChanged()` now passes a list of `Identity` objects rather than user IDs.
+
+#### `AtlasAvatar`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+  * `setParticipants(...)` now takes `Identity` objects as arguments rather than user IDs.
+  * `getParticipants()` now returns a set of `Identity` objects rather than user IDs.
+  * The image URL used is `Identity.getAvatarImageUrl()`
+
+#### `AtlasConversationsRecyclerView`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+  * MUST call `onDestroy()` in your Activity's or Fragment's `onDestroy()` to unregister event listeners on `LayerClient`.
+
+#### `AtlasMessageComposer`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+
+#### `AtlasMessagesRecyclerView`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+  * MUST call `onDestroy()` in your Activity's or Fragment's `onDestroy()` to unregister event listeners on `LayerClient`.
+
+#### `AtlasTypingIndicator`
+  * The method signature of `onTypingIndicator()` has changed. It now passes a full `Identity` object as an argument rather than a user ID.
+  * The method signature of `TypingIndicatorFactory.onBindView()` has changed. The map is now keyed by `Identity` objects rather than user IDs. Classes that implement this interface will need to be updated.
+
+#### `AtlasConversationsAdapter`
+  * Changes here are only relevant if using this directly without using a `AtlasConversationsRecyclerView`.
+  * No longer need to pass a `ParticipantProvider` in the constructors.
+  * MUST call `onDestroy()` in your Activity's or Fragment's `onDestroy()` to unregister event listeners on `LayerClient`.
+
+#### `AtlasMessagesAdapter`
+  * Changes here are only relevant if using this directly without using a `AtlasMessagesRecyclerView`.
+  * No longer need to pass a `ParticipantProvider` in the constructor.
+  * MUST call `onDestroy()` in your Activity's or Fragment's `onDestroy()` to unregister event listeners on `LayerClient`.
+
+#### `AtlasCellFactory`
+  * Any custom cell factories will need to be updated.
+  * No longer need to pass a `ParticipantProvider` on `parseContent()`.
+  * No longer need to pass a `ParticipantProvider` on `getParsedContent()`.
+
+#### `MessageSender`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+  * Usage of subclasses (`AttachmentSender`, `TextSender`, etc) will need to be updated.
+
+#### `AvatarTypingIndicatorFactory`
+  * No longer need to pass a `ParticipantProvider` on `init()`.
+
+#### `Util`
+  * No longer need to pass a `ParticipantProvider` on `getConversationTitle()`.
+  * 'getInitials()' now takes an `Identity` object rather than a `Participant` object.
+
 ## 0.2.14
 
 ### Major Changes

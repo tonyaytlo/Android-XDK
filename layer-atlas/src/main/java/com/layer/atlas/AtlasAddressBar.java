@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,15 +21,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.layer.atlas.provider.Participant;
-import com.layer.atlas.provider.ParticipantProvider;
 import com.layer.atlas.util.AvatarStyle;
 import com.layer.atlas.util.EditTextUtil;
+import com.layer.atlas.util.IdentityDisplayNameComparator;
 import com.layer.atlas.util.views.EmptyDelEditText;
 import com.layer.atlas.util.views.FlowLayout;
 import com.layer.atlas.util.views.MaxHeightScrollView;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.CompoundPredicate;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
@@ -39,15 +40,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class AtlasAddressBar extends LinearLayout {
     private LayerClient mLayerClient;
-    private ParticipantProvider mParticipantProvider;
     private Picasso mPicasso;
 
     private OnConversationClickListener mOnConversationClickListener;
@@ -57,7 +56,9 @@ public class AtlasAddressBar extends LinearLayout {
     private EmptyDelEditText mFilter;
     private RecyclerView mParticipantList;
     private AvailableConversationAdapter mAvailableConversationAdapter;
-    private final Set<String> mSelectedParticipantIds = new LinkedHashSet<String>();
+    private final Set<Identity> mSelectedParticipants = new LinkedHashSet<>();
+    private Set<Identity> mIdentities;
+    private List<String> mRestoredParticipantIds;
 
     private boolean mShowConversations;
 
@@ -94,14 +95,13 @@ public class AtlasAddressBar extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    public AtlasAddressBar init(LayerClient layerClient, ParticipantProvider participantProvider, Picasso picasso) {
+    public AtlasAddressBar init(LayerClient layerClient, Picasso picasso) {
         mLayerClient = layerClient;
-        mParticipantProvider = participantProvider;
         mPicasso = picasso;
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mParticipantList.setLayoutManager(manager);
-        mAvailableConversationAdapter = new AvailableConversationAdapter(mLayerClient, mParticipantProvider, mPicasso);
+        mAvailableConversationAdapter = new AvailableConversationAdapter(mLayerClient, mPicasso);
 
         applyStyle();
 
@@ -133,6 +133,10 @@ public class AtlasAddressBar extends LinearLayout {
                 refresh();
             }
         });
+
+        // Fetch identities from database
+        IdentityFetcher identityFetcher = new IdentityFetcher(layerClient);
+        identityFetcher.fetchIdentities(new IdentitiesFetchedCallback());
         return this;
     }
 
@@ -176,13 +180,13 @@ public class AtlasAddressBar extends LinearLayout {
         return this;
     }
 
-    public Set<String> getSelectedParticipantIds() {
-        return new LinkedHashSet<String>(mSelectedParticipantIds);
+    public Set<Identity> getSelectedParticipants() {
+        return new LinkedHashSet<>(mSelectedParticipants);
     }
 
     public AtlasAddressBar refresh() {
         if (mAvailableConversationAdapter == null) return this;
-        mAvailableConversationAdapter.refresh(getSearchFilter(), mSelectedParticipantIds);
+        mAvailableConversationAdapter.refresh(getSearchFilter(), mSelectedParticipants);
         return this;
     }
 
@@ -191,8 +195,8 @@ public class AtlasAddressBar extends LinearLayout {
         return this;
     }
 
-    public AtlasAddressBar setSelectedParticipants(Set<String> selectedParticipants) {
-        mSelectedParticipantIds.addAll(selectedParticipants);
+    public AtlasAddressBar setSelectedParticipants(Set<Identity> selectedParticipants) {
+        mSelectedParticipants.addAll(selectedParticipants);
         return this;
     }
 
@@ -200,27 +204,33 @@ public class AtlasAddressBar extends LinearLayout {
         mFilter.requestFocus();
     }
 
-    private boolean selectParticipant(String participantId) {
-        if (mSelectedParticipantIds.contains(participantId)) return true;
-        if (mSelectedParticipantIds.size() >= 24) return false;
-        mSelectedParticipantIds.add(participantId);
-        ParticipantChip chip = new ParticipantChip(getContext(), mParticipantProvider, participantId, mPicasso);
+    private boolean selectParticipant(Identity participant) {
+        return selectParticipant(participant, false);
+    }
+
+    private boolean selectParticipant(Identity participant, boolean skipRefresh) {
+        if (mSelectedParticipants.contains(participant)) return true;
+        if (mSelectedParticipants.size() >= 24) return false;
+        mSelectedParticipants.add(participant);
+        ParticipantChip chip = new ParticipantChip(getContext(), participant, mPicasso);
         mSelectedParticipantLayout.addView(chip, mSelectedParticipantLayout.getChildCount() - 1);
         mFilter.setText(null);
-        refresh();
+        if (!skipRefresh) {
+            refresh();
+        }
         if (mOnParticipantSelectionChangeListener != null) {
-            mOnParticipantSelectionChangeListener.onParticipantSelectionChanged(this, new ArrayList<String>(mSelectedParticipantIds));
+            mOnParticipantSelectionChangeListener.onParticipantSelectionChanged(this, new ArrayList<>(mSelectedParticipants));
         }
         return true;
     }
 
     private void unselectParticipant(ParticipantChip chip) {
-        if (!mSelectedParticipantIds.contains(chip.mParticipantId)) return;
-        mSelectedParticipantIds.remove(chip.mParticipantId);
+        if (!mSelectedParticipants.contains(chip.mParticipant)) return;
+        mSelectedParticipants.remove(chip.mParticipant);
         mSelectedParticipantLayout.removeView(chip);
         refresh();
         if (mOnParticipantSelectionChangeListener != null) {
-            mOnParticipantSelectionChangeListener.onParticipantSelectionChanged(this, new ArrayList<String>(mSelectedParticipantIds));
+            mOnParticipantSelectionChangeListener.onParticipantSelectionChanged(this, new ArrayList<>(mSelectedParticipants));
         }
     }
 
@@ -229,7 +239,7 @@ public class AtlasAddressBar extends LinearLayout {
         return s.trim().isEmpty() ? null : s;
     }
 
-    private String removeLastSelectedParticipant() {
+    private Identity removeLastSelectedParticipant() {
         ParticipantChip lastChip = null;
         for (int i = 0; i < mSelectedParticipantLayout.getChildCount(); i++) {
             View v = mSelectedParticipantLayout.getChildAt(i);
@@ -237,7 +247,7 @@ public class AtlasAddressBar extends LinearLayout {
         }
         if (lastChip == null) return null;
         unselectParticipant(lastChip);
-        return lastChip.mParticipantId;
+        return lastChip.mParticipant;
     }
 
     private void parseStyle(Context context, AttributeSet attrs, int defStyle) {
@@ -302,9 +312,15 @@ public class AtlasAddressBar extends LinearLayout {
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
-        if (mSelectedParticipantIds.isEmpty()) return superState;
+        if (mSelectedParticipants.isEmpty()) return superState;
         SavedState savedState = new SavedState(superState);
-        savedState.mSelectedParticipantIds = new ArrayList<String>(mSelectedParticipantIds);
+        if (!mSelectedParticipants.isEmpty()) {
+            List<String> participantIds = new ArrayList<>(mSelectedParticipants.size());
+            for (Identity participant : mSelectedParticipants) {
+                participantIds.add(participant.getUserId());
+            }
+            savedState.mSelectedParticipantIds = participantIds;
+        }
         return savedState;
     }
 
@@ -322,10 +338,35 @@ public class AtlasAddressBar extends LinearLayout {
         super.onRestoreInstanceState(savedState.getSuperState());
 
         if (savedState.mSelectedParticipantIds != null) {
-            mSelectedParticipantIds.clear();
-            for (String participantId : savedState.mSelectedParticipantIds) {
-                selectParticipant(participantId);
+            mSelectedParticipants.clear();
+            mRestoredParticipantIds = savedState.mSelectedParticipantIds;
+            // Only need to restore if identities have already been loaded. Else they will be
+            // restored in the load callback
+            if (mIdentities != null) {
+                restoreSavedSelectedParticipants();
+                refresh();
             }
+        }
+    }
+
+    private void restoreSavedSelectedParticipants() {
+        if (mRestoredParticipantIds != null) {
+            for (Identity identity : mIdentities) {
+                if (mRestoredParticipantIds.contains(identity.getUserId())) {
+                    selectParticipant(identity, true);
+                }
+            }
+            mRestoredParticipantIds = null;
+        }
+    }
+
+    private class IdentitiesFetchedCallback implements IdentityFetcher.IdentityFetcherCallback {
+        @Override
+        public void identitiesFetched(Set<Identity> identities) {
+            mIdentities = identities;
+            mAvailableConversationAdapter.setAllIdentities(identities);
+            restoreSavedSelectedParticipants();
+            refresh();
         }
     }
 
@@ -362,17 +403,17 @@ public class AtlasAddressBar extends LinearLayout {
      * ParticipantChip implements the View used to populate the selected participant FlowLayout.
      */
     private class ParticipantChip extends LinearLayout {
-        private String mParticipantId;
+        private Identity mParticipant;
 
         private AtlasAvatar mAvatar;
         private TextView mName;
         private ImageView mRemove;
 
-        public ParticipantChip(Context context, ParticipantProvider participantProvider, String participantId, Picasso picasso) {
+        public ParticipantChip(Context context, Identity participant, Picasso picasso) {
             super(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             Resources r = getContext().getResources();
-            mParticipantId = participantId;
+            mParticipant = participant;
 
             // Inflate and cache views
             inflater.inflate(R.layout.atlas_participant_chip, this, true);
@@ -393,11 +434,10 @@ public class AtlasAddressBar extends LinearLayout {
             setBackgroundDrawable(r.getDrawable(R.drawable.atlas_participant_chip_background));
 
             // Initialize participant data
-            Participant participant = participantProvider.getParticipant(participantId);
-            mName.setText(participant.getName());
-            mAvatar.init(participantProvider, picasso)
+            mName.setText(participant.getDisplayName());
+            mAvatar.init(picasso)
                     .setStyle(mAvatarStyle)
-                    .setParticipants(participantId);
+                    .setParticipants(participant);
 
             setOnClickListener(new OnClickListener() {
                 @Override
@@ -414,73 +454,128 @@ public class AtlasAddressBar extends LinearLayout {
     }
 
     /**
+     * Helper class that handles loading identities from the database via a {@link Query}.
+     */
+    private static class IdentityFetcher {
+        private final LayerClient mLayerClient;
+
+        IdentityFetcher(LayerClient client) {
+            mLayerClient = client;
+        }
+
+        private void fetchIdentities(final IdentityFetcherCallback callback) {
+            Identity currentUser = mLayerClient.getAuthenticatedUser();
+            Query.Builder<Identity> builder = Query.builder(Identity.class);
+            if (currentUser != null) {
+                builder.predicate(new Predicate(Identity.Property.USER_ID, Predicate.Operator.NOT_EQUAL_TO, currentUser.getUserId()));
+            }
+            final Query<Identity> identitiesQuery = builder.build();
+
+            new AsyncTask<Void, Void, List<Identity>>() {
+
+                @Override
+                protected List<Identity> doInBackground(Void... params) {
+                    return mLayerClient.executeQuery(identitiesQuery, Query.ResultType.OBJECTS);
+                }
+
+                @Override
+                protected void onPostExecute(List<Identity> identities) {
+                    callback.identitiesFetched(new HashSet<>(identities));
+                }
+            }.execute();
+        }
+
+        interface IdentityFetcherCallback {
+            void identitiesFetched(Set<Identity> identities);
+        }
+    }
+
+    /**
      * AvailableConversationAdapter provides items for individual Participants and existing
      * Conversations.  Items are filtered by a participant filter string and by a set of selected
      * Participants.
      */
     private class AvailableConversationAdapter extends RecyclerView.Adapter<AvailableConversationAdapter.ViewHolder> implements RecyclerViewController.Callback {
-        protected final LayerClient mLayerClient;
-        protected final ParticipantProvider mParticipantProvider;
-        protected final Picasso mPicasso;
+        private final LayerClient mLayerClient;
+        private final Picasso mPicasso;
         private final RecyclerViewController<Conversation> mQueryController;
 
-        private final ArrayList<String> mParticipantIds = new ArrayList<String>();
-        private final ArrayList<Participant> mParticipants = new ArrayList<Participant>();
-        private final Map<String, Participant> mParticipantMap = new HashMap<String, Participant>();
+        private final List<Identity> mParticipants = new ArrayList<>();
+        private Set<Identity> mAllIdentities;
 
-        public AvailableConversationAdapter(LayerClient client, ParticipantProvider participantProvider, Picasso picasso) {
-            this(client, participantProvider, picasso, null);
+        AvailableConversationAdapter(LayerClient client, Picasso picasso) {
+            this(client, picasso, null);
         }
 
-        public AvailableConversationAdapter(LayerClient client, ParticipantProvider participantProvider, Picasso picasso, Collection<String> updateAttributes) {
+        AvailableConversationAdapter(LayerClient client, Picasso picasso, Collection<String> updateAttributes) {
             mQueryController = client.newRecyclerViewController(null, updateAttributes, this);
             mLayerClient = client;
-            mParticipantProvider = participantProvider;
             mPicasso = picasso;
             setHasStableIds(false);
         }
 
-        /**
-         * Refreshes this adapter by re-querying the ParticipantProvider and filtering Conversations
-         * to return only those Conversations with the given set of selected Participants.
-         */
-        public void refresh(String filter, Set<String> selectedParticipantIds) {
-            // Apply text search filter to available participants
-            String userId = mLayerClient.getAuthenticatedUserId();
-            synchronized (mParticipantIds) {
-                mParticipantProvider.getMatchingParticipants(filter, mParticipantMap);
-                mParticipants.clear();
-                for (Map.Entry<String, Participant> entry : mParticipantMap.entrySet()) {
-                    // Don't show participants we've already selected
-                    if (selectedParticipantIds.contains(entry.getKey())) continue;
-                    if (entry.getKey().equals(userId)) continue;
-                    mParticipants.add(entry.getValue());
-                }
-                Collections.sort(mParticipants);
+        void setAllIdentities(Set<Identity> identities) {
+            mAllIdentities = identities;
+        }
 
-                mParticipantIds.clear();
-                for (Participant p : mParticipants) {
-                    mParticipantIds.add(p.getId());
-                }
+        /**
+         * Refreshes this adapter by filtering Conversations to return only those Conversations with
+         * the given set of selected Participants.
+         */
+        void refresh(String filter, Set<Identity> selectedParticipants) {
+            // Apply text search filter to available participants
+            Set<Identity> filteredIdentities = filter(filter);
+
+            // Don't show participants we've already selected
+            for (Identity selectedParticipant : selectedParticipants) {
+                filteredIdentities.remove(selectedParticipant);
             }
+            mParticipants.clear();
+            mParticipants.addAll(filteredIdentities);
+            Collections.sort(mParticipants, new IdentityDisplayNameComparator());
+
             // TODO: compute add/remove/move and notify those instead of complete notify
             notifyDataSetChanged();
 
             if (mShowConversations) {
-                queryConversations(selectedParticipantIds);
+                queryConversations(selectedParticipants);
             }
         }
 
-        private void queryConversations(Set<String> selectedParticipantIds) {
+        private Set<Identity> filter(String filter) {
+            if (mAllIdentities == null || mAllIdentities.isEmpty()) {
+                return new HashSet<>();
+            }
+
+            // With no filter, return all Participants
+            if (filter == null) {
+                return new HashSet<>(mAllIdentities);
+            }
+
+            Set<Identity> result = new HashSet<>();
+            // Filter participants by substring matching first- and last- names
+            filter = filter.toLowerCase();
+            for (Identity participant : mAllIdentities) {
+                boolean matches = false;
+                if (participant.getDisplayName() != null && participant.getDisplayName().toLowerCase().contains(filter))
+                    matches = true;
+                if (matches) {
+                    result.add(participant);
+                }
+            }
+            return result;
+        }
+
+        private void queryConversations(Set<Identity> selectedParticipants) {
             // Filter down to only those conversations including the selected participants, hiding one-on-one conversations
             Query.Builder<Conversation> builder = Query.builder(Conversation.class)
                     .sortDescriptor(new SortDescriptor(Conversation.Property.LAST_MESSAGE_SENT_AT, SortDescriptor.Order.DESCENDING));
-            if (selectedParticipantIds.isEmpty()) {
+            if (selectedParticipants.isEmpty()) {
                 builder.predicate(new Predicate(Conversation.Property.PARTICIPANT_COUNT, Predicate.Operator.GREATER_THAN, 2));
             } else {
                 builder.predicate(new CompoundPredicate(CompoundPredicate.Type.AND,
                         new Predicate(Conversation.Property.PARTICIPANT_COUNT, Predicate.Operator.GREATER_THAN, 2),
-                        new Predicate(Conversation.Property.PARTICIPANTS, Predicate.Operator.IN, selectedParticipantIds)));
+                        new Predicate(Conversation.Property.PARTICIPANTS, Predicate.Operator.IN, selectedParticipants)));
             }
             mQueryController.setQuery(builder.build()).execute();
         }
@@ -494,43 +589,39 @@ public class AtlasAddressBar extends LinearLayout {
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ViewHolder viewHolder = new ViewHolder(parent);
             viewHolder.mAvatar
-                    .init(mParticipantProvider, mPicasso)
+                    .init(mPicasso)
                     .setStyle(mAvatarStyle);
             return viewHolder;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            synchronized (mParticipantIds) {
+            synchronized (mParticipants) {
                 switch (getType(position)) {
                     case PARTICIPANT: {
                         position = adapterPositionToParticipantPosition(position);
-                        String participantId = mParticipantIds.get(position);
-                        Participant participant = mParticipants.get(position);
-                        viewHolder.mTitle.setText(participant.getName());
-                        viewHolder.itemView.setTag(participantId);
+                        Identity participant = mParticipants.get(position);
+                        viewHolder.mTitle.setText(participant.getDisplayName());
+                        viewHolder.itemView.setTag(participant);
                         viewHolder.itemView.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                selectParticipant((String) v.getTag());
+                                selectParticipant((Identity) v.getTag());
                             }
                         });
-                        viewHolder.mAvatar.setParticipants(participantId);
+                        viewHolder.mAvatar.setParticipants(participant);
                     }
                     break;
 
                     case CONVERSATION: {
                         position = adapterPositionToConversationPosition(position);
                         Conversation conversation = mQueryController.getItem(position);
-                        String userId = mLayerClient.getAuthenticatedUserId();
-                        List<String> names = new ArrayList<String>();
-                        Set<String> ids = new LinkedHashSet<String>();
-                        for (String participantId : conversation.getParticipants()) {
-                            if (participantId.equals(userId)) continue;
-                            ids.add(participantId);
-                            Participant p = mParticipantProvider.getParticipant(participantId);
-                            if (p == null) continue;
-                            names.add(p.getName());
+                        Identity user = mLayerClient.getAuthenticatedUser();
+                        List<String> names = new ArrayList<>();
+                        Set<Identity> participants = conversation.getParticipants();
+                        participants.remove(user);
+                        for (Identity participant : participants) {
+                            names.add(participant.getDisplayName());
                         }
                         viewHolder.mTitle.setText(TextUtils.join(", ", names));
                         viewHolder.itemView.setTag(conversation);
@@ -541,7 +632,7 @@ public class AtlasAddressBar extends LinearLayout {
                                 mOnConversationClickListener.onConversationClick(AtlasAddressBar.this, (Conversation) v.getTag());
                             }
                         });
-                        viewHolder.mAvatar.setParticipants(ids);
+                        viewHolder.mAvatar.setParticipants(participants);
                     }
                     break;
                 }
@@ -550,8 +641,8 @@ public class AtlasAddressBar extends LinearLayout {
 
         // first are participants; then are conversations
         Type getType(int position) {
-            synchronized (mParticipantIds) {
-                return (position < mParticipantIds.size()) ? Type.PARTICIPANT : Type.CONVERSATION;
+            synchronized (mParticipants) {
+                return (position < mParticipants.size()) ? Type.PARTICIPANT : Type.CONVERSATION;
             }
         }
 
@@ -560,21 +651,21 @@ public class AtlasAddressBar extends LinearLayout {
         }
 
         int adapterPositionToConversationPosition(int position) {
-            synchronized (mParticipantIds) {
-                return position - mParticipantIds.size();
+            synchronized (mParticipants) {
+                return position - mParticipants.size();
             }
         }
 
         int conversationPositionToAdapterPosition(int position) {
-            synchronized (mParticipantIds) {
-                return position + mParticipantIds.size();
+            synchronized (mParticipants) {
+                return position + mParticipants.size();
             }
         }
 
         @Override
         public int getItemCount() {
-            synchronized (mParticipantIds) {
-                return mQueryController.getItemCount() + mParticipantIds.size();
+            synchronized (mParticipants) {
+                return mQueryController.getItemCount() + mParticipants.size();
             }
         }
 
@@ -649,6 +740,6 @@ public class AtlasAddressBar extends LinearLayout {
     }
 
     public interface OnParticipantSelectionChangeListener {
-        void onParticipantSelectionChanged(AtlasAddressBar conversationLauncher, List<String> participantIds);
+        void onParticipantSelectionChanged(AtlasAddressBar conversationLauncher, List<Identity> participants);
     }
 }
