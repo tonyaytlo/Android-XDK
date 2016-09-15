@@ -192,10 +192,8 @@ public class AtlasAvatar extends View {
             mInitials.put(existing, Util.getInitials(existing));
 
             ImageTarget existingTarget = mImageTargets.get(existing);
-            if (existingTarget != null) {
-                mPicasso.cancelRequest(existingTarget);
-                toLoad.add(existingTarget);
-            }
+            mPicasso.cancelRequest(existingTarget);
+            toLoad.add(existingTarget);
         }
         for (ImageTarget target : mPendingLoads) {
             mPicasso.cancelRequest(target);
@@ -239,24 +237,20 @@ public class AtlasAvatar extends View {
         synchronized (mPendingLoads) {
             if (!mPendingLoads.isEmpty()) {
                 int size = Math.round(hasBorder ? (mInnerRadius * 2f) : (mOuterRadius * 2f));
-                boolean needManualInvalidate = true;
                 for (ImageTarget imageTarget : mPendingLoads) {
-                    // Only load via picasso if there is a URL. Otherwise drawing will be handled in onDraw.
-                    if (!TextUtils.isEmpty(imageTarget.getUrl())) {
-                        mPicasso.load(imageTarget.getUrl())
-                                .tag(AtlasAvatar.TAG).noPlaceholder().noFade()
-                                .centerCrop().resize(size, size)
-                                .transform((avatarCount > 1) ? MULTI_TRANSFORM : SINGLE_TRANSFORM)
-                                .into(imageTarget);
-
-                        // If a URL exists then the callback in the image target will handle invalidation
-                        needManualInvalidate = false;
+                    String targetUrl = imageTarget.getUrl();
+                    // Handle empty paths just like null paths. This ensures empty paths will go
+                    // through the normal Picasso flow and the bitmap is set.
+                    if (targetUrl != null && targetUrl.trim().length() == 0) {
+                        targetUrl = null;
                     }
+                    mPicasso.load(targetUrl)
+                            .tag(AtlasAvatar.TAG).noPlaceholder().noFade()
+                            .centerCrop().resize(size, size)
+                            .transform((avatarCount > 1) ? MULTI_TRANSFORM : SINGLE_TRANSFORM)
+                            .into(imageTarget);
                 }
                 mPendingLoads.clear();
-                if (needManualInvalidate) {
-                    invalidate();
-                }
             }
         }
         return true;
