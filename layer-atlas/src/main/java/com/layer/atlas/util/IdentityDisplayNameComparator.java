@@ -9,18 +9,6 @@ public class IdentityDisplayNameComparator implements Comparator<Identity> {
 
     @Override
     public int compare(Identity lhs, Identity rhs) {
-        if (lhs.getDisplayName() == null) {
-            if (rhs.getDisplayName() == null) {
-                return 0;
-            } else {
-                return -1;
-            }
-        }
-
-        if (rhs.getDisplayName() == null) {
-            return 1;
-        }
-
-        return lhs.getDisplayName().compareTo(rhs.getDisplayName());
+        return Util.getDisplayName(lhs).compareTo(Util.getDisplayName(rhs));
     }
 }

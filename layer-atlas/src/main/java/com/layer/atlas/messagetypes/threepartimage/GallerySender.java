@@ -10,6 +10,7 @@ import android.os.Build;
 import com.layer.atlas.R;
 import com.layer.atlas.messagetypes.AttachmentSender;
 import com.layer.atlas.util.Log;
+import com.layer.atlas.util.Util;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.PushNotificationPayload;
@@ -81,7 +82,7 @@ public class GallerySender extends AttachmentSender {
         if (Log.isLoggable(Log.VERBOSE)) Log.v("Received gallery response");
         try {
             Identity me = getLayerClient().getAuthenticatedUser();
-            String myName = me == null ? "" : me.getDisplayName();
+            String myName = me == null ? "" : Util.getDisplayName(me);
             Message message = ThreePartImageUtils.newThreePartImageMessage(activity, getLayerClient(), data.getData());
 
             PushNotificationPayload payload = new PushNotificationPayload.Builder()

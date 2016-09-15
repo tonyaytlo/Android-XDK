@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationServices;
 import com.layer.atlas.R;
 import com.layer.atlas.messagetypes.AttachmentSender;
 import com.layer.atlas.util.Log;
+import com.layer.atlas.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
@@ -164,7 +165,7 @@ public class LocationSender extends AttachmentSender {
             LayerClient client = sender.getLayerClient();
             try {
                 Identity me = client.getAuthenticatedUser();
-                String myName = me == null ? "" : me.getDisplayName();
+                String myName = me == null ? "" : Util.getDisplayName(me);
                 JSONObject o = new JSONObject()
                         .put(LocationCellFactory.KEY_LATITUDE, location.getLatitude())
                         .put(LocationCellFactory.KEY_LONGITUDE, location.getLongitude())

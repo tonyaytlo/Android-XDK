@@ -6,6 +6,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.textservice.TextInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,8 +60,8 @@ public class TextCellFactory extends AtlasCellFactory<TextCellFactory.CellHolder
         String text = part.isContentReady() ? new String(part.getData()) : "";
         String name;
         Identity sender = message.getSender();
-        if (sender.getDisplayName() != null) {
-            name = sender.getDisplayName() + ": ";
+        if (sender != null) {
+            name = Util.getDisplayName(sender) + ": ";
         } else {
             name = "";
         }

@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.layer.atlas.util.AvatarStyle;
 import com.layer.atlas.util.EditTextUtil;
 import com.layer.atlas.util.IdentityDisplayNameComparator;
+import com.layer.atlas.util.Util;
 import com.layer.atlas.util.views.EmptyDelEditText;
 import com.layer.atlas.util.views.FlowLayout;
 import com.layer.atlas.util.views.MaxHeightScrollView;
@@ -434,7 +435,7 @@ public class AtlasAddressBar extends LinearLayout {
             setBackgroundDrawable(r.getDrawable(R.drawable.atlas_participant_chip_background));
 
             // Initialize participant data
-            mName.setText(participant.getDisplayName());
+            mName.setText(Util.getDisplayName(participant));
             mAvatar.init(picasso)
                     .setStyle(mAvatarStyle)
                     .setParticipants(participant);
@@ -557,7 +558,7 @@ public class AtlasAddressBar extends LinearLayout {
             filter = filter.toLowerCase();
             for (Identity participant : mAllIdentities) {
                 boolean matches = false;
-                if (participant.getDisplayName() != null && participant.getDisplayName().toLowerCase().contains(filter))
+                if (Util.getDisplayName(participant).toLowerCase().contains(filter))
                     matches = true;
                 if (matches) {
                     result.add(participant);
@@ -601,7 +602,7 @@ public class AtlasAddressBar extends LinearLayout {
                     case PARTICIPANT: {
                         position = adapterPositionToParticipantPosition(position);
                         Identity participant = mParticipants.get(position);
-                        viewHolder.mTitle.setText(participant.getDisplayName());
+                        viewHolder.mTitle.setText(Util.getDisplayName(participant));
                         viewHolder.itemView.setTag(participant);
                         viewHolder.itemView.setOnClickListener(new OnClickListener() {
                             @Override
@@ -621,7 +622,7 @@ public class AtlasAddressBar extends LinearLayout {
                         Set<Identity> participants = conversation.getParticipants();
                         participants.remove(user);
                         for (Identity participant : participants) {
-                            names.add(participant.getDisplayName());
+                            names.add(Util.getDisplayName(participant));
                         }
                         viewHolder.mTitle.setText(TextUtils.join(", ", names));
                         viewHolder.itemView.setTag(conversation);

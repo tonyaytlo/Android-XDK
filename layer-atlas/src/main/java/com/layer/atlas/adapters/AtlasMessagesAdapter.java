@@ -322,8 +322,8 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
             // Sender name, only for first message in cluster
             if (!oneOnOne && (cluster.mClusterWithPrevious == null || cluster.mClusterWithPrevious == ClusterType.NEW_SENDER)) {
                 Identity sender = message.getSender();
-                if (sender.getDisplayName() != null) {
-                    viewHolder.mUserName.setText(sender.getDisplayName());
+                if (sender != null) {
+                    viewHolder.mUserName.setText(Util.getDisplayName(sender));
                 } else {
                     viewHolder.mUserName.setText(R.string.atlas_message_item_unknown_user);
                 }

@@ -19,6 +19,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.layer.atlas.BuildConfig;
@@ -96,7 +97,7 @@ public class Util {
         Identity authenticatedUser = client.getAuthenticatedUser();
         for (Identity participant : conversation.getParticipants()) {
             if (participant.equals(authenticatedUser)) continue;
-            String initials = conversation.getParticipants().size() > 2 ? getInitials(participant) : participant.getDisplayName();
+            String initials = conversation.getParticipants().size() > 2 ? getInitials(participant) : Util.getDisplayName(participant);
             if (sb.length() > 0) sb.append(", ");
             sb.append(initials);
         }
@@ -125,7 +126,7 @@ public class Util {
                 return getInitials(first) + getInitials(last);
             }
             return getInitials(first);
-        } if (!TextUtils.isEmpty(last)) {
+        } else if (!TextUtils.isEmpty(last)) {
             return getInitials(last);
         } else {
             return getInitials(user.getDisplayName());
@@ -148,6 +149,25 @@ public class Util {
         } else {
             return ("" + name.trim().charAt(0)).toUpperCase();
         }
+    }
+
+    @NonNull
+    public static String getDisplayName(Identity identity) {
+        if (TextUtils.isEmpty(identity.getDisplayName())) {
+            String first = identity.getFirstName();
+            String last = identity.getLastName();
+            if (!TextUtils.isEmpty(first)) {
+                if (!TextUtils.isEmpty(last)) {
+                    return String.format("%s %s", first, last);
+                }
+                return first;
+            } else if (!TextUtils.isEmpty(last)) {
+                return last;
+            } else {
+                return identity.getUserId();
+            }
+        }
+        return identity.getDisplayName();
     }
 
     public static String formatTime(Context context, Date date, DateFormat timeFormat, DateFormat dateFormat) {

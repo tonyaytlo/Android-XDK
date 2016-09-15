@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import com.layer.atlas.R;
 import com.layer.atlas.messagetypes.AttachmentSender;
 import com.layer.atlas.util.Log;
+import com.layer.atlas.util.Util;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.PushNotificationPayload;
@@ -73,7 +74,7 @@ public class CameraSender extends AttachmentSender {
         if (Log.isLoggable(Log.VERBOSE)) Log.v("Received camera response");
         try {
             Identity me = getLayerClient().getAuthenticatedUser();
-            String myName = me == null ? "" : me.getDisplayName();
+            String myName = me == null ? "" : Util.getDisplayName(me);
             Message message = ThreePartImageUtils.newThreePartImageMessage(activity, getLayerClient(), new File(mPhotoFilePath.get()));
 
             PushNotificationPayload payload = new PushNotificationPayload.Builder()
