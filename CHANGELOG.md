@@ -4,10 +4,10 @@
 
 ### Features
   * Support for Identities
-  * Message receipts are now only
 
 ### Bug fixes
   * Message receipts are now only used on the latest message for the current user. This increases performance on the `AtlasMessagesRecyclerView` when loaded with 1000+ messages, as well as achieves parity with iOS. (APPS-2525)
+  * Fixed last message view cropped when build target was SDK 24.
 
 ### Migration Guide
 
