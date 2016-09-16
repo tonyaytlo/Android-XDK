@@ -60,15 +60,6 @@ The Atlas library is located in the `layer-atlas` directory.  The table below de
         <td><a href="layer-atlas/src/main/java/com/layer/atlas/AtlasTypingIndicator.java">AtlasTypingIndicator. TypingIndicatorFactory</a></td>
         <td>Renders typing indicators</td>
     </tr>
-    <tr><th colspan="2" style="text-align:center;">Interfaces</th></tr>
-    <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/atlas/provider/Participant.java">Participant</a></td>
-        <td>Allows Atlas classes to render Participant information</td>
-    </tr>
-    <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/atlas/provider/ParticipantProvider.java">ParticipantProvider</a></td>
-        <td>Provides Atlas classes with Participants from a backend Identity Provider</td>
-    </tr>
 </table>
 
 ##<a name="installation"></a>Installation
@@ -81,7 +72,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.layer.atlas:layer-atlas:0.2.10'
+    compile 'com.layer.atlas:layer-atlas:0.3.0'
 }
 ```
 
@@ -112,7 +103,7 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasConversationsRecycle
 
 ```java
 conversationsList = ((AtlasConversationsRecyclerView) findViewById(R.id.conversations_list))
-	.init(layerClient, participantProvider, picasso)
+	.init(layerClient, picasso)
 	.setOnConversationClickListener(new OnConversationClickListener() {
 		public void onConversationClick(AtlasConversationsAdapter adapter, Conversation conversation) {
 			launchMessagesList(conversation);
@@ -144,7 +135,7 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasMessagesRecyclerView
 
 ```java
 messagesList = ((AtlasMessagesRecyclerView) findViewById(R.id.messages_list))
-	.init(layerClient, participantProvider, picasso)
+	.init(layerClient, picasso)
 	.setConversation(conversation)
 	.addCellFactories(
 		new TextCellFactory(),
@@ -170,7 +161,7 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasMessageComposer.java
 
 ```java
 messageComposer = ((AtlasMessageComposer) findViewById(R.id.message_composer))
-	.init(layerClient, participantProvider)
+	.init(layerClient)
 	.setTextSender(new TextSender())
 	.addAttachmentSenders(
 		new CameraSender("Camera", R.drawable.ic_photo_camera_white_24dp, this),
@@ -225,21 +216,21 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasParticipantPicker.ja
 
 ```java
 addressBar = (AtlasAddressBar) findViewById(R.id.address_bar)
-	.init(layerClient, participantProvider, picasso)
+	.init(layerClient, picasso)
 	.setOnConversationClickListener(new OnConversationClickListenertener() {
 		public void onConversationClick(AtlasAddressBar addressBar, Conversation conversation) {
 			setConversation(conversation);
 		}
 	})
 	.setOnParticipantSelectionChangeListener(new OnParticipantSelectionChangeListener() {
-		public void onParticipantSelectionChanged(AtlasAddressBar addressBar, List<String> participantIds) {
-			if (participantIds.isEmpty()) {
+		public void onParticipantSelectionChanged(AtlasAddressBar addressBar, List<Identity> participants) {
+			if (participants.isEmpty()) {
 				setConversation(null);
 				return;
 			}
 			try {
 				ConversationOptions options = new ConversationOptions().distinct(true);
-				setConversation(layerClient.newConversation(options, participantIds), false);
+				setConversation(layerClient.newConversation(options, new HashSet<>(participants)), false);
 			} catch (LayerConversationException e) {
 				setConversation(e.getConversation(), false);
 			}
