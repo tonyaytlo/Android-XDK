@@ -1,5 +1,16 @@
 # Atlas Android
 
+## 0.3.1
+
+### Features
+  * Updating to Layer SDK 0.23.0 (FCM support)
+  * Compile and target SDK set to API 24
+  * Support library versions are now 24.2.1
+  * Google play services location is updated to 9.6.1
+
+### Migration Guide
+  * There are no API changes in Atlas directly. Please follow the Migration Guide for Layer SDK 0.23.0.
+
 ## 0.3.0
 
 ### Features

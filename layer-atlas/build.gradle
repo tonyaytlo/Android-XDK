@@ -10,12 +10,12 @@ ext.artifactIdName = 'layer-atlas'
 group 'com.layer.atlas'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionName = "${version}"
     }
 
@@ -41,16 +41,13 @@ ext {
 
 dependencies {
     // Layer SDK
-    compile('com.layer.sdk:layer-sdk:0.22.0') {
-        exclude group: 'com.google.android.gms', module: 'play-services-gcm'
+    compile ('com.layer.sdk:layer-sdk:0.23.0') {
+        exclude group: 'com.google.firebase', module: 'firebase-messaging'
     }
     compile 'org.slf4j:slf4j-nop:1.7.2'
 
-    // Google Cloud Messaging
-    compile 'com.google.android.gms:play-services-gcm:9.2.0'
-
     // Google Location
-    compile 'com.google.android.gms:play-services-location:9.2.0'
+    compile 'com.google.android.gms:play-services-location:9.6.1'
 
     // Image cache and loading
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -59,9 +56,9 @@ dependencies {
     compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1'
 
     // Android UI
-    compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:recyclerview-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
 }
 
 def sdkPom() {
