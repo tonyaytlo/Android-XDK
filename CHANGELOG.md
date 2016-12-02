@@ -1,5 +1,11 @@
 # Atlas Android
 
+## 0.3.4
+
+### Features
+  * No longer need to fork the project to create custom cell factories. Subclass `AtlasCellFactory` and register an instance with `AtlasConversationsAdapter` and `AtlasMessagesAdapter`.
+  * `ThreePartImageCellFactory`, `LocationCellFactory` and `SinglePartImageCellFactory` no longer require an `Activity` or `Context` to be supplied to the constructor. Those constructors are now deprecated. 
+
 ## 0.3.3
 
 ### Major Changes

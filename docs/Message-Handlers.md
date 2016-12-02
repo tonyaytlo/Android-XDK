@@ -20,16 +20,17 @@ Here are the steps involved in building a new handler
 
 1. Create a new handler for your custom message type by extending `AtlasCellFactory`.
 2. Create a new sender for your custom message type by extending `MessageSender`.
-3. Add the new cell factory to `MessagesListActivity`.
-4. If needed, update `Util.getLastMessageString` to generate preview for your new message type.
-5. If needed, add the new mime-types to `autoDownloadMimeTypes` option in `LayerClient.Options`.
+3. Add the new cell factory to your `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`
+    * The order in which you register factories is important. The first matching factory will be used for displaying the message and its previews.
+    * Use the same order for both `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`.
+4. If needed, add the new mime-types to `autoDownloadMimeTypes` option in `LayerClient.Options`.
 
 ##<a name="gif"></a>GIF Handler Example
 
 In case of GIF, first you have to figure out what is the best way to store and transmit data. For this discussion, 
 
-* I will assume you want to store the original gif data as a message part. 
-* I will also assume you want to store a preview part (that shows the first frame?), and 
+* Let's assume you want to store the original gif data as a message part. 
+* Let's also assume you want to store a preview part (that shows the first frame?), and 
 * You need to store some form of dimension/info about the gif. For better user experience, your preview should be same dimension as original. So, you will need to store only one dimension information. This leads to something similar to ThreePartImage support we have in Atlas. When thinking about this from Atlas perspective, you need to handle 2 high level concepts. Sending a gif, and receiving a gif.
       
 ###Sending a GIF
@@ -50,7 +51,7 @@ Once the GIF is sent, you have to get the GIF and handle it on the receiving sid
 
 * Note that it doesn't download the original image data. In GIF, I assume you will add the 3rd part as well.
 
-* Create and add ThreePartGifCellFactory to AtlasMessagesRecyclerView. The order of registration is important. The earlier factory that matches will be used. 
+* Create and add ThreePartGifCellFactory to `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`
 
 * Example : https://github.com/layerhq/Atlas-Android-Messenger/blob/80e15193bc21281ab69e0c2244ccbd61f9c87741/app/src/main/java/com/layer/messenger/MessagesListActivity.java#L165
 
