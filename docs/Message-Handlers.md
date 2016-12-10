@@ -20,6 +20,7 @@ Here are the steps involved in building a new handler
 
 1. Create a new handler for your custom message type by extending `AtlasCellFactory`.
 2. Create a new sender for your custom message type by extending `MessageSender`.
+
 3. Add the new cell factory to your `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`
     * The order in which you register factories is important. The first matching factory will be used for displaying the message and its previews.
     * Use the same order for both `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`.
@@ -51,7 +52,7 @@ Once the GIF is sent, you have to get the GIF and handle it on the receiving sid
 
 * Note that it doesn't download the original image data. In GIF, I assume you will add the 3rd part as well.
 
-* Create and add ThreePartGifCellFactory to `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`
+x* Create and add ThreePartGifCellFactory to `AtlasConversationRecyclerView` and `AtlasMessagesRecyclerView`
 
 * Example : https://github.com/layerhq/Atlas-Android-Messenger/blob/80e15193bc21281ab69e0c2244ccbd61f9c87741/app/src/main/java/com/layer/messenger/MessagesListActivity.java#L165
 
