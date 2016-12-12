@@ -103,7 +103,11 @@ conversationsList = ((AtlasConversationsRecyclerView) findViewById(R.id.conversa
 		public boolean onConversationLongClick(AtlasConversationsAdapter adapter, Conversation conversation) {
 		    return false;
 		}
-	});
+	})
+    .addCellFactories(new TextCellFactory(), 
+    new ThreePartImageCellFactory(layerClient, picasso),
+    new LocationCellFactory(picasso),
+    new SinglePartImageCellFactory(layerClient, picasso));
 ```
 
 ###<a name="messages"></a>Messages
