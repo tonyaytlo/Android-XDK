@@ -18,16 +18,13 @@ import com.layer.sdk.messaging.PushNotificationPayload;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import static android.support.v4.app.ActivityCompat.requestPermissions;
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
-
 /**
  * GallerySender creates a ThreePartImage from the a selected image from the user's gallety.
  * Requires `Manifest.permission.READ_EXTERNAL_STORAGE` to read photos from external storage.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class GallerySender extends AttachmentSender {
-    private static final String PERMISSION = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) ? Manifest.permission.READ_EXTERNAL_STORAGE : null;
+    private static final String PERMISSION_READ = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) ? Manifest.permission.READ_EXTERNAL_STORAGE : null;
     public static final int ACTIVITY_REQUEST_CODE = 10;
     public static final int PERMISSION_REQUEST_CODE = 11;
 
@@ -63,12 +60,15 @@ public class GallerySender extends AttachmentSender {
     public boolean requestSend() {
         Activity activity = mActivity.get();
         if (activity == null) return false;
-        if (Log.isLoggable(Log.VERBOSE)) Log.v("Sending gallery image");
-        if (PERMISSION != null && checkSelfPermission(activity, PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(activity, new String[]{PERMISSION}, PERMISSION_REQUEST_CODE);
-            return true;
+
+        if (!hasPermissions(activity, PERMISSION_READ)) {
+            if (Log.isLoggable(Log.VERBOSE)) Log.v("Requesting permissions");
+            requestPermissions(activity, PERMISSION_REQUEST_CODE, PERMISSION_READ);
+        }else {
+            if (Log.isLoggable(Log.VERBOSE)) Log.v("Sending gallery image");
+            startGalleryIntent(activity);
         }
-        startGalleryIntent(activity);
+
         return true;
     }
 
