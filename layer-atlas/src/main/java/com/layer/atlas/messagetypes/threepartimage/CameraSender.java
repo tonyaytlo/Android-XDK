@@ -59,7 +59,8 @@ public class CameraSender extends AttachmentSender {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName);
         mPhotoFilePath.set(file.getAbsolutePath());
 
-        final Uri outputUri = FileProvider.getUriForFile(activity, "com.layer.atlas.provider", file);
+        String authority = activity.getApplicationContext().getPackageName() + ".com.layer.atlas.provider";
+        final Uri outputUri = FileProvider.getUriForFile(activity, authority, file);
 
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
