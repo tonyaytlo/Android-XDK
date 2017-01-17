@@ -1,5 +1,10 @@
 # Atlas Android
 
+##
+
+### Bug fixes
+  * Fixed crash when participant was removed from the conversation (APPS-2719)
+
 ## 0.3.6
 
 ### Features

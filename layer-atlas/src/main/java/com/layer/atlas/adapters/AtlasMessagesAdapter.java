@@ -382,6 +382,9 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
             for (Map.Entry<Identity, Message.RecipientStatus> entry : statuses.entrySet()) {
                 // Only show receipts for other members
                 if (entry.getKey().equals(mLayerClient.getAuthenticatedUser())) continue;
+                // Skip receipts for members no longer in the conversation
+                if (entry.getValue() == null) continue;
+
                 switch (entry.getValue()) {
                     case READ:
                         readCount++;
