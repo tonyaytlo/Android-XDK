@@ -89,6 +89,9 @@ public class GallerySender extends AttachmentSender {
         }
         if (Log.isLoggable(Log.VERBOSE)) Log.v("Received gallery response");
         try {
+            if (Log.isPerfLoggable()) {
+                Log.perf("GallerySender is attempting to send a message");
+            }
             Identity me = getLayerClient().getAuthenticatedUser();
             String myName = me == null ? "" : Util.getDisplayName(me);
             Uri uri = data.getData();
