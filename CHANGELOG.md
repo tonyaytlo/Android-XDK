@@ -1,5 +1,15 @@
 # Atlas Android
 
+## 0.4.0
+
+### Bug Fixes
+  * Fixed manifest merge issues + crashes caused by workarounds by removing the FileProvider required for CameraSender.
+
+### Migration Guide
+####  `CameraSender`
+  * Developers are now required to implement their own FileProvider and supply the CameraSender with the provider authority.
+  * Refer to `/docs/CameraSender.md` for details on how to implement a FileProvider
+
 ## 0.3.7
 
 ### Bug fixes
