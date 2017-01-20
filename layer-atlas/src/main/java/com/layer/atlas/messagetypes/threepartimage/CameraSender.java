@@ -10,7 +10,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
+import android.text.TextUtils;
 
 import com.layer.atlas.R;
 import com.layer.atlas.messagetypes.AttachmentSender;
@@ -44,14 +46,19 @@ public class CameraSender extends AttachmentSender {
     private WeakReference<Activity> mActivity = new WeakReference<Activity>(null);
 
     private final AtomicReference<String> mPhotoFilePath = new AtomicReference<String>(null);
+    private final String mFileProviderAuthority;
 
-    public CameraSender(int titleResId, Integer iconResId, Activity activity) {
-        this(activity.getString(titleResId), iconResId, activity);
+    public CameraSender(int titleResId, Integer iconResId, Activity activity, @NonNull String fileProviderAuthority) {
+        this(activity.getString(titleResId), iconResId, activity, fileProviderAuthority);
     }
 
-    public CameraSender(String title, Integer iconResId, Activity activity) {
+    public CameraSender(String title, Integer iconResId, Activity activity, @NonNull String fileProviderAuthority) {
         super(title, iconResId);
         mActivity = new WeakReference<Activity>(activity);
+        if (TextUtils.isEmpty(fileProviderAuthority)) {
+            throw new IllegalArgumentException("Empty file provider authority");
+        }
+        mFileProviderAuthority = fileProviderAuthority;
     }
 
     private void startCameraIntent(Activity activity) {
@@ -59,8 +66,7 @@ public class CameraSender extends AttachmentSender {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName);
         mPhotoFilePath.set(file.getAbsolutePath());
 
-        String authority = activity.getApplicationContext().getPackageName() + ".com.layer.atlas.provider";
-        final Uri outputUri = FileProvider.getUriForFile(activity, authority, file);
+        final Uri outputUri = FileProvider.getUriForFile(activity, mFileProviderAuthority, file);
 
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
