@@ -18,6 +18,7 @@ import com.layer.atlas.R;
 import com.layer.atlas.messagetypes.AtlasCellFactory;
 import com.layer.atlas.messagetypes.MessageStyle;
 import com.layer.atlas.util.IdentityRecyclerViewEventListener;
+import com.layer.atlas.util.Log;
 import com.layer.atlas.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
@@ -538,16 +539,28 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         mFooterPosition = mQueryController.getItemCount();
         updateRecipientStatusPosition();
         notifyDataSetChanged();
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryDataSetChanged");
+        }
     }
 
     @Override
     public void onQueryItemChanged(RecyclerViewController controller, int position) {
         notifyItemChanged(position);
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemChanged. Position: " + position);
+        }
     }
 
     @Override
     public void onQueryItemRangeChanged(RecyclerViewController controller, int positionStart, int itemCount) {
         notifyItemRangeChanged(positionStart, itemCount);
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemRangeChanged. Position start: " + positionStart + " Count: " + itemCount);
+        }
     }
 
     @Override
@@ -557,6 +570,10 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         notifyItemInserted(position);
         if (mAppendListener != null && (position + 1) == getItemCount()) {
             mAppendListener.onMessageAppend(this, getItem(position));
+        }
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemInserted. Position: " + position);
         }
     }
 
@@ -569,6 +586,10 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         if (mAppendListener != null && (positionEnd + 1) == getItemCount()) {
             mAppendListener.onMessageAppend(this, getItem(positionEnd));
         }
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemRangeInserted. Position start: " + positionStart + " Count: " + itemCount);
+        }
     }
 
     @Override
@@ -576,6 +597,10 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         mFooterPosition--;
         updateRecipientStatusPosition();
         notifyItemRemoved(position);
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemRemoved. Position: " + position);
+        }
     }
 
     @Override
@@ -583,12 +608,20 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         mFooterPosition -= itemCount;
         updateRecipientStatusPosition();
         notifyItemRangeRemoved(positionStart, itemCount);
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Messages adapter - onQueryItemRangeRemoved. Position start: " + positionStart + " Count: " + itemCount);
+        }
     }
 
     @Override
     public void onQueryItemMoved(RecyclerViewController controller, int fromPosition, int toPosition) {
         updateRecipientStatusPosition();
         notifyItemMoved(fromPosition, toPosition);
+
+        if (Log.isPerfLoggable()) {
+            Log.perf("Conversations adapter - onQueryItemMoved. From: " + fromPosition + " To: " + toPosition);
+        }
     }
 
 

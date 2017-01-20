@@ -2,6 +2,10 @@
 
 ## 0.4.0
 
+### Major Changes
+  * Update to Layer Android SDK Version 0.23.6
+  * Added log markers for performance testing
+
 ### Bug Fixes
   * Fixed manifest merge issues + crashes caused by workarounds by removing the FileProvider required for CameraSender.
 
