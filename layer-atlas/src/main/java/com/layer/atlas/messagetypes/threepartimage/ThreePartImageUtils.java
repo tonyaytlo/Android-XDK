@@ -234,13 +234,16 @@ public class ThreePartImageUtils {
             Log.v("Preview sampled size: " + (sampleWidth << 1) + "x" + (sampleHeight << 1));
         }
 
-        // Create preview
+        // Create previewBitmap if sample size and preview size are different
         Bitmap sampledBitmap = BitmapFactory.decodeStream(inputStream, null, previewOptions);
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(sampledBitmap, previewDimensions[0], previewDimensions[1], true);
-
-        sampledBitmap.recycle();
-
-        return previewBitmap;
+        if (previewDimensions[0] != sampleWidth && previewDimensions[1] != sampleHeight) {
+            Bitmap previewBitmap = Bitmap.createScaledBitmap(sampledBitmap, previewDimensions[0], previewDimensions[1], true);
+            sampledBitmap.recycle();
+            return previewBitmap;
+        }
+        else {
+            return sampledBitmap;
+        }
     }
 
     private static MessagePart buildPreviewMessagePart(Context context, LayerClient client, InputStream inputStream,
