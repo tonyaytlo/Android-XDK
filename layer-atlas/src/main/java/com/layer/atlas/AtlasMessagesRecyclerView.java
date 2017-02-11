@@ -126,6 +126,9 @@ public class AtlasMessagesRecyclerView extends RecyclerView {
      * @return This AtlasMessagesRecyclerView.
      */
     public AtlasMessagesRecyclerView setConversation(Conversation conversation) {
+        if (conversation != null) {
+            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
+        }
         mAdapter.setQuery(Query.builder(Message.class)
                 .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation))
                 .sortDescriptor(new SortDescriptor(Message.Property.POSITION, SortDescriptor.Order.ASCENDING))
