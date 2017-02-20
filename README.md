@@ -206,7 +206,7 @@ We expect to add support for other handlers in future. If you would like to buil
 
 ###<a name="Identity"></a>Identity
 
-An application server can directly upload user information to Layer server. This user information is called <a href="https://docs.layer.com/sdk/android/identities">Identity</a>. `AtlasAddressBar` and `AtlasAvater` are controls that are used to render the Identity information.
+An application server can directly upload user information to Layer server. This user information is called <a href="https://docs.layer.com/sdk/android/identities">Identity</a>. `AtlasAddressBar` and `AtlasAvatar` are controls that are used to render the Identity information.
 
 ####AtlasAddressBar
 `AtlasAddressBar` can be used to show a list of users. For eg, the list of users in a `Conversation` or to show a user list for creating a new `Conversation`.
