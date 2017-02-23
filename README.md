@@ -63,7 +63,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.layer.atlas:layer-atlas:0.4.2'
+    compile 'com.layer.atlas:layer-atlas:0.4.3'
 }
 ```
 
@@ -159,7 +159,7 @@ messageComposer = ((AtlasMessageComposer) findViewById(R.id.message_composer))
 	.init(layerClient)
 	.setTextSender(new TextSender())
 	.addAttachmentSenders(
-		new CameraSender("Camera", R.drawable.ic_photo_camera_white_24dp, this),
+		new CameraSender("Camera", R.drawable.ic_photo_camera_white_24dp, this, getApplicationContext().getPackageName() + ".file_provider"),
 		new GallerySender("Gallery", R.drawable.ic_photo_white_24dp, this),
 		new LocationSender("Location", R.drawable.ic_place_white_24dp, this));
 ```

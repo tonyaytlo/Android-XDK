@@ -43,14 +43,14 @@ import java.util.Set;
  * it can render, can create new View hierarchies for its Message types, and can render (bind)
  * Message data with its created View hierarchies.  Typically, CellFactories are segregated by
  * MessagePart MIME types (e.g. "text/plain", "image/jpeg", and "application/vnd.geo+json").
- *
+ * <p>
  * Under the hood, the AtlasMessagesAdapter is a RecyclerView.Adapter, which automatically recycles
  * its list items within view-type "buckets".  Each registered CellFactory actually creates two such
  * view-types: one for cells sent by the authenticated user, and another for cells sent by remote
  * actors.  This allows the AtlasMessagesAdapter to efficiently render images sent by the current
  * user aligned on the left, and images sent by others aligned on the right, for example.  In case
  * this sent-by distinction is of value when rendering cells, it provided as the `isMe` argument.
- *
+ * <p>
  * When rendering Messages, the AtlasMessagesAdapter first determines which CellFactory to handle
  * the Message with calling CellFactory.isBindable() on each of its registered CellFactories. The
  * first CellFactory to return `true` is used for that Message.  Then, the adapter checks for
@@ -94,6 +94,8 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
 
     private RecyclerView mRecyclerView;
     private boolean mReadReceiptsEnabled = true;
+
+    protected boolean mShouldShowAvatarInOneOnOneConversations;
 
     public AtlasMessagesAdapter(Context context, LayerClient layerClient, Picasso picasso) {
         mLayerClient = layerClient;
@@ -176,6 +178,23 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
 
     public View getFooterView() {
         return mFooterView;
+    }
+
+    /**
+     * @return If the Avatar for the other participant in a one on one conversation  will be shown
+     * or not
+     */
+    public boolean getShouldShowAvatarInOneOnOneConversations() {
+        return mShouldShowAvatarInOneOnOneConversations;
+    }
+
+    /**
+     * @param shouldShowAvatarInOneOnOneConversations Whether the Avatar for the other participant
+     *                                                in a one on one conversation should be shown
+     *                                                or not
+     */
+    public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
+        this.mShouldShowAvatarInOneOnOneConversations = shouldShowAvatarInOneOnOneConversations;
     }
 
     /**
@@ -351,12 +370,16 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
 
             // Avatars
             if (oneOnOne) {
-                // Not in one-on-one conversations
-                viewHolder.mAvatar.setVisibility(View.GONE);
+                if (mShouldShowAvatarInOneOnOneConversations) {
+                    viewHolder.mAvatar.setVisibility(View.VISIBLE);
+                    viewHolder.mAvatar.setParticipants(message.getSender());
+
+                } else {
+                    viewHolder.mAvatar.setVisibility(View.GONE);
+                }
             } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != ClusterType.LESS_THAN_MINUTE) {
                 // Last message in cluster
-                viewHolder.mAvatar.setVisibility(View.VISIBLE);
-                viewHolder.mAvatar.setParticipants(message.getSender());
+
 
                 // Add the position to the positions map for Identity updates
                 mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
@@ -455,7 +478,6 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         if (!(viewHolder instanceof CellViewHolder)) return null;
         return ((CellViewHolder) viewHolder).mMessage;
     }
-
 
     //==============================================================================================
     // Clustering

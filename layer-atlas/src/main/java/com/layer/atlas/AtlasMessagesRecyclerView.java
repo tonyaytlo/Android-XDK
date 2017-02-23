@@ -196,6 +196,27 @@ public class AtlasMessagesRecyclerView extends RecyclerView {
     }
 
     /**
+     * Convenience pass-through to this list's AtlasMessagesAdapter.
+     *
+     * @see AtlasMessagesAdapter#getShouldShowAvatarInOneOnOneConversations()
+     */
+
+    public boolean getShouldShowAvatarInOneOnOneConversations() {
+        return mAdapter.getShouldShowAvatarInOneOnOneConversations();
+    }
+
+    /**
+     * Convenience pass-through to this list's AtlasMessagesAdapter.
+     *
+     * @see AtlasMessagesAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
+     */
+
+    public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
+        mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
+    }
+
+
+    /**
      * Scrolls if the user is at the end
      */
     private void autoScroll() {
