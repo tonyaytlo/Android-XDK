@@ -211,8 +211,9 @@ public class AtlasMessagesRecyclerView extends RecyclerView {
      * @see AtlasMessagesAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
      */
 
-    public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
+    public AtlasMessagesRecyclerView setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
         mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
+        return this;
     }
 
 
