@@ -96,7 +96,6 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
     private boolean mReadReceiptsEnabled = true;
 
     protected boolean mShouldShowAvatarInOneOnOneConversations;
-    protected boolean mShouldShowAvatarPresence = true;
 
     public AtlasMessagesAdapter(Context context, LayerClient layerClient, Picasso picasso) {
         mLayerClient = layerClient;
@@ -195,24 +194,7 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
      *                                                or not
      */
     public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
-        mShouldShowAvatarInOneOnOneConversations = shouldShowAvatarInOneOnOneConversations;
-    }
-
-    /**
-     * @return If the Avatar for the other participant in a one on one conversation will be shown
-     * or not. Defaults to `true`.
-     */
-    public boolean getShouldShowAvatarPresence() {
-        return mShouldShowAvatarPresence;
-    }
-
-    /**
-     * @param shouldShowPresence Whether the Avatar for the other participant in a one on one
-     *                           conversation should be shown or not. Default is `true`.
-     */
-    public AtlasMessagesAdapter setShouldShowAvatarPresence(boolean shouldShowPresence) {
-        mShouldShowAvatarPresence = shouldShowPresence;
-        return this;
+        this.mShouldShowAvatarInOneOnOneConversations = shouldShowAvatarInOneOnOneConversations;
     }
 
     /**
@@ -301,7 +283,6 @@ public class AtlasMessagesAdapter extends RecyclerView.Adapter<AtlasMessagesAdap
         CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mPicasso);
         rootViewHolder.mCellHolder = cellType.mCellFactory.createCellHolder(rootViewHolder.mCell, cellType.mMe, mLayoutInflater);
         rootViewHolder.mCellHolderSpecs = new AtlasCellFactory.CellHolderSpecs();
-        rootViewHolder.mAvatar.setShouldShowPresence(mShouldShowAvatarPresence);
         return rootViewHolder;
     }
 
