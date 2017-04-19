@@ -1,5 +1,12 @@
 # Atlas Android
 
+
+## 0.4.7
+
+### Major Changes
+  * Update to Layer Android SDK Version 0.23.13
+  * Add support for Presence
+
 ## 0.4.6
 
 ### Major Changes
