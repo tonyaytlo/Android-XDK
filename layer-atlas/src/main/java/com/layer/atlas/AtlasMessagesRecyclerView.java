@@ -200,6 +200,7 @@ public class AtlasMessagesRecyclerView extends RecyclerView {
      *
      * @see AtlasMessagesAdapter#getShouldShowAvatarInOneOnOneConversations()
      */
+
     public boolean getShouldShowAvatarInOneOnOneConversations() {
         return mAdapter.getShouldShowAvatarInOneOnOneConversations();
     }
@@ -209,29 +210,12 @@ public class AtlasMessagesRecyclerView extends RecyclerView {
      *
      * @see AtlasMessagesAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
      */
+
     public AtlasMessagesRecyclerView setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
         mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
         return this;
     }
 
-    /**
-     * Convenience pass-through to this list's AtlasMessagesAdapter.
-     *
-     * @see AtlasMessagesAdapter#getShouldShowAvatarPresence()
-     */
-    public boolean getShouldShowAvatarPresence() {
-        return mAdapter.getShouldShowAvatarPresence();
-    }
-
-    /**
-     * Convenience pass-through to this list's AtlasMessagesAdapter.
-     *
-     * @see AtlasMessagesAdapter#setShouldShowAvatarPresence(boolean)
-     */
-    public AtlasMessagesRecyclerView setShouldShowAvatarPresence(boolean shouldShowAvatarPresence) {
-        mAdapter.setShouldShowAvatarPresence(shouldShowAvatarPresence);
-        return this;
-    }
 
     /**
      * Scrolls if the user is at the end
