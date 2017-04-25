@@ -157,6 +157,7 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasMessageComposer.java
 ```java
 messageComposer = ((AtlasMessageComposer) findViewById(R.id.message_composer))
 	.init(layerClient)
+        .setConversation(conversation)
 	.setTextSender(new TextSender())
 	.addAttachmentSenders(
 		new CameraSender("Camera", R.drawable.ic_photo_camera_white_24dp, this, getApplicationContext().getPackageName() + ".file_provider"),
