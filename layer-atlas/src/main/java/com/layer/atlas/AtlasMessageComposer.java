@@ -414,4 +414,12 @@ public class AtlasMessageComposer extends FrameLayout {
             mBundle = in.readBundle();
         }
     }
+
+    public String getEnteredText() {
+        return mMessageEditText.getText().toString();
+    }
+
+    public void setText(String textToSet) {
+        mMessageEditText.setText(textToSet);
+    }
 }
