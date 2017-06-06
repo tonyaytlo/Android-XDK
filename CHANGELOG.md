@@ -1,5 +1,16 @@
 # Atlas Android
 
+## 0.4.8
+
+### Major Changes
+  * Added support for Telemetry. For more details please refer to [Android Documentation](https://docs.layer.com/sdk/android/privacy#telemetry)
+  * Displaying Timestamp for the first message in the list
+  * Basic tests
+  * Tests now run on CircleCI on every pull request
+
+#### Bug Fixes
+  * Fixed chat bubble empty on receiving long messages
+  * Using fixed heights suitable for image previews to stop images from resizing on fragment/activity resize
 
 ## 0.4.7
 
