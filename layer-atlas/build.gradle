@@ -7,7 +7,7 @@ apply from: project.file("version.gradle")
 
 ext.pomProjectName = 'Atlas library'
 ext.artifactIdName = 'layer-atlas'
-group 'com.layer.atlas'
+group 'com.layer.ui'
 
 android {
     compileSdkVersion 24

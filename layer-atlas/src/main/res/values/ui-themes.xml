@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ########### -->
+    <!-- UI Style -->
+    <!-- ########### -->
+    <style name="Theme.ui.Base.Light" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="ConversationsRecyclerView">@style/ConversationsRecyclerView</item>
+        <item name="MessageComposer">@style/MessageComposer</item>
+        <item name="MessagesRecyclerView">@style/MessagesRecyclerView</item>
+        <item name="AddressBar">@style/AddressBar</item>
+        <item name="TypingIndicator">@style/TypingIndicator</item>
+
+        <item name="colorPrimary">@color/layer_ui_action_bar_background</item>
+        <item name="colorPrimaryDark">@color/layer_ui_status_bar_background</item>
+
+        <!-- floating action button; EditText cursor -->
+        <item name="colorAccent">@color/layer_ui_floating_button</item>
+
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="actionBarTabTextStyle">@style/ActionBarTabText</item>
+        <item name="actionMenuTextColor">@color/layer_ui_text_white</item>
+        <item name="actionButtonStyle">@style/ActionBarButton</item>
+        <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
+
+        <item name="android:windowBackground">@color/layer_ui_window_background</item>
+    </style>
+
+    <style name="Theme.ui.Light" parent="Theme.ui.Base.Light">
+        <!-- v21 adds custom items -->
+    </style>
+</resources>

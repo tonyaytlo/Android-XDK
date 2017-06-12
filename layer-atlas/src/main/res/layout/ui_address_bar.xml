@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.layer.ui.util.views.MaxHeightScrollView
+        android:id="@+id/selected_participant_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.layer.ui.util.views.FlowLayout
+            android:id="@+id/selected_participant_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <com.layer.ui.util.views.EmptyDelEditText
+                android:id="@+id/filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone"
+                android:minWidth="@dimen/layer_ui_participant_filter_min_width"
+                android:singleLine="true"
+                android:textSize="@dimen/layer_ui_text_size_input"
+                android:background="@drawable/ui_edit_text_background"
+                android:textCursorDrawable="@drawable/ui_edit_text_cursor"
+                />
+
+        </com.layer.ui.util.views.FlowLayout>
+    </com.layer.ui.util.views.MaxHeightScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/participant_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+</merge>

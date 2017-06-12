@@ -13,13 +13,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<manifest
-    package="com.layer.ui"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
+    android:id="@+id/swipeable"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/layer_ui_padding_normal"
+    android:paddingRight="@dimen/layer_ui_padding_normal"
+    android:paddingTop="@dimen/layer_ui_message_cluster_space">
 
-    <application>
-        <activity android:name="com.layer.ui.util.imagepopup.ImagePopupActivity"/>
-
-    </application>
-
-</manifest>
+</FrameLayout>

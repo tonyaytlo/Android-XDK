@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:layer_ui="http://schemas.android.com/apk/res-auto">
+    <item android:drawable="@color/layer_ui_item_swiping" android:state_pressed="true"/>
+    <item android:drawable="@color/layer_ui_item_swiping" layer_ui:state_swiping="true"/>
+</selector>

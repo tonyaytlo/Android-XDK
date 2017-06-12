@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.layer.ui.Avatar
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/layer_ui_chip_height"
+        android:layout_height="@dimen/layer_ui_chip_height"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/layer_ui_padding_narrow"
+        android:gravity="center"
+        android:text="[name]"
+        android:textColor="@color/layer_ui_text_gray"
+        android:textSize="@dimen/layer_ui_text_size_chip"/>
+
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="@dimen/layer_ui_chip_height"
+        android:layout_height="@dimen/layer_ui_chip_height"
+        android:scaleType="center"
+        android:src="@drawable/ic_cancel_white_24dp"
+        android:tint="@color/layer_ui_icon_enabled"
+        />
+
+</merge>

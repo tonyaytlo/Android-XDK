@@ -13,13 +13,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<manifest
-    package="com.layer.ui"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <application>
-        <activity android:name="com.layer.ui.util.imagepopup.ImagePopupActivity"/>
-
-    </application>
-
-</manifest>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="rectangle">
+    <corners android:radius="@dimen/layer_ui_message_item_cell_radius"/>
+    <padding
+        android:bottom="@dimen/layer_ui_message_item_cell_padding_bottom"
+        android:left="@dimen/layer_ui_message_item_cell_padding_far"
+        android:right="@dimen/layer_ui_message_item_cell_padding_near"
+        android:top="@dimen/layer_ui_message_item_cell_padding_top"/>
+    <solid android:color="@color/layer_ui_cell_me_background"/>
+</shape>
