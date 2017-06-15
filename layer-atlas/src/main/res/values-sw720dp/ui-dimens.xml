@@ -18,5 +18,5 @@
     <!-- ####################################################################################### -->
     <!-- # Recycler Maximum Cell Height Dimension                                             # -->
     <!-- ####################################################################################### -->
-    <dimen name="atlas_messages_max_cell_height">876dp</dimen>
+    <dimen name="layer_ui_messages_max_cell_height">876dp</dimen>
 </resources>
