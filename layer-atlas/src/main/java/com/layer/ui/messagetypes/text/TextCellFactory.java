@@ -11,19 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.layer.ui.R;
-import com.layer.ui.messagetypes.CellFactory;
-import com.layer.ui.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-public class TextCellFactory extends
+import com.layer.ui.R;
+import com.layer.ui.messagetypes.CellFactory;
+import com.layer.ui.util.Log;
+import com.layer.ui.util.Util;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
+public class TextCellFactory extends
         CellFactory<TextCellFactory.CellHolder, TextCellFactory.TextInfo> implements View.OnLongClickListener {
     public final static String MIME_TYPE = "text/plain";
     //This is used to bind TextView  to the exact message to ensure the right TextView is updated
