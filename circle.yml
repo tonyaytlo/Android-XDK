@@ -10,4 +10,9 @@ test:
     # wait for it to have booted
     - circle-android wait-for-boot
     # run all tests against the emulator.
-    - ./gradlew test connectedAndroidTest --info
+    - ./gradlew connectedAndroidTest test -PpreDexEnabled=false --console=plain
+
+    # Copy the build outputs to artifacts
+    - cp -r layer-atlas/build/outputs $CIRCLE_ARTIFACTS
+    # Copy the test results to the test results directory.
+    - cp -r layer-atlas/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
