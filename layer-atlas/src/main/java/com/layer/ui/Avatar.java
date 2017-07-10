@@ -13,11 +13,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.layer.sdk.messaging.Identity;
+import com.layer.sdk.messaging.Presence;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.util.Util;
 import com.layer.ui.util.picasso.transformations.CircleTransform;
-import com.layer.sdk.messaging.Identity;
-import com.layer.sdk.messaging.Presence;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * AtlasAvatar can be used to show information about one user, or as a cluster of multiple users.
- *
+ * <p>
  * AtlasAvatar uses Picasso to render the avatar image. So, you need to init
  */
 public class Avatar extends View {
@@ -118,25 +118,32 @@ public class Avatar extends View {
         return this;
     }
 
-    public Avatar setStyle(AvatarStyle avatarStyle) {
+    public void setStyle(AvatarStyle avatarStyle) {
         mPaintBackground.setColor(avatarStyle.getAvatarBackgroundColor());
         mPaintBorder.setColor(avatarStyle.getAvatarBorderColor());
         mPaintInitials.setColor(avatarStyle.getAvatarTextColor());
         mPaintInitials.setTypeface(avatarStyle.getAvatarTextTypeface());
-        return this;
     }
 
-    public Avatar setParticipants(Identity... participants) {
+    public void setParticipants(Identity... participants) {
         mParticipants.clear();
         mParticipants.addAll(Arrays.asList(participants));
         update();
-        return this;
+    }
+
+    /**
+     * Should be called from UI thread.
+     */
+    public void setParticipants(Set<Identity> participants) {
+        mParticipants.clear();
+        mParticipants.addAll(participants);
+        update();
     }
 
     /**
      * Enable or disable showing presence information for this avatar. Presence is shown only for
      * single user Avatars. If avatar is a cluster, presence will not be shown.
-     *
+     * <p>
      * Default is `true`, to show presence.
      *
      * @param shouldShowPresence set to `true` to show presence, `false` otherwise.
@@ -149,23 +156,13 @@ public class Avatar extends View {
 
     /**
      * Returns if `shouldShowPresence` flag is enabled for this avatar.
-     *
+     * <p>
      * Default is `true`
      *
      * @return `true` if `shouldShowPresence` is set to `true`, `false` otherwise.
      */
     public boolean getShouldShowPresence() {
         return mShouldShowPresence;
-    }
-
-    /**
-     * Should be called from UI thread.
-     */
-    public Avatar setParticipants(Set<Identity> participants) {
-        mParticipants.clear();
-        mParticipants.addAll(participants);
-        update();
-        return this;
     }
 
     public Set<Identity> getParticipants() {

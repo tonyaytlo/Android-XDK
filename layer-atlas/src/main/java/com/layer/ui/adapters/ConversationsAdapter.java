@@ -5,21 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.layer.ui.Avatar;
-import com.layer.ui.R;
-import com.layer.ui.messagetypes.CellFactory;
-import com.layer.ui.messagetypes.generic.GenericCellFactory;
-import com.layer.ui.messagetypes.location.LocationCellFactory;
-import com.layer.ui.messagetypes.singlepartimage.SinglePartImageCellFactory;
-import com.layer.ui.messagetypes.text.TextCellFactory;
-import com.layer.ui.messagetypes.threepartimage.ThreePartImageCellFactory;
-import com.layer.ui.util.ConversationFormatter;
-import com.layer.ui.util.ConversationStyle;
-import com.layer.ui.util.IdentityRecyclerViewEventListener;
-import com.layer.ui.util.Log;
-import com.layer.ui.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
@@ -28,43 +14,40 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.sdk.query.SortDescriptor;
+import com.layer.ui.conversationitem.ConversationItemViewModel;
+import com.layer.ui.conversationitem.OnConversationItemClickListener;
+import com.layer.ui.databinding.UiConversationItemBinding;
+import com.layer.ui.messagetypes.CellFactory;
+import com.layer.ui.conversationitem.ConversationItemFormatter;
+import com.layer.ui.util.ConversationStyle;
+import com.layer.ui.util.IdentityRecyclerViewEventListener;
+import com.layer.ui.util.Log;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ViewHolder> implements
-
-        BaseAdapter<Conversation>, RecyclerViewController.Callback {
+public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ViewHolder> implements RecyclerViewController.Callback, BaseAdapter<Conversation> {
     protected final LayerClient mLayerClient;
     protected final Picasso mPicasso;
     private final RecyclerViewController<Conversation> mQueryController;
     private final LayoutInflater mInflater;
     private long mInitialHistory = 0;
 
-    private OnConversationClickListener mConversationClickListener;
-    private ViewHolder.OnClickListener mViewHolderClickListener;
-
-    private final DateFormat mDateFormat;
-    private final DateFormat mTimeFormat;
-    private ConversationStyle conversationStyle;
+    private OnConversationItemClickListener mConversationClickListener;
+    private ConversationStyle mConversationStyle;
     private final IdentityRecyclerViewEventListener mIdentityEventListener;
-
     protected Set<CellFactory> mCellFactories;
-    private Set<CellFactory> mDefaultCellFactories;
+    protected ConversationItemFormatter mConversationItemFormatter;
 
-    protected ConversationFormatter mConversationFormatter;
-
-    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, ConversationFormatter conversationFormatter) {
-        this(context, client, picasso, null, conversationFormatter);
+    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, ConversationItemFormatter conversationItemFormatter) {
+        this(context, client, picasso, null, conversationItemFormatter);
     }
 
-    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, Collection<String> updateAttributes, ConversationFormatter conversationFormatter) {
-        mConversationFormatter = conversationFormatter;
+    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, Collection<String> updateAttributes, ConversationItemFormatter conversationItemFormatter) {
+        mConversationItemFormatter = conversationItemFormatter;
         Query<Conversation> query = Query.builder(Conversation.class)
                 /* Only show conversations we're still a member of */
                 .predicate(new Predicate(Conversation.Property.PARTICIPANT_COUNT, Predicate.Operator.GREATER_THAN, 1))
@@ -76,37 +59,23 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
         mLayerClient = client;
         mPicasso = picasso;
         mInflater = LayoutInflater.from(context);
-        mDateFormat = android.text.format.DateFormat.getDateFormat(context);
-        mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
-        mViewHolderClickListener = new ViewHolder.OnClickListener() {
-            @Override
-            public void onClick(ViewHolder viewHolder) {
-                if (mConversationClickListener == null) return;
 
-                if (Log.isPerfLoggable()) {
-                    Log.perf("Conversation ViewHolder onClick");
-                }
-
-                mConversationClickListener.onConversationClick(ConversationsAdapter.this, viewHolder.getConversation());
-            }
-
-            @Override
-            public boolean onLongClick(ViewHolder viewHolder) {
-                if (mConversationClickListener == null) return false;
-                return mConversationClickListener.onConversationLongClick(ConversationsAdapter.this, viewHolder.getConversation());
-            }
-        };
         setHasStableIds(false);
 
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
         mLayerClient.registerEventListener(mIdentityEventListener);
     }
 
-    public ConversationsAdapter addCellFactories(CellFactory... cellFactories) {
+    public ConversationsAdapter setCellFactories(CellFactory... cellFactories) {
         if (mCellFactories == null) {
             mCellFactories = new LinkedHashSet<CellFactory>();
         }
         Collections.addAll(mCellFactories, cellFactories);
+        return this;
+    }
+
+    public ConversationsAdapter setCellFactories(Set<CellFactory> cellFactories) {
+        mCellFactories = cellFactories;
         return this;
     }
 
@@ -134,11 +103,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     }
 
     public void setStyle(ConversationStyle conversationStyle) {
-        this.conversationStyle = conversationStyle;
-    }
-
-    public void setConversationFormatter(ConversationFormatter mConversationFormatter) {
-        this.mConversationFormatter = mConversationFormatter;
+        this.mConversationStyle = conversationStyle;
     }
 
     private void syncInitialMessages(final int start, final int length) {
@@ -171,7 +136,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     // Listeners
     //==============================================================================================
 
-    public ConversationsAdapter setOnConversationClickListener(OnConversationClickListener conversationClickListener) {
+    public ConversationsAdapter setOnConversationClickListener(OnConversationItemClickListener conversationClickListener) {
         mConversationClickListener = conversationClickListener;
         return this;
     }
@@ -182,44 +147,18 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     //==============================================================================================
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ViewHolder viewHolder = new ViewHolder(mInflater.inflate(ViewHolder.RESOURCE_ID, parent, false), conversationStyle);
-        viewHolder.setClickListener(mViewHolderClickListener);
-        viewHolder.mAvatarCluster
-                .init(mPicasso)
-                .setStyle(conversationStyle.getAvatarStyle());
-        return viewHolder;
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        UiConversationItemBinding binding = UiConversationItemBinding.inflate(mInflater, parent, false);
+        binding.avatar.init(mPicasso);
+
+        ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, mConversationClickListener);
+        return new ViewHolder(binding, viewModel, mConversationStyle);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         mQueryController.updateBoundPosition(position);
-        Conversation conversation = mQueryController.getItem(position);
-        Message lastMessage = conversation.getLastMessage();
-        Context context = viewHolder.itemView.getContext();
-
-        viewHolder.setConversation(conversation);
-        Set<Identity> participants = conversation.getParticipants();
-        participants.remove(mLayerClient.getAuthenticatedUser());
-
-        // Add the position to the positions map for Identity updates
-        mIdentityEventListener.addIdentityPosition(position, participants);
-
-        viewHolder.mAvatarCluster.setParticipants(participants);
-        viewHolder.mTitleView.setText(mConversationFormatter.getConversationTitle(mLayerClient, conversation, participants));
-        viewHolder.applyStyle(conversation.getTotalUnreadMessageCount() > 0);
-
-        if (lastMessage == null) {
-            viewHolder.mMessageView.setText(null);
-            viewHolder.mTimeView.setText(null);
-        } else {
-            viewHolder.mMessageView.setText(this.getLastMessageString(context, lastMessage));
-            if (lastMessage.getReceivedAt() == null) {
-                viewHolder.mTimeView.setText(null);
-            } else {
-                viewHolder.mTimeView.setText(Util.formatTime(context, lastMessage.getReceivedAt(), mTimeFormat, mDateFormat));
-            }
-        }
+        viewHolder.bind(mQueryController.getItem(position), mLayerClient.getAuthenticatedUser());
     }
 
     @Override
@@ -244,37 +183,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
 
     @Override
     public Conversation getItem(RecyclerView.ViewHolder viewHolder) {
-        return ((ViewHolder) viewHolder).getConversation();
-    }
-
-    //==============================================================================================
-    // Util methods
-    //==============================================================================================
-
-    private String getLastMessageString(Context context, Message message) {
-        Set<CellFactory> cellFactories = (mCellFactories == null || mCellFactories.isEmpty()) ? getDefaultCellFactories() : mCellFactories;
-
-        for (CellFactory cellFactory : cellFactories) {
-            if (cellFactory.isType(message)) {
-                return cellFactory.getPreviewText(context, message);
-            }
-        }
-
-        return GenericCellFactory.getPreview(context, message);
-    }
-
-    private Set<CellFactory> getDefaultCellFactories() {
-        if (mDefaultCellFactories == null) {
-            mDefaultCellFactories = new LinkedHashSet<>();
-        }
-        if (mDefaultCellFactories.isEmpty()) {
-            mDefaultCellFactories.addAll(Arrays.asList(new TextCellFactory(),
-                    new ThreePartImageCellFactory(mLayerClient, mPicasso),
-                    new LocationCellFactory(mPicasso),
-                    new SinglePartImageCellFactory(mLayerClient, mPicasso)));
-        }
-
-        return mDefaultCellFactories;
+        return ((ViewHolder) viewHolder).mConversationItemBinding.getViewModel().getConversation();
     }
 
     //==============================================================================================
@@ -361,93 +270,40 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     // Inner classes
     //==============================================================================================
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        // Layout to inflate
-        public final static int RESOURCE_ID = R.layout.ui_conversation_item;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        private final UiConversationItemBinding mConversationItemBinding;
+        private final ConversationStyle mConversationStyle;
+        private ConversationItemViewModel mViewModel;
 
-        // View cache
-        protected TextView mTitleView;
-        protected Avatar mAvatarCluster;
-        protected TextView mMessageView;
-        protected TextView mTimeView;
 
-        protected ConversationStyle conversationStyle;
-        protected Conversation mConversation;
-        protected OnClickListener mClickListener;
-
-        public ViewHolder(View itemView, ConversationStyle conversationStyle) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            this.conversationStyle = conversationStyle;
-
-            mAvatarCluster = (Avatar) itemView.findViewById(R.id.avatar);
-            mTitleView = (TextView) itemView.findViewById(R.id.title);
-            mMessageView = (TextView) itemView.findViewById(R.id.last_message);
-            mTimeView = (TextView) itemView.findViewById(R.id.time);
-            itemView.setBackgroundColor(conversationStyle.getCellBackgroundColor());
+        public ViewHolder(UiConversationItemBinding binding, ConversationItemViewModel viewModel, ConversationStyle conversationStyle) {
+            super(binding.getRoot());
+            mConversationItemBinding = binding;
+            mViewModel = viewModel;
+            mConversationStyle = conversationStyle;
         }
 
-        public void applyStyle(boolean unread) {
-            mTitleView.setTextColor(unread ? conversationStyle.getTitleUnreadTextColor() : conversationStyle.getTitleTextColor());
-            mTitleView.setTypeface(unread ? conversationStyle.getTitleUnreadTextTypeface() : conversationStyle.getTitleTextTypeface(), unread ? conversationStyle.getTitleUnreadTextStyle() : conversationStyle.getTitleTextStyle());
-            mMessageView.setTextColor(unread ? conversationStyle.getSubtitleTextColor() : conversationStyle.getSubtitleTextColor());
-            mMessageView.setTypeface(unread ? conversationStyle.getSubtitleUnreadTextTypeface() : conversationStyle.getSubtitleTextTypeface(), unread ? conversationStyle.getSubtitleUnreadTextStyle() : conversationStyle.getSubtitleTextStyle());
-            mTimeView.setTextColor(conversationStyle.getDateTextColor());
-            mTimeView.setTypeface(conversationStyle.getDateTextTypeface());
-        }
+        public void bind(final Conversation conversation, Identity authenticatedUser) {
+            mViewModel.setConversation(conversation, authenticatedUser);
+            mConversationItemBinding.setViewModel(mViewModel);
+            mConversationItemBinding.setStyle(mConversationStyle);
 
-        protected ViewHolder setClickListener(OnClickListener clickListener) {
-            mClickListener = clickListener;
-            return this;
-        }
+            mConversationItemBinding.getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mViewModel.getOnConversationItemClickListener() != null) {
+                        return mViewModel
+                                .getOnConversationItemClickListener()
+                                .onConversationLongClick(conversation);
+                    }
 
-        public Conversation getConversation() {
-            return mConversation;
-        }
+                    return false;
+                }
+            });
 
-        public void setConversation(Conversation conversation) {
-            mConversation = conversation;
-        }
 
-        @Override
-        public void onClick(View v) {
-            if (mClickListener == null) return;
-            mClickListener.onClick(this);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            if (mClickListener == null) return false;
-            return mClickListener.onLongClick(this);
-        }
-
-        interface OnClickListener {
-            void onClick(ViewHolder viewHolder);
-
-            boolean onLongClick(ViewHolder viewHolder);
+            mConversationItemBinding.executePendingBindings();
         }
     }
 
-    /**
-     * Listens for item clicks on an IntegrationConversationsAdapter.
-     */
-    public interface OnConversationClickListener {
-        /**
-         * Alerts the listener to item clicks.
-         *
-         * @param adapter      The IntegrationConversationsAdapter which had an item clicked.
-         * @param conversation The item clicked.
-         */
-        void onConversationClick(ConversationsAdapter adapter, Conversation conversation);
-
-        /**
-         * Alerts the listener to long item clicks.
-         *
-         * @param adapter      The IntegrationConversationsAdapter which had an item long-clicked.
-         * @param conversation The item long-clicked.
-         * @return true if the long-click was handled, false otherwise.
-         */
-        boolean onConversationLongClick(ConversationsAdapter adapter, Conversation conversation);
-    }
 }

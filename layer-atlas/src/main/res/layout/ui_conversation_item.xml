@@ -13,110 +13,132 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<com.layer.ui.util.views.SwipeableItem
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/layer_ui_primary_item_height"
-    android:background="@drawable/ui_swipeable_item_background_selector">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/leavebehind"
+    <data>
+
+        <import type="com.layer.ui.conversationitem.ConversationItemViewModel"/>
+
+        <import type="com.layer.ui.util.ConversationStyle"/>
+
+        <variable
+            name="style"
+            type="ConversationStyle"/>
+
+        <variable
+            name="viewModel"
+            type="ConversationItemViewModel"/>
+    </data>
+
+    <com.layer.ui.util.views.SwipeableItem
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/layer_ui_item_leavebehind"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:layout_height="@dimen/layer_ui_primary_item_height"
+        android:background="@drawable/ui_swipeable_item_background_selector"
+        android:onClick="@{viewModel.onClickConversation()}">
 
-        <ImageView
-            android:layout_width="@dimen/layer_ui_primary_icon_size"
-            android:layout_height="@dimen/layer_ui_primary_icon_size"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-            android:src="@drawable/ic_delete_white_24dp"
-            android:tint="@color/layer_ui_icon_enabled"/>
-
-    </LinearLayout>
-
-    <!-- Swipeable overlay -->
-    <LinearLayout
-        android:id="@+id/swipeable"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/ui_swipeable_item_foreground_selector"
-        android:duplicateParentState="true"
-        android:orientation="horizontal">
-
-        <com.layer.ui.Avatar
-            android:id="@+id/avatar"
-            android:layout_width="@dimen/layer_ui_avatar_item_single"
-            android:layout_height="@dimen/layer_ui_avatar_item_single"
-            android:layout_margin="@dimen/layer_ui_padding_normal"/>
-
-        <!-- right content part -->
-        <FrameLayout
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/leavebehind"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            >
+            android:background="@color/layer_ui_item_leavebehind"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-            <!-- delimiter -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_gravity="bottom"
-                android:background="@color/layer_ui_item_divider"
-                />
+            <ImageView
+                android:layout_width="@dimen/layer_ui_primary_icon_size"
+                android:layout_height="@dimen/layer_ui_primary_icon_size"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/layer_ui_padding_normal"
+                android:layout_marginStart="@dimen/layer_ui_padding_normal"
+                android:src="@drawable/ic_delete_white_24dp"
+                android:tint="@color/layer_ui_icon_enabled"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:paddingRight="@dimen/layer_ui_padding_normal"
+        </LinearLayout>
+
+        <!-- Swipeable overlay -->
+        <LinearLayout
+            android:id="@+id/swipeable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ui_swipeable_item_foreground_selector"
+            android:duplicateParentState="true"
+            android:orientation="horizontal">
+
+            <com.layer.ui.Avatar
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/layer_ui_avatar_item_single"
+                android:layout_height="@dimen/layer_ui_avatar_item_single"
+                android:layout_margin="@dimen/layer_ui_padding_normal"
+                app:participants="@{viewModel.participantsMinusAuthenticatedUser}"
+                app:style = "@{style.avatarStyle}"/>
+
+            <!-- right content part -->
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 >
 
-                <!-- Tomaz and time -->
+                <!-- delimiter -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/layer_ui_item_divider"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    >
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:paddingEnd="@dimen/layer_ui_padding_normal"
+                    android:paddingRight="@dimen/layer_ui_padding_normal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/title"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:maxLines="1"
+                            android:text="@{viewModel.title}"
+                            android:textColor="@{viewModel.unread ? style.titleTextColor : style.titleUnreadTextColor}"
+                            android:textSize="@dimen/layer_ui_text_size_primary_item_title"
+                            app:typeface="@{viewModel.unread ? style.titleUnreadTextTypeface : style.titleTextTypeface}"/>
+
+                        <TextView
+                            android:id="@+id/right_accessory_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:maxLines="1"
+                            android:paddingLeft="@dimen/layer_ui_padding_narrow"
+                            android:paddingStart="@dimen/layer_ui_padding_narrow"
+                            android:text="@{viewModel.rightAccessoryText}"
+                            android:textColor="@{viewModel.unread ? style.rightAccessoryTextColor : style.rightAccessoryUnreadTextColor}"
+                            android:textSize="@dimen/layer_ui_text_size_primary_item_metadata"
+                            app:typeface="@{viewModel.unread ? style.rightAccessoryUnreadTextTypeface : style.rightAccessoryTextTypeface}"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:id="@+id/subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="[title]"
-                        android:textSize="@dimen/layer_ui_text_size_primary_item_title"
-                        />
-
-                    <TextView
-                        android:id="@+id/time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:paddingLeft="@dimen/layer_ui_padding_narrow"
-                        android:singleLine="true"
-                        android:text="[time]"
-                        android:textColor="@color/layer_ui_text_blue"
-                        android:textSize="@dimen/layer_ui_text_size_primary_item_metadata"
-                        />
-
+                        android:text="@{viewModel.subtitle}"
+                        android:textColor="@{viewModel.unread ? style.subtitleTextColor : style.subtitleUnreadTextColor}"
+                        android:textSize="@dimen/layer_ui_text_size_primary_item_subtitle"
+                        app:typeface="@{viewModel.unread ? style.subtitleUnreadTextTypeface : style.subtitleTextTypeface}"/>
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/last_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:singleLine="true"
-                    android:text="[last message]"
-                    android:textSize="@dimen/layer_ui_text_size_primary_item_subtitle"
-                    />
-            </LinearLayout>
-        </FrameLayout>
-    </LinearLayout>
-</com.layer.ui.util.views.SwipeableItem>
+            </FrameLayout>
+        </LinearLayout>
+    </com.layer.ui.util.views.SwipeableItem>
+</layout>

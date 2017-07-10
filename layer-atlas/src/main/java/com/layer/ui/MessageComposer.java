@@ -194,7 +194,7 @@ public class MessageComposer extends FrameLayout {
     public MessageComposer addAttachmentSenders(AttachmentSender... senders) {
         for (AttachmentSender sender : senders) {
             if (sender.getTitle() == null && sender.getIcon() == null) {
-                throw new NullPointerException("Attachment handlers must have at least a title or icon specified.");
+                throw new NullPointerException("Attachment handlers must have at least a mTitle or icon specified.");
             }
             sender.init(this.getContext().getApplicationContext(), mLayerClient);
             sender.setConversation(mConversation);

@@ -25,22 +25,33 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Conversation;
 import com.layer.ui.adapters.ConversationsAdapter;
+import com.layer.ui.conversationitem.OnConversationItemClickListener;
 import com.layer.ui.messagetypes.CellFactory;
+import com.layer.ui.messagetypes.location.LocationCellFactory;
+import com.layer.ui.messagetypes.singlepartimage.SinglePartImageCellFactory;
+import com.layer.ui.messagetypes.text.TextCellFactory;
+import com.layer.ui.messagetypes.threepartimage.ThreePartImageCellFactory;
 import com.layer.ui.util.AvatarStyle;
-import com.layer.ui.util.ConversationFormatter;
+import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.util.ConversationStyle;
 import com.layer.ui.util.itemanimators.NoChangeAnimator;
 import com.layer.ui.util.views.SwipeableItem;
-import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Conversation;
 import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class ConversationsRecyclerView extends RecyclerView {
     ConversationsAdapter mAdapter;
     private ItemTouchHelper mSwipeItemTouchHelper;
-
     private ConversationStyle conversationStyle;
+    private Set<CellFactory> mDefaultCellFactories;
+    private LayerClient mLayerClient;
+    private Picasso mPicasso;
 
     public ConversationsRecyclerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -55,7 +66,7 @@ public class ConversationsRecyclerView extends RecyclerView {
         super(context);
     }
 
-    public ConversationsRecyclerView init(LayerClient layerClient, Picasso picasso, ConversationFormatter conversationFormatter) {
+    public ConversationsRecyclerView init(LayerClient layerClient, Picasso picasso, ConversationItemFormatter conversationItemFormatter) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         manager.setStackFromEnd(false);
         setLayoutManager(manager);
@@ -63,7 +74,9 @@ public class ConversationsRecyclerView extends RecyclerView {
         // Don't flash items when changing content
         setItemAnimator(new NoChangeAnimator());
 
-        mAdapter = new ConversationsAdapter(getContext(), layerClient, picasso, conversationFormatter);
+        mLayerClient = layerClient;
+        mPicasso = picasso;
+        mAdapter = new ConversationsAdapter(getContext(), layerClient, picasso, conversationItemFormatter);
         mAdapter.setStyle(conversationStyle);
         super.setAdapter(mAdapter);
         refresh();
@@ -71,17 +84,18 @@ public class ConversationsRecyclerView extends RecyclerView {
         return this;
     }
 
-    public ConversationsRecyclerView init(LayerClient layerClient, Picasso picasso) {
-        return init(layerClient, picasso, new ConversationFormatter());
-    }
-
     @Override
     public void setAdapter(Adapter adapter) {
         throw new RuntimeException("ConversationsRecyclerView sets its own Adapter");
     }
 
-    public ConversationsRecyclerView addCellFactories (CellFactory... cellFactories) {
-        mAdapter.addCellFactories(cellFactories);
+    public ConversationsRecyclerView addCellFactories(CellFactory... cellFactories) {
+        mAdapter.setCellFactories(cellFactories);
+        return this;
+    }
+
+    public ConversationsRecyclerView addCellFactories(Set<CellFactory> cellFactories) {
+        mAdapter.setCellFactories(cellFactories);
         return this;
     }
 
@@ -112,9 +126,9 @@ public class ConversationsRecyclerView extends RecyclerView {
     /**
      * Convenience pass-through to this list's ConversationsAdapter.
      *
-     * @see ConversationsAdapter#setOnConversationClickListener(ConversationsAdapter.OnConversationClickListener)
+     * @see ConversationsAdapter#setOnConversationClickListener(OnConversationItemClickListener)
      */
-    public ConversationsRecyclerView setOnConversationClickListener(ConversationsAdapter.OnConversationClickListener listener) {
+    public ConversationsRecyclerView setOnConversationClickListener(OnConversationItemClickListener listener) {
         mAdapter.setOnConversationClickListener(listener);
         return this;
     }
@@ -133,6 +147,20 @@ public class ConversationsRecyclerView extends RecyclerView {
         return this;
     }
 
+    private Set<CellFactory> getDefaultCellFactories() {
+        if (mDefaultCellFactories == null) {
+            mDefaultCellFactories = new LinkedHashSet<>();
+        }
+        if (mDefaultCellFactories.isEmpty()) {
+            mDefaultCellFactories.addAll(Arrays.asList(new TextCellFactory(),
+                    new ThreePartImageCellFactory(mLayerClient, mPicasso),
+                    new LocationCellFactory(mPicasso),
+                    new SinglePartImageCellFactory(mLayerClient, mPicasso)));
+        }
+
+        return mDefaultCellFactories;
+    }
+
     /**
      * Convenience pass-through to this list's ConversationsAdapter.
      *
@@ -143,12 +171,18 @@ public class ConversationsRecyclerView extends RecyclerView {
         return this;
     }
 
-    public ConversationsRecyclerView setTypeface(Typeface titleTypeface, Typeface titleUnreadTypeface, Typeface subtitleTypeface, Typeface subtitleUnreadTypeface, Typeface dateTypeface) {
+    public ConversationsRecyclerView setTypeface(Typeface titleTypeface,
+                                                 Typeface titleUnreadTypeface,
+                                                 Typeface subtitleTypeface,
+                                                 Typeface subtitleUnreadTypeface,
+                                                 Typeface rightAcccessoryTextTypeface,
+                                                 Typeface rightAccessoryUnreadTextTypeface) {
         conversationStyle.setTitleTextTypeface(titleTypeface);
         conversationStyle.setTitleUnreadTextTypeface(titleUnreadTypeface);
         conversationStyle.setSubtitleTextTypeface(subtitleTypeface);
         conversationStyle.setSubtitleUnreadTextTypeface(subtitleUnreadTypeface);
-        conversationStyle.setDateTextTypeface(dateTypeface);
+        conversationStyle.setRightAccessoryTextTypeface(rightAcccessoryTextTypeface);
+        conversationStyle.setRightAccessoryUnreadTextTypeface(rightAccessoryUnreadTextTypeface);
         return this;
     }
 
@@ -181,7 +215,9 @@ public class ConversationsRecyclerView extends RecyclerView {
 
         styleBuilder.cellBackgroundColor(ta.getColor(R.styleable.ConversationsRecyclerView_cellBackgroundColor, Color.TRANSPARENT));
         styleBuilder.cellUnreadBackgroundColor(ta.getColor(R.styleable.ConversationsRecyclerView_cellUnreadBackgroundColor, Color.TRANSPARENT));
-        styleBuilder.dateTextColor(ta.getColor(R.styleable.ConversationsRecyclerView_dateTextColor, context.getResources().getColor(R.color.layer_ui_color_primary_blue)));
+
+        styleBuilder.rightAccessoryTextColor(ta.getColor(R.styleable.ConversationsRecyclerView_rightAccessoryTextColor, context.getResources().getColor(R.color.layer_ui_color_primary_blue)));
+        styleBuilder.rightAccessoryUnreadTextColor(ta.getColor(R.styleable.ConversationsRecyclerView_rightAccessoryUnreadTextColor, context.getResources().getColor(R.color.layer_ui_color_primary_blue)));
 
         AvatarStyle.Builder avatarStyleBuilder = new AvatarStyle.Builder();
         avatarStyleBuilder.avatarTextColor(ta.getColor(R.styleable.ConversationsRecyclerView_avatarTextColor, context.getResources().getColor(R.color.layer_ui_avatar_text)));

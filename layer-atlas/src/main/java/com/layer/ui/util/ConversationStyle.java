@@ -19,8 +19,10 @@ public final class ConversationStyle {
     private Typeface mSubtitleUnreadTextTypeface;
     private int mCellBackgroundColor;
     private int mCellUnreadBackgroundColor;
-    private Typeface mDateTextTypeface;
-    private int mDateTextColor;
+    private Typeface mRightAccessoryTextTypeface;
+    private int mRightAccessoryTextColor;
+    private Typeface mRightAccessoryUnreadTextTypeface;
+    private int mRightAccessoryUnreadTextColor;
     private AvatarStyle mAvatarStyle;
 
     private ConversationStyle(Builder builder) {
@@ -38,8 +40,10 @@ public final class ConversationStyle {
         setSubtitleUnreadTextTypeface(builder.subtitleUnreadTextTypeface);
         mCellBackgroundColor = builder.cellBackgroundColor;
         mCellUnreadBackgroundColor = builder.cellUnreadBackgroundColor;
-        setDateTextTypeface(builder.dateTextTypeface);
-        mDateTextColor = builder.dateTextColor;
+        setRightAccessoryTextTypeface(builder.rightAccessoryTextTypeface);
+        mRightAccessoryTextColor = builder.rightAccessoryTextColor;
+        setRightAccessoryUnreadTextTypeface(builder.rightAccessoryUnreadTextTypeface);
+        mRightAccessoryUnreadTextColor = builder.rightAccessoryUnreadTextColor;
         mAvatarStyle = builder.avatarStyle;
     }
 
@@ -59,8 +63,12 @@ public final class ConversationStyle {
         this.mSubtitleUnreadTextTypeface = subtitleUnreadTextTypeface;
     }
 
-    public void setDateTextTypeface(Typeface dateTextTypeface) {
-        this.mDateTextTypeface = dateTextTypeface;
+    public void setRightAccessoryTextTypeface(Typeface rightAccessoryTextTypeface) {
+        this.mRightAccessoryTextTypeface = rightAccessoryTextTypeface;
+    }
+
+    public void setRightAccessoryUnreadTextTypeface(Typeface rightAccessoryUnreadTextTypeface) {
+        mRightAccessoryUnreadTextTypeface = rightAccessoryUnreadTextTypeface;
     }
 
     @ColorInt
@@ -125,13 +133,22 @@ public final class ConversationStyle {
         return mCellUnreadBackgroundColor;
     }
 
-    public Typeface getDateTextTypeface() {
-        return mDateTextTypeface;
+    public Typeface getRightAccessoryTextTypeface() {
+        return mRightAccessoryTextTypeface;
     }
 
     @ColorInt
-    public int getDateTextColor() {
-        return mDateTextColor;
+    public int getRightAccessoryTextColor() {
+        return mRightAccessoryTextColor;
+    }
+
+    public Typeface getRightAccessoryUnreadTextTypeface() {
+        return mRightAccessoryUnreadTextTypeface;
+    }
+
+    @ColorInt
+    public int getRightAccessoryUnreadTextColor() {
+        return mRightAccessoryUnreadTextColor;
     }
 
     public AvatarStyle getAvatarStyle() {
@@ -153,8 +170,10 @@ public final class ConversationStyle {
         private Typeface subtitleUnreadTextTypeface;
         private int cellBackgroundColor;
         private int cellUnreadBackgroundColor;
-        private Typeface dateTextTypeface;
-        private int dateTextColor;
+        private Typeface rightAccessoryTextTypeface;
+        private int rightAccessoryTextColor;
+        private Typeface rightAccessoryUnreadTextTypeface;
+        private int rightAccessoryUnreadTextColor;
         private AvatarStyle avatarStyle;
 
         public Builder() {
@@ -230,13 +249,23 @@ public final class ConversationStyle {
             return this;
         }
 
-        public Builder dateTextTypeface(Typeface val) {
-            dateTextTypeface = val;
+        public Builder rightAccessoryTextTypeface(Typeface val) {
+            rightAccessoryTextTypeface = val;
             return this;
         }
 
-        public Builder dateTextColor(@ColorInt int val) {
-            dateTextColor = val;
+        public Builder rightAccessoryTextColor(@ColorInt int val) {
+            rightAccessoryTextColor = val;
+            return this;
+        }
+
+        public Builder rightAccessoryUnreadTextTypeface(Typeface val) {
+            rightAccessoryUnreadTextTypeface = val;
+            return this;
+        }
+
+        public Builder rightAccessoryUnreadTextColor(@ColorInt int val) {
+            rightAccessoryUnreadTextColor = val;
             return this;
         }
 

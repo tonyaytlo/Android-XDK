@@ -72,10 +72,10 @@ public abstract class AttachmentSender extends MessageSender {
     }
 
     /**
-     * Returns the title for this AttachmentSender, typically for use in the AtlasMessageComposer
+     * Returns the mTitle for this AttachmentSender, typically for use in the AtlasMessageComposer
      * attachment menu.
      *
-     * @return The title for this AttachmentSender.
+     * @return The mTitle for this AttachmentSender.
      */
     public String getTitle() {
         return mTitle;
