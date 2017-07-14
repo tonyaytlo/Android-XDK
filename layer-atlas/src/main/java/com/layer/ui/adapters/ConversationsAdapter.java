@@ -14,6 +14,8 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.sdk.query.SortDescriptor;
+import com.layer.ui.avatar.AvatarViewModelImpl;
+import com.layer.ui.avatar.IdentityNameFormatterImpl;
 import com.layer.ui.conversationitem.ConversationItemViewModel;
 import com.layer.ui.conversationitem.OnConversationItemClickListener;
 import com.layer.ui.databinding.UiConversationItemBinding;
@@ -22,7 +24,7 @@ import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.util.ConversationStyle;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.ui.util.Log;
-import com.squareup.picasso.Picasso;
+import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +33,6 @@ import java.util.Set;
 
 public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdapter.ViewHolder> implements RecyclerViewController.Callback, BaseAdapter<Conversation> {
     protected final LayerClient mLayerClient;
-    protected final Picasso mPicasso;
     private final RecyclerViewController<Conversation> mQueryController;
     private final LayoutInflater mInflater;
     private long mInitialHistory = 0;
@@ -39,15 +40,17 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     private OnConversationItemClickListener mConversationClickListener;
     private ConversationStyle mConversationStyle;
     private final IdentityRecyclerViewEventListener mIdentityEventListener;
+    private ImageCacheWrapper mImageCacheWrapper;
     protected Set<CellFactory> mCellFactories;
     protected ConversationItemFormatter mConversationItemFormatter;
 
-    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, ConversationItemFormatter conversationItemFormatter) {
-        this(context, client, picasso, null, conversationItemFormatter);
+    public ConversationsAdapter(Context context, LayerClient client, ConversationItemFormatter conversationItemFormatter, ImageCacheWrapper imageCacheWrapper) {
+        this(context, client, null, conversationItemFormatter, imageCacheWrapper);
     }
 
-    public ConversationsAdapter(Context context, LayerClient client, Picasso picasso, Collection<String> updateAttributes, ConversationItemFormatter conversationItemFormatter) {
+    public ConversationsAdapter(Context context, LayerClient client, Collection<String> updateAttributes, ConversationItemFormatter conversationItemFormatter, ImageCacheWrapper imageCacheWrapper) {
         mConversationItemFormatter = conversationItemFormatter;
+        mImageCacheWrapper = imageCacheWrapper;
         Query<Conversation> query = Query.builder(Conversation.class)
                 /* Only show conversations we're still a member of */
                 .predicate(new Predicate(Conversation.Property.PARTICIPANT_COUNT, Predicate.Operator.GREATER_THAN, 1))
@@ -57,7 +60,6 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
                 .build();
         mQueryController = client.newRecyclerViewController(query, updateAttributes, this);
         mLayerClient = client;
-        mPicasso = picasso;
         mInflater = LayoutInflater.from(context);
 
         setHasStableIds(false);
@@ -149,7 +151,7 @@ public class ConversationsAdapter extends RecyclerView.Adapter<ConversationsAdap
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         UiConversationItemBinding binding = UiConversationItemBinding.inflate(mInflater, parent, false);
-        binding.avatar.init(mPicasso);
+        binding.avatar.init(new AvatarViewModelImpl(mImageCacheWrapper), new IdentityNameFormatterImpl());
 
         ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, mConversationClickListener);
         return new ViewHolder(binding, viewModel, mConversationStyle);

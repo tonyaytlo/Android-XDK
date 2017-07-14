@@ -37,6 +37,7 @@ import com.layer.ui.messagetypes.threepartimage.ThreePartImageCellFactory;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.util.ConversationStyle;
+import com.layer.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.ui.util.itemanimators.NoChangeAnimator;
 import com.layer.ui.util.views.SwipeableItem;
 import com.squareup.picasso.Picasso;
@@ -66,7 +67,7 @@ public class ConversationsRecyclerView extends RecyclerView {
         super(context);
     }
 
-    public ConversationsRecyclerView init(LayerClient layerClient, Picasso picasso, ConversationItemFormatter conversationItemFormatter) {
+    public ConversationsRecyclerView init(LayerClient layerClient, Picasso picasso, ConversationItemFormatter conversationFormatter, ImageCacheWrapper imageCacheWrapper) {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         manager.setStackFromEnd(false);
         setLayoutManager(manager);
@@ -76,7 +77,7 @@ public class ConversationsRecyclerView extends RecyclerView {
 
         mLayerClient = layerClient;
         mPicasso = picasso;
-        mAdapter = new ConversationsAdapter(getContext(), layerClient, picasso, conversationItemFormatter);
+        mAdapter = new ConversationsAdapter(getContext(), layerClient, conversationFormatter, imageCacheWrapper);
         mAdapter.setStyle(conversationStyle);
         super.setAdapter(mAdapter);
         refresh();

@@ -1,13 +1,13 @@
-package com.layer.atlas.test;
+package com.layer.ui.test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.layer.ui.messagetypes.text.TextCellFactory;
-import com.layer.atlas.mock.MockLayerClient;
-import com.layer.atlas.mock.MockMessageImpl;
-import com.layer.atlas.mock.MockMessagePart;
+import com.layer.ui.mock.MockLayerClient;
+import com.layer.ui.mock.MockMessageImpl;
+import com.layer.ui.mock.MockMessagePart;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
