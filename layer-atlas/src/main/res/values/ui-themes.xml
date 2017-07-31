@@ -4,7 +4,7 @@
     <!-- UI Style -->
     <!-- ########### -->
     <style name="Theme.ui.Base.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="ConversationsRecyclerView">@style/ConversationsRecyclerView</item>
+        <item name="ConversationItemsListView">@style/ConversationItemsListView</item>
         <item name="MessageComposer">@style/MessageComposer</item>
         <item name="MessagesRecyclerView">@style/MessagesRecyclerView</item>
         <item name="AddressBar">@style/AddressBar</item>

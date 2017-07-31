@@ -147,7 +147,6 @@ public class MessagesRecyclerView extends RecyclerView {
         if (listener == null) {
             mSwipeItemTouchHelper = null;
         } else {
-            listener.setBaseAdapter((MessagesAdapter) getAdapter());
             mSwipeItemTouchHelper = new ItemTouchHelper(listener);
             mSwipeItemTouchHelper.attachToRecyclerView(this);
         }

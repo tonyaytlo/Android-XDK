@@ -96,11 +96,11 @@ The <a href="layer-atlas/src/main/java/com/layer/atlas/AtlasConversationsRecycle
 conversationsList = ((AtlasConversationsRecyclerView) findViewById(R.id.conversations_list))
 	.init(layerClient, picasso)
 	.setOnConversationClickListener(new OnConversationClickListener() {
-		public void onConversationClick(AtlasConversationsAdapter adapter, Conversation conversation) {
+		public void onItemClick(AtlasConversationsAdapter adapter, Conversation conversation) {
 			launchMessagesList(conversation);
 		}
 		
-		public boolean onConversationLongClick(AtlasConversationsAdapter adapter, Conversation conversation) {
+		public boolean onItemLongClick(AtlasConversationsAdapter adapter, Conversation conversation) {
 		    return false;
 		}
 	})
@@ -228,7 +228,7 @@ An application server can directly upload user information to Layer server. This
 addressBar = (AtlasAddressBar) findViewById(R.id.address_bar)
 	.init(layerClient, picasso)
 	.setOnConversationClickListener(new OnConversationClickListenertener() {
-		public void onConversationClick(AtlasAddressBar addressBar, Conversation conversation) {
+		public void onItemClick(AtlasAddressBar addressBar, Conversation conversation) {
 			setConversation(conversation);
 		}
 	})

@@ -1,17 +1,17 @@
-package com.layer.ui.conversationitem;
+package com.layer.ui.recyclerview;
 
-import com.layer.sdk.messaging.Conversation;
+import com.layer.sdk.query.Queryable;
 
 /**
  * Listens for item clicks on an IntegrationConversationsAdapter.
  */
-public interface OnConversationItemClickListener {
+public interface OnItemClickListener<ITEM extends Queryable> {
     /**
      * Alerts the listener to item clicks.
      *
      * @param conversation The item clicked.
      */
-    void onConversationClick(Conversation conversation);
+    void onItemClick(ITEM conversation);
 
     /**
      * Alerts the listener to long item clicks.
@@ -19,5 +19,5 @@ public interface OnConversationItemClickListener {
      * @param conversation The item long-clicked.
      * @return true if the long-click was handled, false otherwise.
      */
-    boolean onConversationLongClick(Conversation conversation);
+    boolean onItemLongClick(ITEM conversation);
 }

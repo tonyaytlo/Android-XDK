@@ -4,7 +4,7 @@
     <!-- ###################### -->
     <!-- UI Component Styles -->
     <!-- ###################### -->
-    <attr name="ConversationsRecyclerView" format="reference" />
+    <attr name="ConversationItemsListView" format="reference" />
     <attr name="MessageComposer" format="reference" />
     <attr name="MessagesRecyclerView" format="reference" />
     <attr name="AddressBar" format="reference" />
@@ -30,7 +30,7 @@
         <attr name="presenceGroupColor" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="ConversationsRecyclerView">
+    <declare-styleable name="ConversationItemsListView">
         <attr name="cellTitleTextColor" />
         <attr name="cellTitleTextTypeface" />
         <attr name="cellTitleTextStyle" />

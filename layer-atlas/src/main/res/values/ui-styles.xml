@@ -17,7 +17,7 @@
     <!-- ############################## -->
     <!-- Default UI Component Styles -->
     <!-- ############################## -->
-    <style name="ConversationsRecyclerView">
+    <style name="ConversationItemsListView">
         <item name="cellTitleTextColor">@color/layer_ui_text_black</item>
         <item name="cellTitleTextTypeface">normal</item>
         <item name="cellTitleTextStyle">normal</item>

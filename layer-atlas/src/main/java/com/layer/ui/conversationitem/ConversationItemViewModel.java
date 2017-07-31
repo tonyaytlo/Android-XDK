@@ -1,42 +1,42 @@
 package com.layer.ui.conversationitem;
 
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
+import com.layer.ui.recyclerview.OnItemClickListener;
+import com.layer.ui.viewmodel.ItemViewModel;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConversationItemViewModel extends BaseObservable {
+public class ConversationItemViewModel extends ItemViewModel<Conversation> {
     //View Logic
     protected final ConversationItemFormatter mConversationItemFormatter;
     protected Identity mAuthenticatedUser;
 
     // View Data
-    public Conversation mConversation;
     protected Set<Identity> mParticipantsMinusAuthenticatedUser;
 
     // Listeners
-    protected OnConversationItemClickListener mOnConversationItemClickListener;
+    protected OnItemClickListener mOnItemClickListener;
 
-
-    public ConversationItemViewModel(ConversationItemFormatter conversationItemFormatter, OnConversationItemClickListener onConversationItemClickListener) {
+    public ConversationItemViewModel(ConversationItemFormatter conversationItemFormatter, OnItemClickListener onItemClickListener, Identity authenticatedUser) {
         mConversationItemFormatter = conversationItemFormatter;
-        mOnConversationItemClickListener = onConversationItemClickListener;
+        mOnItemClickListener = onItemClickListener;
         mParticipantsMinusAuthenticatedUser = new HashSet<>();
+        mAuthenticatedUser = authenticatedUser;
     }
 
-    public void setConversation(@NonNull Conversation conversation, @NonNull Identity authenticatedUser) {
-        mConversation = conversation;
+    @Override
+    public void setItem(Conversation conversation) {
+        super.setItem(conversation);
+
         mParticipantsMinusAuthenticatedUser.clear();
 
         mParticipantsMinusAuthenticatedUser.addAll(conversation.getParticipants());
-        mParticipantsMinusAuthenticatedUser.remove(authenticatedUser);
-        mAuthenticatedUser = authenticatedUser;
+        mParticipantsMinusAuthenticatedUser.remove(mAuthenticatedUser);
 
         notifyChange();
     }
@@ -44,33 +44,28 @@ public class ConversationItemViewModel extends BaseObservable {
     // Getters
 
     @Bindable
-    public Conversation getConversation() {
-        return mConversation;
-    }
-
-    @Bindable
     public String getTitle() {
-        return mConversationItemFormatter.getConversationTitle(mAuthenticatedUser, mConversation, mConversation.getParticipants());
+        return mConversationItemFormatter.getConversationTitle(mAuthenticatedUser, getItem(), getItem().getParticipants());
     }
 
     @Bindable
     public String getSubtitle() {
-        return mConversationItemFormatter.getLastMessagePreview(mConversation);
+        return mConversationItemFormatter.getLastMessagePreview(getItem());
     }
 
     @Bindable
     public String getRightAccessoryText() {
-        return mConversationItemFormatter.getTimeStamp(mConversation);
+        return mConversationItemFormatter.getTimeStamp(getItem());
     }
 
     @Bindable
     public boolean isUnread() {
-        return mConversation.getTotalUnreadMessageCount() > 0;
+        return getItem().getTotalUnreadMessageCount() > 0;
     }
 
     @Bindable
-    public OnConversationItemClickListener getOnConversationItemClickListener() {
-        return mOnConversationItemClickListener;
+    public OnItemClickListener getOnItemClickListener() {
+        return mOnItemClickListener;
     }
 
     @Bindable
@@ -84,8 +79,8 @@ public class ConversationItemViewModel extends BaseObservable {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mOnConversationItemClickListener != null) {
-                    mOnConversationItemClickListener.onConversationClick(mConversation);
+                if (mOnItemClickListener != null) {
+                    mOnItemClickListener.onItemClick(getItem());
                 }
             }
         };

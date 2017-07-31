@@ -54,8 +54,8 @@ public abstract class CellFactory<Tholder extends CellFactory.CellHolder, Tcache
 
     /**
      * Provides an opportunity to parse this CellFactory Message data in a background thread.
-     * A best effort is made to pre-parse on a background thread before binding, but this method
-     * may still get called on the main thread just prior to binding under heavy load.
+     * A best effort is made to pre-parse on a background thread before mBinding, but this method
+     * may still get called on the main thread just prior to mBinding under heavy load.
      *
      * @param layerClient Active LayerClient
      * @param message     Message to parse
@@ -140,7 +140,7 @@ public abstract class CellFactory<Tholder extends CellFactory.CellHolder, Tcache
     }
 
     /**
-     * CellHolderSpecs contains CellHolder specifications for use during binding.
+     * CellHolderSpecs contains CellHolder specifications for use during mBinding.
      */
     public static class CellHolderSpecs {
         // True if the CellHolder is for my message, or false if for a remote user.
@@ -159,7 +159,7 @@ public abstract class CellFactory<Tholder extends CellFactory.CellHolder, Tcache
     /**
      * Object intended to hold parsed content generated from a Message's MessagePart data arrays.
      * When parsing takes time, like parsing serialized JSON, this can improve UI performance by
-     * pre-caching parsed content off the main thread, and providing the parsed content when binding
+     * pre-caching parsed content off the main thread, and providing the parsed content when mBinding
      * cell holders.
      */
     public interface ParsedContent {

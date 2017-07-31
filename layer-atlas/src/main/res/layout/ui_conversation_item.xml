@@ -20,11 +20,11 @@
 
         <import type="com.layer.ui.conversationitem.ConversationItemViewModel"/>
 
-        <import type="com.layer.ui.util.ConversationStyle"/>
+        <import type="com.layer.ui.style.ConversationItemStyle"/>
 
         <variable
             name="style"
-            type="ConversationStyle"/>
+            type="ConversationItemStyle"/>
 
         <variable
             name="viewModel"

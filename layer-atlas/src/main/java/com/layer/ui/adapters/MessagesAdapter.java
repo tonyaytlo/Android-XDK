@@ -264,7 +264,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     /**
      * Registers one or more CellFactories for the MessagesAdapter to manage.  CellFactories
-     * know which Messages they can render, and handle View caching, creation, and binding.
+     * know which Messages they can render, and handle View caching, creation, and mBinding.
      *
      * @param cellFactories Cells to register.
      * @return This MessagesAdapter.
