@@ -1,6 +1,7 @@
 package com.layer.ui.adapters;
 
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,25 +11,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Space;
-import android.widget.TextView;
 
-import com.layer.ui.avatar.AvatarView;
-import com.layer.ui.R;
-import com.layer.ui.avatar.AvatarViewModelImpl;
-import com.layer.ui.avatar.IdentityNameFormatterImpl;
-import com.layer.ui.messagetypes.CellFactory;
-import com.layer.ui.messagetypes.MessageStyle;
-import com.layer.ui.presence.PresenceView;
-import com.layer.ui.util.IdentityRecyclerViewEventListener;
-import com.layer.ui.util.Log;
-import com.layer.ui.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.ListViewController;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
+import com.layer.ui.R;
+import com.layer.ui.avatar.AvatarView;
+import com.layer.ui.avatar.AvatarViewModelImpl;
+import com.layer.ui.avatar.IdentityNameFormatterImpl;
+import com.layer.ui.databinding.UiMessageItemMeBinding;
+import com.layer.ui.databinding.UiMessageItemThemBinding;
+import com.layer.ui.messageitem.MessageItemViewModel;
+import com.layer.ui.messagetypes.CellFactory;
+import com.layer.ui.messagetypes.MessageStyle;
+import com.layer.ui.util.IdentityRecyclerViewEventListener;
+import com.layer.ui.util.LayerDateFormatter;
+import com.layer.ui.util.Log;
+import com.layer.ui.util.Util;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.text.DateFormat;
@@ -67,66 +69,70 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         BaseAdapter<Message>, RecyclerViewController.Callback {
     private final static int VIEW_TYPE_FOOTER = 0;
     protected final LayerClient mLayerClient;
-    private final RecyclerViewController<Message> mQueryController;
     protected final LayoutInflater mLayoutInflater;
     protected final Handler mUiThreadHandler;
-    protected OnMessageAppendListener mAppendListener;
     protected final DisplayMetrics mDisplayMetrics;
-    private final IdentityRecyclerViewEventListener mIdentityEventListener;
-
-    // Cells
-    protected int mViewTypeCount = VIEW_TYPE_FOOTER;
     protected final Set<CellFactory> mCellFactories = new LinkedHashSet<CellFactory>();
     protected final Map<Integer, CellType> mCellTypesByViewType = new HashMap<Integer, CellType>();
-    protected final Map<CellFactory, Integer> mMyViewTypesByCell = new HashMap<CellFactory, Integer>();
-    protected final Map<CellFactory, Integer> mTheirViewTypesByCell = new HashMap<CellFactory, Integer>();
-
+    protected final Map<CellFactory, Integer> mMyViewTypesByCell =
+            new HashMap<CellFactory, Integer>();
+    protected final Map<CellFactory, Integer> mTheirViewTypesByCell =
+            new HashMap<CellFactory, Integer>();
+    private final RecyclerViewController<Message> mQueryController;
+    private final IdentityRecyclerViewEventListener mIdentityEventListener;
     // Dates and Clustering
-    private final Map<Uri, Cluster> mClusterCache = new HashMap<Uri, Cluster>();
-    private final DateFormat mDateFormat;
-    private final DateFormat mTimeFormat;
-
-    private View mFooterView;
-    private int mFooterPosition = 0;
-
-    private Integer mRecipientStatusPosition;
-
-    //Style
-    private MessageStyle mMessageStyle;
-
-    private RecyclerView mRecyclerView;
-    private boolean mReadReceiptsEnabled = true;
-
+    private final Map<Uri, Cluster> mClusterCache = new HashMap<>();
+    protected OnMessageAppendListener mAppendListener;
+    // Cells
+    protected int mViewTypeCount = VIEW_TYPE_FOOTER;
     protected boolean mShouldShowAvatarInOneOnOneConversations;
     protected boolean mShouldShowAvatarPresence = true;
+    private View mFooterView;
+    private int mFooterPosition = 0;
+    private Integer mRecipientStatusPosition;
+    private boolean mReadReceiptsEnabled = true;
+    //Style
+    private MessageStyle mMessageStyle;
+    private RecyclerView mRecyclerView;
     private ImageCacheWrapper mImageCacheWrapper;
 
-    public MessagesAdapter(Context context, LayerClient layerClient, ImageCacheWrapper imageCacheWrapper) {
+    private int readCount = 0;
+    private boolean delivered = false;
+    private Map<Identity, Message.RecipientStatus> statuses;
+    private LayerDateFormatter mLayerDateFormatter;
+
+    public MessagesAdapter(Context context, LayerClient layerClient, ImageCacheWrapper imageCacheWrapper, LayerDateFormatter layerDateFormatter) {
         mImageCacheWrapper = imageCacheWrapper;
         mLayerClient = layerClient;
+        mLayerDateFormatter = layerDateFormatter;
         mLayoutInflater = LayoutInflater.from(context);
         mUiThreadHandler = new Handler(Looper.getMainLooper());
-        mDateFormat = android.text.format.DateFormat.getDateFormat(context);
-        mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
         mDisplayMetrics = context.getResources().getDisplayMetrics();
 
         mQueryController = layerClient.newRecyclerViewController(null, null, this);
-        mQueryController.setPreProcessCallback(new ListViewController.PreProcessCallback<Message>() {
-            @Override
-            public void onCache(ListViewController listViewController, Message message) {
-                for (CellFactory factory : mCellFactories) {
-                    if (factory.isBindable(message)) {
-                        factory.getParsedContent(mLayerClient, message);
-                        break;
+        mQueryController.setPreProcessCallback(
+                new ListViewController.PreProcessCallback<Message>() {
+                    @Override
+                    public void onCache(ListViewController listViewController, Message message) {
+                        for (CellFactory factory : mCellFactories) {
+                            if (factory.isBindable(message)) {
+                                factory.getParsedContent(mLayerClient, message);
+                                break;
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
 
         setHasStableIds(false);
 
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
         mLayerClient.registerEventListener(mIdentityEventListener);
+    }
+
+    private static boolean isDateBoundary(Date d1, Date d2) {
+        if (d1 == null || d2 == null) return false;
+        return (d1.getYear() != d2.getYear()) || (d1.getMonth() != d2.getMonth()) || (d1.getDay()
+                != d2.getDay());
     }
 
     /**
@@ -163,6 +169,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         this.mMessageStyle = messageStyle;
     }
 
+    public View getFooterView() {
+        return mFooterView;
+    }
+
     public void setFooterView(View footerView) {
         boolean isNull = footerView == null;
         boolean wasNull = mFooterView == null;
@@ -180,12 +190,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
     }
 
-    public View getFooterView() {
-        return mFooterView;
-    }
-
     /**
-     * @return If the AvatarViewModel for the other participant in a one on one conversation  will be shown
+     * @return If the AvatarViewModel for the other participant in a one on one conversation  will
+     * be shown
      * or not
      */
     public boolean getShouldShowAvatarInOneOnOneConversations() {
@@ -193,16 +200,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     /**
-     * @param shouldShowAvatarInOneOnOneConversations Whether the AvatarViewModel for the other participant
+     * @param shouldShowAvatarInOneOnOneConversations Whether the AvatarViewModel for the other
+     *                                                participant
      *                                                in a one on one conversation should be shown
      *                                                or not
      */
-    public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
+    public void setShouldShowAvatarInOneOnOneConversations(
+            boolean shouldShowAvatarInOneOnOneConversations) {
         mShouldShowAvatarInOneOnOneConversations = shouldShowAvatarInOneOnOneConversations;
     }
 
     /**
-     * @return If the AvatarViewModel for the other participant in a one on one conversation will be shown
+     * @return If the AvatarViewModel for the other participant in a one on one conversation will be
+     * shown
      * or not. Defaults to `true`.
      */
     public boolean getShouldShowAvatarPresence() {
@@ -218,11 +228,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return this;
     }
 
+
+    //==============================================================================================
+    // Listeners
+    //==============================================================================================
+
     /**
      * Set whether or not the conversation supports read receipts. This determines if the read
      * receipts should be shown in the view holders.
      *
-     * @param readReceiptsEnabled true if the conversation is adapter is used for supports read receipts
+     * @param readReceiptsEnabled true if the conversation is adapter is used for supports read
+     *                            receipts
      */
     public void setReadReceiptsEnabled(boolean readReceiptsEnabled) {
         mReadReceiptsEnabled = readReceiptsEnabled;
@@ -230,7 +246,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
 
     //==============================================================================================
-    // Listeners
+    // Adapter and Cells
     //==============================================================================================
 
     /**
@@ -245,11 +261,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         mAppendListener = listener;
         return this;
     }
-
-
-    //==============================================================================================
-    // Adapter and Cells
-    //==============================================================================================
 
     /**
      * Registers one or more CellFactories for the MessagesAdapter to manage.  CellFactories
@@ -296,13 +307,24 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_FOOTER) {
-            return new ViewHolder(mLayoutInflater.inflate(ViewHolder.RESOURCE_ID_FOOTER, parent, false));
+            return new ViewHolder(
+                    mLayoutInflater.inflate(ViewHolder.RESOURCE_ID_FOOTER, parent, false));
         }
 
         CellType cellType = mCellTypesByViewType.get(viewType);
-        int rootResId = cellType.mMe ? CellViewHolder.RESOURCE_ID_ME : CellViewHolder.RESOURCE_ID_THEM;
-        CellViewHolder rootViewHolder = new CellViewHolder(mLayoutInflater.inflate(rootResId, parent, false), mShouldShowAvatarPresence, mImageCacheWrapper);
-        rootViewHolder.mCellHolder = cellType.mCellFactory.createCellHolder(rootViewHolder.mCell, cellType.mMe, mLayoutInflater);
+
+        ViewDataBinding viewDataBinding = null;
+        if (cellType.mMe) {
+            viewDataBinding = UiMessageItemMeBinding.inflate(mLayoutInflater, parent, false);
+        } else {
+            viewDataBinding = UiMessageItemThemBinding.inflate(mLayoutInflater, parent, false);
+        }
+
+        MessageItemViewModel messageItemViewModel = new MessageItemViewModel();
+        CellViewHolder rootViewHolder = new CellViewHolder(viewDataBinding, messageItemViewModel,
+                mImageCacheWrapper);
+        rootViewHolder.mCellHolder = cellType.mCellFactory.createCellHolder(
+                rootViewHolder.getCell(), cellType.mMe, mLayoutInflater);
         rootViewHolder.mCellHolderSpecs = new CellFactory.CellHolderSpecs();
         return rootViewHolder;
     }
@@ -335,73 +357,56 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
         // Clustering and dates
         Cluster cluster = getClustering(message, position);
-        if (cluster.mClusterWithPrevious == null) {
-            // No previous message, so no gap
-            viewHolder.mClusterSpaceGap.setVisibility(View.GONE);
-            bindDateTimeForMessage(viewHolder, message);
-        } else if (cluster.mDateBoundaryWithPrevious || cluster.mClusterWithPrevious == ClusterType.MORE_THAN_HOUR) {
-            // Crossed into a new day, or > 1hr lull in conversation
-            bindDateTimeForMessage(viewHolder, message);
-            viewHolder.mClusterSpaceGap.setVisibility(View.GONE);
-        } else if (cluster.mClusterWithPrevious == ClusterType.LESS_THAN_MINUTE) {
-            // Same sender with < 1m gap
-            viewHolder.mClusterSpaceGap.setVisibility(View.GONE);
-            viewHolder.mTimeGroup.setVisibility(View.GONE);
-        } else if (cluster.mClusterWithPrevious == ClusterType.NEW_SENDER || cluster.mClusterWithPrevious == ClusterType.LESS_THAN_HOUR) {
-            // New sender or > 1m gap
-            viewHolder.mClusterSpaceGap.setVisibility(View.VISIBLE);
-            viewHolder.mTimeGroup.setVisibility(View.GONE);
+        updateValuesForRecipient(cellType.mMe, position, message);
+
+        boolean isClusterSpaceVisible = cluster.mClusterWithPrevious == ClusterType.NEW_SENDER
+                || cluster.mClusterWithPrevious == ClusterType.LESS_THAN_HOUR;
+        boolean isTimeGroupVisible =
+                !((cluster.mClusterWithPrevious == ClusterType.LESS_THAN_MINUTE) ||
+                        (cluster.mClusterWithPrevious == ClusterType.NEW_SENDER ||
+                                cluster.mClusterWithPrevious == ClusterType.LESS_THAN_HOUR));
+        boolean isDisplayName = !oneOnOne && (cluster.mClusterWithPrevious == null
+                || cluster.mClusterWithPrevious == ClusterType.NEW_SENDER);
+        boolean shouldBindDateTimeForMessage =
+                cluster.mClusterWithPrevious == null || (cluster.mDateBoundaryWithPrevious
+                        || cluster.mClusterWithPrevious == ClusterType.MORE_THAN_HOUR);
+        boolean shouldClusterBeVisible = cluster.mClusterWithNext == null
+                || cluster.mClusterWithNext != ClusterType.LESS_THAN_MINUTE;
+
+        boolean isRecipientStatusVisible =
+                cellType.mMe && (mReadReceiptsEnabled && mRecipientStatusPosition != null
+                        && mRecipientStatusPosition == position);
+
+        Context context = viewHolder.getCell().getContext();
+        String str = "";
+
+        if (cellType.mMe && (mReadReceiptsEnabled && mRecipientStatusPosition != null
+                && mRecipientStatusPosition == position)) {
+            if (readCount > 0) {
+                // Use 2 to include one other participant plus the current user
+                if (statuses.size() > 2) {
+                    str = context.getResources()
+                            .getQuantityString(
+                                    R.plurals.layer_ui_message_item_read_muliple_participants,
+                                    readCount, readCount);
+                } else {
+                    str = context.getString(R.string.layer_ui_message_item_read);
+                }
+            } else if (delivered) {
+                str = context.getString(R.string.layer_ui_message_item_delivered);
+            }
         }
 
-        // Sender-dependent elements
-        if (cellType.mMe) {
-            updateViewHolderForRecipientStatus(viewHolder, position, message);
 
-            // Unsent and sent
-            if (!message.isSent()) {
-                viewHolder.mCell.setAlpha(0.5f);
-            } else {
-                viewHolder.mCell.setAlpha(1.0f);
-            }
-        } else {
-            if (mReadReceiptsEnabled) {
-                message.markAsRead();
-            }
-            // Sender name, only for first message in cluster
-            if (!oneOnOne && (cluster.mClusterWithPrevious == null || cluster.mClusterWithPrevious == ClusterType.NEW_SENDER)) {
-                Identity sender = message.getSender();
-                if (sender != null) {
-                    viewHolder.mUserName.setText(Util.getDisplayName(sender));
-                } else {
-                    viewHolder.mUserName.setText(R.string.layer_ui_message_item_unknown_user);
-                }
-                viewHolder.mUserName.setVisibility(View.VISIBLE);
+        viewHolder.bind(message, oneOnOne, mShouldShowAvatarInOneOnOneConversations,
+                isClusterSpaceVisible, isDisplayName, shouldBindDateTimeForMessage,
+                shouldClusterBeVisible, str, isRecipientStatusVisible, mLayerDateFormatter);
 
-                // Add the position to the positions map for Identity updates
-                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(sender));
-            } else {
-                viewHolder.mUserName.setVisibility(View.GONE);
-            }
-
-            // Avatars
-            if (oneOnOne) {
-                if (mShouldShowAvatarInOneOnOneConversations) {
-                    viewHolder.mAvatarView.setVisibility(View.VISIBLE);
-                    viewHolder.mAvatarView.setParticipants(message.getSender());
-
-                } else {
-                    viewHolder.mAvatarView.setVisibility(View.GONE);
-                }
-            } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != ClusterType.LESS_THAN_MINUTE) {
-                // Last message in cluster
-                viewHolder.mAvatarView.setVisibility(View.VISIBLE);
-                viewHolder.mAvatarView.setParticipants(message.getSender());
-                // Add the position to the positions map for Identity updates
-                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
-            } else {
-                // Invisible for clustered messages to preserve proper spacing
-                viewHolder.mAvatarView.setVisibility(View.INVISIBLE);
-            }
+        if (!oneOnOne && (cluster.mClusterWithNext == null
+                || cluster.mClusterWithNext != ClusterType.LESS_THAN_MINUTE)) {
+            // Add the position to the positions map for Identity updates
+            mIdentityEventListener.addIdentityPosition(position,
+                    Collections.singleton(message.getSender()));
         }
 
         // CellHolder
@@ -409,28 +414,33 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         cellHolder.setMessage(message);
 
         // Cell dimensions
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.mCell.getLayoutParams();
-        int maxWidth = mRecyclerView.getWidth() - viewHolder.mRoot.getPaddingLeft() - viewHolder.mRoot.getPaddingRight() - params.leftMargin - params.rightMargin;
+        LinearLayout.LayoutParams params =
+                (LinearLayout.LayoutParams) viewHolder.getCell().getLayoutParams();
+        int maxWidth = mRecyclerView.getWidth() - viewHolder.mRoot.getPaddingLeft()
+                - viewHolder.mRoot.getPaddingRight() - params.leftMargin - params.rightMargin;
         if (!oneOnOne && !cellType.mMe) {
             // Subtract off avatar width if needed
-            ViewGroup.MarginLayoutParams avatarParams = (ViewGroup.MarginLayoutParams) viewHolder.mAvatarView.getLayoutParams();
+            ViewGroup.MarginLayoutParams avatarParams =
+                    (ViewGroup.MarginLayoutParams) viewHolder.getAvatarView().getLayoutParams();
             maxWidth -= avatarParams.width + avatarParams.rightMargin + avatarParams.leftMargin;
         }
         // TODO: subtract spacing rather than multiply by 0.8 to handle screen sizes more cleanly
-        int maxHeight = (int) viewHolder.mRoot.getContext().getResources().getDimension(R.dimen.layer_ui_messages_max_cell_height);
+        int maxHeight = (int) viewHolder.mRoot.getContext().getResources().getDimension(
+                R.dimen.layer_ui_messages_max_cell_height);
 
         viewHolder.mCellHolderSpecs.isMe = cellType.mMe;
         viewHolder.mCellHolderSpecs.position = position;
         viewHolder.mCellHolderSpecs.maxWidth = maxWidth;
         viewHolder.mCellHolderSpecs.maxHeight = maxHeight;
-        cellType.mCellFactory.bindCellHolder(cellHolder, cellType.mCellFactory.getParsedContent(mLayerClient, message), message, viewHolder.mCellHolderSpecs);
+        cellType.mCellFactory.bindCellHolder(cellHolder,
+                cellType.mCellFactory.getParsedContent(mLayerClient, message), message,
+                viewHolder.mCellHolderSpecs);
     }
 
-    private void updateViewHolderForRecipientStatus(CellViewHolder viewHolder, int position, Message message) {
-        if (mReadReceiptsEnabled && mRecipientStatusPosition != null && mRecipientStatusPosition == position) {
-            int readCount = 0;
-            boolean delivered = false;
-            Map<Identity, Message.RecipientStatus> statuses = message.getRecipientStatus();
+    private void updateValuesForRecipient(boolean isCellTypeMe, int position, Message message) {
+        if (isCellTypeMe && (mReadReceiptsEnabled && mRecipientStatusPosition != null
+                && mRecipientStatusPosition == position)) {
+            statuses = message.getRecipientStatus();
             for (Map.Entry<Identity, Message.RecipientStatus> entry : statuses.entrySet()) {
                 // Only show receipts for other members
                 if (entry.getKey().equals(mLayerClient.getAuthenticatedUser())) continue;
@@ -446,35 +456,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
                         break;
                 }
             }
-            if (readCount > 0) {
-                viewHolder.mReceipt.setVisibility(View.VISIBLE);
-                // Use 2 to include one other participant plus the current user
-                if (statuses.size() > 2) {
-                    String quantityString = viewHolder.mReceipt.getResources()
-                            .getQuantityString(R.plurals.layer_ui_message_item_read_muliple_participants, readCount, readCount);
-                    viewHolder.mReceipt.setText(quantityString);
-                } else {
-                    viewHolder.mReceipt.setText(R.string.layer_ui_message_item_read);
-                }
-            } else if (delivered) {
-                viewHolder.mReceipt.setVisibility(View.VISIBLE);
-                viewHolder.mReceipt.setText(R.string.layer_ui_message_item_delivered);
-            } else {
-                viewHolder.mReceipt.setVisibility(View.GONE);
-            }
-        } else {
-            viewHolder.mReceipt.setVisibility(View.GONE);
         }
-    }
-
-    private void bindDateTimeForMessage(CellViewHolder viewHolder, Message message) {
-        Date receivedAt = message.getReceivedAt();
-        if (receivedAt == null) receivedAt = new Date();
-        String timeBarDayText = Util.formatTimeDay(viewHolder.mCell.getContext(), receivedAt);
-        viewHolder.mTimeGroupDay.setText(timeBarDayText);
-        String timeBarTimeText = mTimeFormat.format(receivedAt.getTime());
-        viewHolder.mTimeGroupTime.setText(" " + timeBarTimeText);
-        viewHolder.mTimeGroup.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -498,15 +480,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return mQueryController.getItem(position);
     }
 
+    //==============================================================================================
+    // Clustering
+    //==============================================================================================
+
     @Override
     public Message getItem(RecyclerView.ViewHolder viewHolder) {
         if (!(viewHolder instanceof CellViewHolder)) return null;
         return ((CellViewHolder) viewHolder).mMessage;
     }
-
-    //==============================================================================================
-    // Clustering
-    //==============================================================================================
 
     // TODO: optimize by limiting search to positions in- and around- visible range
     private Cluster getClustering(Message message, int position) {
@@ -519,7 +501,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         int previousPosition = position - 1;
         Message previousMessage = (previousPosition >= 0) ? getItem(previousPosition) : null;
         if (previousMessage != null) {
-            result.mDateBoundaryWithPrevious = isDateBoundary(previousMessage.getReceivedAt(), message.getReceivedAt());
+            result.mDateBoundaryWithPrevious = isDateBoundary(previousMessage.getReceivedAt(),
+                    message.getReceivedAt());
             result.mClusterWithPrevious = ClusterType.fromMessages(previousMessage, message);
 
             Cluster previousCluster = mClusterCache.get(previousMessage.getId());
@@ -529,7 +512,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             } else {
                 // does the previous need to change its clustering?
                 if ((previousCluster.mClusterWithNext != result.mClusterWithPrevious) ||
-                        (previousCluster.mDateBoundaryWithNext != result.mDateBoundaryWithPrevious)) {
+                        (previousCluster.mDateBoundaryWithNext
+                                != result.mDateBoundaryWithPrevious)) {
                     requestUpdate(previousMessage, previousPosition);
                 }
             }
@@ -540,7 +524,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         int nextPosition = position + 1;
         Message nextMessage = (nextPosition < getItemCount()) ? getItem(nextPosition) : null;
         if (nextMessage != null) {
-            result.mDateBoundaryWithNext = isDateBoundary(message.getReceivedAt(), nextMessage.getReceivedAt());
+            result.mDateBoundaryWithNext = isDateBoundary(message.getReceivedAt(),
+                    nextMessage.getReceivedAt());
             result.mClusterWithNext = ClusterType.fromMessages(message, nextMessage);
 
             Cluster nextCluster = mClusterCache.get(nextMessage.getId());
@@ -559,11 +544,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
 
         return result;
-    }
-
-    private static boolean isDateBoundary(Date d1, Date d2) {
-        if (d1 == null || d2 == null) return false;
-        return (d1.getYear() != d2.getYear()) || (d1.getMonth() != d2.getMonth()) || (d1.getDay() != d2.getDay());
     }
 
     private void requestUpdate(final Message message, final int lastPosition) {
@@ -617,11 +597,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     @Override
-    public void onQueryItemRangeChanged(RecyclerViewController controller, int positionStart, int itemCount) {
+    public void onQueryItemRangeChanged(RecyclerViewController controller, int positionStart,
+            int itemCount) {
         notifyItemRangeChanged(positionStart, itemCount);
 
         if (Log.isPerfLoggable()) {
-            Log.perf("Messages adapter - onQueryItemRangeChanged. Position start: " + positionStart + " Count: " + itemCount);
+            Log.perf("Messages adapter - onQueryItemRangeChanged. Position start: " + positionStart
+                    + " Count: " + itemCount);
         }
     }
 
@@ -640,7 +622,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     @Override
-    public void onQueryItemRangeInserted(RecyclerViewController controller, int positionStart, int itemCount) {
+    public void onQueryItemRangeInserted(RecyclerViewController controller, int positionStart,
+            int itemCount) {
         mFooterPosition += itemCount;
         updateRecipientStatusPosition();
         notifyItemRangeInserted(positionStart, itemCount);
@@ -650,7 +633,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
 
         if (Log.isPerfLoggable()) {
-            Log.perf("Messages adapter - onQueryItemRangeInserted. Position start: " + positionStart + " Count: " + itemCount);
+            Log.perf("Messages adapter - onQueryItemRangeInserted. Position start: " + positionStart
+                    + " Count: " + itemCount);
         }
     }
 
@@ -666,23 +650,27 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     }
 
     @Override
-    public void onQueryItemRangeRemoved(RecyclerViewController controller, int positionStart, int itemCount) {
+    public void onQueryItemRangeRemoved(RecyclerViewController controller, int positionStart,
+            int itemCount) {
         mFooterPosition -= itemCount;
         updateRecipientStatusPosition();
         notifyItemRangeRemoved(positionStart, itemCount);
 
         if (Log.isPerfLoggable()) {
-            Log.perf("Messages adapter - onQueryItemRangeRemoved. Position start: " + positionStart + " Count: " + itemCount);
+            Log.perf("Messages adapter - onQueryItemRangeRemoved. Position start: " + positionStart
+                    + " Count: " + itemCount);
         }
     }
 
     @Override
-    public void onQueryItemMoved(RecyclerViewController controller, int fromPosition, int toPosition) {
+    public void onQueryItemMoved(RecyclerViewController controller, int fromPosition,
+            int toPosition) {
         updateRecipientStatusPosition();
         notifyItemMoved(fromPosition, toPosition);
 
         if (Log.isPerfLoggable()) {
-            Log.perf("Conversations adapter - onQueryItemMoved. From: " + fromPosition + " To: " + toPosition);
+            Log.perf("Conversations adapter - onQueryItemMoved. From: " + fromPosition + " To: "
+                    + toPosition);
         }
     }
 
@@ -690,60 +678,6 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     //==============================================================================================
     // Inner classes
     //==============================================================================================
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        public final static int RESOURCE_ID_FOOTER = R.layout.ui_message_item_footer;
-
-        // View cache
-        protected ViewGroup mRoot;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            mRoot = (ViewGroup) itemView.findViewById(R.id.swipeable);
-        }
-    }
-
-    static class CellViewHolder extends ViewHolder {
-        public final static int RESOURCE_ID_ME = R.layout.ui_message_item_me;
-        public final static int RESOURCE_ID_THEM = R.layout.ui_message_item_them;
-
-        protected Message mMessage;
-
-        // View cache
-        protected TextView mUserName;
-        protected View mTimeGroup;
-        protected TextView mTimeGroupDay;
-        protected TextView mTimeGroupTime;
-        protected Space mClusterSpaceGap;
-        protected AvatarView mAvatarView;
-        protected ViewGroup mCell;
-        protected TextView mReceipt;
-        protected PresenceView mPresenceView;
-
-        // Cell
-        protected CellFactory.CellHolder mCellHolder;
-        protected CellFactory.CellHolderSpecs mCellHolderSpecs;
-
-        public CellViewHolder(View itemView, boolean shouldShowAvatarPresence, ImageCacheWrapper imageCachWrapper) {
-            super(itemView);
-            mUserName = (TextView) itemView.findViewById(R.id.sender);
-            mTimeGroup = itemView.findViewById(R.id.time_group);
-            mTimeGroupDay = (TextView) itemView.findViewById(R.id.time_group_day);
-            mTimeGroupTime = (TextView) itemView.findViewById(R.id.time_group_time);
-            mClusterSpaceGap = (Space) itemView.findViewById(R.id.cluster_space);
-            mCell = (ViewGroup) itemView.findViewById(R.id.cell);
-            mReceipt = (TextView) itemView.findViewById(R.id.receipt);
-            mPresenceView = (PresenceView) itemView.findViewById(R.id.presence);
-            mAvatarView = ((AvatarView) itemView.findViewById(R.id.avatar));
-            if (mAvatarView != null)  {
-                mAvatarView.init(new AvatarViewModelImpl(imageCachWrapper), new IdentityNameFormatterImpl());
-            }
-
-            if (!shouldShowAvatarPresence) {
-                mPresenceView.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
 
     private enum ClusterType {
         NEW_SENDER,
@@ -769,22 +703,130 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         }
     }
 
+    /**
+     * Listens for inserts to the end of an AtlasQueryAdapter.
+     */
+    public interface OnMessageAppendListener {
+        /**
+         * Alerts the listener to inserts at the end of an AtlasQueryAdapter.  If a batch of items
+         * were appended, only the last one will be alerted here.
+         *
+         * @param adapter The AtlasQueryAdapter which had an item appended.
+         * @param message The item appended to the AtlasQueryAdapter.
+         */
+        void onMessageAppend(MessagesAdapter adapter, Message message);
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        public final static int RESOURCE_ID_FOOTER = R.layout.ui_message_item_footer;
+
+        // View cache
+        protected ViewGroup mRoot;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mRoot = (ViewGroup) itemView.findViewById(R.id.swipeable);
+        }
+    }
+
+    static class CellViewHolder extends ViewHolder {
+
+        protected Message mMessage;
+
+        // Cell
+        protected CellFactory.CellHolder mCellHolder;
+        protected CellFactory.CellHolderSpecs mCellHolderSpecs;
+        protected ViewDataBinding mViewDataBinding;
+        private MessageItemViewModel mMessageItemViewModel;
+        private DateFormat mTimeFormat;
+
+
+        public CellViewHolder(ViewDataBinding viewDataBinding, MessageItemViewModel messageItemViewModel,
+                ImageCacheWrapper imageCachWrapper) {
+
+            super(viewDataBinding.getRoot());
+            mViewDataBinding = viewDataBinding;
+            mMessageItemViewModel = messageItemViewModel;
+            mTimeFormat = android.text.format.DateFormat.getTimeFormat(viewDataBinding.getRoot().getContext());
+
+
+            if (mViewDataBinding instanceof UiMessageItemThemBinding) {
+                AvatarView avatarView = ((UiMessageItemThemBinding) mViewDataBinding).avatar;
+                if (avatarView != null) {
+                    avatarView.init(new AvatarViewModelImpl(imageCachWrapper), new IdentityNameFormatterImpl());
+                }
+            }
+        }
+
+        public void bind(Message message, boolean oneOnOne,
+                boolean shouldShowAvatarInOneOnOneConversations, boolean isClusterSpaceVisible,
+                boolean isDisplayName, boolean shouldBindDateTimeForMessage, boolean shouldClusterBeVisible,
+                String recipientStatus, boolean isRecipientStatusVisible, LayerDateFormatter layerDateFormatter) {
+
+            Context context = mViewDataBinding.getRoot().getContext();
+            Date receivedAt = mMessage.getReceivedAt();
+            if (receivedAt == null) receivedAt = new Date();
+            String timeBarDayText =  layerDateFormatter.formatTimeDay(receivedAt);
+
+            String timeBarTimeText = mTimeFormat.format(receivedAt.getTime());
+
+            Identity identity = mMessage.getSender();
+            String sender = identity == null ? context.getString(
+                    R.string.layer_ui_message_item_unknown_user) : Util.getDisplayName(mMessage.getSender());
+
+
+            mMessageItemViewModel.setTimeGroupDay(timeBarDayText);
+            mMessageItemViewModel.setSender(sender);
+            if (message.getSender() != null) {
+                mMessageItemViewModel.setParticipants(
+                        message.getSender());
+            }
+            mMessageItemViewModel.setOneOnOne(oneOnOne);
+            mMessageItemViewModel.setRecipientStatus(recipientStatus);
+            mMessageItemViewModel.setRecipientStatusVisible(isRecipientStatusVisible);
+            mMessageItemViewModel.setGroupTime(" " + timeBarTimeText);
+            mMessageItemViewModel.setShouldShowAvatar(shouldShowAvatarInOneOnOneConversations);
+            mMessageItemViewModel.setClusterSpaceVisible(isClusterSpaceVisible);
+            mMessageItemViewModel.setIsDisplayName(isDisplayName);
+            mMessageItemViewModel.setIsBindDateTimeForMessage(shouldBindDateTimeForMessage);
+            mMessageItemViewModel.setShouldClusterBeVisible(shouldClusterBeVisible);
+            mMessageItemViewModel.setParticipants(message.getSender());
+            mMessageItemViewModel.setMessageSent(message.isSent());
+            mMessageItemViewModel.notifyChange();
+
+            if (mViewDataBinding instanceof UiMessageItemThemBinding) {
+                UiMessageItemThemBinding uiMessageItemThemBinding =
+                        (UiMessageItemThemBinding) mViewDataBinding;
+                uiMessageItemThemBinding.setViewModel(mMessageItemViewModel);
+            } else {
+                UiMessageItemMeBinding uiMessageItemMeBinding =
+                        ((UiMessageItemMeBinding) mViewDataBinding);
+                uiMessageItemMeBinding.setViewModel(mMessageItemViewModel);
+            }
+            mViewDataBinding.executePendingBindings();
+
+        }
+
+        public ViewGroup getCell() {
+            return mViewDataBinding instanceof UiMessageItemThemBinding
+                    ? ((UiMessageItemThemBinding) mViewDataBinding).cell
+                    : ((UiMessageItemMeBinding) mViewDataBinding).cell;
+        }
+
+        public AvatarView getAvatarView() {
+            if (mViewDataBinding instanceof UiMessageItemThemBinding) {
+                return ((UiMessageItemThemBinding) mViewDataBinding).avatar;
+            }
+            return null;
+        }
+    }
+
     private static class Cluster {
         public boolean mDateBoundaryWithPrevious;
         public ClusterType mClusterWithPrevious;
 
         public boolean mDateBoundaryWithNext;
         public ClusterType mClusterWithNext;
-    }
-
-    private static class MessagePosition {
-        public Message mMessage;
-        public int mPosition;
-
-        public MessagePosition(Message message, int position) {
-            mMessage = message;
-            mPosition = position;
-        }
     }
 
     private static class CellType {
@@ -814,19 +856,5 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             result = 31 * result + mCellFactory.hashCode();
             return result;
         }
-    }
-
-    /**
-     * Listens for inserts to the end of an AtlasQueryAdapter.
-     */
-    public interface OnMessageAppendListener {
-        /**
-         * Alerts the listener to inserts at the end of an AtlasQueryAdapter.  If a batch of items
-         * were appended, only the last one will be alerted here.
-         *
-         * @param adapter The AtlasQueryAdapter which had an item appended.
-         * @param message The item appended to the AtlasQueryAdapter.
-         */
-        void onMessageAppend(MessagesAdapter adapter, Message message);
     }
 }
