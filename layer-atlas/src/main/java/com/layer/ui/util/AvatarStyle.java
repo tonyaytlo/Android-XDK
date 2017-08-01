@@ -8,12 +8,16 @@ public final class AvatarStyle {
     private int mAvatarBorderColor;
     private int mAvatarTextColor;
     private Typeface mAvatarTextTypeface;
+    private float mWidth;
+    private float mHeight;
 
     private AvatarStyle(Builder builder) {
         mAvatarBackgroundColor = builder.avatarBackgroundColor;
         mAvatarTextColor = builder.avatarTextColor;
         mAvatarTextTypeface = builder.avatarTextTypeface;
         mAvatarBorderColor = builder.avatarBorderColor;
+        mWidth = builder.width;
+        mHeight = builder.height;
     }
 
     public void setAvatarTextTypeface(Typeface avatarTextTypeface) {
@@ -36,11 +40,21 @@ public final class AvatarStyle {
         return mAvatarBorderColor;
     }
 
+    public float getWidth() {
+        return mWidth;
+    }
+
+    public float getHeight() {
+        return mHeight;
+    }
+
     public static final class Builder {
         private int avatarBorderColor;
         private int avatarBackgroundColor;
         private int avatarTextColor;
         private Typeface avatarTextTypeface;
+        private float width;
+        private float height;
 
         public Builder() {
         }
@@ -62,6 +76,16 @@ public final class AvatarStyle {
 
         public Builder avatarBorderColor(int val) {
             avatarBorderColor = val;
+            return this;
+        }
+
+        public Builder width(float width) {
+            this.width = width;
+            return this;
+        }
+
+        public Builder height (float height) {
+            this.height = height;
             return this;
         }
 

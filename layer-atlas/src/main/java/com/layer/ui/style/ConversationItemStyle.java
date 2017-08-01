@@ -1,56 +1,84 @@
 package com.layer.ui.style;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.layer.ui.R;
 import com.layer.ui.util.AvatarStyle;
 
 public class ConversationItemStyle extends ItemStyle {
+
+    // Item
+    private float mItemHeight;
+
+    // Avatar
+    private AvatarStyle mAvatarStyle;
+    private int mAvatarVisibility;
+
+    // Title
     private int mTitleTextColor;
     private int mTitleTextStyle;
     private Typeface mTitleTextTypeface;
     private int mTitleUnreadTextColor;
     private int mTitleUnreadTextStyle;
     private Typeface mTitleUnreadTextTypeface;
+    private float mTitleTextSize;
+
+    // Subtitle
     private int mSubtitleTextColor;
     private int mSubtitleTextStyle;
     private Typeface mSubtitleTextTypeface;
     private int mSubtitleUnreadTextColor;
     private int mSubtitleUnreadTextStyle;
     private Typeface mSubtitleUnreadTextTypeface;
-    private int mCellBackgroundColor;
-    private int mCellUnreadBackgroundColor;
+    private float mSubtitleTextSize;
+    private int mSubtitleVisibility;
+
+    // Right Accessory Text
     private Typeface mRightAccessoryTextTypeface;
     private int mRightAccessoryTextColor;
     private Typeface mRightAccessoryUnreadTextTypeface;
     private int mRightAccessoryUnreadTextColor;
-    private AvatarStyle mAvatarStyle;
+    private float mRightAccessoryTextSize;
+    private int mRightAccessoryTextVisibility;
+
+    // Cell background
+    private int mCellBackgroundColor;
+    private int mCellUnreadBackgroundColor;
+
+    // Margins
+    private float mMarginHorizontal;
+    private float mMarginVertical;
 
     public ConversationItemStyle(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        Resources resources = context.getResources();
+
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ConversationItemsListView, R.attr.ConversationItemsListView, defStyle);
-        mTitleTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellTitleTextColor, context.getResources().getColor(R.color.layer_ui_text_gray));
+        mTitleTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellTitleTextColor, resources.getColor(R.color.layer_ui_text_gray));
         mTitleTextStyle = ta.getInt(R.styleable.ConversationItemsListView_cellTitleTextStyle, Typeface.NORMAL);
         String titleTextTypefaceName = ta.getString(R.styleable.ConversationItemsListView_cellTitleTextTypeface);
         mTitleTextTypeface = titleTextTypefaceName != null ? Typeface.create(titleTextTypefaceName, mTitleTextStyle) : null;
 
-        mTitleUnreadTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellTitleUnreadTextColor, context.getResources().getColor(R.color.layer_ui_text_black));
+        mTitleUnreadTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellTitleUnreadTextColor, resources.getColor(R.color.layer_ui_text_black));
         mTitleUnreadTextStyle = ta.getInt(R.styleable.ConversationItemsListView_cellTitleUnreadTextStyle, Typeface.BOLD);
         String titleUnreadTextTypefaceName = ta.getString(R.styleable.ConversationItemsListView_cellTitleUnreadTextTypeface);
         mTitleUnreadTextTypeface = titleUnreadTextTypefaceName != null ? Typeface.create(titleUnreadTextTypefaceName, mTitleUnreadTextStyle) : null;
 
-        mSubtitleTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellSubtitleTextColor, context.getResources().getColor(R.color.layer_ui_text_gray));
+        mSubtitleTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellSubtitleTextColor, resources.getColor(R.color.layer_ui_text_gray));
         mSubtitleTextStyle = ta.getInt(R.styleable.ConversationItemsListView_cellSubtitleTextStyle, Typeface.NORMAL);
         String subtitleTextTypefaceName = ta.getString(R.styleable.ConversationItemsListView_cellSubtitleTextTypeface);
         mSubtitleTextTypeface = subtitleTextTypefaceName != null ? Typeface.create(subtitleTextTypefaceName, mSubtitleTextStyle) : null;
+        mSubtitleVisibility = View.VISIBLE;
 
-        mSubtitleUnreadTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellSubtitleUnreadTextColor, context.getResources().getColor(R.color.layer_ui_text_black));
+        mSubtitleUnreadTextColor = ta.getColor(R.styleable.ConversationItemsListView_cellSubtitleUnreadTextColor, resources.getColor(R.color.layer_ui_text_black));
         mSubtitleUnreadTextStyle = ta.getInt(R.styleable.ConversationItemsListView_cellSubtitleUnreadTextStyle, Typeface.NORMAL);
         String subtitleUnreadTextTypefaceName = ta.getString(R.styleable.ConversationItemsListView_cellSubtitleUnreadTextTypeface);
         mSubtitleUnreadTextTypeface = subtitleUnreadTextTypefaceName != null ? Typeface.create(subtitleUnreadTextTypefaceName, mSubtitleUnreadTextStyle) : null;
@@ -58,15 +86,72 @@ public class ConversationItemStyle extends ItemStyle {
         setCellBackgroundColor(ta.getColor(R.styleable.ConversationItemsListView_cellBackgroundColor, Color.TRANSPARENT));
         setCellUnreadBackgroundColor(ta.getColor(R.styleable.ConversationItemsListView_cellUnreadBackgroundColor, Color.TRANSPARENT));
 
-        setRightAccessoryTextColor(ta.getColor(R.styleable.ConversationItemsListView_rightAccessoryTextColor, context.getResources().getColor(R.color.layer_ui_color_primary_blue)));
-        setRightAccessoryUnreadTextColor(ta.getColor(R.styleable.ConversationItemsListView_rightAccessoryUnreadTextColor, context.getResources().getColor(R.color.layer_ui_color_primary_blue)));
+        setRightAccessoryTextColor(ta.getColor(R.styleable.ConversationItemsListView_rightAccessoryTextColor, resources.getColor(R.color.layer_ui_color_primary_blue)));
+        setRightAccessoryUnreadTextColor(ta.getColor(R.styleable.ConversationItemsListView_rightAccessoryUnreadTextColor, resources.getColor(R.color.layer_ui_color_primary_blue)));
+        mRightAccessoryTextVisibility = View.VISIBLE;
 
         AvatarStyle.Builder avatarStyleBuilder = new AvatarStyle.Builder();
-        avatarStyleBuilder.avatarTextColor(ta.getColor(R.styleable.ConversationItemsListView_avatarTextColor, context.getResources().getColor(R.color.layer_ui_avatar_text)));
-        avatarStyleBuilder.avatarBackgroundColor(ta.getColor(R.styleable.ConversationItemsListView_avatarBackgroundColor, context.getResources().getColor(R.color.layer_ui_avatar_background)));
-        avatarStyleBuilder.avatarBorderColor(ta.getColor(R.styleable.ConversationItemsListView_avatarBorderColor, context.getResources().getColor(R.color.layer_ui_avatar_border)));
+        avatarStyleBuilder.avatarTextColor(ta.getColor(R.styleable.ConversationItemsListView_avatarTextColor, resources.getColor(R.color.layer_ui_avatar_text)));
+        avatarStyleBuilder.avatarBackgroundColor(ta.getColor(R.styleable.ConversationItemsListView_avatarBackgroundColor, resources.getColor(R.color.layer_ui_avatar_background)));
+        avatarStyleBuilder.avatarBorderColor(ta.getColor(R.styleable.ConversationItemsListView_avatarBorderColor, resources.getColor(R.color.layer_ui_avatar_border)));
+        mAvatarVisibility = View.VISIBLE;
+
+        float heightMedium = resources.getDimension(R.dimen.layer_ui_item_height_medium);
+        float heightSmall = resources.getDimension(R.dimen.layer_ui_item_height_small);
+        float heightTiny = resources.getDimension(R.dimen.layer_ui_item_height_tiny);
+
+        mItemHeight = ta.getDimension(R.styleable.ConversationItemsListView_itemHeight, resources.getDimension(R.dimen.layer_ui_item_height_large));
+
+        if (mItemHeight > heightMedium) {
+            mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_large));
+            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_large);
+            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_large);
+            mRightAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_right_accessory_text_large);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_large)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_large)));
+
+        } else if (mItemHeight > heightSmall && mItemHeight <= heightMedium) {
+
+            mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_medium));
+            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_medium);
+            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_medium);
+            mSubtitleVisibility = View.GONE;
+            mRightAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_right_accessory_text_medium);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_medium)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_medium)));
+
+        } else if (mItemHeight > heightTiny && mItemHeight <= heightSmall) {
+
+            mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_small));
+            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_small);
+            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_small);
+            mSubtitleVisibility = View.GONE;
+            mRightAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_right_accessory_text_small);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_small)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_small)));
+
+        } else {
+
+            mAvatarVisibility = View.GONE;
+            mSubtitleVisibility = View.GONE;
+
+            mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_tiny));
+            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_tiny);
+            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_tiny);
+            mSubtitleVisibility = View.GONE;
+            mRightAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_right_accessory_text_tiny);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_tiny)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_tiny)));
+        }
+
+        mMarginHorizontal = ta.getDimension(R.styleable.ConversationItemsListView_marginHorizontal, resources.getDimension(R.dimen.layer_ui_margin_large));
+
         setAvatarStyle(avatarStyleBuilder.build());
         ta.recycle();
+    }
+
+    public float getItemHeight() {
+        return mItemHeight;
     }
 
     @ColorInt
@@ -219,6 +304,58 @@ public class ConversationItemStyle extends ItemStyle {
 
     public void setRightAccessoryUnreadTextColor(@ColorInt int rightAccessoryUnreadTextColor) {
         mRightAccessoryUnreadTextColor = rightAccessoryUnreadTextColor;
+    }
+
+    public float getMarginHorizontal() {
+        return mMarginHorizontal;
+    }
+
+    public void setMarginHorizontal(float marginHorizontal) {
+        mMarginHorizontal = marginHorizontal;
+    }
+
+    public float getMarginVertical() {
+        return mMarginVertical;
+    }
+
+    public void setMarginVertical(float marginVertical) {
+        mMarginVertical = marginVertical;
+    }
+
+    public int getSubtitleVisibility() {
+        return mSubtitleVisibility;
+    }
+
+    public float getTitleTextSize() {
+        return mTitleTextSize;
+    }
+
+    public void setTitleTextSize(float titleTextSize) {
+        mTitleTextSize = titleTextSize;
+    }
+
+    public float getSubtitleTextSize() {
+        return mSubtitleTextSize;
+    }
+
+    public void setSubtitleTextSize(float subtitleTextSize) {
+        mSubtitleTextSize = subtitleTextSize;
+    }
+
+    public float getRightAccessoryTextSize() {
+        return mRightAccessoryTextSize;
+    }
+
+    public void setRightAccessoryTextSize(float rightAccessoryTextSize) {
+        mRightAccessoryTextSize = rightAccessoryTextSize;
+    }
+
+    public int getAvatarVisibility() {
+        return mAvatarVisibility;
+    }
+
+    public int getRightAccessoryTextVisibility() {
+        return mRightAccessoryTextVisibility;
     }
 
     public AvatarStyle getAvatarStyle() {

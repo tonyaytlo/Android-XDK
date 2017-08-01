@@ -12,20 +12,19 @@ import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.ui.avatar.AvatarViewModelImpl;
 import com.layer.ui.avatar.IdentityNameFormatter;
+import com.layer.ui.avatar.IdentityNameFormatterImpl;
 import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.conversationitem.ConversationItemViewModel;
-import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.databinding.UiConversationItemBinding;
+import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.style.ConversationItemStyle;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Collection;
 
-public class ConversationItemsAdapter
-        extends ItemRecyclerViewAdapter<Conversation, ConversationItemViewModel,
-        UiConversationItemBinding,
-        ConversationItemStyle,
+public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversation,
+        ConversationItemViewModel, UiConversationItemBinding, ConversationItemStyle,
         ConversationItemsAdapter.ConversationItemViewHolder> {
     private static final String TAG = "ConversationItemsAdapter";
 
@@ -51,6 +50,7 @@ public class ConversationItemsAdapter
         layerClient.registerEventListener(mIdentityEventListener);
 
         mIdentityNameFormatter = identityNameFormatter;
+        mIdentityNameFormatter = new IdentityNameFormatterImpl();
     }
 
     //==============================================================================================
@@ -156,6 +156,7 @@ public class ConversationItemsAdapter
             mBinding.setViewModel(viewModel);
             mBinding.setStyle(itemStyle);
             mBinding.avatar.init(new AvatarViewModelImpl(imageCacheWrapper), identityNameFormatter);
+
         }
 
         @Override

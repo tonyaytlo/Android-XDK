@@ -19,6 +19,11 @@
     <!-- # Standard Dimensions                                                                 # -->
     <!-- ####################################################################################### -->
 
+    <dimen name="layer_ui_margin_large">12dp</dimen>
+    <dimen name="layer_ui_margin_medium">10dp</dimen>
+    <dimen name="layer_ui_margin_small">8dp</dimen>
+    <dimen name="layer_ui_margin_tiny">8dp</dimen>
+
     <dimen name="layer_ui_padding_normal">16dp</dimen>
     <dimen name="layer_ui_padding_narrow">8dp</dimen>
     <dimen name="layer_ui_primary_item_height">72dp</dimen>
@@ -33,7 +38,7 @@
     <dimen name="layer_ui_chip_margin">4dp</dimen>
 
     <dimen name="layer_ui_text_size_input">16sp</dimen>
-    <dimen name="layer_ui_text_size_primary_item_title">16sp</dimen>
+    <dimen name="layer_ui_text_size_primary_item_title">18sp</dimen>
     <dimen name="layer_ui_text_size_primary_item_subtitle">14sp</dimen>
     <dimen name="layer_ui_text_size_primary_item_metadata">12sp</dimen>
     <dimen name="layer_ui_text_size_secondary_item">16sp</dimen>
@@ -93,14 +98,49 @@
     <dimen name="layer_ui_avatar_item_multi">26dp</dimen>
     <dimen name="layer_ui_message_avatar_item_single">24dp</dimen>
 
-    <dimen name="layer_ui_avatar_width">40dp</dimen>
-    <dimen name="layer_ui_avatar_height">40dp</dimen>
+    <dimen name="layer_ui_avatar_width_large">48dp</dimen>
+    <dimen name="layer_ui_avatar_height_large">48dp</dimen>
+    <dimen name="layer_ui_avatar_width_medium">40dp</dimen>
+    <dimen name="layer_ui_avatar_height_medium">40dp</dimen>
+    <dimen name="layer_ui_avatar_width_small">32dp</dimen>
+    <dimen name="layer_ui_avatar_height_small">32dp</dimen>
+    <dimen name="layer_ui_avatar_width_tiny">12dp</dimen>
+    <dimen name="layer_ui_avatar_height_tiny">12dp</dimen>
+
     <dimen name="layer_ui_avatar_presence_height">12dp</dimen>
     <dimen name="layer_ui_avatar_single_line_user_padding">16dp</dimen>
 
     <dimen name="layer_ui_avatar_message_left_margin">12dp</dimen>
     <dimen name="layer_ui_avatar_message_right_margin">8dp</dimen>
     <dimen name="layer_ui_avatar_presence_diameter">40dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Layer UI Item                                                                         # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="layer_ui_item_height_large">72dp</dimen>
+    <dimen name="layer_ui_item_height_medium">60dp</dimen>
+    <dimen name="layer_ui_item_height_small">48dp</dimen>
+    <dimen name="layer_ui_item_height_tiny">32dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Address Bar                                                                         # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="layer_ui_conversation_item_title_large">18sp</dimen>
+    <dimen name="layer_ui_conversation_item_title_medium">18sp</dimen>
+    <dimen name="layer_ui_conversation_item_title_small">16sp</dimen>
+    <dimen name="layer_ui_conversation_item_title_tiny">14sp</dimen>
+
+    <dimen name="layer_ui_conversation_item_subtitle_large">14sp</dimen>
+    <dimen name="layer_ui_conversation_item_subtitle_medium">10sp</dimen>
+    <dimen name="layer_ui_conversation_item_subtitle_small">10sp</dimen>
+    <dimen name="layer_ui_conversation_item_subtitle_tiny">10sp</dimen>
+
+    <dimen name="layer_ui_conversation_item_right_accessory_text_large">12sp</dimen>
+    <dimen name="layer_ui_conversation_item_right_accessory_text_medium">10sp</dimen>
+    <dimen name="layer_ui_conversation_item_right_accessory_text_small">8sp</dimen>
+    <dimen name="layer_ui_conversation_item_right_accessory_text_tiny">8sp</dimen>
 
 
 

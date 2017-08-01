@@ -18,13 +18,13 @@
     <!-- Default UI Component Styles -->
     <!-- ############################## -->
     <style name="ConversationItemsListView">
-        <item name="cellTitleTextColor">@color/layer_ui_text_black</item>
+        <item name="cellTitleTextColor">@color/layer_ui_text_gray</item>
         <item name="cellTitleTextTypeface">normal</item>
         <item name="cellTitleTextStyle">normal</item>
         <item name="cellTitleUnreadTextColor">@color/layer_ui_text_black</item>
         <item name="cellTitleUnreadTextTypeface">normal</item>
         <item name="cellTitleUnreadTextStyle">bold</item>
-        <item name="cellSubtitleTextColor">@color/layer_ui_text_black</item>
+        <item name="cellSubtitleTextColor">@color/layer_ui_text_gray</item>
         <item name="cellSubtitleTextTypeface">normal</item>
         <item name="cellSubtitleTextStyle">normal</item>
         <item name="cellSubtitleUnreadTextColor">@color/layer_ui_text_black</item>
@@ -32,9 +32,9 @@
         <item name="cellSubtitleUnreadTextStyle">bold</item>
         <item name="cellBackgroundColor">@android:color/transparent</item>
         <item name="cellUnreadBackgroundColor">@android:color/transparent</item>
-        <item name="rightAccessoryTextColor">@color/layer_ui_text_blue</item>
+        <item name="rightAccessoryTextColor">@color/layer_ui_text_gray</item>
         <item name="rightAccessoryTextTypeface">normal</item>
-        <item name="rightAccessoryUnreadTextColor">@color/layer_ui_text_blue</item>
+        <item name="rightAccessoryUnreadTextColor">@color/layer_ui_text_black</item>
         <item name="rightAccessoryUnreadTextTypeface">normal</item>
         <item name="avatarTextColor">@color/layer_ui_text_black</item>
         <item name="avatarBackgroundColor">@color/layer_ui_avatar_background</item>
