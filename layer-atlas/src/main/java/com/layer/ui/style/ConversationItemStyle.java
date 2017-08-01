@@ -140,6 +140,7 @@ public class ConversationItemStyle extends ItemStyle {
             mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_tiny);
             mSubtitleVisibility = View.GONE;
             mRightAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_right_accessory_text_tiny);
+            mRightAccessoryTextVisibility = View.GONE;
             avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_tiny)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_tiny)));
         }

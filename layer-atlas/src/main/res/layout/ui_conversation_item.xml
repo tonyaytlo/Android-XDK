@@ -37,8 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ui_swipeable_item_background_selector"
-        android:onClick="@{viewModel.onClickConversation()}"
-        android:paddingTop="@{style.marginVertical}">
+        android:onClick="@{viewModel.onClickConversation()}">
 
         <LinearLayout
             android:id="@+id/leavebehind"
@@ -72,10 +71,8 @@
                 android:id="@+id/avatar"
                 android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
                 android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
-                android:layout_marginBottom="@{style.marginVertical}"
                 android:layout_marginLeft="8dp"
                 android:layout_marginStart="@{style.marginHorizontal}"
-                android:layout_marginTop="@{style.marginVertical}"
                 android:visibility="@{style.avatarVisibility}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -134,7 +131,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/title"
                 app:layout_constraintBottom_toBottomOf="@+id/title"
-                app:layout_constraintVertical_bias="@{style.subtitleVisibility == View.VISIBLE ? 0.15f : 0.5f}"
+                app:layout_constraintVertical_bias="@{style.subtitleVisibility == View.VISIBLE ? 0.2f : 0.5f}"
                 app:typeface="@{viewModel.unread ? style.rightAccessoryUnreadTextTypeface : style.rightAccessoryTextTypeface}"/>
 
 
