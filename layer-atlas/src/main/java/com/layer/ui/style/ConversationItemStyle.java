@@ -96,13 +96,13 @@ public class ConversationItemStyle extends ItemStyle {
         avatarStyleBuilder.avatarBorderColor(ta.getColor(R.styleable.ConversationItemsListView_avatarBorderColor, resources.getColor(R.color.layer_ui_avatar_border)));
         mAvatarVisibility = View.VISIBLE;
 
+        float heightLarge = resources.getDimension(R.dimen.layer_ui_item_height_large);
         float heightMedium = resources.getDimension(R.dimen.layer_ui_item_height_medium);
         float heightSmall = resources.getDimension(R.dimen.layer_ui_item_height_small);
-        float heightTiny = resources.getDimension(R.dimen.layer_ui_item_height_tiny);
 
         mItemHeight = ta.getDimension(R.styleable.ConversationItemsListView_itemHeight, resources.getDimension(R.dimen.layer_ui_item_height_large));
 
-        if (mItemHeight > heightMedium) {
+        if (mItemHeight >= heightLarge) {
             mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_large));
             mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_large);
             mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_subtitle_large);
@@ -110,7 +110,7 @@ public class ConversationItemStyle extends ItemStyle {
             avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_large)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_large)));
 
-        } else if (mItemHeight > heightSmall && mItemHeight <= heightMedium) {
+        } else if (mItemHeight >= heightMedium && mItemHeight < heightLarge) {
 
             mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_medium));
             mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_medium);
@@ -120,7 +120,7 @@ public class ConversationItemStyle extends ItemStyle {
             avatarStyleBuilder.width(ta.getDimension(R.styleable.ConversationItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_medium)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.ConversationItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_medium)));
 
-        } else if (mItemHeight > heightTiny && mItemHeight <= heightSmall) {
+        } else if (mItemHeight >= heightSmall && mItemHeight < heightMedium) {
 
             mMarginVertical = ta.getDimension(R.styleable.ConversationItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_small));
             mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_small);
