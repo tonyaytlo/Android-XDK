@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.ui.R;
+import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.util.imagecache.BitmapWrapper;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
@@ -88,9 +89,9 @@ public class AvatarView extends View {
         parseStyle(getContext(), attrs, defStyleAttr);
     }
 
-    public AvatarView init(@NonNull AvatarViewModel avatarViewModel, @NonNull IdentityNameFormatter identityNameFormatter) {
+    public AvatarView init(@NonNull AvatarViewModel avatarViewModel, @NonNull IdentityFormatter identityFormatter) {
         mViewModel = avatarViewModel;
-        mViewModel.setIdentityNameFormatter(identityNameFormatter);
+        mViewModel.setIdentityFormatter(identityFormatter);
 
         mPaintInitials.setAntiAlias(true);
         mPaintInitials.setSubpixelText(true);

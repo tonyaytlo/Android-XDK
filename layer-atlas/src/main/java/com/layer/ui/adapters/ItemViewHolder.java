@@ -7,12 +7,14 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
+import com.layer.sdk.query.Queryable;
 import com.layer.ui.style.ItemStyle;
 import com.layer.ui.viewmodel.ItemViewModel;
 
-public class ItemViewHolder<ITEM, VIEW_MODEL extends ItemViewModel<ITEM>, BINDING extends ViewDataBinding, STYLE extends ItemStyle>
+public class ItemViewHolder<ITEM extends Queryable, VIEW_MODEL extends ItemViewModel<ITEM>, BINDING extends ViewDataBinding, STYLE extends ItemStyle>
         extends RecyclerView.ViewHolder {
 
     protected VIEW_MODEL mViewModel;
@@ -32,6 +34,13 @@ public class ItemViewHolder<ITEM, VIEW_MODEL extends ItemViewModel<ITEM>, BINDIN
     @CallSuper
     public void setItem(ITEM item) {
         mViewModel.setItem(item);
+
+        getBinding().getRoot().setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return getViewModel().getItemClickListener().onItemLongClick(getItem());
+            }
+        });
     }
 
     @CallSuper

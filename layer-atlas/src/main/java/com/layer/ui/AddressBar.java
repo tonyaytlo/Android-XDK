@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.layer.ui.avatar.AvatarView;
 import com.layer.ui.avatar.AvatarViewModelImpl;
-import com.layer.ui.avatar.IdentityNameFormatterImpl;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.presence.PresenceView;
 import com.layer.ui.util.AvatarStyle;
 import com.layer.ui.util.EditTextUtil;
@@ -461,7 +461,7 @@ public class AddressBar extends LinearLayout {
 
             // Initialize participant data
             mName.setText(Util.getDisplayName(participant));
-            mAvatarView.init(new AvatarViewModelImpl(mImageCacheWrapper), new IdentityNameFormatterImpl());
+            mAvatarView.init(new AvatarViewModelImpl(mImageCacheWrapper), new IdentityFormatterImpl());
             mAvatarView.setParticipants(participant);
             mPresenceView.setParticipants(participant);
             mAvatarView.setStyle(mAvatarStyle);
@@ -616,7 +616,7 @@ public class AddressBar extends LinearLayout {
             ViewHolder viewHolder = new ViewHolder(parent);
 
             viewHolder.mAvatarView
-                    .init(new AvatarViewModelImpl(mImageCacheWrapper), new IdentityNameFormatterImpl());
+                    .init(new AvatarViewModelImpl(mImageCacheWrapper), new IdentityFormatterImpl());
             viewHolder.mAvatarView.setStyle(mAvatarStyle);
             return viewHolder;
         }

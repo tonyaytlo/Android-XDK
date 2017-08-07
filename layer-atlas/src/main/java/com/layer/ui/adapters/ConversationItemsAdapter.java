@@ -1,7 +1,6 @@
 package com.layer.ui.adapters;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
@@ -10,22 +9,23 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
-import com.layer.ui.avatar.AvatarViewModelImpl;
-import com.layer.ui.avatar.IdentityNameFormatter;
-import com.layer.ui.avatar.IdentityNameFormatterImpl;
+import com.layer.ui.databinding.UiFourPartItemBinding;
+import com.layer.ui.identity.IdentityFormatter;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.conversationitem.ConversationItemViewModel;
-import com.layer.ui.databinding.UiConversationItemBinding;
 import com.layer.ui.recyclerview.OnItemClickListener;
-import com.layer.ui.style.ConversationItemStyle;
+import com.layer.ui.style.FourPartItemStyle;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Collection;
 
+import com.layer.ui.fourpartitem.FourPartItemViewHolder;
+
 public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversation,
-        ConversationItemViewModel, UiConversationItemBinding, ConversationItemStyle,
-        ConversationItemsAdapter.ConversationItemViewHolder> {
+        ConversationItemViewModel, UiFourPartItemBinding, FourPartItemStyle,
+        FourPartItemViewHolder<Conversation, ConversationItemViewModel>> {
     private static final String TAG = "ConversationItemsAdapter";
 
     protected long mInitialHistory = 0;
@@ -34,14 +34,14 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     protected ConversationItemFormatter mConversationItemFormatter;
     protected ImageCacheWrapper mImageCacheWrapper;
 
-    protected IdentityNameFormatter mIdentityNameFormatter;
+    protected IdentityFormatter mIdentityFormatter;
 
     public ConversationItemsAdapter(Context context, LayerClient layerClient,
                                     Query<Conversation> query,
                                     Collection<String> updateAttributes,
                                     ConversationItemFormatter conversationItemFormatter,
                                     ImageCacheWrapper imageCacheWrapper,
-                                    IdentityNameFormatter identityNameFormatter) {
+                                    IdentityFormatter identityFormatter) {
         super(context, layerClient, TAG, false);
         setQuery(query, updateAttributes);
         mConversationItemFormatter = conversationItemFormatter;
@@ -49,8 +49,8 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
         layerClient.registerEventListener(mIdentityEventListener);
 
-        mIdentityNameFormatter = identityNameFormatter;
-        mIdentityNameFormatter = new IdentityNameFormatterImpl();
+        mIdentityFormatter = identityFormatter;
+        mIdentityFormatter = new IdentityFormatterImpl();
     }
 
     //==============================================================================================
@@ -58,10 +58,10 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     //==============================================================================================
 
     @Override
-    public ConversationItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        UiConversationItemBinding binding = UiConversationItemBinding.inflate(getLayoutInflater(), parent, false);
+    public FourPartItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        UiFourPartItemBinding binding = UiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
         ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, mItemClickListener, mLayerClient.getAuthenticatedUser());
-        ConversationItemViewHolder itemViewHolder = new ConversationItemViewHolder(binding, viewModel, getStyle(), mImageCacheWrapper, mIdentityNameFormatter);
+        FourPartItemViewHolder itemViewHolder = new FourPartItemViewHolder<>(binding, viewModel, getStyle(), mImageCacheWrapper, mIdentityFormatter);
 
         binding.addOnRebindCallback(mOnRebindCallback);
 
@@ -95,8 +95,8 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     // Setters
     //==============================================================================================
 
-    public void setIdentityNameFormatter(IdentityNameFormatter identityNameFormatter) {
-        mIdentityNameFormatter = identityNameFormatter;
+    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mIdentityFormatter = identityFormatter;
     }
 
     //==============================================================================================
@@ -139,42 +139,5 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
                 }
             }
         }).start();
-    }
-
-    //==============================================================================================
-    // Conversation Item ViewHolder
-    //==============================================================================================
-
-    static class ConversationItemViewHolder extends ItemViewHolder<Conversation, ConversationItemViewModel, UiConversationItemBinding, ConversationItemStyle> {
-
-        public ConversationItemViewHolder(UiConversationItemBinding binding, ConversationItemViewModel viewModel,
-                                          ConversationItemStyle itemStyle, ImageCacheWrapper imageCacheWrapper,
-                                          IdentityNameFormatter identityNameFormatter) {
-            super(binding, viewModel);
-            setStyle(itemStyle);
-
-            mBinding.setViewModel(viewModel);
-            mBinding.setStyle(itemStyle);
-            mBinding.avatar.init(new AvatarViewModelImpl(imageCacheWrapper), identityNameFormatter);
-
-        }
-
-        @Override
-        public void setItem(final Conversation conversation) {
-            super.setItem(conversation);
-
-            getBinding().getRoot().setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mViewModel.getOnItemClickListener() != null) {
-                        return mViewModel
-                                .getOnItemClickListener()
-                                .onItemLongClick(conversation);
-                    }
-
-                    return false;
-                }
-            });
-        }
     }
 }

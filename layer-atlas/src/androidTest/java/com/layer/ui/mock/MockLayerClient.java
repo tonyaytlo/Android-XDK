@@ -33,6 +33,12 @@ import java.util.Set;
 
 public class MockLayerClient extends LayerClient {
 
+    private Identity mAuthenticatedUser;
+
+    public MockLayerClient() {
+        mAuthenticatedUser = new MockIdentity();
+    }
+
     @Override
     public boolean isClosed() {
         return false;
@@ -196,7 +202,7 @@ public class MockLayerClient extends LayerClient {
     @Nullable
     @Override
     public Identity getAuthenticatedUser() {
-        return null;
+        return mAuthenticatedUser;
     }
 
     @Override

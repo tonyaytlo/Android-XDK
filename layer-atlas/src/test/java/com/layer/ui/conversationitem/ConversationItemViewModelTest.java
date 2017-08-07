@@ -72,11 +72,11 @@ public class ConversationItemViewModelTest {
     }
 
     @Test
-    public void testRightAccessoryText() {
+    public void testAccessoryText() {
         ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, null, layerClient.getAuthenticatedUser());
         viewModel.setItem(conversation);
 
-        assertThat(viewModel.getRightAccessoryText(), is(CONVERSATION_TIMESTAMP));
+        assertThat(viewModel.getAccessoryText(), is(CONVERSATION_TIMESTAMP));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ConversationItemViewModelTest {
         ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, null, layerClient.getAuthenticatedUser());
         viewModel.setItem(conversation);
 
-        assertThat(viewModel.isUnread(), is(true));
+        assertThat(viewModel.isSecondaryState(), is(true));
     }
 
     @Test
@@ -92,8 +92,8 @@ public class ConversationItemViewModelTest {
         ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, null, layerClient.getAuthenticatedUser());
         viewModel.setItem(conversation);
 
-        assertThat(viewModel.getParticipantsMinusAuthenticatedUser().contains(participant1), is(false));
-        assertThat(viewModel.getParticipantsMinusAuthenticatedUser().contains(participant2), is(true));
-        assertThat(viewModel.getParticipantsMinusAuthenticatedUser().contains(participant3), is(true));
+        assertThat(viewModel.getIdentities().contains(participant1), is(false));
+        assertThat(viewModel.getIdentities().contains(participant2), is(true));
+        assertThat(viewModel.getIdentities().contains(participant3), is(true));
     }
 }

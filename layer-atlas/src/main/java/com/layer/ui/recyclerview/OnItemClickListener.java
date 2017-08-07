@@ -9,15 +9,15 @@ public interface OnItemClickListener<ITEM extends Queryable> {
     /**
      * Alerts the listener to item clicks.
      *
-     * @param conversation The item clicked.
+     * @param item The item clicked.
      */
-    void onItemClick(ITEM conversation);
+    void onItemClick(ITEM item);
 
     /**
      * Alerts the listener to long item clicks.
      *
-     * @param conversation The item long-clicked.
+     * @param item The item long-clicked.
      * @return true if the long-click was handled, false otherwise.
      */
-    boolean onItemLongClick(ITEM conversation);
+    boolean onItemLongClick(ITEM item);
 }

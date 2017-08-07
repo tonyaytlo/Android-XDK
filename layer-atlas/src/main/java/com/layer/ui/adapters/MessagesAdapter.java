@@ -21,7 +21,7 @@ import com.layer.sdk.query.RecyclerViewController;
 import com.layer.ui.R;
 import com.layer.ui.avatar.AvatarView;
 import com.layer.ui.avatar.AvatarViewModelImpl;
-import com.layer.ui.avatar.IdentityNameFormatterImpl;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.databinding.UiMessageItemMeBinding;
 import com.layer.ui.databinding.UiMessageItemThemBinding;
 import com.layer.ui.messageitem.MessageItemViewModel;
@@ -753,7 +753,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             if (mViewDataBinding instanceof UiMessageItemThemBinding) {
                 AvatarView avatarView = ((UiMessageItemThemBinding) mViewDataBinding).avatar;
                 if (avatarView != null) {
-                    avatarView.init(new AvatarViewModelImpl(imageCachWrapper), new IdentityNameFormatterImpl());
+                    avatarView.init(new AvatarViewModelImpl(imageCachWrapper), new IdentityFormatterImpl());
                 }
             }
         }

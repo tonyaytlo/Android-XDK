@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <com.layer.ui.recyclerview.ItemsRecyclerView
-        android:id="@+id/ui_conversation_items_list_recycler"
+        android:id="@+id/ui_items_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"

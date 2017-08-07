@@ -127,21 +127,19 @@
     <!-- # Address Bar                                                                         # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="layer_ui_conversation_item_title_large">18sp</dimen>
-    <dimen name="layer_ui_conversation_item_title_medium">18sp</dimen>
+    <dimen name="layer_ui_item_title_large">18sp</dimen>
+    <dimen name="layer_ui_item_title_medium">18sp</dimen>
     <dimen name="layer_ui_conversation_item_title_small">16sp</dimen>
     <dimen name="layer_ui_conversation_item_title_tiny">14sp</dimen>
 
-    <dimen name="layer_ui_conversation_item_subtitle_large">14sp</dimen>
-    <dimen name="layer_ui_conversation_item_subtitle_medium">10sp</dimen>
-    <dimen name="layer_ui_conversation_item_subtitle_small">10sp</dimen>
-    <dimen name="layer_ui_conversation_item_subtitle_tiny">10sp</dimen>
+    <dimen name="layer_ui_item_subtitle_large">14sp</dimen>
+    <dimen name="layer_ui_item_subtitle_medium">10sp</dimen>
+    <dimen name="layer_ui_item_subtitle_small">10sp</dimen>
+    <dimen name="layer_ui_item_subtitle_tiny">10sp</dimen>
 
-    <dimen name="layer_ui_conversation_item_right_accessory_text_large">12sp</dimen>
-    <dimen name="layer_ui_conversation_item_right_accessory_text_medium">10sp</dimen>
-    <dimen name="layer_ui_conversation_item_right_accessory_text_small">8sp</dimen>
-    <dimen name="layer_ui_conversation_item_right_accessory_text_tiny">8sp</dimen>
-
-
+    <dimen name="layer_ui_item_right_accessory_text_large">12sp</dimen>
+    <dimen name="layer_ui_item_right_accessory_text_medium">12sp</dimen>
+    <dimen name="layer_ui_item_right_accessory_text_small">8sp</dimen>
+    <dimen name="layer_ui_item_right_accessory_text_tiny">8sp</dimen>
 
 </resources>

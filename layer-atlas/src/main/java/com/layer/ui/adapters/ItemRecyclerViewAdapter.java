@@ -16,8 +16,10 @@ import com.layer.ui.style.ItemStyle;
 import com.layer.ui.util.Log;
 import com.layer.ui.viewmodel.ItemViewModel;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
         VIEW_MODEL extends ItemViewModel<ITEM>, BINDING extends ViewDataBinding,
@@ -32,6 +34,7 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     protected RecyclerView mRecyclerView;
 
     protected RecyclerViewController<ITEM> mQueryController;
+    protected List<ITEM> mItems;
     protected LayerClient mLayerClient;
 
     protected STYLE mStyle;
@@ -77,9 +80,24 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
      * Set query
      */
 
-    @CallSuper
     public void setQuery(Query<ITEM> query, Collection<String> updateAttributes) {
         mQueryController = mLayerClient.newRecyclerViewController(query, updateAttributes, this);
+        mItems = null;
+    }
+
+    public void setItems(List<ITEM> items) {
+        mItems = items;
+        mQueryController = null;
+        if (mRecyclerView != null) {
+            notifyDataSetChanged();
+        }
+
+    }
+
+    public void setItems(Set<ITEM> items) {
+        List<ITEM> list = new ArrayList<>();
+        list.addAll(items);
+        setItems(list);
     }
 
     /**
@@ -87,7 +105,9 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
      */
     @CallSuper
     public void refresh() {
-        mQueryController.execute();
+        if (mQueryController != null) {
+            mQueryController.execute();
+        }
     }
 
     /**
@@ -115,19 +135,35 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
 
     @Override
     public int getItemCount() {
-        return mQueryController.getItemCount();
+        if (mQueryController != null) {
+            return mQueryController.getItemCount();
+        } else {
+            return mItems.size();
+        }
     }
 
     public Integer getPosition(ITEM item) {
-        return mQueryController.getPosition(item);
+        if (mQueryController != null) {
+            return mQueryController.getPosition(item);
+        } else {
+            return mItems.indexOf(item);
+        }
     }
 
     public Integer getPosition(ITEM item, int lastPosition) {
-        return mQueryController.getPosition(item, lastPosition);
+        if (mQueryController != null) {
+            return mQueryController.getPosition(item, lastPosition);
+        } else {
+            return mItems.indexOf(item);
+        }
     }
 
     public ITEM getItem(int position) {
-        return mQueryController.getItem(position);
+        if (mQueryController != null) {
+            return mQueryController.getItem(position);
+        } else {
+            return mItems.get(position);
+        }
     }
 
     public ITEM getItem(ItemViewHolder<ITEM, VIEW_MODEL, BINDING, STYLE> viewHolder) {
@@ -149,9 +185,12 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     @Override
     public void onBindViewHolder(VIEW_HOLDER holder, int position, List<Object> payloads) {
         if (payloads.isEmpty() || hasNonDataBindingInvalidate(payloads, TAG)) {
-            mQueryController.updateBoundPosition(position);
-            ITEM item = getItem(position);
 
+            if (mQueryController != null) {
+                mQueryController.updateBoundPosition(position);
+            }
+
+            ITEM item = getItem(position);
             if (item != null) {
                 holder.setItem(item);
 

@@ -63,8 +63,11 @@ public class ConversationItemFormatter {
     }
 
     public String getConversationMetadataTitle(Conversation conversation) {
-        String metadataTitle = (String) conversation.getMetadata().get(METADATA_KEY_CONVERSATION_TITLE);
-        if (metadataTitle != null && !metadataTitle.trim().isEmpty()) return metadataTitle.trim();
+        if (conversation.getMetadata() != null) {
+            String metadataTitle = (String) conversation.getMetadata().get(METADATA_KEY_CONVERSATION_TITLE);
+            if (metadataTitle != null && !metadataTitle.trim().isEmpty())
+                return metadataTitle.trim();
+        }
         return null;
     }
 

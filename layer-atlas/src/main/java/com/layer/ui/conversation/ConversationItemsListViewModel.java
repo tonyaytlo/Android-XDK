@@ -10,7 +10,7 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.ui.adapters.ConversationItemsAdapter;
-import com.layer.ui.avatar.IdentityNameFormatter;
+import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
@@ -39,9 +39,9 @@ public class ConversationItemsListViewModel extends BaseObservable {
     public ConversationItemsListViewModel(Context context, LayerClient layerClient,
                                           ConversationItemFormatter conversationItemFormatter,
                                           ImageCacheWrapper imageCacheWrapper,
-                                          IdentityNameFormatter identityNameFormatter) {
+                                          IdentityFormatter identityFormatter) {
         this(context, layerClient, MY_CURRENT_CONVERSATIONS_BY_TIME, null,
-                INITIAL_HISTORIC_MESSAGES_TO_SYNC, conversationItemFormatter, imageCacheWrapper, identityNameFormatter);
+                INITIAL_HISTORIC_MESSAGES_TO_SYNC, conversationItemFormatter, imageCacheWrapper, identityFormatter);
     }
 
     /**
@@ -53,9 +53,9 @@ public class ConversationItemsListViewModel extends BaseObservable {
                                           int initialHistoricMessagesToFetch,
                                           ConversationItemFormatter conversationItemFormatter,
                                           ImageCacheWrapper imageCacheWrapper,
-                                          IdentityNameFormatter identityNameFormatter) {
+                                          IdentityFormatter identityFormatter) {
         mConversationItemsAdapter = new ConversationItemsAdapter(context, layerClient, query,
-                updateAttributes, conversationItemFormatter, imageCacheWrapper, identityNameFormatter);
+                updateAttributes, conversationItemFormatter, imageCacheWrapper, identityFormatter);
         mConversationItemsAdapter.setInitialHistoricMessagesToFetch(initialHistoricMessagesToFetch);
     }
 

@@ -11,8 +11,11 @@
     <application>
 
         <activity
-            android:name="com.layer.ui.view.AvatarActivityTestView">
+            android:name="com.layer.ui.testactivity.AvatarActivityTestView">
         </activity>
+
+        <activity android:name=".testactivity.IdentityItemTestActivity"/>
+        <activity android:name=".testactivity.ConversationItemTestActivity"/>
 
     </application>
 

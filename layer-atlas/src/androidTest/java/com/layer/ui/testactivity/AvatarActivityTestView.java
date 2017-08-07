@@ -1,4 +1,4 @@
-package com.layer.ui.view;
+package com.layer.ui.testactivity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import com.layer.sdk.messaging.Presence;
 import com.layer.ui.R;
 import com.layer.ui.avatar.AvatarView;
 import com.layer.ui.avatar.AvatarViewModelImpl;
-import com.layer.ui.avatar.IdentityNameFormatterImpl;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.mock.MockIdentity;
 import com.layer.ui.mock.MockLayerClient;
 import com.layer.ui.presence.PresenceView;
@@ -44,9 +44,9 @@ public class AvatarActivityTestView extends Activity implements AdapterView.OnIt
         mPresenceView = (PresenceView) findViewById(R.id.test_presence);
         mPresenceView.setParticipants(mMockIdentity);
         ImageCacheWrapper imageCacheWrapper = new PicassoImageCacheWrapper(Picasso.with(this));
-        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper), new IdentityNameFormatterImpl());
+        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper), new IdentityFormatterImpl());
         mAvatarView.setParticipants(mMockIdentity);
-        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper), new IdentityNameFormatterImpl());
+        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper), new IdentityFormatterImpl());
         setUp();
     }
 

@@ -17,7 +17,7 @@
     <!-- ############################## -->
     <!-- Default UI Component Styles -->
     <!-- ############################## -->
-    <style name="ConversationItemsListView">
+    <style name="FourPartItemsListView">
         <item name="cellTitleTextColor">@color/layer_ui_text_gray</item>
         <item name="cellTitleTextTypeface">normal</item>
         <item name="cellTitleTextStyle">normal</item>
@@ -32,10 +32,10 @@
         <item name="cellSubtitleUnreadTextStyle">bold</item>
         <item name="cellBackgroundColor">@android:color/transparent</item>
         <item name="cellUnreadBackgroundColor">@android:color/transparent</item>
-        <item name="rightAccessoryTextColor">@color/layer_ui_text_gray</item>
-        <item name="rightAccessoryTextTypeface">normal</item>
-        <item name="rightAccessoryUnreadTextColor">@color/layer_ui_text_black</item>
-        <item name="rightAccessoryUnreadTextTypeface">normal</item>
+        <item name="accessoryTextColor">@color/layer_ui_text_gray</item>
+        <item name="accessoryTextTypeface">normal</item>
+        <item name="accessoryUnreadTextColor">@color/layer_ui_text_black</item>
+        <item name="accessoryUnreadTextTypeface">normal</item>
         <item name="avatarTextColor">@color/layer_ui_text_black</item>
         <item name="avatarBackgroundColor">@color/layer_ui_avatar_background</item>
         <item name="avatarBorderColor">@color/layer_ui_avatar_border</item>

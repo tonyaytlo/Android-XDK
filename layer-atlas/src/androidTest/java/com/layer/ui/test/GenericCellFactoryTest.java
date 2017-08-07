@@ -2,18 +2,19 @@ package com.layer.ui.test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
 
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
+import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.messagetypes.generic.GenericCellFactory;
 import com.layer.ui.mock.MockLayerClient;
 import com.layer.ui.mock.MockMessageImpl;
 import com.layer.ui.mock.MockMessagePart;
-import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Identity;
-import com.layer.sdk.messaging.Message;
-import com.layer.sdk.messaging.MessagePart;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,9 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(AndroidJUnit4.class)
 public class GenericCellFactoryTest {
     private final static String MIME_TYPE = "text/plain";
-
-
-    Identity mParticipant1, mParticipant2;
 
     private List<MessagePart> mTestMessageParts;
     private MessagePart mTextMessagePart;

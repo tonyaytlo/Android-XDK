@@ -11,6 +11,7 @@ import com.layer.sdk.messaging.MessageOptions;
 import com.layer.sdk.messaging.MessagePart;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +19,17 @@ import java.util.Map;
 public class MockMessageImpl implements Message {
 
     private List<MessagePart> mMessageParts = new ArrayList<>();
+    private Date mReceivedAtDate;
 
     public MockMessageImpl(List<MessagePart> messageParts) {
         mMessageParts = messageParts;
+        mReceivedAtDate = new Date();
+    }
+
+    public MockMessageImpl(MessagePart... messageParts) {
+        mMessageParts = new ArrayList<>();
+        Collections.addAll(mMessageParts, messageParts);
+        mReceivedAtDate = new Date();
     }
 
     @Override
@@ -70,7 +79,7 @@ public class MockMessageImpl implements Message {
 
     @Override
     public Date getReceivedAt() {
-        return null;
+        return mReceivedAtDate;
     }
 
     @Nullable

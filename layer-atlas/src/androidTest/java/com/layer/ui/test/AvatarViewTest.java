@@ -24,7 +24,7 @@ import android.view.WindowManager;
 
 import com.layer.ui.R;
 import com.layer.ui.presence.PresenceView;
-import com.layer.ui.view.AvatarActivityTestView;
+import com.layer.ui.testactivity.AvatarActivityTestView;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

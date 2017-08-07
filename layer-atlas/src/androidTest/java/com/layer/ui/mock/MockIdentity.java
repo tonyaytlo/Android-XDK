@@ -8,6 +8,7 @@ import com.layer.sdk.messaging.Metadata;
 import com.layer.sdk.messaging.Presence;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class MockIdentity implements Identity {
 
@@ -16,6 +17,14 @@ public class MockIdentity implements Identity {
     private static final int MOCK_OFFLINE = 3;
     private static final int MOCK_INVISIBLE = 4;
     private static final int MOCK_BUSY = 5;
+
+    private Date mLastSeenAt;
+    private String mUserId;
+
+    public MockIdentity() {
+        mLastSeenAt = new Date();
+        mUserId = UUID.randomUUID().toString();
+    }
 
     @NonNull
     @Override
@@ -26,7 +35,7 @@ public class MockIdentity implements Identity {
     @NonNull
     @Override
     public String getUserId() {
-        return null;
+        return mUserId;
     }
 
     @Override
@@ -109,6 +118,16 @@ public class MockIdentity implements Identity {
 
     @Override
     public Date getLastSeenAt() {
-        return null;
+        return mLastSeenAt;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Identity) {
+            Identity otherIdentity = (Identity) other;
+            return this.getUserId().equals(otherIdentity.getUserId());
+        }
+
+        return false;
     }
 }
