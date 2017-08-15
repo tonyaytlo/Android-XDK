@@ -1,10 +1,9 @@
-package com.layer.ui.messagetypes.text;
+package com.layer.ui.message.messagetypes.text;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.support.v4.widget.ContentLoadingProgressBar;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,8 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.R;
-import com.layer.ui.messagetypes.CellFactory;
+import com.layer.ui.databinding.UiMessageItemCellTextBinding;
+import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.util.Log;
 import com.layer.ui.util.Util;
 
@@ -41,16 +41,16 @@ public class TextCellFactory extends
 
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
-        View v = layoutInflater.inflate(R.layout.ui_message_item_cell_text, cellView, true);
+
+        UiMessageItemCellTextBinding uiMessageItemCellTextBinding = UiMessageItemCellTextBinding
+                .inflate(layoutInflater, cellView, true);
+
+        mMessageStyle.setIsMe(isMe);
+        uiMessageItemCellTextBinding.setMessageStyle(mMessageStyle);
+        View v = uiMessageItemCellTextBinding.getRoot();
         v.setBackgroundResource(isMe ? R.drawable.ui_message_item_cell_me : R.drawable.ui_message_item_cell_them);
         ((GradientDrawable) v.getBackground()).setColor(isMe ? mMessageStyle.getMyBubbleColor() : mMessageStyle.getOtherBubbleColor());
-
-        TextView t = (TextView) v.findViewById(R.id.cell_text);
-        t.setTextSize(TypedValue.COMPLEX_UNIT_PX, isMe ? mMessageStyle.getMyTextSize() : mMessageStyle.getOtherTextSize());
-        t.setTextColor(isMe ? mMessageStyle.getMyTextColor() : mMessageStyle.getOtherTextColor());
-        t.setLinkTextColor(isMe ? mMessageStyle.getMyTextColor() : mMessageStyle.getOtherTextColor());
-        t.setTypeface(isMe ? mMessageStyle.getMyTextTypeface() : mMessageStyle.getOtherTextTypeface(), isMe ? mMessageStyle.getMyTextStyle() : mMessageStyle.getOtherTextStyle());
-        return new CellHolder(v);
+        return new CellHolder(uiMessageItemCellTextBinding);
     }
 
     @Override
@@ -159,9 +159,9 @@ public class TextCellFactory extends
         TextView mTextView;
         ContentLoadingProgressBar mProgressBar;
 
-        public CellHolder(View view) {
-            mTextView = (TextView) view.findViewById(R.id.cell_text);
-            mProgressBar = (ContentLoadingProgressBar) view.findViewById(R.id.text_cell_progress);
+        public CellHolder(UiMessageItemCellTextBinding uiMessageItemCellTextBinding) {
+            mTextView = uiMessageItemCellTextBinding.cellText;
+            mProgressBar = uiMessageItemCellTextBinding.textCellProgress;
         }
     }
 

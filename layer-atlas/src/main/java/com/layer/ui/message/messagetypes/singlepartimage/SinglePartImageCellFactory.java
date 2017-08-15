@@ -1,4 +1,4 @@
-package com.layer.ui.messagetypes.singlepartimage;
+package com.layer.ui.message.messagetypes.singlepartimage;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -13,38 +13,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.layer.ui.R;
-import com.layer.ui.messagetypes.CellFactory;
-import com.layer.ui.util.imagepopup.ImagePopupActivity;
-import com.layer.ui.util.imagecache.transformations.RoundedTransform;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
+import com.layer.ui.R;
+import com.layer.ui.databinding.UiMessageItemCellImageBinding;
+import com.layer.ui.message.messagetypes.CellFactory;
+import com.layer.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.ui.util.imagecache.ImageRequestParameters;
+import com.layer.ui.util.imagepopup.ImagePopupActivity;
 
 /**
  * BasicImage handles non-ThreePartImage images.  It relies on the ThreePartImage RequestHandler and does not handle image rotation.
  */
 public class SinglePartImageCellFactory extends
         CellFactory<SinglePartImageCellFactory.CellHolder, SinglePartImageCellFactory.PartId> implements View.OnClickListener {
-    private static final String PICASSO_TAG = SinglePartImageCellFactory.class.getSimpleName();
+    private static final String IMAGE_CACHING_TAG = SinglePartImageCellFactory.class.getSimpleName();
     private static final int PLACEHOLDER = com.layer.ui.R.drawable.ui_message_item_cell_placeholder;
     private static final int CACHE_SIZE_BYTES = 256 * 1024;
 
     private final LayerClient mLayerClient;
-    private final Picasso mPicasso;
-    private Transformation mTransform;
+    private final ImageCacheWrapper mImageCacheWrapper;
 
-    public SinglePartImageCellFactory(LayerClient mLayerClient, Picasso mPicasso) {
+    public SinglePartImageCellFactory(LayerClient mLayerClient, ImageCacheWrapper imageCacheWrapper) {
         super(CACHE_SIZE_BYTES);
         this.mLayerClient = mLayerClient;
-        this.mPicasso = mPicasso;
-    }
-
-    public SinglePartImageCellFactory(Activity activity, LayerClient layerClient, Picasso picasso) {
-        this(layerClient, picasso);
+        this.mImageCacheWrapper = imageCacheWrapper;
     }
 
     @Override
@@ -54,7 +48,7 @@ public class SinglePartImageCellFactory extends
 
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
-        return new CellHolder(layoutInflater.inflate(R.layout.ui_message_item_cell_image, cellView, true));
+        return new CellHolder(UiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
     }
 
     @Override
@@ -62,19 +56,29 @@ public class SinglePartImageCellFactory extends
         cellHolder.mImageView.setTag(index);
         cellHolder.mImageView.setOnClickListener(this);
         cellHolder.mProgressBar.show();
-        mPicasso.load(index.mId).tag(PICASSO_TAG).placeholder(PLACEHOLDER)
-                .centerInside().resize(specs.maxWidth, specs.maxHeight).onlyScaleDown()
-                .transform(getTransform(cellHolder.mImageView.getContext())).into(cellHolder.mImageView, new Callback() {
+
+        ImageCacheWrapper.Callback callback = new ImageCacheWrapper.Callback() {
             @Override
             public void onSuccess() {
                 cellHolder.mProgressBar.hide();
             }
 
             @Override
-            public void onError() {
+            public void onFailure() {
                 cellHolder.mProgressBar.hide();
             }
-        });
+        };
+
+        ImageRequestParameters imageRequestParameters = new ImageRequestParameters
+                .Builder(index.mId, PLACEHOLDER, specs.maxWidth, specs.maxHeight, callback)
+                .setRotateAngleTo(0)
+                .setTag(IMAGE_CACHING_TAG)
+                .setShouldCenterImage(true)
+                .setShouldScaleDownTo(true)
+                .setShouldTransformIntoRound(true)
+                .setRotateAngleTo(0)
+                .build();
+        mImageCacheWrapper.loadImage(imageRequestParameters, cellHolder.mImageView);
     }
 
     @Override
@@ -96,11 +100,11 @@ public class SinglePartImageCellFactory extends
     public void onScrollStateChanged(int newState) {
         switch (newState) {
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                mPicasso.pauseTag(PICASSO_TAG);
+                mImageCacheWrapper.pauseTag(IMAGE_CACHING_TAG);
                 break;
             case RecyclerView.SCROLL_STATE_IDLE:
             case RecyclerView.SCROLL_STATE_SETTLING:
-                mPicasso.resumeTag(PICASSO_TAG);
+                mImageCacheWrapper.resumeTag(IMAGE_CACHING_TAG);
                 break;
         }
     }
@@ -129,18 +133,6 @@ public class SinglePartImageCellFactory extends
         }
     }
 
-    //==============================================================================================
-    // private methods
-    //==============================================================================================
-
-    private Transformation getTransform(Context context) {
-        if (mTransform == null) {
-            float radius = context.getResources().getDimension(com.layer.ui.R.dimen.layer_ui_message_item_cell_radius);
-            mTransform = new RoundedTransform(radius);
-        }
-
-        return mTransform;
-    }
 
     //==============================================================================================
     // Inner classes
@@ -149,10 +141,12 @@ public class SinglePartImageCellFactory extends
     public static class CellHolder extends CellFactory.CellHolder {
         ImageView mImageView;
         ContentLoadingProgressBar mProgressBar;
+        UiMessageItemCellImageBinding mUiMessageItemCellImageBinding;
 
-        public CellHolder(View view) {
-            mImageView = (ImageView) view.findViewById(R.id.cell_image);
-            mProgressBar = (ContentLoadingProgressBar) view.findViewById(R.id.cell_progress);
+        public CellHolder(UiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
+            mUiMessageItemCellImageBinding = uiMessageItemCellImageBinding;
+            mImageView = uiMessageItemCellImageBinding.cellImage;
+            mProgressBar = uiMessageItemCellImageBinding.cellProgress;
         }
     }
 

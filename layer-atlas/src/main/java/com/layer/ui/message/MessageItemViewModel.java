@@ -1,71 +1,47 @@
-package com.layer.ui.messageitem;
+package com.layer.ui.message;
 
-import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.view.View;
 
 import com.layer.sdk.messaging.Identity;
+import com.layer.sdk.messaging.Message;
+import com.layer.ui.recyclerview.OnItemClickListener;
+import com.layer.ui.viewmodel.ItemViewModel;
 
 import java.util.Collections;
 import java.util.Set;
 
-public class MessageItemViewModel extends BaseObservable {
+public class MessageItemViewModel extends ItemViewModel<Message> {
 
-    private boolean mIsOneOnOne;
-    private boolean mShouldShowAvatar;
     private boolean mIsClusterSpaceVisible;
     private boolean mIsDisplayName;
     private boolean mIsBindDateTimeForMessage;
-    private boolean mShouldClusterBeVisible;
     private String mTimeGroupDay;
     private boolean mIsMessageSent;
     private String mSender;
     private Set<Identity> mParticipants;
     private String mRecipientStatus;
     private String mGroupTime;
-    private boolean mRecipientStatusVisible;
+    private boolean mIsRecipientStatusVisible;
+    private boolean mIsMyCellType;
+    private int mAvatarViewVisibilityType;
+
+    public MessageItemViewModel(
+            OnItemClickListener<Message> itemClickListener) {
+        super(itemClickListener);
+    }
+
 
     public boolean isClusterSpaceVisible() {
         return mIsClusterSpaceVisible;
     }
 
-    public int isDisplayAvatar() {
-        if (isOneOnOne()) {
-            if (isShouldShowAvatar()) {
-                return (View.VISIBLE);
-            } else {
-                return (View.GONE);
-            }
-        } else if (mShouldClusterBeVisible) {
-            return (View.VISIBLE);
-        }
-
-        return (View.INVISIBLE);
+    @Bindable
+    public int getAvatarVisibility() {
+        return mAvatarViewVisibilityType;
     }
 
-    public void setShouldShowAvatar(
-            boolean shouldShowAvatar) {
-        mShouldShowAvatar = shouldShowAvatar;
-    }
-
-    public void setClusterSpaceVisible(boolean isClusterSpaceVisible) {
+    public void setIsClusterSpaceVisible(boolean isClusterSpaceVisible) {
         mIsClusterSpaceVisible = isClusterSpaceVisible;
-    }
-
-    public void setOneOnOne(boolean oneOnOne) {
-        mIsOneOnOne = oneOnOne;
-    }
-
-    private boolean isOneOnOne() {
-        return mIsOneOnOne;
-    }
-
-    public void setShouldClusterBeVisible(boolean shouldClusterBeVisible) {
-        mShouldClusterBeVisible = shouldClusterBeVisible;
-    }
-
-    private boolean isShouldShowAvatar() {
-        return mShouldShowAvatar;
     }
 
     @Bindable
@@ -87,11 +63,11 @@ public class MessageItemViewModel extends BaseObservable {
     }
 
     @Bindable
-    public boolean isBindDateTimeForMessage() {
+    public boolean getShouldBindDateTimeForMessage() {
         return mIsBindDateTimeForMessage;
     }
 
-    public void setIsBindDateTimeForMessage(boolean isBindDateTimeForMessage) {
+    public void setShouldBindDateTimeForMessage(boolean isBindDateTimeForMessage) {
         mIsBindDateTimeForMessage = isBindDateTimeForMessage;
     }
 
@@ -122,12 +98,12 @@ public class MessageItemViewModel extends BaseObservable {
         mSender = sender;
     }
 
-    public void setIsDisplayName(boolean isDisplayName) {
+    public void setShouldShowDisplayName(boolean isDisplayName) {
         mIsDisplayName = isDisplayName;
     }
 
     @Bindable
-    public boolean isDisplayName() {
+    public boolean getShouldShowDisplayName() {
         return mIsDisplayName;
     }
 
@@ -142,10 +118,23 @@ public class MessageItemViewModel extends BaseObservable {
 
     @Bindable
     public boolean isRecipientStatusVisible() {
-        return mRecipientStatusVisible;
+        return mIsRecipientStatusVisible;
     }
 
-    public void setRecipientStatusVisible(boolean recipientStatusVisible) {
-        mRecipientStatusVisible = recipientStatusVisible;
+    public void setIsRecipientStatusVisible(boolean isRecipientStatusVisible) {
+        mIsRecipientStatusVisible = isRecipientStatusVisible;
+    }
+
+    public void setMyCellType(boolean isMyCellType) {
+        mIsMyCellType = isMyCellType;
+    }
+
+    @Bindable
+    public boolean isMyCellType() {
+        return mIsMyCellType;
+    }
+
+    public void setAvatarViewVisibilityType(int avatarViewVisibilityType) {
+        mAvatarViewVisibilityType = avatarViewVisibilityType;
     }
 }
