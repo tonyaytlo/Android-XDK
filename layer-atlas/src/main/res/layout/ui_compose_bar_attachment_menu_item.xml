@@ -13,34 +13,38 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/layer_ui_dropdown_item_height"
-              android:orientation="horizontal"
-              android:background="?attr/selectableItemBackground"
-              android:paddingLeft="@dimen/layer_ui_padding_normal"
-              android:paddingRight="@dimen/layer_ui_padding_normal"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:scaleType="center"
-        android:visibility="gone"
-        />
+    <data>
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        <import type="com.layer.ui.message.messagetypes.AttachmentSender"/>
+
+        <variable
+            name="sender"
+            type="AttachmentSender"/>
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/layer_ui_dropdown_item_height"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/layer_ui_padding_normal"
         android:paddingLeft="@dimen/layer_ui_padding_normal"
-        android:text="[title]"
-        android:textColor="@color/layer_ui_text_black"
-        android:textSize="@dimen/layer_ui_text_size_dropdown_item"
-        />
+        android:paddingRight="@dimen/layer_ui_padding_normal"
+        android:paddingStart="@dimen/layer_ui_padding_normal"
+        android:onClick="@{() -> sender.requestSend()}">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@{sender.title}"
+            android:textColor="@color/layer_ui_text_black"
+            android:textSize="@dimen/layer_ui_text_size_dropdown_item"
+            android:drawablePadding="@dimen/layer_ui_padding_normal"/>
+
+    </FrameLayout>
+</layout>

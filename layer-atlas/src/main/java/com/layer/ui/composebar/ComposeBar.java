@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -22,15 +23,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerTypingIndicatorListener;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.ui.R;
+import com.layer.ui.databinding.UiComposeBarAttachmentMenuItemBinding;
 import com.layer.ui.databinding.UiComposeBarBinding;
 import com.layer.ui.message.messagetypes.AttachmentSender;
 import com.layer.ui.message.messagetypes.MessageSender;
@@ -285,23 +285,23 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout menuLayout = (LinearLayout) mAttachmentMenu.getContentView();
 
-        View menuItem = inflater.inflate(R.layout.ui_compose_bar_attachment_menu_item, menuLayout, false);
-        ((TextView) menuItem.findViewById(R.id.title)).setText(sender.getTitle());
-        menuItem.setTag(sender);
-        menuItem.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                mAttachmentMenu.dismiss();
-                ((AttachmentSender) v.getTag()).requestSend();
-            }
-        });
-        if (sender.getIcon() != null) {
-            ImageView iconView = ((ImageView) menuItem.findViewById(R.id.icon));
-            iconView.setImageResource(sender.getIcon());
-            iconView.setVisibility(VISIBLE);
-            Drawable d = DrawableCompat.wrap(iconView.getDrawable());
-            DrawableCompat.setTint(d, getResources().getColor(R.color.layer_ui_icon_enabled));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            menuLayout.setBackground(mAttachmentSendersBackground);
+        } else {
+            menuLayout.setBackgroundDrawable(mAttachmentSendersBackground);
         }
-        menuLayout.addView(menuItem);
+
+        UiComposeBarAttachmentMenuItemBinding binding = UiComposeBarAttachmentMenuItemBinding.inflate(inflater, menuLayout, false);
+        binding.setSender(sender);
+        binding.executePendingBindings();
+
+        if (sender.getIcon() != null) {
+            Drawable iconDrawable = ContextCompat.getDrawable(getContext(), sender.getIcon());
+            DrawableCompat.setTint(iconDrawable, getResources().getColor(R.color.layer_ui_icon_enabled));
+            binding.title.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null);
+        }
+
+        menuLayout.addView(binding.getRoot());
     }
 
     public void setOnMessageEditTextFocusChangeListener(OnFocusChangeListener onFocusChangeListener) {
