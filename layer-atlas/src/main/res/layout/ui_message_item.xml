@@ -111,26 +111,36 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
-                <FrameLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:visibility="@{viewModel.avatarVisibility}">
+                    android:layout_height="wrap_content">
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.GONE}">
 
-                    <com.layer.ui.avatar.AvatarView
-                        android:id="@+id/avatar"
+                        <com.layer.ui.avatar.AvatarView
+                            android:id="@+id/avatar"
+                            android:layout_width="@dimen/layer_ui_message_avatar_item_single"
+                            android:layout_height="@dimen/layer_ui_message_avatar_item_single"
+                            app:participants="@{viewModel.participants}" />
+
+
+                        <com.layer.ui.presence.PresenceView
+                            android:id="@+id/presence"
+                            android:layout_width="@dimen/layer_ui_message_avatar_item_single"
+                            android:layout_height="@dimen/layer_ui_message_avatar_item_single"
+                            android:layout_gravity="bottom|right" />
+
+                    </FrameLayout>
+                    <!--Empty space when Avatar visibility is set to View.GONE so that messages can align properly-->
+                    <android.widget.Space
                         android:layout_width="@dimen/layer_ui_message_avatar_item_single"
                         android:layout_height="@dimen/layer_ui_message_avatar_item_single"
-                        app:participants="@{viewModel.participants}" />
+                        android:visibility="@{viewModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"/>
 
-
-                    <com.layer.ui.presence.PresenceView
-                        android:id="@+id/presence"
-                        android:layout_width="@dimen/layer_ui_message_avatar_item_single"
-                        android:layout_height="@dimen/layer_ui_message_avatar_item_single"
-                        android:layout_gravity="bottom|right" />
-
-                </FrameLayout>
+                </RelativeLayout>
 
                 <android.widget.Space
                     android:layout_width="0dp"

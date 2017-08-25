@@ -19,6 +19,7 @@ import com.layer.ui.util.Util;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.text.DateFormat;
+import java.util.Collections;
 import java.util.Date;
 
 public class MessageCellViewHolder extends
@@ -43,7 +44,7 @@ public class MessageCellViewHolder extends
         uiMessageItemBinding.avatar.init(new AvatarViewModelImpl(imageCachWrapper), new IdentityFormatterImpl());
     }
 
-    public void bind(Message message, int viewVisibilityType, boolean isClusterSpaceVisible,
+    public void bind(Message message, boolean shouldAvatarBeVisible, boolean shouldDisplayAvatarSpace, boolean isClusterSpaceVisible,
             boolean shouldDisplayName, boolean shouldBindDateTimeForMessage, String recipientStatus,
             boolean isRecipientStatusVisible, DateFormatter dateFormatter, boolean isCellTypeMe) {
 
@@ -63,17 +64,19 @@ public class MessageCellViewHolder extends
         messageItemViewModel.setTimeGroupDay(timeBarDayText);
         messageItemViewModel.setSender(sender);
         if (message.getSender() != null) {
+
             messageItemViewModel.setParticipants(
-                    message.getSender());
+                    Collections.singleton(message.getSender()));
         }
         messageItemViewModel.setRecipientStatus(recipientStatus);
         messageItemViewModel.setIsRecipientStatusVisible(isRecipientStatusVisible);
         messageItemViewModel.setGroupTime(" " + timeBarTimeText);
-        messageItemViewModel.setAvatarViewVisibilityType(viewVisibilityType);
+        messageItemViewModel.setAvatarViewVisibilityType(shouldAvatarBeVisible);
+        messageItemViewModel.setShouldDisplayAvatarSpace(shouldDisplayAvatarSpace);
         messageItemViewModel.setIsClusterSpaceVisible(isClusterSpaceVisible);
         messageItemViewModel.setShouldShowDisplayName(shouldDisplayName);
         messageItemViewModel.setShouldBindDateTimeForMessage(shouldBindDateTimeForMessage);
-        messageItemViewModel.setParticipants(message.getSender());
+        messageItemViewModel.setParticipants(Collections.singleton(message.getSender()));
         messageItemViewModel.setMessageSent(message.isSent());
         messageItemViewModel.setMyCellType(isCellTypeMe);
         messageItemViewModel.notifyChange();

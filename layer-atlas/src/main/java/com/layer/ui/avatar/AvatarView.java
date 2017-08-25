@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -45,7 +47,7 @@ public class AvatarView extends View {
     private final Paint mPaintBorder = new Paint();
     private final Paint mPaintBackground = new Paint();
 
-    private int mMaxAvatar = 3;
+    private int mMaxAvatar = 2;
     private static final float BORDER_SIZE_DP = 1f;
     private static final float MULTI_FRACTION = 26f / 40f;
 
@@ -75,6 +77,7 @@ public class AvatarView extends View {
     private Rect mRect = new Rect();
     private RectF mContentRect = new RectF();
     private AvatarViewModel mViewModel;
+    private int mParticipantsInitialSize;
 
     public AvatarView(Context context) {
         super(context);
@@ -115,6 +118,7 @@ public class AvatarView extends View {
     public void setParticipants(Identity... participants) {
         mParticipants.clear();
         mParticipants.addAll(Arrays.asList(participants));
+        mParticipantsInitialSize = mParticipants.size();
         update();
     }
 
@@ -124,6 +128,7 @@ public class AvatarView extends View {
     public void setParticipants(Set<Identity> participants) {
         mParticipants.clear();
         mParticipants.addAll(participants);
+        mParticipantsInitialSize = mParticipants.size();
         update();
     }
 
@@ -300,6 +305,8 @@ public class AvatarView extends View {
         float cx = mCenterX;
         float cy = mCenterY;
         mContentRect.set(cx - contentRadius, cy - contentRadius, cx + contentRadius, cy + contentRadius);
+
+        boolean hasDrawnGroupAvatarResource = false;
         for (Map.Entry<Identity, String> entry : mInitials.entrySet()) {
             // Border / background
             if (hasBorder) canvas.drawCircle(cx, cy, mOuterRadius, mPaintBorder);
@@ -308,14 +315,23 @@ public class AvatarView extends View {
             Identity identity = entry.getKey();
             BitmapWrapper bitmapWrapper = mIdentityBitmapWrapperMap.get(identity);
             Bitmap bitmap = (bitmapWrapper == null) ? null : bitmapWrapper.getBitmap();
-            if (bitmap != null && identity.getAvatarImageUrl() != null) {
-                canvas.drawBitmap(bitmap, mContentRect.left, mContentRect.top, PAINT_BITMAP);
+
+            //Check if the participants are more than two and display the group avatar placeholder
+            if (mParticipantsInitialSize > 2 && !hasDrawnGroupAvatarResource) {
+                hasDrawnGroupAvatarResource = true;
+                Drawable avatarPlaceholder = getContext().getResources().getDrawable(R.mipmap.avatar_placeholder);
+                Bitmap avatarPlaceholderBitmap = ((BitmapDrawable) avatarPlaceholder).getBitmap();
+                canvas.drawBitmap(avatarPlaceholderBitmap, mContentRect.left, mContentRect.top, PAINT_BITMAP);
             } else {
-                String initials = entry.getValue();
-                mPaintInitials.setTextSize(mTextSize);
-                mPaintInitials.getTextBounds(initials, 0, initials.length(), mRect);
-                canvas.drawCircle(cx, cy, contentRadius, mPaintBackground);
-                canvas.drawText(initials, cx - mRect.centerX(), cy - mRect.centerY() - 1f, mPaintInitials);
+                if (bitmap != null && identity.getAvatarImageUrl() != null) {
+                    canvas.drawBitmap(bitmap, mContentRect.left, mContentRect.top, PAINT_BITMAP);
+                } else {
+                    String initials = entry.getValue();
+                    mPaintInitials.setTextSize(mTextSize);
+                    mPaintInitials.getTextBounds(initials, 0, initials.length(), mRect);
+                    canvas.drawCircle(cx, cy, contentRadius, mPaintBackground);
+                    canvas.drawText(initials, cx - mRect.centerX(), cy - mRect.centerY() - 1f, mPaintInitials);
+                }
             }
 
             // Translate for next avatar
@@ -327,7 +343,7 @@ public class AvatarView extends View {
 
     private void parseStyle(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.AvatarView, R.attr.AvatarView, defStyleAttr);
-        mMaxAvatar = ta.getInt(R.styleable.AvatarView_maximumAvatars, 3);
+        mMaxAvatar = ta.getInt(R.styleable.AvatarView_maximumAvatars, 2);
         ta.recycle();
     }
 

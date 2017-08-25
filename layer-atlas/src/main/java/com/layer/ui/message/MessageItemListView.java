@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.layer.sdk.messaging.Conversation;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
@@ -23,6 +24,7 @@ import com.layer.ui.message.messagetypes.MessageStyle;
 import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.List;
+import java.util.Set;
 
 public class MessageItemListView  extends ConstraintLayout {
 
@@ -140,10 +142,10 @@ public class MessageItemListView  extends ConstraintLayout {
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-     * @see MessagesAdapter#setFooterView(View)
+     * @see MessagesAdapter#setFooterView(View, Set)
      */
-    public void setFooterView(View footerView) {
-        mAdapter.setFooterView(footerView);
+    public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
+        mAdapter.setFooterView(footerView, users);
         autoScroll();
     }
 
@@ -171,10 +173,6 @@ public class MessageItemListView  extends ConstraintLayout {
                 .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation))
                 .sortDescriptor(new SortDescriptor(Message.Property.POSITION, SortDescriptor.Order.ASCENDING))
                 .build()).refresh();
-    }
-
-    public void setFooterView(TypingIndicatorLayout footerView) {
-        mAdapter.setFooterView(footerView);
     }
 
     public void parseStyle(Context context, AttributeSet attrs, int defStyle) {

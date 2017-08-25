@@ -13,15 +13,61 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <FrameLayout
-        android:id="@+id/swipeable"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.layer.ui.message.MessageItemViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/layer_ui_padding_normal"
-        android:paddingRight="@dimen/layer_ui_padding_normal"
+        android:layout_marginLeft="@dimen/layer_ui_padding_normal"
         android:paddingTop="@dimen/layer_ui_message_cluster_space">
 
-    </FrameLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/messageFooterAnimation"
+            android:visibility="@{viewModel.messageFooterAnimationVisibility ? View.VISIBLE : View.GONE}"
+            android:orientation="horizontal">
+            <com.layer.ui.avatar.AvatarView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/layer_ui_message_avatar_item_single"
+                android:layout_height="@dimen/layer_ui_message_avatar_item_single"
+                android:layout_marginRight="@dimen/layer_ui_padding_narrow"
+                android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.GONE}"
+                app:participants="@{viewModel.participants}" />
+
+            <FrameLayout
+                android:id="@+id/swipeable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/layer_ui_padding_normal"
+                android:paddingRight="@dimen/layer_ui_padding_normal">
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/messageFooterNames"
+            android:layout_below="@id/messageFooterAnimation"
+            android:layout_marginTop="@dimen/layer_ui_message_item_time_group_padding_top"
+            android:visibility="@{viewModel.typingIndicatorMessageVisibility ? View.VISIBLE : View.GONE}"
+            android:text="@{viewModel.typingIndicatorMessage}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/layer_ui_text_gray"
+            android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
+            android:paddingLeft="@dimen/layer_ui_padding_normal"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:maxLines="1"/>
+
+    </RelativeLayout>
 </layout>

@@ -62,7 +62,8 @@ import java.util.Set;
  * @see CellFactory
  */
 public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageItemViewModel,
-        ViewDataBinding, MessageStyle, ItemViewHolder<Message, MessageItemViewModel, ViewDataBinding, MessageStyle>> {
+        ViewDataBinding, MessageStyle, ItemViewHolder<Message, MessageItemViewModel,
+        ViewDataBinding, MessageStyle>> {
 
     private static final String TAG = MessagesAdapter.class.getSimpleName();
     private final static int VIEW_TYPE_FOOTER = 0;
@@ -92,8 +93,11 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
     private boolean delivered = false;
     private Map<Identity, Message.RecipientStatus> statuses;
     private DateFormatter mDateFormatter;
+    private Set<Identity> mUsersTyping;
+    private boolean mOneOnOne;
 
-    public MessagesAdapter(Context context, LayerClient layerClient, ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter) {
+    public MessagesAdapter(Context context, LayerClient layerClient,
+            ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter) {
         super(context, layerClient, TAG, false);
         mImageCacheWrapper = imageCacheWrapper;
         mDateFormatter = dateFormatter;
@@ -154,10 +158,11 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
         return mFooterView;
     }
 
-    public void setFooterView(View footerView) {
+    public void setFooterView(View footerView, Set<Identity> users) {
         boolean isNull = footerView == null;
         boolean wasNull = mFooterView == null;
         mFooterView = footerView;
+        mUsersTyping = users;
 
         if (wasNull && !isNull) {
             // Insert
@@ -289,18 +294,22 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         if (viewType == VIEW_TYPE_FOOTER) {
+            MessageItemViewModel messageItemViewModel = new MessageItemViewModel(null);
+
             UiMessageItemFooterBinding uiMessageItemFooterBinding =
                     UiMessageItemFooterBinding.inflate(mLayoutInflater, parent, false);
-            return new MessageItemFooterViewHolder(uiMessageItemFooterBinding);
+            return new MessageItemFooterViewHolder(uiMessageItemFooterBinding, messageItemViewModel,
+                    mImageCacheWrapper);
         }
 
         MessageCell messageCell = mCellTypesByViewType.get(viewType);
 
-        UiMessageItemBinding uiMessageItemMeBinding = UiMessageItemBinding.inflate(mLayoutInflater, parent, false);
+        UiMessageItemBinding uiMessageItemMeBinding = UiMessageItemBinding.inflate(mLayoutInflater,
+                parent, false);
 
         MessageItemViewModel messageItemViewModel = new MessageItemViewModel(null);
-        MessageCellViewHolder rootViewHolder = new MessageCellViewHolder(uiMessageItemMeBinding, messageItemViewModel,
-                mImageCacheWrapper);
+        MessageCellViewHolder rootViewHolder = new MessageCellViewHolder(uiMessageItemMeBinding,
+                messageItemViewModel, mImageCacheWrapper);
         rootViewHolder.mCellHolder = messageCell.mCellFactory.createCellHolder(
                 rootViewHolder.getCell(), messageCell.mMe, mLayoutInflater);
         rootViewHolder.mCellHolderSpecs = new CellFactory.CellHolderSpecs();
@@ -326,14 +335,15 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
         if (mFooterView.getParent() != null) {
             ((ViewGroup) mFooterView.getParent()).removeView(mFooterView);
         }
-        viewHolder.mRoot.addView(mFooterView);
+        boolean shouldAvatarViewBeVisible = !(mOneOnOne & !mShouldShowAvatarInOneOnOneConversations);
+        viewHolder.bind(mUsersTyping, mFooterView, shouldAvatarViewBeVisible);
     }
 
     public void bindCellViewHolder(MessageCellViewHolder viewHolder, int position) {
         Message message = getItem(position);
         viewHolder.mMessage = message;
         MessageCell messageCell = mCellTypesByViewType.get(viewHolder.getItemViewType());
-        boolean oneOnOne = message.getConversation().getParticipants().size() == 2;
+        mOneOnOne = message.getConversation().getParticipants().size() == 2;
 
         // Clustering and dates
         MessageCluster messageCluster = getClustering(message, position);
@@ -341,7 +351,7 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
 
         boolean isClusterSpaceVisible = messageCluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER
                 || messageCluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_HOUR;
-        boolean shouldDisplayName = !messageCell.mMe && (!oneOnOne && (
+        boolean shouldDisplayName = !messageCell.mMe && (!mOneOnOne && (
                 messageCluster.mClusterWithPrevious == null
                 || messageCluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER));
         boolean shouldBindDateTimeForMessage =
@@ -375,26 +385,27 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
         }
 
         boolean isAvatarViewVisibilitySet = false;
-        int avatarViewVisibilityType = 0;
-
-        if (messageCell.mMe || (oneOnOne && !mShouldShowAvatarInOneOnOneConversations)) {
-            avatarViewVisibilityType = View.GONE;
+        boolean shouldAvatarBeVisible = false;
+        boolean shouldDisplayAvatarSpace = false;
+        if (messageCell.mMe || (mOneOnOne && !mShouldShowAvatarInOneOnOneConversations)) {
+            shouldAvatarBeVisible = false;
             isAvatarViewVisibilitySet = true;
         }
 
-        if (!isAvatarViewVisibilitySet && ((oneOnOne && mShouldShowAvatarInOneOnOneConversations) || shouldClusterBeVisible)) {
-            avatarViewVisibilityType = View.VISIBLE;
+        if (!isAvatarViewVisibilitySet && ((mOneOnOne && mShouldShowAvatarInOneOnOneConversations) || shouldClusterBeVisible)) {
+            shouldAvatarBeVisible = true;
             isAvatarViewVisibilitySet = true;
         }
 
         if (!isAvatarViewVisibilitySet) {
-            avatarViewVisibilityType = View.INVISIBLE;
+            shouldAvatarBeVisible = false;
+            shouldDisplayAvatarSpace = true;
         }
 
-        viewHolder.bind(message, avatarViewVisibilityType, isClusterSpaceVisible, shouldDisplayName,
+        viewHolder.bind(message, shouldAvatarBeVisible, shouldDisplayAvatarSpace, isClusterSpaceVisible, shouldDisplayName,
                 shouldBindDateTimeForMessage, str, isRecipientStatusVisible, mDateFormatter, messageCell.mMe);
 
-        if (!oneOnOne && (messageCluster.mClusterWithNext == null
+        if (!mOneOnOne && (messageCluster.mClusterWithNext == null
                 || messageCluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE)) {
             // Add the position to the positions map for Identity updates
             mIdentityEventListener.addIdentityPosition(position,
@@ -410,7 +421,7 @@ public class MessagesAdapter extends ItemRecyclerViewAdapter<Message, MessageIte
                 (LinearLayout.LayoutParams) viewHolder.getCell().getLayoutParams();
         int maxWidth = mRecyclerView.getWidth() - viewHolder.mRoot.getPaddingLeft()
                 - viewHolder.mRoot.getPaddingRight() - params.leftMargin - params.rightMargin;
-        if (!oneOnOne && !messageCell.mMe) {
+        if (!mOneOnOne && !messageCell.mMe) {
             // Subtract off avatar width if needed
             ViewGroup.MarginLayoutParams avatarParams =
                     (ViewGroup.MarginLayoutParams) viewHolder.getAvatarView().getLayoutParams();

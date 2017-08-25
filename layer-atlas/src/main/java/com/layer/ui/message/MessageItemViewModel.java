@@ -7,7 +7,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.viewmodel.ItemViewModel;
 
-import java.util.Collections;
 import java.util.Set;
 
 public class MessageItemViewModel extends ItemViewModel<Message> {
@@ -23,7 +22,11 @@ public class MessageItemViewModel extends ItemViewModel<Message> {
     private String mGroupTime;
     private boolean mIsRecipientStatusVisible;
     private boolean mIsMyCellType;
-    private int mAvatarViewVisibilityType;
+    private boolean mIsAvatarViewVisible;
+    private boolean mIsVisible;
+    private String mTypingIndicatorMessage;
+    private boolean mIsTypingIndicatorVisible;
+    private boolean mShouldDisplayAvatarSpace;
 
     public MessageItemViewModel(
             OnItemClickListener<Message> itemClickListener) {
@@ -36,8 +39,8 @@ public class MessageItemViewModel extends ItemViewModel<Message> {
     }
 
     @Bindable
-    public int getAvatarVisibility() {
-        return mAvatarViewVisibilityType;
+    public boolean getAvatarVisibility() {
+        return mIsAvatarViewVisible;
     }
 
     public void setIsClusterSpaceVisible(boolean isClusterSpaceVisible) {
@@ -49,8 +52,8 @@ public class MessageItemViewModel extends ItemViewModel<Message> {
         return mParticipants;
     }
 
-    public void setParticipants(Identity identity) {
-        mParticipants = Collections.singleton(identity);
+    public void setParticipants(Set<Identity> identities) {
+        mParticipants = identities;
     }
 
     @Bindable
@@ -134,7 +137,43 @@ public class MessageItemViewModel extends ItemViewModel<Message> {
         return mIsMyCellType;
     }
 
-    public void setAvatarViewVisibilityType(int avatarViewVisibilityType) {
-        mAvatarViewVisibilityType = avatarViewVisibilityType;
+    public void setAvatarViewVisibilityType(boolean isAvatarVisible) {
+        mIsAvatarViewVisible = isAvatarVisible;
+    }
+
+    @Bindable
+    public boolean getMessageFooterAnimationVisibility() {
+        return mIsVisible;
+    }
+
+    public void setMessageFooterAnimationVisibility(boolean isVisible) {
+        mIsVisible = isVisible;
+    }
+
+    public void setTypingIndicatorMessage(String typingIndicatorMessage) {
+        mTypingIndicatorMessage = typingIndicatorMessage;
+    }
+
+    @Bindable
+    public String getTypingIndicatorMessage() {
+        return mTypingIndicatorMessage;
+    }
+
+    public void setTypingIndicatorMessageVisibility(boolean isTypingIndicatorVisible) {
+        mIsTypingIndicatorVisible = isTypingIndicatorVisible;
+    }
+
+    @Bindable
+    public boolean getTypingIndicatorMessageVisibility() {
+        return mIsTypingIndicatorVisible;
+    }
+
+    public void setShouldDisplayAvatarSpace(boolean shouldDisplayAvatarSpace) {
+        mShouldDisplayAvatarSpace = shouldDisplayAvatarSpace;
+    }
+
+    @Bindable
+    public boolean getShouldDisplayAvatarSpace() {
+        return mShouldDisplayAvatarSpace;
     }
 }

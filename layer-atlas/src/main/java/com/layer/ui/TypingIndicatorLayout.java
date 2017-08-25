@@ -26,6 +26,7 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -144,19 +145,24 @@ public class TypingIndicatorLayout extends FrameLayout implements LayerTypingInd
         if (mConversation != conversation) return;
 
         // Notify ActivityListener to active/inactive typists.
-        boolean empty;
+        boolean isEmpty;
         if (typingIndicator == TypingIndicator.FINISHED) {
             mTypists.remove(user);
         } else {
             mTypists.put(user, typingIndicator);
         }
-        empty = mTypists.isEmpty();
-        if (empty && mActive) {
+
+        isEmpty = mTypists.isEmpty();
+        Set<Identity> identitySet = mTypists.keySet();
+
+        if (isEmpty && mActive) {
             mActive = false;
-            if (mActivityListener != null) mActivityListener.onTypingActivityChange(this, false);
-        } else if (!empty && !mActive) {
+            if (mActivityListener != null) mActivityListener.onTypingActivityChange(this, false, identitySet);
+        } else if (!isEmpty && !mActive) {
             mActive = true;
-            if (mActivityListener != null) mActivityListener.onTypingActivityChange(this, true);
+            if (mActivityListener != null) mActivityListener.onTypingActivityChange(this, true, identitySet);
+        } else if (!isEmpty) {
+            if (mActivityListener != null) mActivityListener.onTypingActivityChange(this, true, identitySet);
         }
 
         // Refresh the indicator view.
@@ -196,6 +202,6 @@ public class TypingIndicatorLayout extends FrameLayout implements LayerTypingInd
          * @param typingIndicator AtlasTypingIndicator notifying this listener.
          * @param active          `true` if typists are now active, or `false` if inactive.
          */
-        void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active);
+        void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active, Set<Identity> users);
     }
 }

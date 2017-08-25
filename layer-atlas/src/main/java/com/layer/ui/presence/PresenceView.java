@@ -120,8 +120,8 @@ public class PresenceView extends View {
 
     private void drawPresence(Canvas canvas,boolean makeCircleHollow) {
 
-        int drawableWidth = getWidth() - (getPaddingLeft() + getPaddingRight());
-        int drawableHeight = getHeight() - (getPaddingTop() + getPaddingBottom());
+        int drawableWidth = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
+        int drawableHeight = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
         float dimension = Math.min(drawableWidth, drawableHeight);
         float density = getContext().getResources().getDisplayMetrics().density;
         float fraction = 1f;
