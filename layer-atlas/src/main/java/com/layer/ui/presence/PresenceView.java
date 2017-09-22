@@ -154,12 +154,13 @@ public class PresenceView extends View {
     }
 
     private void parseStyle(Context context, AttributeSet attrs, int defStyle) {
+
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PresenceView, R.attr.PresenceView, defStyle);
-        this.mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor, Color.rgb(0x4F, 0xBF, 0x62));
-        this.mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor, Color.rgb(0xE6, 0x44, 0x3F));
-        this.mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor, Color.rgb(0xF7, 0xCA, 0x40));
-        this.mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor, Color.rgb(0x50, 0xC0, 0x62));
-        this.mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor, Color.rgb(0x99, 0x99, 0x9c));
+        this.mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor, getContext().getResources().getColor(R.color.layer_ui_presence_available));
+        this.mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor,getContext().getResources().getColor(R.color.layer_ui_presence_busy));
+        this.mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor, getContext().getResources().getColor(R.color.layer_ui_presence_away));
+        this.mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor, getContext().getResources().getColor(R.color.layer_ui_presence_invisible));
+        this.mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor, getContext().getResources().getColor(R.color.layer_ui_presence_offline));
         ta.recycle();
     }
 }

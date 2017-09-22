@@ -23,6 +23,8 @@
     <color name="layer_ui_color_primary_gray_1">#FFF3F3F3</color>
     <color name="layer_ui_color_primary_gray_3">#FFDADDE4</color>
     <color name="layer_ui_color_primary_gray_5">#FFA4A8B2</color>
+    <color name="layer_ui_color_light_black">#3D000000</color>
+    <color name="layer_ui_item_divider_color">#FFE0E0E0</color>
 
     <color name="layer_ui_status_bar_background">@color/layer_ui_color_dark_blue</color>
     <color name="layer_ui_action_bar_background">@color/layer_ui_color_primary_blue</color>
@@ -42,13 +44,13 @@
     <color name="layer_ui_button_text_disabled">#42000000</color>
     <color name="layer_ui_button_text_pressed">@color/layer_ui_color_primary_blue</color>
 
-    <color name="layer_ui_item_leavebehind">#3D000000</color>
+    <color name="layer_ui_item_leavebehind">@color/layer_ui_color_light_black</color>
     <color name="layer_ui_item_swiping">#E0FFFFFF</color>
 
     <color name="layer_ui_item_selected">#FFD8D8D8</color>
-    <color name="layer_ui_item_divider">#FFE0E0E0</color>
+    <color name="layer_ui_item_divider">@color/layer_ui_item_divider_color</color>
 
-    <color name="layer_ui_view_divider">#FFE0E0E0</color>
+    <color name="layer_ui_view_divider">@color/layer_ui_item_divider_color</color>
 
     <color name="layer_ui_dialog_primary">@color/layer_ui_color_primary_blue</color>
     <color name="layer_ui_dialog_accent">@color/layer_ui_color_primary_blue</color>
@@ -62,16 +64,16 @@
     <color name="layer_ui_cell_me_background">@color/layer_ui_color_primary_blue</color>
 
     <color name="layer_ui_icon_enabled">#8A000000</color>
-    <color name="layer_ui_icon_disabled">#3D000000</color>
+    <color name="layer_ui_icon_disabled">@color/layer_ui_color_light_black</color>
     <color name="layer_ui_delete_icon">@android:color/white</color>
 
     <color name="layer_ui_image_popup_background">@android:color/black</color>
 
-    <color name="layer_ui_presence_available">#4fbf62</color>
-    <color name="layer_ui_presence_busy">#e6443f</color>
-    <color name="layer_ui_presence_away">#f7ca40</color>
-    <color name="layer_ui_presence_invisible">#50c062</color>
-    <color name="layer_ui_presence_offline">#99999c</color>
+    <color name="layer_ui_presence_available">#ff4fbf62</color>
+    <color name="layer_ui_presence_busy">#ffe6443f</color>
+    <color name="layer_ui_presence_away">#fff7ca40</color>
+    <color name="layer_ui_presence_invisible">#ff50c062</color>
+    <color name="layer_ui_presence_offline">#ff99999c</color>
 
 
     <!-- ########## -->
