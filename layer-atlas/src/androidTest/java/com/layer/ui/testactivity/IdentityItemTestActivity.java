@@ -14,6 +14,7 @@ import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.identity.IdentityItemViewModel;
 import com.layer.ui.mock.MockIdentity;
+import com.layer.ui.mock.MockLayerClient;
 import com.layer.ui.style.FourPartItemStyle;
 import com.layer.ui.util.DateFormatterImpl;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
@@ -27,13 +28,15 @@ public class IdentityItemTestActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         ImageCacheWrapper imageCacheWrapper = new PicassoImageCacheWrapper(Picasso.with(this));
-        IdentityFormatter identityFormatter = new IdentityFormatterImpl();
+        IdentityFormatter identityFormatter = new IdentityFormatterImpl(getApplicationContext());
         Identity identity = new MockIdentity();
 
         TestActivityFourPartItemBinding binding = DataBindingUtil.setContentView(this, R.layout.test_activity_four_part_item);
         FourPartItemStyle style = new FourPartItemStyle(this, null, 0);
 
-        IdentityItemViewModel viewModel = new IdentityItemViewModel(null, identityFormatter, new DateFormatterImpl(getApplicationContext()));
+        IdentityItemViewModel viewModel = new IdentityItemViewModel(getApplicationContext(), new MockLayerClient());
+        viewModel.setIdentityFormatter(identityFormatter);
+        viewModel.setDateFormatter(new DateFormatterImpl(getApplicationContext()));
         viewModel.setItem(identity);
 
         AvatarViewModel avatarViewModel = new AvatarViewModelImpl(imageCacheWrapper);

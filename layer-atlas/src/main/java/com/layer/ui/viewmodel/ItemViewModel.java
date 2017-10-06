@@ -1,19 +1,35 @@
 package com.layer.ui.viewmodel;
 
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.view.View;
 
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.Queryable;
+import com.layer.ui.identity.IdentityFormatter;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.recyclerview.OnItemClickListener;
+import com.layer.ui.util.DateFormatter;
+import com.layer.ui.util.DateFormatterImpl;
 
-public abstract class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
+public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
 
-    protected ITEM mItem;
-    protected OnItemClickListener<ITEM> mItemClickListener;
+    private Context mContext;
+    private LayerClient mLayerClient;
 
-    public ItemViewModel(OnItemClickListener<ITEM> itemClickListener) {
-        mItemClickListener = itemClickListener;
+    private ITEM mItem;
+    private OnItemClickListener<ITEM> mItemClickListener;
+    private IdentityFormatter mIdentityFormatter;
+    private DateFormatter mDateFormatter;
+
+    public ItemViewModel(Context context, LayerClient layerClient) {
+        mContext = context;
+        mLayerClient = layerClient;
+
+        mIdentityFormatter = new IdentityFormatterImpl(context);
+        mDateFormatter = new DateFormatterImpl(context);
     }
 
     @Bindable
@@ -29,6 +45,10 @@ public abstract class ItemViewModel<ITEM extends Queryable> extends BaseObservab
         mItem = null;
     }
 
+    public void setItemClickListener(OnItemClickListener<ITEM> itemClickListener) {
+        mItemClickListener = itemClickListener;
+    }
+
     public OnItemClickListener<ITEM> getItemClickListener() {
         return mItemClickListener;
     }
@@ -42,5 +62,37 @@ public abstract class ItemViewModel<ITEM extends Queryable> extends BaseObservab
                 }
             }
         };
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void setContext(Context context) {
+        mContext = context;
+    }
+
+    public LayerClient getLayerClient() {
+        return mLayerClient;
+    }
+
+    public void setLayerClient(LayerClient layerClient) {
+        mLayerClient = layerClient;
+    }
+
+    public IdentityFormatter getIdentityFormatter() {
+        return mIdentityFormatter;
+    }
+
+    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mIdentityFormatter = identityFormatter;
+    }
+
+    public DateFormatter getDateFormatter() {
+        return mDateFormatter;
+    }
+
+    public void setDateFormatter(DateFormatter dateFormatter) {
+        mDateFormatter = dateFormatter;
     }
 }

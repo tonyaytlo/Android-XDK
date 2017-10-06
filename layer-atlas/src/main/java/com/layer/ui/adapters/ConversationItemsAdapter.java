@@ -9,48 +9,50 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
-import com.layer.ui.databinding.UiFourPartItemBinding;
-import com.layer.ui.identity.IdentityFormatter;
-import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.conversationitem.ConversationItemFormatter;
 import com.layer.ui.conversationitem.ConversationItemViewModel;
+import com.layer.ui.databinding.UiFourPartItemBinding;
+import com.layer.ui.fourpartitem.FourPartItemViewHolder;
+import com.layer.ui.identity.IdentityFormatter;
+import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.style.FourPartItemStyle;
+import com.layer.ui.util.DateFormatter;
+import com.layer.ui.util.DateFormatterImpl;
 import com.layer.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Collection;
-
-import com.layer.ui.fourpartitem.FourPartItemViewHolder;
 
 public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversation,
         ConversationItemViewModel, UiFourPartItemBinding, FourPartItemStyle,
         FourPartItemViewHolder<Conversation, ConversationItemViewModel>> {
     private static final String TAG = "ConversationItemsAdapter";
 
-    protected long mInitialHistory = 0;
-    protected final IdentityRecyclerViewEventListener mIdentityEventListener;
+    private long mInitialHistory = 0;
+    private final IdentityRecyclerViewEventListener mIdentityEventListener;
 
-    protected ConversationItemFormatter mConversationItemFormatter;
-    protected ImageCacheWrapper mImageCacheWrapper;
+    private ConversationItemFormatter mConversationItemFormatter;
+    private ImageCacheWrapper mImageCacheWrapper;
 
-    protected IdentityFormatter mIdentityFormatter;
+    private IdentityFormatter mIdentityFormatter;
+    private DateFormatter mDateFormatter;
 
     public ConversationItemsAdapter(Context context, LayerClient layerClient,
                                     Query<Conversation> query,
                                     Collection<String> updateAttributes,
                                     ConversationItemFormatter conversationItemFormatter,
-                                    ImageCacheWrapper imageCacheWrapper,
-                                    IdentityFormatter identityFormatter) {
+                                    ImageCacheWrapper imageCacheWrapper) {
         super(context, layerClient, TAG, false);
         setQuery(query, updateAttributes);
         mConversationItemFormatter = conversationItemFormatter;
         mImageCacheWrapper = imageCacheWrapper;
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
+
         layerClient.registerEventListener(mIdentityEventListener);
 
-        mIdentityFormatter = identityFormatter;
-        mIdentityFormatter = new IdentityFormatterImpl();
+        mIdentityFormatter = new IdentityFormatterImpl(context);
+        mDateFormatter = new DateFormatterImpl(context);
     }
 
     //==============================================================================================
@@ -60,10 +62,17 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     @Override
     public FourPartItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         UiFourPartItemBinding binding = UiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
-        ConversationItemViewModel viewModel = new ConversationItemViewModel(mConversationItemFormatter, mItemClickListener, mLayerClient.getAuthenticatedUser());
-        FourPartItemViewHolder itemViewHolder = new FourPartItemViewHolder<>(binding, viewModel, getStyle(), mImageCacheWrapper, mIdentityFormatter);
+        ConversationItemViewModel viewModel = new ConversationItemViewModel(getContext(), getLayerClient());
+        viewModel.setIdentityFormatter(mIdentityFormatter);
+        viewModel.setDateFormatter(mDateFormatter);
 
-        binding.addOnRebindCallback(mOnRebindCallback);
+        viewModel.setItemClickListener(getItemClickListener());
+        viewModel.setConversationItemFormatter(mConversationItemFormatter);
+        viewModel.setAuthenticatedUser(getLayerClient().getAuthenticatedUser());
+
+        FourPartItemViewHolder itemViewHolder = new FourPartItemViewHolder<>(binding, viewModel, getStyle(), mImageCacheWrapper);
+
+        binding.addOnRebindCallback(getOnRebindCallback());
 
         return itemViewHolder;
     }
@@ -99,6 +108,10 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
         mIdentityFormatter = identityFormatter;
     }
 
+    public void setDateFormatter(DateFormatter dateFormatter) {
+        mDateFormatter = dateFormatter;
+    }
+
     //==============================================================================================
     // UI Interactions
     //==============================================================================================
@@ -131,7 +144,7 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
                         Query<Message> localCountQuery = Query.builder(Message.class)
                                 .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation))
                                 .build();
-                        long delta = desiredHistory - mLayerClient.executeQueryForCount(localCountQuery);
+                        long delta = desiredHistory - getLayerClient().executeQueryForCount(localCountQuery);
                         if (delta > 0) conversation.syncMoreHistoricMessages((int) delta);
                     } catch (IndexOutOfBoundsException e) {
                         // Concurrent modification

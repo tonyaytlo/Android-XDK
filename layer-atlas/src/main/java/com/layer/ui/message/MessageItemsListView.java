@@ -23,6 +23,7 @@ import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.ui.R;
 import com.layer.ui.TypingIndicatorLayout;
+import com.layer.ui.message.binder.BinderRegistry;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.message.messagetypes.MessageStyle;
 import com.layer.ui.recyclerview.ItemsRecyclerView;
@@ -93,23 +94,13 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mMessagesRecyclerView.setAdapter(adapter);
         setShouldShowAvatarInOneOnOneConversations(mShouldShowAvatarsInOneOnOneConversations);
 
-        mMessagesRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        // Create an adapter that auto-scrolls if we're already at the bottom
+        adapter.setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                for (CellFactory factory : adapter.getCellFactories()) {
-                    factory.onScrollStateChanged(newState);
-                }
+            public void onMessageAppend(MessagesAdapter adapter, Message message) {
+                autoScroll();
             }
         });
-
-        // Create an adapter that auto-scrolls if we're already at the bottom
-        adapter.setRecyclerView(mMessagesRecyclerView)
-                .setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
-                    @Override
-                    public void onMessageAppend(MessagesAdapter adapter, Message message) {
-                        autoScroll();
-                    }
-                });
     }
 
     //============================================================================================
@@ -191,12 +182,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     }
 
     /**
-     * Convenience pass-through to this list's MessagesAdapter.
+     * Convenience pass-through to this list's MessagesAdapter's BinderRegistry.
      *
-     * @see MessagesAdapter#addCellFactories(List)
+     * @see BinderRegistry#setCellFactories(List)
      */
     public void setCellFactories(List<CellFactory> cellFactories) {
-        mAdapter.addCellFactories(cellFactories);
+        mAdapter.getBinderRegistry().setCellFactories(cellFactories);
     }
 
     public void setTextTypeface(Typeface myTypeface, Typeface otherTypeface) {
@@ -266,7 +257,13 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mLayerClient = layerClient;
         mLayerClient.registerEventListener(this);
 
-        mAdapter.setQuery(query).refresh();
+        mAdapter.setQuery(query, null);
+        Set<Identity> participants = conversation.getParticipants();
+        if (participants != null) {
+            mAdapter.setIsOneOnOneConversation(conversation.getParticipants().size() == 2);
+        }
+
+        mAdapter.refresh();
     }
 
     protected void parseStyle(Context context, AttributeSet attrs, int defStyle) {

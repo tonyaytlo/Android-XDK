@@ -1,23 +1,17 @@
 package com.layer.ui.identity;
 
+import android.content.Context;
+
+import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.ui.fourpartitem.FourPartItemViewModel;
-import com.layer.ui.recyclerview.OnItemClickListener;
-import com.layer.ui.util.DateFormatter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
-
-    protected IdentityFormatter mIdentityFormatter;
-    protected DateFormatter mDateFormatter;
-
-    public IdentityItemViewModel(OnItemClickListener<Identity> onItemClickListener,
-                                 IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
-        super(onItemClickListener);
-        mIdentityFormatter = identityFormatter;
-        mDateFormatter = dateFormatter;
+    public IdentityItemViewModel(Context context, LayerClient layerClient) {
+        super(context, layerClient);
     }
 
     @Override
@@ -28,17 +22,17 @@ public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
 
     @Override
     public String getTitle() {
-        return mIdentityFormatter.getDisplayName(getItem());
+        return getIdentityFormatter().getDisplayName(getItem());
     }
 
     @Override
     public String getSubtitle() {
-        return mIdentityFormatter.getMetaData(getItem());
+        return getIdentityFormatter().getMetaData(getItem());
     }
 
     @Override
     public String getAccessoryText() {
-        return mDateFormatter.formatTimeDay(getItem().getLastSeenAt());
+        return getDateFormatter().formatTimeDay(getItem().getLastSeenAt());
     }
 
     @Override

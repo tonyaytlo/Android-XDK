@@ -19,11 +19,8 @@ public class IdentityItemsListViewModel extends BaseObservable {
     protected IdentityItemsAdapter mItemsAdapter;
 
     public IdentityItemsListViewModel(Context context, LayerClient layerClient,
-                                      ImageCacheWrapper imageCacheWrapper,
-                                      DateFormatter dateFormatter,
-                                      IdentityFormatter identityFormatter) {
-        mItemsAdapter = new IdentityItemsAdapter(context, layerClient, imageCacheWrapper,
-                identityFormatter, dateFormatter);
+                                      ImageCacheWrapper imageCacheWrapper) {
+        mItemsAdapter = new IdentityItemsAdapter(context, layerClient, imageCacheWrapper);
     }
 
     public void setIdentities(Set<Identity> identities) {
@@ -47,5 +44,13 @@ public class IdentityItemsListViewModel extends BaseObservable {
     @Bindable
     public IdentityItemsAdapter getAdapter() {
         return mItemsAdapter;
+    }
+
+    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mItemsAdapter.setIdentityFormatter(identityFormatter);
+    }
+
+    public void setDateFormatter(DateFormatter dateFormatter) {
+        mItemsAdapter.setDateFormatter(dateFormatter);
     }
 }

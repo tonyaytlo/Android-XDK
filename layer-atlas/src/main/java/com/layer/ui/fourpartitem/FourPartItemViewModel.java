@@ -1,7 +1,9 @@
 package com.layer.ui.fourpartitem;
 
+import android.content.Context;
 import android.databinding.Bindable;
 
+import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.Queryable;
 import com.layer.ui.recyclerview.OnItemClickListener;
@@ -10,9 +12,8 @@ import com.layer.ui.viewmodel.ItemViewModel;
 import java.util.Set;
 
 public abstract class FourPartItemViewModel<ITEM extends Queryable> extends ItemViewModel<ITEM> {
-
-    public FourPartItemViewModel(OnItemClickListener<ITEM> itemClickListener) {
-        super(itemClickListener);
+    public FourPartItemViewModel(Context context, LayerClient layerClient) {
+        super(context, layerClient);
     }
 
     @Bindable
