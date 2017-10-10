@@ -89,7 +89,7 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
         Tag tag = (Tag) l.getTag();
 
         int avatarSpace = l.getResources().getDimensionPixelSize(R.dimen.layer_ui_padding_narrow);
-        int avatarDim = l.getResources().getDimensionPixelSize(R.dimen.layer_ui_message_avatar_item_single);
+        int avatarDim = l.getResources().getDimensionPixelSize(R.dimen.layer_ui_avatar_height);
 
         // Iterate over existing typists and remove non-typists
         List<AvatarView> newlyFinished = new ArrayList<AvatarView>();

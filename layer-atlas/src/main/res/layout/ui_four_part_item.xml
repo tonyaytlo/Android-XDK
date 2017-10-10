@@ -51,8 +51,8 @@
                 android:layout_width="@dimen/layer_ui_primary_icon_size"
                 android:layout_height="@dimen/layer_ui_primary_icon_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-                android:layout_marginStart="@dimen/layer_ui_padding_normal"
+                android:layout_marginLeft="@dimen/layer_ui_margin_normal"
+                android:layout_marginStart="@dimen/layer_ui_margin_normal"
                 android:src="@drawable/ic_delete_white_24dp"
                 android:tint="@color/layer_ui_icon_enabled"/>
 
@@ -64,6 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="@{style.itemHeight, default=wrap_content}"
             android:background="@drawable/ui_swipeable_item_foreground_selector"
+            android:layout_marginLeft="@dimen/layer_ui_margin_large"
             android:duplicateParentState="true"
             android:orientation="horizontal">
 
@@ -71,10 +72,6 @@
                 android:id="@+id/avatar"
                 android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
                 android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
-
-
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="@{style.marginHorizontal}"
                 android:visibility="@{style.avatarVisibility}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -84,17 +81,12 @@
 
             <com.layer.ui.presence.PresenceView
                 android:id="@+id/presence"
-                android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
-                android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
-                android:layout_marginEnd="@{style.marginHorizontal}"
-                android:layout_marginRight="@{style.marginHorizontal}"
-                app:layout_constraintLeft_toLeftOf="@+id/avatar"
+                android:layout_width="@{style.avatarStyle.presenceRadius, default=wrap_content}"
+                android:layout_height="@{style.avatarStyle.presenceRadius, default=wrap_content}"
                 app:layout_constraintRight_toRightOf="@+id/avatar"
                 app:layout_constraintBottom_toBottomOf="@+id/avatar"
                 app:participants="@{viewModel.identities}"
-                android:layout_marginLeft="8dp"
                 app:layout_constraintVertical_bias="0.0"/>
-
 
             <!-- right content part -->
 
@@ -106,7 +98,7 @@
                 android:layout_marginStart="@{style.marginHorizontal}"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:maxWidth="256dp"
+                android:maxWidth="@dimen/max_width_four_part_title_text_view"
                 android:text="@{viewModel.title}"
                 android:textColor="@{viewModel.secondaryState ? style.titleUnreadTextColor : style.titleTextColor}"
                 android:textSize="@{style.titleTextSize}"
@@ -141,10 +133,12 @@
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/layer_ui_margin_normal"
                 android:layout_marginLeft="@{style.marginHorizontal}"
                 android:layout_marginStart="@{style.marginHorizontal}"
                 android:maxLines="1"
+                android:ellipsize="end"
+                android:maxWidth="@dimen/max_width_four_part_subtitle_text_view"
                 android:text="@{viewModel.subtitle}"
                 android:textColor="@{viewModel.secondaryState ? style.subtitleUnreadTextColor : style.subtitleTextColor}"
                 android:textSize="@{style.subtitleTextSize}"

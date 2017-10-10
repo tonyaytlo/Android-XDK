@@ -16,17 +16,17 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/layer_ui_secondary_item_height"
+    android:layout_height="wrap_content"
     android:background="@drawable/ui_address_bar_item_background"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/layer_ui_padding_narrow"
+    android:layout_marginTop="@dimen/layer_ui_padding_narrow">
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/layer_ui_padding_narrow"
-        android:layout_marginLeft="@dimen/layer_ui_avatar_message_left_margin"
-        android:layout_marginRight="@dimen/layer_ui_avatar_message_right_margin"
-        android:layout_marginTop="@dimen/layer_ui_padding_narrow">
+        android:layout_marginLeft="@dimen/layer_ui_avatar_left_padding_user_list"
+        android:layout_marginRight="@dimen/layer_ui_avatar_right_padding_user_list">
 
         <com.layer.ui.avatar.AvatarView
             android:id="@+id/avatar"
@@ -34,8 +34,8 @@
             android:layout_height="@dimen/layer_ui_avatar_height" />
 
         <com.layer.ui.presence.PresenceView
-            android:layout_width="@dimen/layer_ui_avatar_presence_diameter"
-            android:layout_height="@dimen/layer_ui_avatar_presence_diameter"
+            android:layout_width="@dimen/layer_ui_avatar_presence_height"
+            android:layout_height="@dimen/layer_ui_avatar_presence_height"
             android:layout_gravity="bottom|right"
             android:id="@+id/presence" />
 

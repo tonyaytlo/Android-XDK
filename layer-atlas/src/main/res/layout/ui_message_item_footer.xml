@@ -28,8 +28,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-        android:layout_marginStart="@dimen/layer_ui_padding_normal"
         android:paddingTop="@dimen/layer_ui_message_cluster_space">
 
         <LinearLayout
@@ -40,10 +38,13 @@
             android:orientation="horizontal">
             <com.layer.ui.avatar.AvatarView
                 android:id="@+id/avatar"
-                android:layout_width="@dimen/layer_ui_message_avatar_item_single"
-                android:layout_height="@dimen/layer_ui_message_avatar_item_single"
-                android:layout_marginRight="@dimen/layer_ui_padding_narrow"
-                android:layout_marginEnd="@dimen/layer_ui_padding_narrow"
+                android:layout_width="@dimen/layer_ui_avatar_width"
+                android:layout_height="@dimen/layer_ui_avatar_height"
+                android:layout_marginBottom="@dimen/layer_ui_message_item_cell_padding_bottom"
+                android:layout_marginLeft="@dimen/layer_ui_message_item_avatar_padding_left"
+                android:layout_marginStart="@dimen/layer_ui_message_item_avatar_padding_left"
+                android:layout_marginRight="@dimen/layer_ui_avatar_right_padding_message"
+                android:layout_marginEnd="@dimen/layer_ui_avatar_right_padding_message"
                 android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.GONE}"
                 app:participants="@{viewModel.participants}" />
 
@@ -51,7 +52,6 @@
                 android:id="@+id/swipeable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/layer_ui_padding_normal"
                 android:paddingRight="@dimen/layer_ui_padding_normal">
             </FrameLayout>
         </LinearLayout>

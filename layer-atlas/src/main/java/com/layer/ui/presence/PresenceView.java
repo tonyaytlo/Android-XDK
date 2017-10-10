@@ -123,33 +123,27 @@ public class PresenceView extends View {
         int drawableWidth = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
         int drawableHeight = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
         float dimension = Math.min(drawableWidth, drawableHeight);
-        float density = getContext().getResources().getDisplayMetrics().density;
         float fraction = 1f;
-        float BORDER_SIZE_DP = 1F;
 
         float outerRadius = fraction * dimension / 2f;
-        float innerRadius = outerRadius - (density * BORDER_SIZE_DP);
         float centerX = getPaddingLeft() + outerRadius;
         float centerY = getPaddingTop() + outerRadius;
 
-        // Presence
-        float presenceOuterRadius = outerRadius / 3f;
-        float presenceInnerRadius = innerRadius / 3f;
-        float presenceCenterX = centerX + outerRadius - presenceOuterRadius;
-        float presenceCenterY = centerY + outerRadius - presenceOuterRadius;
+        float presenceCenterX = centerX + outerRadius - outerRadius;
+        float presenceCenterY = centerY + outerRadius - outerRadius;
 
         // Clear background + create border
         mBackgroundPaint.setColor(Color.WHITE);
         mBackgroundPaint.setAntiAlias(true);
-        canvas.drawCircle(presenceCenterX, presenceCenterY, presenceOuterRadius, mBackgroundPaint);
+        canvas.drawCircle(presenceCenterX, presenceCenterY, outerRadius, mBackgroundPaint);
 
         // Draw Presence status
         mPresencePaint.setAntiAlias(true);
-        canvas.drawCircle(presenceCenterX, presenceCenterY, presenceInnerRadius, mPresencePaint);
+        canvas.drawCircle(presenceCenterX, presenceCenterY, outerRadius, mPresencePaint);
 
         // Draw hollow if needed
         if (makeCircleHollow) {
-            canvas.drawCircle(presenceCenterX, presenceCenterY, (presenceInnerRadius / 2f), mBackgroundPaint);
+            canvas.drawCircle(presenceCenterX, presenceCenterY, (outerRadius / 2f), mBackgroundPaint);
         }
     }
 

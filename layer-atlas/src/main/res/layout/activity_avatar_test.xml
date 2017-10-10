@@ -5,8 +5,8 @@
 
     <com.layer.ui.presence.PresenceView
         android:id="@+id/test_presence"
-        android:layout_width="@dimen/layer_ui_avatar_presence_diameter"
-        android:layout_height="@dimen/layer_ui_avatar_presence_diameter" />
+        android:layout_width="@dimen/layer_ui_avatar_presence_height"
+        android:layout_height="@dimen/layer_ui_avatar_presence_height" />
 
     <com.layer.ui.avatar.AvatarView
         android:id="@+id/test_avatar"

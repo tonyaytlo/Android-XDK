@@ -78,6 +78,7 @@
         </attr>
         <attr name="avatarWidth" format="dimension"/>
         <attr name="avatarHeight" format="dimension"/>
+        <attr name="presenceRadius" format="dimension"/>
         <attr name="marginHorizontal" format="dimension"/>
         <attr name="marginVertical" format="dimension"/>
         <attr name="itemHeight" format="dimension|reference"/>

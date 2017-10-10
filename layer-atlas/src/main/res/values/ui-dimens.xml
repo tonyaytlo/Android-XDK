@@ -23,6 +23,8 @@
     <dimen name="layer_ui_margin_medium">10dp</dimen>
     <dimen name="layer_ui_margin_small">8dp</dimen>
     <dimen name="layer_ui_margin_tiny">4dp</dimen>
+    <dimen name="layer_ui_margin_normal">6dp</dimen>
+
 
     <dimen name="layer_ui_padding_normal">16dp</dimen>
     <dimen name="layer_ui_padding_narrow">8dp</dimen>
@@ -57,19 +59,25 @@
     <dimen name="layer_ui_message_item_cell_radius">15dp</dimen>
     <dimen name="layer_ui_message_item_cell_min_width">30dp</dimen>
     <dimen name="layer_ui_message_item_cell_min_height">30dp</dimen>
-    <dimen name="layer_ui_message_item_cell_padding_top">4dp</dimen>
-    <dimen name="layer_ui_message_item_cell_padding_bottom">6dp</dimen>
-    <dimen name="layer_ui_message_item_cell_padding_near">@dimen/layer_ui_padding_narrow</dimen>
-    <dimen name="layer_ui_message_item_cell_padding_far">9dp</dimen>
+    <dimen name="layer_ui_message_item_cell_padding_top">8dp</dimen>
+    <dimen name="layer_ui_message_item_cell_padding_bottom">8dp</dimen>
+    <dimen name="layer_ui_message_item_cell_padding_near">12dp</dimen>
+    <dimen name="layer_ui_message_item_cell_padding_far">12dp</dimen>
     <dimen name="layer_ui_message_item_cell_margin_far">@dimen/layer_ui_padding_normal</dimen>
 
     <dimen name="layer_ui_message_item_time_group_padding_top">14dp</dimen>
     <dimen name="layer_ui_message_item_time_group_padding_bottom">7dp</dimen>
     <dimen name="layer_ui_message_item_receipt_margin">12dp</dimen>
-    <dimen name="layer_ui_message_item_sender_margin_left">48dp</dimen>
     <dimen name="layer_ui_message_item_sender_margin_bottom">1dp</dimen>
     <dimen name="layer_ui_message_cluster_space">2dp</dimen>
-    <dimen name="layer_ui_message_cluster_space_gap">16dp</dimen>
+    <dimen name="layer_ui_message_cluster_space_gap">4dp</dimen>
+    <dimen name="layer_ui_message_item_padding">2dp</dimen>
+    <dimen name="layer_ui_message_item_time_group_padding">2dp</dimen>
+    <dimen name="layer_ui_message_item_avatar_padding_left">12dp</dimen>
+    <dimen name="layer_ui_zero_padding">0dp</dimen>
+
+
+
 
 
     <!-- ####################################################################################### -->
@@ -94,25 +102,45 @@
     <!-- ####################################################################################### -->
     <!-- # Avatar                                                                         # -->
     <!-- ####################################################################################### -->
+
     <dimen name="layer_ui_avatar_item_single">40dp</dimen>
     <dimen name="layer_ui_avatar_item_multi">26dp</dimen>
     <dimen name="layer_ui_message_avatar_item_single">24dp</dimen>
 
+    <!--Default Avatar width for small screen size-->
+    <dimen name="layer_ui_avatar_width">32dp</dimen>
+    <dimen name="layer_ui_avatar_height">32dp</dimen>
+    <dimen name="layer_ui_avatar_presence_height">12dp</dimen>
+
     <dimen name="layer_ui_avatar_width_large">48dp</dimen>
     <dimen name="layer_ui_avatar_height_large">48dp</dimen>
+    <dimen name="layer_ui_avatar_presence_large">14dp</dimen>
+
     <dimen name="layer_ui_avatar_width_medium">40dp</dimen>
     <dimen name="layer_ui_avatar_height_medium">40dp</dimen>
+    <dimen name="layer_ui_avatar_presence_medium">12dp</dimen>
+
     <dimen name="layer_ui_avatar_width_small">32dp</dimen>
     <dimen name="layer_ui_avatar_height_small">32dp</dimen>
+    <dimen name="layer_ui_avatar_presence_small">12dp</dimen>
+
     <dimen name="layer_ui_avatar_width_tiny">12dp</dimen>
     <dimen name="layer_ui_avatar_height_tiny">12dp</dimen>
 
-    <dimen name="layer_ui_avatar_presence_height">12dp</dimen>
-    <dimen name="layer_ui_avatar_single_line_user_padding">16dp</dimen>
+    <!--Default padding for displaying Avatar and Name. Use: Dense single-line list items-->
+    <dimen name="layer_ui_avatar_left_padding_user_list">16dp</dimen>
+    <dimen name="layer_ui_avatar_right_padding_user_list">16dp</dimen>
+    <dimen name="layer_ui_avatar_user_list_height">56dp</dimen>
 
-    <dimen name="layer_ui_avatar_message_left_margin">12dp</dimen>
-    <dimen name="layer_ui_avatar_message_right_margin">8dp</dimen>
-    <dimen name="layer_ui_avatar_presence_diameter">40dp</dimen>
+    <!--Default padding to align bottom, closer to message. Use: Messages-->
+    <dimen name="layer_ui_avatar_left_padding_message">12dp</dimen>
+    <dimen name="layer_ui_avatar_right_padding_message">8dp</dimen>
+
+    <!--To calculate the sender Margin, @dimen/layer_ui_avatar_height
+    + @dimen/layer_ui_avatar_left_padding_message
+    + @dimen/layer_ui_avatar_right_padding_message
+    + @dimen/layer_ui_message_item_cell_padding_far (Use in TextCellFactory bubble padding)-->
+    <dimen name="layer_ui_message_item_sender_margin_left">64dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Layer UI Item                                                                         # -->
@@ -131,6 +159,8 @@
     <dimen name="layer_ui_item_title_medium">18sp</dimen>
     <dimen name="layer_ui_conversation_item_title_small">16sp</dimen>
     <dimen name="layer_ui_conversation_item_title_tiny">14sp</dimen>
+    <dimen name="max_width_four_part_subtitle_text_view">256dp</dimen>
+    <dimen name="max_width_four_part_title_text_view">200dp</dimen>
 
     <dimen name="layer_ui_item_subtitle_large">14sp</dimen>
     <dimen name="layer_ui_item_subtitle_medium">10sp</dimen>

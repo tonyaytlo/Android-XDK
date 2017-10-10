@@ -109,6 +109,7 @@ public class FourPartItemStyle extends ItemStyle {
             mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_large);
             avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_large)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_large)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_large)));
 
         } else if (mItemHeight >= heightMedium && mItemHeight < heightLarge) {
 
@@ -119,6 +120,7 @@ public class FourPartItemStyle extends ItemStyle {
             mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_medium);
             avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_medium)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_medium)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_medium)));
 
         } else if (mItemHeight >= heightSmall && mItemHeight < heightMedium) {
 
@@ -129,6 +131,7 @@ public class FourPartItemStyle extends ItemStyle {
             mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_small);
             avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_small)));
             avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_small)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_small)));
 
         } else {
 

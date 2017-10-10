@@ -10,6 +10,7 @@ public final class AvatarStyle {
     private Typeface mAvatarTextTypeface;
     private float mWidth;
     private float mHeight;
+    private float mPresenceRadius;
 
     private AvatarStyle(Builder builder) {
         mAvatarBackgroundColor = builder.avatarBackgroundColor;
@@ -18,6 +19,7 @@ public final class AvatarStyle {
         mAvatarBorderColor = builder.avatarBorderColor;
         mWidth = builder.width;
         mHeight = builder.height;
+        mPresenceRadius = builder.presenceRadius;
     }
 
     public void setAvatarTextTypeface(Typeface avatarTextTypeface) {
@@ -48,6 +50,10 @@ public final class AvatarStyle {
         return mHeight;
     }
 
+    public float getPresenceRadius() {
+        return mPresenceRadius;
+    }
+
     public static final class Builder {
         private int avatarBorderColor;
         private int avatarBackgroundColor;
@@ -55,6 +61,7 @@ public final class AvatarStyle {
         private Typeface avatarTextTypeface;
         private float width;
         private float height;
+        private float presenceRadius;
 
         public Builder() {
         }
@@ -86,6 +93,11 @@ public final class AvatarStyle {
 
         public Builder height (float height) {
             this.height = height;
+            return this;
+        }
+
+        public Builder presenceRadius(float presenceRadius) {
+            this.presenceRadius = presenceRadius;
             return this;
         }
 
