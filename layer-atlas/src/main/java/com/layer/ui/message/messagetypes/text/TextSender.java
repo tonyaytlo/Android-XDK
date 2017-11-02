@@ -43,6 +43,7 @@ public class TextSender extends MessageSender {
 
         // Send message
         MessagePart part = getLayerClient().newMessagePart(text);
+
         PushNotificationPayload payload = new PushNotificationPayload.Builder()
                 .text(notificationString)
                 .build();
