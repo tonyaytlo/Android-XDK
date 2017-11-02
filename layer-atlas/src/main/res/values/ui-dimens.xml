@@ -69,14 +69,11 @@
     <dimen name="layer_ui_message_item_receipt_margin">12dp</dimen>
     <dimen name="layer_ui_message_item_sender_margin_bottom">1dp</dimen>
     <dimen name="layer_ui_message_cluster_space">2dp</dimen>
-    <dimen name="layer_ui_message_cluster_space_gap">4dp</dimen>
+    <dimen name="layer_ui_message_cluster_space_gap">8dp</dimen>
     <dimen name="layer_ui_message_item_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_time_group_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_avatar_padding_left">12dp</dimen>
     <dimen name="layer_ui_zero_padding">0dp</dimen>
-
-
-
 
 
     <!-- ####################################################################################### -->

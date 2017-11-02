@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.layer.ui.message.MessageItemHeaderViewModel"/>
+    </data>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/emptyListText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/layer_ui_text_gray"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            android:text="@{viewModel.headerText}"
+            android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
+            android:maxLines="2"/>
+
+    </FrameLayout>
+
+</layout>

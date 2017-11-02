@@ -25,13 +25,14 @@
             type="com.layer.ui.message.MessageItemLegacyViewModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-        android:layout_marginStart="@dimen/layer_ui_padding_normal"
-        android:paddingTop="@dimen/layer_ui_message_cluster_space">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layer_ui_padding_normal"
+            android:layout_marginStart="@dimen/layer_ui_padding_normal"
+            android:paddingTop="@dimen/layer_ui_message_cluster_space">
 
-    </android.support.constraint.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
+
 </layout>

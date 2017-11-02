@@ -20,7 +20,8 @@ public class MessageItemsListViewModel extends BaseObservable {
     protected SwipeableItem.OnItemSwipeListener<Message> mItemSwipeListener;
 
     public MessageItemsListViewModel(Context context, LayerClient layerClient,
-                                     ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
+                                     ImageCacheWrapper imageCacheWrapper,
+                                     DateFormatter dateFormatter,
                                      IdentityFormatter identityFormatter) {
         mMessageItemsAdapter = new MessageItemsAdapter(context, layerClient,
                 imageCacheWrapper, dateFormatter, identityFormatter);

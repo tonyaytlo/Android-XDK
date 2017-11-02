@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.ListViewController;
@@ -78,7 +79,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     private boolean mShouldShowAvatarPresence = true;
 
     private View mHeaderView;
-    private boolean mShouldShowHeader = true;
+    private boolean mShouldShowHeader;
 
     private View mFooterView;
     private boolean mShouldShowFooter = true;
@@ -90,6 +91,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     private DateFormatter mDateFormatter;
     private IdentityFormatter mIdentityFormatter;
     private Set<Identity> mUsersTyping;
+    protected Conversation mConversation;
 
     public MessagesAdapter(Context context, LayerClient layerClient,
                            ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
@@ -234,7 +236,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
             boolean isNull = headerView == null;
             boolean wasNull = mHeaderView == null;
-            mFooterView = headerView;
+            mHeaderView = headerView;
 
             if (wasNull && !isNull) {
                 // Insert
@@ -342,7 +344,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
         if (getQueryController() != null) {
             itemCount = getQueryController().getItemCount();
         } else {
-            itemCount = getItems().size();
+            itemCount = getItems() != null ? getItems().size() : 0;
         }
 
         return itemCount + ((mFooterView == null) ? 0 : 1) + (mHeaderView == null ? 0 : 1);
@@ -350,7 +352,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
     @Override
     public int getItemViewType(int position) {
-        if (mShouldShowHeader && mHeaderView != null && position == getHeaderPosition()) {
+        if ((mShouldShowHeader && mHeaderView != null && position == getHeaderPosition()) || getItem(position) == null) {
             return mBinderRegistry.VIEW_TYPE_HEADER;
         }
 
@@ -574,6 +576,10 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
                                  int toPosition) {
         updateRecipientStatusPosition();
         super.onQueryItemMoved(controller, fromPosition, toPosition);
+    }
+
+    public void setConversation(Conversation conversation) {
+        mConversation = conversation;
     }
 
     /**

@@ -65,6 +65,8 @@
             android:layout_height="@{style.itemHeight, default=wrap_content}"
             android:background="@drawable/ui_swipeable_item_foreground_selector"
             android:layout_marginLeft="@dimen/layer_ui_margin_large"
+            android:layout_marginStart="@dimen/layer_ui_margin_large"
+            android:layout_marginTop="@dimen/layer_ui_margin_large"
             android:duplicateParentState="true"
             android:orientation="horizontal">
 

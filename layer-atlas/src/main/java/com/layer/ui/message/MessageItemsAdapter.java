@@ -5,11 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Message;
 import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.ui.viewmodel.ItemViewModel;
 
 public class MessageItemsAdapter extends MessagesAdapter {
 
@@ -21,7 +19,8 @@ public class MessageItemsAdapter extends MessagesAdapter {
 
     @Override
     protected MessageItemHeaderViewHolder createHeaderViewHolder(ViewGroup parent) {
-        return new MessageItemHeaderViewHolder(parent, new ItemViewModel<Message>(getContext(), getLayerClient()));
+        return new MessageItemHeaderViewHolder(parent,
+                new MessageItemHeaderViewModel(getContext(), getLayerClient()));
     }
 
     @Override
@@ -32,7 +31,7 @@ public class MessageItemsAdapter extends MessagesAdapter {
             ((ViewGroup) headerView.getParent()).removeView(headerView);
         }
 
-        holder.bind(headerView);
+        holder.bind(headerView, mConversation);
     }
 
     @Override

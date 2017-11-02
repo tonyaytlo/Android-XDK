@@ -52,7 +52,6 @@ public class AvatarView extends View {
     private static final float MULTI_FRACTION = 0.83f;
     private Drawable avatarPlaceholder = ContextCompat.getDrawable(getContext(), R.drawable.avatar_placeholder);
 
-
     static {
         PAINT_TRANSPARENT.setARGB(0, 255, 255, 255);
         PAINT_TRANSPARENT.setAntiAlias(true);
@@ -112,7 +111,6 @@ public class AvatarView extends View {
         mPaintBackground.setColor(getResources().getColor(R.color.layer_ui_avatar_background));
         mPaintBorder.setColor(getResources().getColor(R.color.layer_ui_avatar_border));
         mPaintInitials.setColor(getResources().getColor(R.color.layer_ui_avatar_text));
-
         return this;
     }
 

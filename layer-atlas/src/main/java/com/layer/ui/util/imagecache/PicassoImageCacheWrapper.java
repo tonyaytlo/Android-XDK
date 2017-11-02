@@ -109,7 +109,7 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
             requestCreator = requestCreator.centerCrop();
         }
 
-        if (imageRequestParameters.getResizeWidthTo() >= 0 && imageRequestParameters.getResizeHeightTo() >= 0) {
+        if (imageRequestParameters.getResizeWidthTo() > 0 && imageRequestParameters.getResizeHeightTo() > 0) {
             requestCreator.resize(imageRequestParameters.getResizeWidthTo(), imageRequestParameters.getResizeHeightTo());
         }
 

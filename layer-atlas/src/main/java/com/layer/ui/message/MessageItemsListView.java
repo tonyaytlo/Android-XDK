@@ -42,8 +42,37 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
     protected LayerClient mLayerClient;
     protected Conversation mConversation;
+    private int mNumberOfItemsPerSync;
+    private View mHeaderView;
 
-    protected int mNumberOfItemsPerSync = 25;
+    private RecyclerView.AdapterDataObserver dataObserver = new RecyclerView.AdapterDataObserver() {
+        @Override
+        public void onChanged() {
+            super.onChanged();
+
+            //Check the default data source state of the Adapter, if HeaderView, FooterView are set on the Adapter
+            int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
+            if (mAdapter.getItemCount() == count && mAdapter.getHeaderView() == null) {
+                mAdapter.setShouldShowHeader(true);
+                mAdapter.setHeaderView(mHeaderView);
+            } else {
+                removeEmptyHeaderView();
+            }
+        }
+
+        @Override
+        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+            removeEmptyHeaderView();
+            super.onItemRangeChanged(positionStart, itemCount, payload);
+        }
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            removeEmptyHeaderView();
+            super.onItemRangeInserted(positionStart, itemCount);
+        }
+    };
+
 
     public MessageItemsListView(Context context) {
         this(context, null);
@@ -55,6 +84,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
         inflate(getContext(), R.layout.ui_message_items_list, this);
         mMessagesRecyclerView = (ItemsRecyclerView<Message>) findViewById(R.id.ui_message_recycler);
+        mHeaderView = new EmptyMessageListHeaderView(getContext());
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mLinearLayoutManager.setStackFromEnd(true);
@@ -79,6 +109,18 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         });
     }
 
+    private void removeEmptyHeaderView() {
+        //Check the default data source state of the Adapter, if HeaderView, FooterView are set on the Adapter
+        int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
+        if (mAdapter.getHeaderView() == mHeaderView && count != mAdapter.getItemCount()) {
+            mAdapter.setHeaderView(null);
+            mAdapter.setShouldShowHeader(false);
+        }
+    }
+    public void removeHeaderView() {
+        mAdapter.setHeaderView(null);
+    }
+
     public void setItemSwipeListener(SwipeableItem.OnItemSwipeListener<Message> itemSwipeListener) {
         mMessagesRecyclerView.setItemSwipeListener(itemSwipeListener);
     }
@@ -86,11 +128,20 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void onDestroy() {
         mMessagesRecyclerView.onDestroy();
         mLayerClient.unregisterEventListener(this);
+        mAdapter.unregisterAdapterDataObserver(dataObserver);
+    }
+
+    public void setHeaderView(View headerView) {
+        mAdapter.setHeaderView(headerView);
     }
 
     public void setAdapter(final MessagesAdapter adapter) {
-        adapter.setStyle(mMessageStyle);
         mAdapter = adapter;
+        mAdapter.setStyle(mMessageStyle);
+        if (!mAdapter.hasObservers()) {
+            mAdapter.registerAdapterDataObserver(dataObserver);
+            dataObserver.onChanged();
+        }
         mMessagesRecyclerView.setAdapter(adapter);
         setShouldShowAvatarInOneOnOneConversations(mShouldShowAvatarsInOneOnOneConversations);
 
@@ -249,20 +300,18 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * @param query        Query to be used with the specified conversation
      */
     public void setConversation(LayerClient layerClient, Conversation conversation, Query<Message> query) {
-        if (conversation != null) {
-            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
-        }
-
         mConversation = conversation;
         mLayerClient = layerClient;
-        mLayerClient.registerEventListener(this);
 
         mAdapter.setQuery(query, null);
-        Set<Identity> participants = conversation!=null ? conversation.getParticipants() : null;
-        if (participants != null) {
+        if (conversation != null) {
+            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
             mAdapter.setIsOneOnOneConversation(conversation.getParticipants().size() == 2);
+            mAdapter.setConversation(conversation);
         }
 
+        mLayerClient.registerEventListener(this);
+        mAdapter.setQuery(query, null);
         mAdapter.refresh();
     }
 
@@ -290,4 +339,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         ta.recycle();
         mMessageStyle = messageStyleBuilder.build();
     }
+
+
 }
