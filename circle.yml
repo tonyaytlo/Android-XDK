@@ -2,9 +2,13 @@ machine:
   environment:
     PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-2.9/bin:$PATH"
     TERM: "dumb"
+    JAVAOPTIONS: "-Xms1024m -Xmx2048m"
     QEMU_AUDIO_DRV: none
     ADB_INSTALL_TIMEOUT: "10"
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+
+  java:
+    version: openjdk8
 
 dependencies:
   pre:
@@ -17,6 +21,10 @@ dependencies:
     - echo yes | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout;1.0.2"
     - echo yes | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 
+    # Android SDK Platform 26
+    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-26" ]; then echo y | android update sdk --no-ui --all --filter "android-26"; fi
+    # Android SDK Build-tools, revision 26.0.2
+    - if [ ! -d "/usr/local/android-sdk-linux/platforms/android-26.0.2" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-26.0.2"; fi
 
     # Create a new avd targeting the version we want. Currently v19 is the most stable option
     - echo no | android create avd --force -n layer-android19 --target android-19 --tag google_apis
