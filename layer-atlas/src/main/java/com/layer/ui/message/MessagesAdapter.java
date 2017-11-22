@@ -77,6 +77,9 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     private boolean mIsOneOnOneConversation;
     private boolean mShouldShowAvatarInOneOnOneConversations;
     private boolean mShouldShowAvatarPresence = true;
+    private boolean mShouldShowAvatarForCurrentUser;
+    private boolean mShouldShowPresenceForCurrentUser;
+
 
     private View mHeaderView;
     private boolean mShouldShowHeader;
@@ -280,12 +283,28 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
         return mShouldShowAvatarPresence;
     }
 
+    public boolean getShouldShowAvatarForCurrentUser() {
+        return mShouldShowAvatarForCurrentUser;
+    }
+
+    public boolean getShouldShowPresenceForCurrentUser() {
+        return mShouldShowPresenceForCurrentUser;
+    }
+
     /**
      * @param shouldShowPresence Whether the AvatarView for the other participant in a one on one
      *                           conversation should be shown or not. Default is `true`.
      */
     public void setShouldShowAvatarPresence(boolean shouldShowPresence) {
         mShouldShowAvatarPresence = shouldShowPresence;
+    }
+
+    public void setShouldShowAvatarForCurrentUser(boolean shouldShowAvatarForCurrentUser) {
+        mShouldShowAvatarForCurrentUser = shouldShowAvatarForCurrentUser;
+    }
+
+    public void setShouldShowPresenceForCurrentUser(boolean shouldShowPresenceForCurrentUser) {
+        mShouldShowPresenceForCurrentUser = shouldShowPresenceForCurrentUser;
     }
 
     protected ImageCacheWrapper getImageCacheWrapper() {
@@ -489,6 +508,11 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
             }
             nextMessageCluster.mClusterWithPrevious = result.mClusterWithNext;
             nextMessageCluster.mDateBoundaryWithPrevious = result.mDateBoundaryWithNext;
+        }
+
+        if (mShouldShowAvatarForCurrentUser && nextMessage != null) {
+            result.mNextMessageIsFromSameUser = message.getSender() == nextMessage.getSender()
+                    && !result.mDateBoundaryWithNext;
         }
 
         return result;

@@ -42,6 +42,8 @@ public class MessageItemsAdapter extends MessagesAdapter {
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
         viewModel.setShowPresence(getShouldShowPresence());
+        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
+        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
 
         return new MessageItemCardViewHolder(parent, viewModel, getBinderRegistry().getMessageModelManager());
     }
@@ -61,6 +63,8 @@ public class MessageItemsAdapter extends MessagesAdapter {
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
         viewModel.setShowPresence(getShouldShowPresence());
+        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
+        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
 
         return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
     }

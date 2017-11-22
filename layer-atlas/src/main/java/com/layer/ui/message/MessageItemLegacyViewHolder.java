@@ -3,7 +3,6 @@ package com.layer.ui.message;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.layer.ui.R;
 import com.layer.ui.avatar.AvatarViewModelImpl;
@@ -21,6 +20,8 @@ public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageIt
         super(parent, R.layout.ui_message_item_legacy, messageItemViewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(messageItemViewModel.getImageCacheWrapper()),
+                messageItemViewModel.getIdentityFormatter());
+        getBinding().currentUserAvatar.init(new AvatarViewModelImpl(messageItemViewModel.getImageCacheWrapper()),
                 messageItemViewModel.getIdentityFormatter());
 
         getBinding().setViewModel(messageItemViewModel);

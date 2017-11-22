@@ -14,6 +14,9 @@ public class MessageItemCardViewHolder extends MessageItemViewHolder<MessageItem
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
 
+        getBinding().currentUserAvatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
+                viewModel.getIdentityFormatter());
+
         getBinding().setViewModel(viewModel);
         getBinding().messageViewer.setMessageModelManager(modelRegistry);
     }

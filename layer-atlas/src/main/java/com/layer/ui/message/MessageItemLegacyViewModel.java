@@ -43,6 +43,10 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
     private String mTypingIndicatorMessage;
     private boolean mIsTypingIndicatorVisible;
     private boolean mShouldDisplayAvatarSpace;
+    private boolean mShouldShowAvatarForCurrentUser;
+    private boolean mShouldCurrentUserAvatarBeVisible;
+    private boolean mShouldShowPresenceForCurrentUser;
+    private boolean mShouldCurrentUserPresenceBeVisible;
 
     public MessageItemLegacyViewModel(Context context, LayerClient layerClient,
                                       ImageCacheWrapper imageCacheWrapper,
@@ -74,7 +78,8 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
             // No previous message, so no gap
             mIsClusterSpaceVisible = false;
             updateReceivedAtDateAndTime(message);
-        } else if (cluster.mDateBoundaryWithPrevious || cluster.mClusterWithPrevious == MessageCluster.Type.MORE_THAN_HOUR) {
+        } else if (cluster.mDateBoundaryWithPrevious
+                || cluster.mClusterWithPrevious == MessageCluster.Type.MORE_THAN_HOUR) {
             // Crossed into a new day, or > 1hr lull in conversation
             updateReceivedAtDateAndTime(message);
             mIsClusterSpaceVisible = false;
@@ -87,6 +92,11 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
             mIsClusterSpaceVisible = true;
             mShouldShowDateTimeForMessage = false;
         }
+
+        mShouldCurrentUserAvatarBeVisible = mIsMyCellType &&  mShouldShowAvatarForCurrentUser &&
+                !cluster.mNextMessageIsFromSameUser;
+        mShouldCurrentUserPresenceBeVisible =
+                mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
     }
 
     protected void updateSenderDependentElements(Message message, MessageCell messageCell,
@@ -212,12 +222,20 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
         mShowAvatars = showAvatars;
     }
 
+    public void setShouldShowAvatarForCurrentUser(boolean shouldShowAvatarForCurrentUser) {
+        mShouldShowAvatarForCurrentUser = shouldShowAvatarForCurrentUser;
+    }
+
     public void setShowPresence(boolean showPresence) {
         mShowPresence = showPresence;
     }
 
     public void setEnableReadReceipts(boolean enableReadReceipts) {
         mEnableReadReceipts = enableReadReceipts;
+    }
+
+    public void setShouldShowPresenceForCurrentUser(boolean shouldShowPresenceForCurrentUser) {
+        mShouldShowPresenceForCurrentUser = shouldShowPresenceForCurrentUser;
     }
 
     // To be eliminated
@@ -263,6 +281,11 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
     @Bindable
     public boolean getAvatarVisibility() {
         return mIsAvatarViewVisible;
+    }
+
+    @Bindable
+    public boolean getShouldShowAvatarForCurrentUser() {
+        return mShouldShowAvatarForCurrentUser;
     }
 
     @Bindable
@@ -327,5 +350,15 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
     @Bindable
     public boolean getShouldDisplayAvatarSpace() {
         return mShouldDisplayAvatarSpace;
+    }
+
+    @Bindable
+    public boolean getShouldCurrentUserAvatarBeVisible() {
+        return mShouldCurrentUserAvatarBeVisible;
+    }
+
+    @Bindable
+    public boolean getShouldCurrentUserPresenceBeVisible() {
+        return mShouldCurrentUserPresenceBeVisible;
     }
 }

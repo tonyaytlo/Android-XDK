@@ -120,12 +120,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
                     android:visibility="@{viewModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintWidth_default="wrap"
-                    app:layout_constraintHeight_default="wrap"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintHeight_default="wrap"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0">
+                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintWidth_default="wrap">
 
                     <com.layer.ui.avatar.AvatarView
                         android:id="@+id/avatar"
@@ -144,26 +144,55 @@
 
                 </FrameLayout>
 
+
+                <FrameLayout
+                    android:id="@+id/current_user_avatar_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
+                    android:visibility="@{viewModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHeight_default="wrap"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_default="wrap">
+
+                     <com.layer.ui.avatar.AvatarView
+                         android:id="@+id/current_user_avatar"
+                         android:layout_width="@dimen/layer_ui_avatar_width"
+                         android:visibility="@{viewModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                         android:layout_height="@dimen/layer_ui_avatar_height"
+                         app:participants="@{viewModel.participants}"/>
+
+                     <com.layer.ui.presence.PresenceView
+                         android:id="@+id/current_user_presence"
+                         android:layout_width="@dimen/layer_ui_avatar_presence_height"
+                         android:layout_height="@dimen/layer_ui_avatar_presence_height"
+                         android:visibility="@{viewModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                         android:layout_gravity="bottom|right"
+                         app:participants="@{viewModel.participants}"/>
+
+                </FrameLayout>
+
                 <FrameLayout
                     android:id="@+id/cell"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
                     android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-                    android:layout_marginStart="@dimen/layer_ui_padding_normal"
                     android:layout_marginTop="@dimen/layer_ui_message_item_padding"
                     android:alpha="@{viewModel.messageCellAlpha}"
                     android:minHeight="@dimen/layer_ui_message_item_cell_min_height"
                     android:minWidth="@dimen/layer_ui_message_item_cell_min_width"
-                    app:layout_constraintWidth_default="wrap"
-                    app:layout_constraintHeight_default="wrap"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHeight_default="wrap"
                     app:layout_constraintHorizontal_bias="@{viewModel.myCellType ? 1.0f : 0.0f}"
-                    app:layout_constraintLeft_toRightOf="@+id/avatar_container"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_container"
+                    app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5"/>
-
+                    app:layout_constraintVertical_bias="0.5"
+                    app:layout_constraintWidth_default="wrap"/>
+                
             </android.support.constraint.ConstraintLayout>
 
             <TextView

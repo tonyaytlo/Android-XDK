@@ -7,6 +7,7 @@ import java.util.Date;
 public class MessageCluster {
     public boolean mDateBoundaryWithPrevious;
     public Type mClusterWithPrevious;
+    public boolean mNextMessageIsFromSameUser;
 
     public boolean mDateBoundaryWithNext;
     public Type mClusterWithNext;
