@@ -1,4 +1,4 @@
-package com.layer.ui.message.model;
+package com.layer.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
@@ -9,8 +9,8 @@ import com.google.gson.JsonParser;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.R;
+import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.view.MessageView;
-import com.layer.ui.message.view.TextMessageView;
 
 public class TextMessageModel extends MessageModel {
 
@@ -21,6 +21,8 @@ public class TextMessageModel extends MessageModel {
     private String mTitle;
     private String mSubtitle;
     private String mAuthor;
+    private String mActionEvent;
+    private JsonObject mCustomData;
 
     public TextMessageModel(Context context, LayerClient layerClient) {
         super(context, layerClient);
@@ -45,6 +47,14 @@ public class TextMessageModel extends MessageModel {
         mSubtitle = jsonObject.has("subtitle") ? jsonObject.get("subtitle").getAsString().trim() : null;
         mTitle = jsonObject.has("title") ? jsonObject.get("title").getAsString().trim() : null;
         mAuthor = jsonObject.has("author") ? jsonObject.get("author").getAsString().trim() : null;
+        if (jsonObject.has("action")) {
+            JsonObject action = jsonObject.getAsJsonObject("action");
+            mActionEvent = action.get("event").getAsString();
+            mCustomData = action.get("data").getAsJsonObject();
+        } else {
+            mActionEvent = null;
+            mCustomData = null;
+        }
     }
 
     @Bindable
@@ -65,6 +75,20 @@ public class TextMessageModel extends MessageModel {
     }
 
     @Override
+    public String getActionEvent() {
+        return mActionEvent;
+    }
+
+    @Override
+    public JsonObject getActionData() {
+        if (mCustomData != null) {
+            return mCustomData;
+        } else {
+            return super.getActionData();
+        }
+    }
+
+    @Override
     public String getFooter() {
         return mAuthor;
     }
@@ -82,11 +106,6 @@ public class TextMessageModel extends MessageModel {
     @Bindable
     public String getAuthorName() {
         return getIdentityFormatter().getDisplayName(getMessage().getSender());
-    }
-
-    @Bindable
-    public boolean isMessageFromMe() {
-        return getLayerClient().getAuthenticatedUser().equals(getMessage().getSender());
     }
 
     @Bindable

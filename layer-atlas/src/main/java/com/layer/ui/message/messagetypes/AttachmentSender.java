@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Parcelable;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -63,6 +64,7 @@ public abstract class AttachmentSender extends MessageSender {
      *
      * @return true if the result was handled, or false otherwise.
      */
+    @MainThread
     public boolean onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         // Optional override
         return false;
