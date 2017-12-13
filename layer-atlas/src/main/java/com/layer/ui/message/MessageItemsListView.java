@@ -24,6 +24,7 @@ import com.layer.sdk.query.SortDescriptor;
 import com.layer.ui.R;
 import com.layer.ui.TypingIndicatorLayout;
 import com.layer.ui.message.action.ActionHandlerRegistry;
+import com.layer.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.ui.message.action.OpenUrlActionHandler;
 import com.layer.ui.message.binder.BinderRegistry;
 import com.layer.ui.message.messagetypes.CellFactory;
@@ -293,6 +294,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
                 .build());
 
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
     }
 
 

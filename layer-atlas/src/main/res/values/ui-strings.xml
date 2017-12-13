@@ -69,7 +69,7 @@
 
     <string name="attachment_menu_camera">Camera</string>
     <string name="attachment_menu_gallery">Gallery</string>
-    <string name="attachment_menu_location">Location</string>
+    <string name="attachment_menu_current_location">Current Location</string>
 
     <string name="empty_conversation_with_zero_participant">Start a private Conversation</string>
     <string name="empty_conversation_with_one_participant">Start a Conversation with %s</string>

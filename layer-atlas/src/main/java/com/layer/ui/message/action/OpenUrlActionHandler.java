@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
@@ -27,7 +28,7 @@ public class OpenUrlActionHandler extends ActionHandler {
     }
 
     @Override
-    public void performAction(@NonNull Context context, JsonObject data) {
+    public void performAction(@NonNull Context context, @Nullable JsonObject data) {
         if (data == null || !data.has(KEY_URL)) {
             throw new IllegalStateException("Incorrect data. No url to open");
         }

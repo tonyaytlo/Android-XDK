@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.layer.ui.message.image.ImageMessageMetadata;
-import com.layer.ui.message.image.ImageMessageModel;
-import com.layer.ui.util.display.DisplayUtils;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.ui.util.imagecache.ImageRequestParameters;
 
@@ -102,7 +99,7 @@ public class Bindings {
 
     @BindingAdapter({"app:loadFrom", "app:usingImageLoader"})
     public static void loadFrom(ImageView imageView, ImageRequestParameters parameters, ImageCacheWrapper imageCacheWrapper) {
-        if (parameters!=null) {
+        if (parameters != null) {
             imageCacheWrapper.loadImage(parameters, imageView);
         } else {
             imageCacheWrapper.loadDefaultPlaceholder(imageView);

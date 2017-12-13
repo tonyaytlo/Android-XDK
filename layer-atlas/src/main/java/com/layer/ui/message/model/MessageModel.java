@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
@@ -94,12 +95,15 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         decrementDownloadingPartCounter();
     }
 
+    @Nullable
     @Bindable
     public abstract String getTitle();
 
+    @Nullable
     @Bindable
     public abstract String getDescription();
 
+    @Nullable
     @Bindable
     public abstract String getFooter();
 

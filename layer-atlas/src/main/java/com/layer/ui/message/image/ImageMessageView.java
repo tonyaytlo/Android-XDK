@@ -65,11 +65,4 @@ public class ImageMessageView extends MessageView<ImageMessageModel> {
             layoutParams.height = height;
         }
     }
-
-    @Override
-    public void performAction(String event, JsonObject customData) {
-        if (event != null) {
-            ActionHandlerRegistry.dispatchEvent(getContext(), event, customData);
-        }
-    }
 }

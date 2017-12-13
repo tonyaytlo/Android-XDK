@@ -115,4 +115,11 @@
 
     <color name="ui_image_message_view_background_them">@color/layer_ui_color_primary_gray</color>
 
+    <!-- ########## -->
+    <!-- Location Message View -->
+    <!-- ########## -->
+
+    <color name="ui_location_message_background">@android:color/white</color>
+    <color name="ui_location_message_marker_color">@android:color/holo_red_dark</color>
+
 </resources>

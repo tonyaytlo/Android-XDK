@@ -203,4 +203,11 @@
     <dimen name="ui_standard_message_container_title_text_size">14sp</dimen>
     <dimen name="ui_standard_message_container_subtitle_text_size">12sp</dimen>
     <dimen name="ui_standard_message_container_footer_text_size">12sp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Location Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="layer_ui_location_message_map_width">2048px</dimen>
+
 </resources>

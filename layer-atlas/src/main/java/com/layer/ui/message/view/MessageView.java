@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
+import com.layer.ui.message.action.ActionHandlerRegistry;
 import com.layer.ui.message.container.MessageContainer;
 import com.layer.ui.message.model.MessageModel;
 
@@ -27,6 +28,8 @@ public abstract class MessageView<VIEW_MODEL extends MessageModel> extends Frame
     public abstract Class<? extends MessageContainer> getContainerClass();
 
     public void performAction(String event, JsonObject customData) {
-
+        if (event != null) {
+            ActionHandlerRegistry.dispatchEvent(getContext(), event, customData);
+        }
     }
 }
