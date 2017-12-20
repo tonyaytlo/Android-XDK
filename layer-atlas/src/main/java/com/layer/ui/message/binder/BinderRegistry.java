@@ -10,6 +10,7 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.message.MessageCell;
 import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.message.image.ImageMessageModel;
+import com.layer.ui.message.link.LinkMessageModel;
 import com.layer.ui.message.location.LocationMessageModel;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.message.model.MessageModel;
@@ -181,6 +182,7 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(TextMessageModel.ROOT_MIME_TYPE, TextMessageModel.class);
         mMessageModelManager.registerModel(ImageMessageModel.ROOT_MIME_TYPE, ImageMessageModel.class);
         mMessageModelManager.registerModel(LocationMessageModel.ROOT_MIME_TYPE, LocationMessageModel.class);
+        mMessageModelManager.registerModel(LinkMessageModel.ROOT_MIME_TYPE, LinkMessageModel.class);
     }
 
     public <T extends MessageModel> void registerModel(@NonNull String modelIdentifier, @NonNull Class<T> messageModelClass) {

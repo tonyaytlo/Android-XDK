@@ -53,7 +53,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintRight_toRightOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintTop_toBottomOf="@+id/ui_standard_message_container_content_view"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintWidth_default="spread"
             app:layout_goneMarginTop="0dp"/>
 
         <TextView
@@ -75,7 +75,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintRight_toRightOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintTop_toBottomOf="@+id/ui_standard_message_container_title"
-            app:layout_constraintWidth_default="wrap"/>
+            app:layout_constraintWidth_default="spread"/>
 
         <TextView
             android:id="@+id/ui_standard_message_container_footer"
@@ -96,7 +96,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintRight_toRightOf="@+id/ui_standard_message_container_content_view"
             app:layout_constraintTop_toBottomOf="@+id/ui_standard_message_container_subtitle"
-            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintWidth_default="spread"
             app:layout_goneMarginTop="@dimen/layer_ui_margin_large"/>
 
 

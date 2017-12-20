@@ -24,7 +24,7 @@
     <dimen name="layer_ui_margin_small">8dp</dimen>
     <dimen name="layer_ui_margin_tiny">4dp</dimen>
     <dimen name="layer_ui_margin_normal">6dp</dimen>
-    
+
     <dimen name="layer_ui_padding_normal">16dp</dimen>
     <dimen name="layer_ui_padding_narrow">8dp</dimen>
     <dimen name="layer_ui_primary_item_height">72dp</dimen>
@@ -209,5 +209,13 @@
     <!-- ####################################################################################### -->
 
     <dimen name="layer_ui_location_message_map_width">2048px</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Location Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="layer_ui_link_message_image_height">100dp</dimen>
+    <dimen name="layer_ui_link_message_image_width">248dp</dimen>
+    <dimen name="layer_ui_link_message_url_text_size">14sp</dimen>
 
 </resources>

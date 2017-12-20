@@ -105,4 +105,9 @@ public class Bindings {
             imageCacheWrapper.loadDefaultPlaceholder(imageView);
         }
     }
+
+    @BindingAdapter("app:visibleOrGone")
+    public static void visibleOrGone(View view, boolean visible) {
+        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
 }
