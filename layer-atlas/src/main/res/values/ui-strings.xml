@@ -70,11 +70,14 @@
     <string name="attachment_menu_camera">Camera</string>
     <string name="attachment_menu_gallery">Gallery</string>
     <string name="attachment_menu_current_location">Current Location</string>
+    <string name="attachment_menu_file">File</string>
 
     <string name="empty_conversation_with_zero_participant">Start a private Conversation</string>
     <string name="empty_conversation_with_one_participant">Start a Conversation with %s</string>
     <string name="empty_conversation_with_two_participants">Start a Conversation with %1$s \u0026 %2$s</string>
     <string name="empty_conversation_with_three_participants">Start a Conversation with %1$s, %2$s \u0026 one other</string>
     <string name="empty_conversation_with_many_participants">Start a Conversation with %1$s, %2$s \u0026 %3$d others</string>
+
+    <string name="open_file_action_handler_activity_picker_title">Open with</string>
 
 </resources>

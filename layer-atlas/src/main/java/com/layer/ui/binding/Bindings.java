@@ -2,6 +2,7 @@ package com.layer.ui.binding;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
+import android.support.annotation.DrawableRes;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,5 +110,10 @@ public class Bindings {
     @BindingAdapter("app:visibleOrGone")
     public static void visibleOrGone(View view, boolean visible) {
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @BindingAdapter("app:imageResource")
+    public static void imageResource(ImageView imageView, @DrawableRes int resource){
+        imageView.setImageResource(resource);
     }
 }

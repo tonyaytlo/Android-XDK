@@ -52,7 +52,8 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
                 if (messagePart.isContentReady()) {
                     parse(messagePart);
-                } else if (shouldDownloadContentIfNotReady(messagePart) || isRoot) { // Always download root message part
+                    notifyChange();
+                } else if (isRoot || shouldDownloadContentIfNotReady(messagePart)) { // Always download root message part
                     download(messagePart);
                 }
             }
