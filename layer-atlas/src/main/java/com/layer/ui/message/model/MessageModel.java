@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -18,7 +19,10 @@ import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.message.view.MessageView;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.DateFormatterImpl;
+import com.layer.ui.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak {
@@ -32,6 +36,10 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     private Message mMessage;
     private MessagePart mRootMessagePart;
+    private List<MessagePart> mChildMessageParts;
+    private List<MessageModel> mChildMessageModels;
+
+    private MessageModelManager mMessageModelManager;
 
     public MessageModel(Context context, LayerClient layerClient) {
         mIdentityFormatter = new IdentityFormatterImpl(context);
@@ -39,22 +47,56 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         mDownloadingPartCounter = new AtomicInteger();
         mContext = context;
         mLayerClient = layerClient;
+        mChildMessageModels = new ArrayList<>();
     }
 
-    public void setMessage(Message message) {
+    public void setMessage(@NonNull Message message) {
+        MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(message);
+        if (rootMessagePart == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Message has no message part with role = root");
+            }
+            throw new IllegalArgumentException("Message has no message part with role = root");
+        }
+
+        setMessage(message, rootMessagePart);
+    }
+
+    public void setMessage(@NonNull Message message, @NonNull MessagePart rootMessagePart) {
         if (!message.equals(mMessage)) {
             mMessage = message;
-            for (MessagePart messagePart : message.getMessageParts()) {
-                boolean isRoot = MessagePartUtils.isRoleRoot(messagePart);
-                if (isRoot) {
-                    mRootMessagePart = messagePart;
-                }
+            mRootMessagePart = rootMessagePart;
 
-                if (messagePart.isContentReady()) {
-                    parse(messagePart);
-                    notifyChange();
-                } else if (isRoot || shouldDownloadContentIfNotReady(messagePart)) { // Always download root message part
-                    download(messagePart);
+            // Always download and parse the root part
+            if (mRootMessagePart.isContentReady()) {
+                parse(mRootMessagePart);
+            } else {
+                download(mRootMessagePart);
+            }
+
+            // Deal with child parts
+            String rootNodeId = MessagePartUtils.getNodeId(mRootMessagePart);
+            mChildMessageParts = null;
+
+            if (rootNodeId != null) {
+                mChildMessageParts = MessagePartUtils.getChildParts(message, rootNodeId);
+            }
+
+            if (mChildMessageParts != null) {
+                for (MessagePart childMessagePart : mChildMessageParts) {
+                    if (childMessagePart.isContentReady()) {
+                        parse(childMessagePart);
+                    } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
+                        download(childMessagePart);
+                    }
+
+                    String mimeType = MessagePartUtils.getMimeType(childMessagePart);
+                    MessageModel childModel = mMessageModelManager.getModel(mimeType);
+                    if (childModel != null) {
+                        mChildMessageModels.add(childModel);
+                        childModel.setMessageModelManager(mMessageModelManager);
+                        childModel.setMessage(message, childMessagePart);
+                    }
                 }
             }
         }
@@ -62,16 +104,39 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     public abstract Class<? extends MessageView> getRendererType();
 
-    protected void download(MessagePart messagePart) {
+    protected void download(@NonNull MessagePart messagePart) {
         messagePart.download(this);
     }
 
-    protected abstract void parse(MessagePart messagePart);
+    protected abstract void parse(@NonNull MessagePart messagePart);
 
-    protected abstract boolean shouldDownloadContentIfNotReady(MessagePart messagePart);
+    protected abstract boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart);
 
+    @NonNull
     protected MessagePart getRootMessagePart() {
         return mRootMessagePart;
+    }
+
+    @Nullable
+    protected List<MessagePart> getChildMessageParts() {
+        return mChildMessageParts;
+    }
+
+    @Nullable
+    public List<MessageModel> getChildMessageModels() {
+        return mChildMessageModels;
+    }
+
+    protected void addChildMessageModel(MessageModel messageModel) {
+        mChildMessageModels.add(messageModel);
+    }
+
+    protected MessageModelManager getMessageModelManager() {
+        return mMessageModelManager;
+    }
+
+    public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
+        mMessageModelManager = messageModelManager;
     }
 
     @Override
@@ -161,7 +226,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         mDateFormatter = dateFormatter;
     }
 
-    protected Message getMessage() {
+    public Message getMessage() {
         return mMessage;
     }
 

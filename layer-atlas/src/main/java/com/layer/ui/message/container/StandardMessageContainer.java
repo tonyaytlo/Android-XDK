@@ -42,6 +42,11 @@ public class StandardMessageContainer extends MessageContainer {
         view.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // TODO: AND-1242 Figure out how to not have to remove all the subviews in the content view
+        //       This is needed because containers in inner messageviewers have problems related to
+        //       recycling due to model type mismatches
+        mBinding.uiStandardMessageContainerContentView.removeAllViews();
         mBinding.uiStandardMessageContainerContentView.addView(view);
     }
 

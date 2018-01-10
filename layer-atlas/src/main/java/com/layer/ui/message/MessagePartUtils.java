@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,6 +18,10 @@ public class MessagePartUtils {
 
     private static final Pattern PARAMETER_ROLE = Pattern.compile("\\s*role\\s*=\\s*\\w+");
     private static final Pattern PARAMETER_IS_ROOT = Pattern.compile(".*;\\s*role\\s*=\\s*root\\s*;?");
+
+    private static final String ROLE_ROOT = "root";
+    private static final String PARAMETER_KEY_NODE_ID = "node-id";
+    private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
 
     @Nullable
     public static String getMimeType(MessagePart messagePart) {
@@ -44,6 +50,32 @@ public class MessagePartUtils {
         return arguments;
     }
 
+    @Nullable
+    public static MessagePart getMessagePartWithNodeId(@NonNull Message message, @NonNull String nodeId) {
+        for (MessagePart messagePart : message.getMessageParts()) {
+            Map<String, String> arguments = getMimeTypeArguments(messagePart);
+
+            if (arguments != null && arguments.containsKey(PARAMETER_KEY_NODE_ID)) {
+                String id = arguments.get(PARAMETER_KEY_NODE_ID);
+                if (id.equals(nodeId)) return messagePart;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static String getNodeId(@NonNull MessagePart messagePart) {
+        Map<String, String> arguments = getMimeTypeArguments(messagePart);
+        return arguments != null ? arguments.get(PARAMETER_KEY_NODE_ID) : null;
+    }
+
+    @Nullable
+    public static String getParentNodeId(@NonNull MessagePart messagePart) {
+        Map<String, String> arguments = getMimeTypeArguments(messagePart);
+        return arguments != null ? arguments.get(PARAMETER_KEY_PARENT_NODE_ID) : null;
+    }
+
     public static boolean hasMessagePartWithRole(@NonNull Message message, @NonNull String role) {
         return getMessagePartWithRole(message, role) != null;
     }
@@ -59,7 +91,7 @@ public class MessagePartUtils {
     }
 
     @Nullable
-    public static MessagePart getMessagePartWithRole(Message message, String role) {
+    public static MessagePart getMessagePartWithRole(@NonNull Message message, @NonNull String role) {
         for (MessagePart messagePart : message.getMessageParts()) {
             if (isRole(messagePart, role)) {
                 return messagePart;
@@ -67,6 +99,11 @@ public class MessagePartUtils {
         }
 
         return null;
+    }
+
+    @Nullable
+    public static MessagePart getMessagePartWithRoleRoot(@NonNull Message message) {
+        return getMessagePartWithRole(message, ROLE_ROOT);
     }
 
     @Nullable
@@ -83,6 +120,25 @@ public class MessagePartUtils {
         if (mimeType == null || mimeType.isEmpty()) return false;
 
         return PARAMETER_IS_ROOT.matcher(mimeType).find();
+    }
+
+    @NonNull
+    public static List<MessagePart> getChildParts(@NonNull Message message, @NonNull String parentNodeId) {
+        List<MessagePart> children = new ArrayList<>();
+
+        for (MessagePart messagePart : message.getMessageParts()) {
+            Map<String, String> mimeTypeArguments = getMimeTypeArguments(messagePart);
+            if (mimeTypeArguments == null) continue;
+
+            if (mimeTypeArguments.containsKey(PARAMETER_KEY_PARENT_NODE_ID)) {
+                String id = mimeTypeArguments.get(PARAMETER_KEY_PARENT_NODE_ID);
+                if (parentNodeId.equals(id)) {
+                    children.add(messagePart);
+                }
+            }
+        }
+
+        return children;
     }
 
     public static boolean isRole(@NonNull MessagePart messagePart, @NonNull String role) {

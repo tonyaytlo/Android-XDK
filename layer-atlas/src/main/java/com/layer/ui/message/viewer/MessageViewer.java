@@ -9,19 +9,19 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.layer.sdk.messaging.Message;
+import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.message.container.MessageContainer;
 import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.model.MessageModelManager;
 import com.layer.ui.message.view.MessageView;
+import com.layer.ui.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class MessageViewer extends FrameLayout {
     private MessageModelManager mMessageModelManager;
-
-    private Message mMessage;
 
     private MessageContainer mMessageContainer;
     private MessageView mMessageView;
@@ -38,44 +38,65 @@ public class MessageViewer extends FrameLayout {
         super(context, attrs, defStyleAttr);
     }
 
-    public void setMessage(Message message) {
-        mMessage = message;
-        bindMessageToView();
-    }
-
-    public void setMessageModelManager(MessageModelManager messageModelManager) {
+    public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
         mMessageModelManager = messageModelManager;
     }
 
-    // TODO : This only works for one message part... fix to add more
-    // TODO : Handle these nulls appropriately
-    @Nullable
-    private MessageModel getMessageTypeModel() {
-        String mimeType = MessagePartUtils.getMimeType(mMessage.getMessageParts().get(0));
-        return mMessageModelManager.getModel(mimeType);
+    public void setMessage(@NonNull Message message) {
+        MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(message);
+        if (rootMessagePart == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Message has no message part with role = root");
+            }
+            throw new IllegalArgumentException("Message does not contain a part with role = root");
+        }
+
+        setMessage(message, rootMessagePart);
+    }
+
+    public void setMessage(@NonNull Message message, @NonNull MessagePart rootMessagePart) {
+        String mimeType = MessagePartUtils.getMimeType(rootMessagePart);
+        if (mimeType == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Message has no message part with role = root");
+            }
+            throw new IllegalArgumentException("No mime type found in the root message part");
+        }
+
+        MessageModel model = mMessageModelManager.getModel(mimeType);
+        if (model == null) {
+            if (Log.isLoggable(Log.DEBUG)) Log.d("No model found for mime type = " + mimeType);
+
+            return;
+        }
+        model.setMessageModelManager(mMessageModelManager);
+        model.setMessage(message, rootMessagePart);
+
+        bindModelToView(model);
+    }
+
+    public void setModel(@NonNull MessageModel rootModel) {
+        bindModelToView(rootModel);
     }
 
     //==============================================================================================
     //  View Processing
     //==============================================================================================
 
-    protected void bindMessageToView() {
-        // Get the model
-        MessageModel model = getMessageTypeModel();
-        // TODO : Deal with possible null
-        model.setMessage(mMessage);
+    public void bindModelToView(@NonNull MessageModel model) {
         Class<? extends MessageView> modelType = model.getRendererType();
 
         try {
-            if (mMessageView == null) {
-                mMessageView = instantiateView(modelType);
-            }
+            /** TODO: AND-1242 Fix problem with recycling inner message viewers where the type of model
+             *        being set does not match the existing model and views already in there
+             *        This code, formerly would only instantiate and add message views
+             *        and containers iff they were null (i.e. a freshly instantiated message viewer)
+             */
+            mMessageView = instantiateView(modelType);
 
-            if (mMessageContainer == null) {
-                mMessageContainer = instantiateContainer(mMessageView.getContainerClass());
-                addContainer(mMessageContainer);
-                mMessageContainer.setMessageView(mMessageView);
-            }
+            mMessageContainer = instantiateContainer(mMessageView.getContainerClass());
+            addContainer(mMessageContainer);
+            mMessageContainer.setMessageView(mMessageView);
 
             mMessageContainer.setMessageModel(model);
 
@@ -90,17 +111,20 @@ public class MessageViewer extends FrameLayout {
         }
     }
 
-    protected MessageView instantiateView(Class<? extends MessageView> viewTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    protected MessageView instantiateView(@NonNull Class<? extends MessageView> viewTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<? extends MessageView> constructor = viewTypeClass.getConstructor(Context.class);
-        return constructor.newInstance(getContext());
+        MessageView messageView = constructor.newInstance(getContext());
+        messageView.setMessageModelManager(mMessageModelManager);
+        return messageView;
     }
 
-    protected MessageContainer instantiateContainer(Class<? extends MessageContainer> containerTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    protected MessageContainer instantiateContainer(@NonNull Class<? extends MessageContainer> containerTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<? extends MessageContainer> constructor = containerTypeClass.getConstructor(Context.class);
         return constructor.newInstance(getContext());
     }
 
-    protected void addContainer(MessageContainer container) {
+    protected void addContainer(@NonNull MessageContainer container) {
+        removeAllViews();
         container.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
