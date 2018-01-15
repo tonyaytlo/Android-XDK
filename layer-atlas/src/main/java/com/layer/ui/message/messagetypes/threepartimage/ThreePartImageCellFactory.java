@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * ThreePartImage handles image Messages with three parts: full image, preview image, and
@@ -74,11 +76,11 @@ public class ThreePartImageCellFactory extends
     public void bindCellHolder(final CellHolder cellHolder, final Info info, final Message message, CellHolderSpecs specs) {
         cellHolder.mImageView.setTag(info);
         cellHolder.mImageView.setOnClickListener(this);
-        MessagePart preview = getPreviewPart(message);
+        final ThreePartMessageParts parts = new ThreePartMessageParts(message);
 
         // Info width and height are the rotated width and height, though the content is not pre-rotated.
         int[] cellDims = Util.scaleDownInside(info.width, info.height, specs.maxWidth, specs.maxHeight);
-        ViewGroup.LayoutParams params = cellHolder.mImageView.getLayoutParams();
+        final ViewGroup.LayoutParams params = cellHolder.mImageView.getLayoutParams();
         params.width = cellDims[0];
         params.height = cellDims[1];
         cellHolder.mProgressBar.show();
@@ -122,7 +124,7 @@ public class ThreePartImageCellFactory extends
         };
 
         ImageRequestParameters imageRequestParameters = new ImageRequestParameters
-                .Builder(preview.getId())
+                .Builder(parts.getPreviewPart().getId())
                 .placeHolder(PLACEHOLDER)
                 .resize(width, height)
                 .tag(IMAGE_CACHING_TAG)
@@ -138,20 +140,16 @@ public class ThreePartImageCellFactory extends
         cellHolder.mImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                MessagePart full = getFullPart(message);
-                MessagePart preview = getPreviewPart(message);
-                MessagePart info = getInfoPart(message);
-
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
 
-                BitmapFactory.decodeStream(full.getDataStream(), null, options);
+                BitmapFactory.decodeStream(parts.getFullPart().getDataStream(), null, options);
                 Log.v("Full size: " + options.outWidth + "x" + options.outHeight);
 
-                BitmapFactory.decodeStream(preview.getDataStream(), null, options);
+                BitmapFactory.decodeStream(parts.getPreviewPart().getDataStream(), null, options);
                 Log.v("Preview size: " + options.outWidth + "x" + options.outHeight);
 
-                Log.v("Info: " + new String(info.getData()));
+                Log.v("Info: " + new String(parts.getInfoPart().getData()));
 
                 return false;
             }
@@ -194,11 +192,24 @@ public class ThreePartImageCellFactory extends
     //==============================================================================================
 
     public boolean isType(Message message) {
-        List<MessagePart> parts = message.getMessageParts();
-        return parts.size() == 3 &&
-                parts.get(ThreePartImageConstants.PART_INDEX_FULL).getMimeType().startsWith("image/") &&
-                parts.get(ThreePartImageConstants.PART_INDEX_PREVIEW).getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW) &&
-                parts.get(ThreePartImageConstants.PART_INDEX_INFO).getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO);
+        Set<MessagePart> parts = message.getMessageParts();
+        if (parts.size() != 3) {
+            return false;
+        }
+
+        boolean hasInfoPart = false;
+        boolean hasPreviewPart = false;
+        boolean hasFullPart = false;
+        for (MessagePart part : parts) {
+            if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO)) {
+                hasInfoPart = true;
+            } else if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+                hasPreviewPart = true;
+            } else if (part.getMimeType().startsWith("image/")) {
+                hasFullPart = true;
+            }
+        }
+        return hasInfoPart && hasPreviewPart && hasFullPart;
     }
 
     @Override
@@ -212,14 +223,16 @@ public class ThreePartImageCellFactory extends
     }
 
     public static Info getInfo(Message message) {
+        ThreePartMessageParts parts = new ThreePartMessageParts(message);
+
         try {
             Info info = new Info();
-            JSONObject infoObject = new JSONObject(new String(getInfoPart(message).getData()));
+            JSONObject infoObject = new JSONObject(new String(parts.getInfoPart().getData()));
             info.orientation = infoObject.getInt("orientation");
             info.width = infoObject.getInt("width");
             info.height = infoObject.getInt("height");
-            info.previewPartId = getPreviewPart(message).getId();
-            info.fullPartId = getFullPart(message).getId();
+            info.previewPartId = parts.getPreviewPart().getId();
+            info.fullPartId = parts.getFullPart().getId();
             return info;
         } catch (JSONException e) {
             if (Log.isLoggable(Log.ERROR)) {
@@ -227,18 +240,6 @@ public class ThreePartImageCellFactory extends
             }
         }
         return null;
-    }
-
-    public static MessagePart getInfoPart(Message message) {
-        return message.getMessageParts().get(ThreePartImageConstants.PART_INDEX_INFO);
-    }
-
-    public static MessagePart getPreviewPart(Message message) {
-        return message.getMessageParts().get(ThreePartImageConstants.PART_INDEX_PREVIEW);
-    }
-
-    public static MessagePart getFullPart(Message message) {
-        return message.getMessageParts().get(ThreePartImageConstants.PART_INDEX_FULL);
     }
 
 
@@ -293,6 +294,48 @@ public class ThreePartImageCellFactory extends
         public CellHolder(UiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
                 mImageView = uiMessageItemCellImageBinding.cellImage;
                 mProgressBar = uiMessageItemCellImageBinding.cellProgress;
+        }
+    }
+
+    private static class ThreePartMessageParts {
+        private MessagePart mInfoPart;
+        private MessagePart mPreviewPart;
+        private MessagePart mFullPart;
+
+        public ThreePartMessageParts(Message message) {
+            Set<MessagePart> messageParts = message.getMessageParts();
+
+            for (MessagePart part : messageParts) {
+                if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO)) {
+                    mInfoPart = part;
+                } else if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+                    mPreviewPart = part;
+                } else if (part.getMimeType().startsWith("image/")) {
+                    mFullPart = part;
+                }
+            }
+
+            if (mInfoPart == null || mPreviewPart == null || mFullPart == null) {
+                if (Log.isLoggable(Log.ERROR)) {
+                    Log.e("Incorrect parts for a three part image: " + messageParts);
+                }
+                throw new IllegalArgumentException("Incorrect parts for a three part image: " + messageParts);
+            }
+        }
+
+        @NonNull
+        public MessagePart getInfoPart() {
+            return mInfoPart;
+        }
+
+        @NonNull
+        public MessagePart getPreviewPart() {
+            return mPreviewPart;
+        }
+
+        @NonNull
+        public MessagePart getFullPart() {
+            return mFullPart;
         }
     }
 }

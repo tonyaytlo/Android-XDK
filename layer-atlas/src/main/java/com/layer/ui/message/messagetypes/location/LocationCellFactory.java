@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.R;
 import com.layer.ui.databinding.UiMessageItemCellImageBinding;
 import com.layer.ui.message.messagetypes.CellFactory;
@@ -25,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.Set;
 
 public class LocationCellFactory extends
         CellFactory<LocationCellFactory.CellHolder, LocationCellFactory.Location> implements View.OnClickListener {
@@ -46,7 +48,9 @@ public class LocationCellFactory extends
     }
 
     public boolean isType(Message message) {
-        return message.getMessageParts().size() == 1 && message.getMessageParts().get(0).getMimeType().equals(MIME_TYPE);
+        Set<MessagePart> parts = message.getMessageParts();
+        return parts.size() == 1
+                && parts.iterator().next().getMimeType().equals(MIME_TYPE);
     }
 
     @Override
@@ -73,7 +77,7 @@ public class LocationCellFactory extends
     @Override
     public Location parseContent(LayerClient layerClient, Message message) {
         try {
-            JSONObject o = new JSONObject(new String(message.getMessageParts().get(0).getData()));
+            JSONObject o = new JSONObject(new String(message.getMessageParts().iterator().next().getData()));
             Location c = new Location();
             c.mLatitude = o.optDouble(KEY_LATITUDE, 0);
             c.mLongitude = o.optDouble(KEY_LONGITUDE, 0);
