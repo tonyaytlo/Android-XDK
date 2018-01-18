@@ -205,6 +205,15 @@
     <dimen name="ui_standard_message_container_footer_text_size">12sp</dimen>
 
     <!-- ####################################################################################### -->
+    <!-- # Titled message container                                                          # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_titled_message_container_corner_radius">17.5dp</dimen>
+    <dimen name="ui_titled_message_container_title_text_size">16sp</dimen>
+    <dimen name="ui_titled_message_container_min_width">192dp</dimen>
+    <dimen name="ui_titled_message_container_min_width_zero">0dp</dimen>
+
+    <!-- ####################################################################################### -->
     <!-- # Location Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
@@ -232,4 +241,11 @@
     <dimen name="ui_button_message_action_button_text_size">14sp</dimen>
     <dimen name="ui_button_message_choice_button_text_size">14sp</dimen>
 
+    <!-- ####################################################################################### -->
+    <!-- # Choice Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_choice_button_message_label_text_size">17sp</dimen>
+    <dimen name="ui_choice_button_message_button_text_size">17sp</dimen>
+    <dimen name="ui_choice_button_message_button_stroke_width">1dp</dimen>
 </resources>

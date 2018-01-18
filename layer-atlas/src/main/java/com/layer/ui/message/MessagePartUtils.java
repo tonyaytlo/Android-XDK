@@ -20,6 +20,7 @@ public class MessagePartUtils {
     private static final Pattern PARAMETER_IS_ROOT = Pattern.compile(".*;\\s*role\\s*=\\s*root\\s*;?");
 
     private static final String ROLE_ROOT = "root";
+    private static final String ROLE_RESPONSE_SUMMARY = "response_summary";
     private static final String PARAMETER_KEY_NODE_ID = "node-id";
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
 
@@ -120,6 +121,17 @@ public class MessagePartUtils {
         if (mimeType == null || mimeType.isEmpty()) return false;
 
         return PARAMETER_IS_ROOT.matcher(mimeType).find();
+    }
+
+    public static boolean isResponseSummaryPart(@NonNull MessagePart childMessagePart) {
+        return isRole(childMessagePart, ROLE_RESPONSE_SUMMARY);
+    }
+
+    public static boolean isParentMessagePart(@NonNull MessagePart rootMessagePart, @NonNull MessagePart childMessagePart) {
+        String parentNodeId = getParentNodeId(childMessagePart);
+        if (parentNodeId == null) return false;
+
+        return parentNodeId.equals(getNodeId(rootMessagePart));
     }
 
     @NonNull

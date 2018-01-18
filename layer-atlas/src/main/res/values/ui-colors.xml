@@ -101,6 +101,12 @@
     <color name="ui_standard_message_container_content_view_subtitle">@color/layer_ui_text_gray</color>
 
     <!-- ########## -->
+    <!-- Titled Message Container -->
+    <!-- ########## -->
+    <color name="ui_titled_message_container_content_view_title">@color/layer_ui_text_black</color>
+
+
+    <!-- ########## -->
     <!-- Text Message View -->
     <!-- ########## -->
 
@@ -130,7 +136,6 @@
     <color name="ui_action_button_background_disabled">@color/layer_ui_color_primary_gray_5</color>
     <color name="ui_action_button_background_pressed">@color/layer_ui_color_primary_blue</color>
 
-
     <color name="ui_button_message_action_button_text_enabled">@color/layer_ui_text_blue</color>
     <color name="ui_button_message_action_button_text_disabled">@color/layer_ui_text_gray</color>
     <color name="ui_button_message_action_button_text_pressed">@android:color/black</color>
@@ -138,4 +143,15 @@
     <color name="ui_button_message_choice_button_text_enabled">@color/layer_ui_text_blue</color>
     <color name="ui_button_message_choice_button_text_disabled">@color/layer_ui_text_gray</color>
     <color name="ui_button_message_choice_button_text_pressed">@android:color/white</color>
+
+    <color name="ui_choice_button_background_enabled">@android:color/white</color>
+    <color name="ui_choice_button_background_enabled_stroke">@color/layer_ui_color_primary_blue</color>
+    <color name="ui_choice_button_background_disabled">@color/layer_ui_color_primary_gray_3</color>
+    <color name="ui_choice_button_background_pressed">@color/layer_ui_color_primary_blue</color>
+    <color name="ui_choice_button_background_selected">@color/layer_ui_color_primary_blue</color>
+
+    <color name="ui_choice_button_text_enabled">@color/layer_ui_text_blue</color>
+    <color name="ui_choice_button_text_disabled">@color/layer_ui_text_gray</color>
+    <color name="ui_choice_button_text_pressed">@android:color/white</color>
+    <color name="ui_choice_button_text_selected">@android:color/white</color>
 </resources>

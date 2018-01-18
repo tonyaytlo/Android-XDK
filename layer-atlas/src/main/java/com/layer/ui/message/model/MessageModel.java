@@ -10,7 +10,11 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.changes.LayerChange;
+import com.layer.sdk.changes.LayerChangeEvent;
+import com.layer.sdk.listeners.LayerChangeEventListener;
 import com.layer.sdk.listeners.LayerProgressListener;
+import com.layer.sdk.messaging.LayerObject;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.identity.IdentityFormatter;
@@ -25,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak {
+public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak, LayerChangeEventListener {
     private final AtomicInteger mDownloadingPartCounter;
 
     private IdentityFormatter mIdentityFormatter;
@@ -38,6 +42,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     private MessagePart mRootMessagePart;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
+    private MessagePart mResponseSummaryPart;
 
     private MessageModelManager mMessageModelManager;
 
@@ -62,24 +67,32 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         setMessage(message, rootMessagePart);
     }
 
-    public void setMessage(@NonNull Message message, @NonNull MessagePart rootMessagePart) {
+    public void setMessage(@NonNull Message message, @Nullable MessagePart rootMessagePart) {
         if (!message.equals(mMessage)) {
             mMessage = message;
             mRootMessagePart = rootMessagePart;
 
-            // Always download and parse the root part
-            if (mRootMessagePart.isContentReady()) {
-                parse(mRootMessagePart);
-            } else {
-                download(mRootMessagePart);
+            if (mRootMessagePart != null) {
+                // Always download and parse the root part
+                if (mRootMessagePart.isContentReady()) {
+                    parse(mRootMessagePart);
+                } else {
+                    download(mRootMessagePart);
+                }
             }
 
             // Deal with child parts
+            processChildParts();
+        }
+    }
+
+    protected void processChildParts() {
+        if (mRootMessagePart != null) {
             String rootNodeId = MessagePartUtils.getNodeId(mRootMessagePart);
             mChildMessageParts = null;
 
             if (rootNodeId != null) {
-                mChildMessageParts = MessagePartUtils.getChildParts(message, rootNodeId);
+                mChildMessageParts = MessagePartUtils.getChildParts(mMessage, rootNodeId);
             }
 
             if (mChildMessageParts != null) {
@@ -90,16 +103,44 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
                         download(childMessagePart);
                     }
 
+                    if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
+                        mResponseSummaryPart = childMessagePart;
+                        processResponseSummaryPart(childMessagePart);
+                        continue;
+                    }
+
                     String mimeType = MessagePartUtils.getMimeType(childMessagePart);
+                    if (mimeType == null) continue;
                     MessageModel childModel = mMessageModelManager.getModel(mimeType);
                     if (childModel != null) {
                         mChildMessageModels.add(childModel);
                         childModel.setMessageModelManager(mMessageModelManager);
-                        childModel.setMessage(message, childMessagePart);
+                        childModel.setMessage(mMessage, childMessagePart);
                     }
                 }
             }
+        } else {
+            mChildMessageModels.clear();
+            mChildMessageParts.clear();
         }
+    }
+
+    @Override
+    public void onChangeEvent(LayerChangeEvent layerChangeEvent) {
+        // handle updates to message parts here
+        for (LayerChange change : layerChangeEvent.getChanges()) {
+            if (change.getChangeType() == LayerChange.Type.UPDATE
+                    && change.getObjectType() == LayerObject.Type.MESSAGE_PART) {
+                // check the message part for equality
+                //change.getObject()
+            } else if (change.getChangeType() == LayerChange.Type.INSERT) {
+
+            }
+        }
+    }
+
+    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
+        // Standard operation is no-op
     }
 
     public abstract Class<? extends MessageView> getRendererType();
@@ -133,6 +174,11 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     protected MessageModelManager getMessageModelManager() {
         return mMessageModelManager;
+    }
+
+    @Nullable
+    protected MessagePart getResponseSummaryPart() {
+        return mResponseSummaryPart;
     }
 
     public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {

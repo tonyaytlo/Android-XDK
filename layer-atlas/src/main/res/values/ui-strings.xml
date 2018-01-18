@@ -80,4 +80,6 @@
 
     <string name="open_file_action_handler_activity_picker_title">Open with</string>
 
+    <string name="choice_message_model_default_title">Choose One</string>
+
 </resources>
