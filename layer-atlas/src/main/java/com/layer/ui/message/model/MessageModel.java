@@ -10,17 +10,14 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.changes.LayerChange;
-import com.layer.sdk.changes.LayerChangeEvent;
-import com.layer.sdk.listeners.LayerChangeEventListener;
 import com.layer.sdk.listeners.LayerProgressListener;
-import com.layer.sdk.messaging.LayerObject;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.message.view.MessageView;
+import com.layer.ui.repository.MessageSenderRepository;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.DateFormatterImpl;
 import com.layer.ui.util.Log;
@@ -29,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak, LayerChangeEventListener {
+public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak {
     private final AtomicInteger mDownloadingPartCounter;
 
     private IdentityFormatter mIdentityFormatter;
@@ -45,6 +42,8 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     private MessagePart mResponseSummaryPart;
 
     private MessageModelManager mMessageModelManager;
+
+    private MessageSenderRepository mMessageSenderRepository;
 
     public MessageModel(Context context, LayerClient layerClient) {
         mIdentityFormatter = new IdentityFormatterImpl(context);
@@ -88,12 +87,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     protected void processChildParts() {
         if (mRootMessagePart != null) {
-            String rootNodeId = MessagePartUtils.getNodeId(mRootMessagePart);
-            mChildMessageParts = null;
-
-            if (rootNodeId != null) {
-                mChildMessageParts = MessagePartUtils.getChildParts(mMessage, rootNodeId);
-            }
+            mChildMessageParts = MessagePartUtils.getChildParts(mMessage, mRootMessagePart);
 
             if (mChildMessageParts != null) {
                 for (MessagePart childMessagePart : mChildMessageParts) {
@@ -122,20 +116,6 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         } else {
             mChildMessageModels.clear();
             mChildMessageParts.clear();
-        }
-    }
-
-    @Override
-    public void onChangeEvent(LayerChangeEvent layerChangeEvent) {
-        // handle updates to message parts here
-        for (LayerChange change : layerChangeEvent.getChanges()) {
-            if (change.getChangeType() == LayerChange.Type.UPDATE
-                    && change.getObjectType() == LayerObject.Type.MESSAGE_PART) {
-                // check the message part for equality
-                //change.getObject()
-            } else if (change.getChangeType() == LayerChange.Type.INSERT) {
-
-            }
         }
     }
 
@@ -283,5 +263,13 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @Bindable
     public boolean isMessageFromMe() {
         return getLayerClient().getAuthenticatedUser().equals(getMessage().getSender());
+    }
+
+    @NonNull
+    protected MessageSenderRepository getMessageSenderRepository() {
+        if (mMessageSenderRepository == null) {
+            mMessageSenderRepository = new MessageSenderRepository(mContext, mLayerClient);
+        }
+        return mMessageSenderRepository;
     }
 }

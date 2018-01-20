@@ -48,6 +48,7 @@
     <dimen name="layer_ui_text_size_message_item">14sp</dimen>
     <dimen name="layer_ui_text_size_message_item_metadata">12sp</dimen>
     <dimen name="layer_ui_text_size_chip">13sp</dimen>
+    <dimen name="layer_ui_text_size_status">11sp</dimen>
     <dimen name="layer_ui_cursor_width">1dp</dimen>
 
 
@@ -73,6 +74,7 @@
     <dimen name="layer_ui_message_item_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_time_group_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_avatar_padding_left">12dp</dimen>
+    <dimen name="layer_ui_message_item_top_bottom_margin">4dp</dimen>
     <dimen name="layer_ui_zero_padding">0dp</dimen>
 
 

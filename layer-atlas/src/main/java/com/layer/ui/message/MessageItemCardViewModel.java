@@ -26,7 +26,8 @@ public class MessageItemCardViewModel extends ItemViewModel<Message> {
     private ImageCacheWrapper mImageCacheWrapper;
 
     // View related variables
-    private boolean mIsClusterSpaceVisible;
+    private boolean mPreviousPartOfCluster;
+    private boolean mNextPartOfCluster;
     private boolean mShouldShowDisplayName;
     private boolean mShouldShowDateTimeForMessage;
     private String mTimeGroupDay;
@@ -70,24 +71,23 @@ public class MessageItemCardViewModel extends ItemViewModel<Message> {
     }
 
     protected void updateClusteringAndDates(Message message, MessageCluster cluster) {
-        if (cluster.mClusterWithPrevious == null) {
-            // No previous message, so no gap
-            mIsClusterSpaceVisible = false;
-            updateReceivedAtDateAndTime(message);
-        } else if (cluster.mDateBoundaryWithPrevious
+        // Determine if previous/next items are part of a cluster for padding purposes
+        mPreviousPartOfCluster = cluster.mClusterWithPrevious != null
+                && (cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_HOUR
+                || cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_MINUTE);
+        mNextPartOfCluster = cluster.mClusterWithNext != null
+                && (cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_HOUR
+                || cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_MINUTE);
+
+        // Update and show/hide date
+        if (cluster.mClusterWithPrevious == null
+                || cluster.mDateBoundaryWithPrevious
                 || cluster.mClusterWithPrevious == MessageCluster.Type.MORE_THAN_HOUR) {
-            // Crossed into a new day, or > 1hr lull in conversation
             updateReceivedAtDateAndTime(message);
-            mIsClusterSpaceVisible = false;
-        } else if (cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_MINUTE) {
-            // Same sender with < 1m gap
-            mIsClusterSpaceVisible = false;
-            mShouldShowDateTimeForMessage = false;
-        } else if (cluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER) {
-            // New sender or > 1m gap
-            mIsClusterSpaceVisible = true;
+        } else {
             mShouldShowDateTimeForMessage = false;
         }
+
         mShouldCurrentUserAvatarBeVisible = mIsMyMessage && mShouldShowAvatarForCurrentUser &&
                 !cluster.mNextMessageIsFromSameUser;
         mShouldCurrentUserPresenceBeVisible =
@@ -199,8 +199,6 @@ public class MessageItemCardViewModel extends ItemViewModel<Message> {
             } else {
                 mIsReadReceiptVisible = false;
             }
-        } else {
-            mIsClusterSpaceVisible = false;
         }
     }
 
@@ -239,8 +237,13 @@ public class MessageItemCardViewModel extends ItemViewModel<Message> {
     // Bindable properties
 
     @Bindable
-    public boolean isClusterSpaceVisible() {
-        return mIsClusterSpaceVisible;
+    public boolean isPreviousPartOfCluster() {
+        return mPreviousPartOfCluster;
+    }
+
+    @Bindable
+    public boolean isNextPartOfCluster() {
+        return mNextPartOfCluster;
     }
 
     @Bindable

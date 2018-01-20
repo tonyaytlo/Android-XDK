@@ -37,6 +37,7 @@
 
     <color name="layer_ui_text_black">@android:color/black</color>
     <color name="layer_ui_text_gray">#FF757575</color>
+    <color name="layer_ui_text_light_gray">#FFA3A8B2</color>
     <color name="layer_ui_text_white">@android:color/white</color>
     <color name="layer_ui_text_blue">@color/layer_ui_color_primary_blue</color>
 

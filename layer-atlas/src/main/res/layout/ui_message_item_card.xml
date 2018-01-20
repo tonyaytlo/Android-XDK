@@ -29,6 +29,8 @@
     <com.layer.ui.util.views.SwipeableItem
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@{viewModel.previousPartOfCluster ? 0.0f : @dimen/layer_ui_message_item_top_bottom_margin}"
+        android:layout_marginBottom="@{viewModel.nextPartOfCluster ? @dimen/layer_ui_message_cluster_space : @dimen/layer_ui_message_item_top_bottom_margin}"
         android:background="@drawable/ui_swipeable_item_background_selector">
 
         <LinearLayout
@@ -56,8 +58,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ui_swipeable_item_foreground_selector"
             android:duplicateParentState="true"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/layer_ui_message_cluster_space">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/time_group"
@@ -66,7 +67,6 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="@dimen/layer_ui_message_item_time_group_padding_bottom"
-                android:paddingTop="@dimen/layer_ui_message_item_time_group_padding_top"
                 android:visibility="@{viewModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
 
                 <TextView
@@ -86,12 +86,6 @@
                     android:textColor="@color/layer_ui_text_gray"
                     android:textSize="@dimen/layer_ui_text_size_message_item_metadata"/>
             </LinearLayout>
-
-            <Space
-                android:id="@+id/cluster_space"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/layer_ui_message_cluster_space_gap"
-                android:visibility="@{viewModel.clusterSpaceVisible ? View.VISIBLE : View.GONE}"/>
 
             <TextView
                 android:id="@+id/senderName"

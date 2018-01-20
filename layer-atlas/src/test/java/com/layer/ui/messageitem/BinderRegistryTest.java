@@ -43,8 +43,8 @@ public class BinderRegistryTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(message1Part1.getMimeType()).thenReturn("application/vnd.layer.card.response+json;node-id=e004b419-2e53-4680-88cf-6938b365a2c0;role=root");
-        when(message1Part2.getMimeType()).thenReturn("application/vnd.layer.card.text+json;node-id=f469fcad-a59f-4bdd-af7c-044ea11f3b91;role=message;parent-node-id=e004b419-2e53-4680-88cf-6938b365a2c0");
+        when(message1Part1.getMimeType()).thenReturn("application/vnd.layer.card.response+json;role=root");
+        when(message1Part2.getMimeType()).thenReturn("application/vnd.layer.card.text+json;role=message;parent-node-id=e004b419-2e53-4680-88cf-6938b365a2c0");
 
         when(message2Part1.getMimeType()).thenReturn("image/jpeg");
         when(message2Part2.getMimeType()).thenReturn("image/jpeg+preview");

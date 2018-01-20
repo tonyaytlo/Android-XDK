@@ -15,6 +15,8 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.BR;
 import com.layer.ui.R;
 import com.layer.ui.message.model.MessageModel;
+import com.layer.ui.message.response.ChoiceResponseModel;
+import com.layer.ui.repository.MessageSenderRepository;
 import com.layer.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ChoiceMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.choice+json";
@@ -37,13 +40,6 @@ public class ChoiceMessageModel extends MessageModel {
         mSelectedChoices = new ArrayList<>();
     }
 
-    public ChoiceMessageModel(Context context, LayerClient layerClient, ChoiceMessageMetadata metadata) {
-        this(context, layerClient);
-        mMetadata = metadata;
-        processSelections();
-        notifyPropertyChanged(BR.choiceMessageMetadata);
-    }
-
     @Override
     public Class<ChoiceMessageView> getRendererType() {
         return ChoiceMessageView.class;
@@ -54,9 +50,6 @@ public class ChoiceMessageModel extends MessageModel {
         if (messagePart.equals(getRootMessagePart())) {
             JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
             mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
-            for (ChoiceModel choiceModel : mMetadata.getChoices()) {
-                choiceModel.setMessage(getMessage());
-            }
             processSelections();
             notifyPropertyChanged(BR.choiceMessageMetadata);
         }
@@ -64,7 +57,6 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Override
     protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
-        super.processResponseSummaryPart(responseSummaryPart);
         JsonReader reader = new JsonReader(new InputStreamReader(responseSummaryPart.getDataStream()));
         mResponseSummary = mGson.fromJson(reader, ResponseSummary.class);
         processSelections();
@@ -149,6 +141,26 @@ public class ChoiceMessageModel extends MessageModel {
         } else if (mMetadata.getPreselectedChoice() != null) {
             mSelectedChoices.add(mMetadata.getPreselectedChoice());
         }
+    }
+
+    void sendResponse(@NonNull ChoiceMetadata choice) {
+        String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
+        String statusText;
+        if (mMetadata.getLabel() == null) {
+            statusText = getContext().getString(R.string.response_message_status_text,
+                    userName, choice.getText());
+        } else {
+            statusText = getContext().getString(R.string.response_message_status_text_with_label,
+                    userName, choice.getText(), mMetadata.getLabel());
+        }
+        UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
+
+        ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
+                rootPartId, statusText);
+        choiceResponseModel.addChoice(mMetadata.getResponseName(), choice.getId());
+
+        MessageSenderRepository messageSenderRepository = getMessageSenderRepository();
+        messageSenderRepository.sendChoiceResponse(getMessage().getConversation(), choiceResponseModel);
     }
 
     public static class ResponseSummary {

@@ -94,7 +94,7 @@ public class FileMessageComposer {
 
     private MessagePart getSourceMessagePart(LayerClient layerClient,
                                               InputStream inputStream, FileMessageMetadata metadata) {
-        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.getMimeType(), "source", null, "root");
+        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.getMimeType(), "source", "root");
         return layerClient.newMessagePart(mimeType, inputStream, metadata.getSize());
     }
 }

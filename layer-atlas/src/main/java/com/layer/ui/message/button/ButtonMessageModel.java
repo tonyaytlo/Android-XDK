@@ -43,7 +43,7 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 

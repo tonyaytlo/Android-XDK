@@ -392,7 +392,9 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
             MessageCell messageCell = mBinderRegistry.getMessageCellForViewType(viewType);
             messageCell.mCellFactory.setStyle(getStyle());
             return createLegacyMessageItemViewHolder(parent, messageCell);
-        } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN) {
+        } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
+            return createStatusMessageItemViewHolder(parent);
+        } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN){
             return createCardMessageItemViewHolder(parent);
         } else {
             throw new IllegalStateException("Unknown View Type");
@@ -407,6 +409,8 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
     protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell);
 
+    protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createStatusMessageItemViewHolder(ViewGroup parent);
+
     @Override
     public void onBindViewHolder(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, int position, List<Object> payloads) {
         int viewType = getItemViewType(position);
@@ -416,6 +420,8 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
             bindFooter(viewHolder);
         } else if (viewType >= mBinderRegistry.VIEW_TYPE_LEGACY_START && viewType <= mBinderRegistry.VIEW_TYPE_LEGACY_END) {
             prepareAndBindMessageItem(viewHolder, position);
+        } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
+            prepareAndBindStatus(viewHolder, position);
         } else {
             prepareAndBindCard(viewHolder, position);
         }
@@ -446,6 +452,15 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     }
 
     public abstract void bindLegacyMessageItem(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, MessageCluster cluster, int position);
+
+    protected void prepareAndBindStatus(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, int position) {
+        Message message = getItem(position);
+        viewHolder.setItem(message);
+
+        bindStatusMessageItem(viewHolder);
+    }
+
+    public abstract void bindStatusMessageItem(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder);
 
     //==============================================================================================
     // Clustering

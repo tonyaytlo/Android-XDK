@@ -8,10 +8,11 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.message.MessageCell;
+import com.layer.ui.message.MessageItemStatusViewModel;
 import com.layer.ui.message.MessagePartUtils;
+import com.layer.ui.message.button.ButtonMessageModel;
 import com.layer.ui.message.choice.ChoiceMessageModel;
 import com.layer.ui.message.file.FileMessageModel;
-import com.layer.ui.message.button.ButtonMessageModel;
 import com.layer.ui.message.image.ImageMessageModel;
 import com.layer.ui.message.link.LinkMessageModel;
 import com.layer.ui.message.location.LocationMessageModel;
@@ -39,6 +40,7 @@ public class BinderRegistry {
     public final int VIEW_TYPE_LEGACY_START;
     public final int VIEW_TYPE_LEGACY_END;
     public final int VIEW_TYPE_CARD;
+    public final int VIEW_TYPE_STATUS;
 
     protected LayerClient mLayerClient;
 
@@ -78,7 +80,8 @@ public class BinderRegistry {
         VIEW_TYPE_FOOTER = footerViewType;
         VIEW_TYPE_LEGACY_START = Math.max(headerViewType, footerViewType) + 1;
         VIEW_TYPE_LEGACY_END = VIEW_TYPE_LEGACY_START + NUMBER_OF_LEGACY_VIEW_TYPES;
-        VIEW_TYPE_CARD = VIEW_TYPE_LEGACY_END + 1;
+        VIEW_TYPE_STATUS = VIEW_TYPE_LEGACY_END + 1;
+        VIEW_TYPE_CARD = VIEW_TYPE_STATUS + 1;
 
         mMessageModelManager = new MessageModelManager(context.getApplicationContext(), layerClient);
         initMessageTypeModelRegistry();
@@ -91,7 +94,16 @@ public class BinderRegistry {
         return true;
     }
 
+    public boolean isStatusMessageType(Message message) {
+        String rootMimeType = MessagePartUtils.getRootMimeType(message);
+        return MessageItemStatusViewModel.STATUS_ROOT_MIME_TYPE.equals(rootMimeType)
+                || MessageItemStatusViewModel.RESPONSE_ROOT_MIME_TYPE.equals(rootMimeType);
+    }
+
     public int getViewType(Message message) {
+        if (isStatusMessageType(message)) {
+            return VIEW_TYPE_STATUS;
+        }
         if (!isLegacyMessageType(message)) {
             String rootMimeType = MessagePartUtils.getRootMimeType(message);
             if (mMessageModelManager.hasModel(rootMimeType)) {

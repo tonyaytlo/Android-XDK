@@ -12,11 +12,13 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.layer.ui.R;
+import com.layer.ui.util.Log;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChoiceButtonSet extends LinearLayout {
     private ColorStateList mChoiceButtonColorStateList;
@@ -24,6 +26,9 @@ public class ChoiceButtonSet extends LinearLayout {
     private boolean mAllowDeselect;
     private boolean mAllowMultiSelect;
     private boolean mIsEnabledForMe;
+
+    private Map<String, ChoiceMetadata> mChoiceMetadata = new HashMap<>();
+    private OnChoiceClickedListener mOnChoiceClickedListener;
 
     public ChoiceButtonSet(Context context) {
         this(context, null, 0);
@@ -43,6 +48,10 @@ public class ChoiceButtonSet extends LinearLayout {
         mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.ui_choice_button_selector);
     }
 
+    public void setOnChoiceClickedListener(OnChoiceClickedListener onChoiceClickedListener) {
+        mOnChoiceClickedListener = onChoiceClickedListener;
+    }
+
     public void setSelectionConditions(boolean allowDeselect, boolean allowReselect,
                                        boolean allowMultiSelect, boolean isEnabledForMe) {
         mAllowDeselect = allowDeselect;
@@ -51,11 +60,11 @@ public class ChoiceButtonSet extends LinearLayout {
         mIsEnabledForMe = isEnabledForMe;
     }
 
-    public boolean hasChoiceItem(ChoiceModel item) {
+    public boolean hasChoiceItem(ChoiceMetadata item) {
         return getRootView().findViewWithTag(item.getId()) != null;
     }
 
-    public void addOrUpdateChoice(final ChoiceModel choice) {
+    public void addOrUpdateChoice(final ChoiceMetadata choice) {
         AppCompatButton choiceButton = getRootView().findViewWithTag(choice.getId());
         if (choiceButton == null) {
             // Instantiate
@@ -84,10 +93,18 @@ public class ChoiceButtonSet extends LinearLayout {
 
         choiceButton.setText(choice.getText());
 
+        mChoiceMetadata.put(choice.getId(), choice);
+
         choiceButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Clicked on choice: " + view.getTag() + " text" + choice.getText(), Toast.LENGTH_LONG).show();
+                String choiceId = (String) view.getTag();
+                ChoiceMetadata choice = mChoiceMetadata.get(choiceId);
+                if (mOnChoiceClickedListener != null) {
+                    mOnChoiceClickedListener.onChoiceClick(choice);
+                } else if (Log.isLoggable(Log.VERBOSE)) {
+                    Log.v("Clicked choice but no OnChoiceClickedListener is registered. Choice: " + choiceId);
+                }
             }
         });
     }
@@ -123,5 +140,9 @@ public class ChoiceButtonSet extends LinearLayout {
                 }
             }
         }
+    }
+
+    public interface OnChoiceClickedListener {
+        void onChoiceClick(ChoiceMetadata choice);
     }
 }

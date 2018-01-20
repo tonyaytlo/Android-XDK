@@ -21,7 +21,6 @@ public class MessagePartUtils {
 
     private static final String ROLE_ROOT = "root";
     private static final String ROLE_RESPONSE_SUMMARY = "response_summary";
-    private static final String PARAMETER_KEY_NODE_ID = "node-id";
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
 
     @Nullable
@@ -52,23 +51,8 @@ public class MessagePartUtils {
     }
 
     @Nullable
-    public static MessagePart getMessagePartWithNodeId(@NonNull Message message, @NonNull String nodeId) {
-        for (MessagePart messagePart : message.getMessageParts()) {
-            Map<String, String> arguments = getMimeTypeArguments(messagePart);
-
-            if (arguments != null && arguments.containsKey(PARAMETER_KEY_NODE_ID)) {
-                String id = arguments.get(PARAMETER_KEY_NODE_ID);
-                if (id.equals(nodeId)) return messagePart;
-            }
-        }
-
-        return null;
-    }
-
-    @Nullable
     public static String getNodeId(@NonNull MessagePart messagePart) {
-        Map<String, String> arguments = getMimeTypeArguments(messagePart);
-        return arguments != null ? arguments.get(PARAMETER_KEY_NODE_ID) : null;
+        return messagePart.getId().getLastPathSegment();
     }
 
     @Nullable
@@ -135,8 +119,9 @@ public class MessagePartUtils {
     }
 
     @NonNull
-    public static List<MessagePart> getChildParts(@NonNull Message message, @NonNull String parentNodeId) {
+    public static List<MessagePart> getChildParts(@NonNull Message message, @NonNull MessagePart parentPart) {
         List<MessagePart> children = new ArrayList<>();
+        String parentPartId = parentPart.getId().getLastPathSegment();
 
         for (MessagePart messagePart : message.getMessageParts()) {
             Map<String, String> mimeTypeArguments = getMimeTypeArguments(messagePart);
@@ -144,7 +129,7 @@ public class MessagePartUtils {
 
             if (mimeTypeArguments.containsKey(PARAMETER_KEY_PARENT_NODE_ID)) {
                 String id = mimeTypeArguments.get(PARAMETER_KEY_PARENT_NODE_ID);
-                if (parentNodeId.equals(id)) {
+                if (parentPartId.equals(id)) {
                     children.add(messagePart);
                 }
             }
@@ -170,18 +155,13 @@ public class MessagePartUtils {
 
     public static String getAsRoleRoot(String mimeType) {
         StringBuilder builder = new StringBuilder(mimeType);
-        return builder.append(";role=").append("root").append(";node-id=").append("root").toString();
+        return builder.append(";role=").append("root").toString();
     }
 
     public static String getAsRoleWithParentId(String mimeType, @NonNull String role,
-                                               @Nullable String nodeId,
                                                @Nullable String parentNodeId) {
         StringBuilder builder = new StringBuilder(mimeType);
         builder.append(";role=").append(role);
-
-        if (nodeId != null) {
-            builder.append("node-id=").append(nodeId);
-        }
 
         if (parentNodeId != null) {
             builder.append("; parent-node-id=").append(parentNodeId).toString();

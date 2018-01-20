@@ -102,4 +102,17 @@ public class MessageItemsAdapter extends MessagesAdapter {
         boolean shouldAvatarViewBeVisible = !(isOneOnOneConversation() & !getShouldShowAvatarInOneOnOneConversations());
         viewHolder.bind(getUsersTyping(), footerView, shouldAvatarViewBeVisible);
     }
+
+    @Override
+    protected MessageItemViewHolder createStatusMessageItemViewHolder(ViewGroup parent) {
+        MessageItemStatusViewModel viewModel = new MessageItemStatusViewModel(parent.getContext(), getLayerClient());
+        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
+        return new MessageItemStatusViewHolder(parent, viewModel);
+    }
+
+    @Override
+    public void bindStatusMessageItem(MessageItemViewHolder viewHolder) {
+        MessageItemStatusViewHolder holder = (MessageItemStatusViewHolder) viewHolder;
+        holder.bind();
+    }
 }

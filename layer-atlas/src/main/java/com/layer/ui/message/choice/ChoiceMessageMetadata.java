@@ -22,7 +22,7 @@ public class ChoiceMessageMetadata extends BaseObservable {
     private String mLabel;
 
     @SerializedName("choices")
-    private List<ChoiceModel> mChoices;
+    private List<ChoiceMetadata> mChoices;
 
     @SerializedName("type")
     private String mType;
@@ -68,7 +68,7 @@ public class ChoiceMessageMetadata extends BaseObservable {
     }
 
     @Bindable
-    public List<ChoiceModel> getChoices() {
+    public List<ChoiceMetadata> getChoices() {
         return mChoices;
     }
 
@@ -108,6 +108,7 @@ public class ChoiceMessageMetadata extends BaseObservable {
     }
 
     @Bindable
+    @NonNull
     public String getResponseName() {
         if (TextUtils.isEmpty(mResponseName)) {
             return DEFAULT_RESPONSE_NAME;
@@ -144,7 +145,7 @@ public class ChoiceMessageMetadata extends BaseObservable {
         mLabel = label;
     }
 
-    public void setChoices(List<ChoiceModel> choices) {
+    public void setChoices(List<ChoiceMetadata> choices) {
         mChoices = choices;
     }
 

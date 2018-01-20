@@ -122,11 +122,11 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         }
 
         return getLayerClient().newMessagePart(MessagePartUtils.getAsRoleWithParentId("image/jpeg",
-                "preview", null, "root"), new FileInputStream(temp), temp.length());
+                "preview", "root"), new FileInputStream(temp), temp.length());
     }
 
     private MessagePart buildSourceMessagePart(InputStream inputStream, BitmapFactory.Options bounds, long length) {
-        String mimeType = MessagePartUtils.getAsRoleWithParentId(bounds.outMimeType, "source", null, "root");
+        String mimeType = MessagePartUtils.getAsRoleWithParentId(bounds.outMimeType, "source", "root");
         return getLayerClient().newMessagePart(mimeType, inputStream, length);
     }
 }

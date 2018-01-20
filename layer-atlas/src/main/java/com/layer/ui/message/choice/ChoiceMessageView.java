@@ -17,7 +17,8 @@ import com.layer.ui.message.view.MessageView;
 
 import java.util.List;
 
-public class ChoiceMessageView extends MessageView<ChoiceMessageModel> {
+public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implements
+        ChoiceButtonSet.OnChoiceClickedListener {
     private UiChoiceMessageViewBinding mBinding;
     private LinearLayout mChoiceSetsParentLayout;
     private TextView mTitle;
@@ -47,10 +48,9 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> {
             public void onPropertyChanged(Observable sender, int propertyId) {
                 if (sender != model) return;
 
-                if (propertyId == BR.choiceMessageMetadata) {
+                if (propertyId == BR.choiceMessageMetadata || propertyId == BR.selectedChoices) {
                     processModel((ChoiceMessageModel) sender);
                 }
-
             }
         });
 
@@ -65,19 +65,19 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> {
 
     private void processModel(ChoiceMessageModel model) {
         if (model.getChoiceMessageMetadata() != null) {
-            List<ChoiceModel> choiceModels = model.getChoiceMessageMetadata().getChoices();
+            List<ChoiceMetadata> choices = model.getChoiceMessageMetadata().getChoices();
             List<String> selectedChoices = model.getSelectedChoices();
             boolean allowReselect = model.getChoiceMessageMetadata().getAllowReselect();
             boolean allowDeselect = model.getChoiceMessageMetadata().getAllowDeselect();
             boolean allowMultiSelect = model.getChoiceMessageMetadata().getAllowMultiselect();
             boolean isEnabledForMe = model.getIsEnabledForMe();
 
-            for (ChoiceModel choiceModel : choiceModels) {
-                addOrUpdateChoiceMessageSet(choiceModel);
+            for (ChoiceMetadata choice : choices) {
+                addOrUpdateChoiceMessageSet(choice);
             }
 
-            for (ChoiceModel choiceModel : choiceModels) {
-                updateChoices(choiceModel, selectedChoices, allowMultiSelect, allowDeselect,
+            for (ChoiceMetadata choice : choices) {
+                updateChoices(choice, selectedChoices, allowMultiSelect, allowDeselect,
                         allowReselect, isEnabledForMe);
             }
         }
@@ -95,29 +95,38 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> {
         }
     }
 
-    private void addOrUpdateChoiceMessageSet(ChoiceModel choiceModel) {
+    private void addOrUpdateChoiceMessageSet(ChoiceMetadata choice) {
         for (int i = 0; i < mChoiceSetsParentLayout.getChildCount(); i++) {
             ChoiceButtonSet choiceButtonSet = (ChoiceButtonSet) mChoiceSetsParentLayout.getChildAt(i);
-            if (choiceButtonSet.hasChoiceItem(choiceModel)) {
-                choiceButtonSet.addOrUpdateChoice(choiceModel);
+            if (choiceButtonSet.hasChoiceItem(choice)) {
+                choiceButtonSet.addOrUpdateChoice(choice);
                 return;
             }
         }
 
         ChoiceButtonSet choiceButtonSet = new ChoiceButtonSet(getContext());
+        choiceButtonSet.setOnChoiceClickedListener(this);
         mChoiceSetsParentLayout.addView(choiceButtonSet);
-        choiceButtonSet.addOrUpdateChoice(choiceModel);
+        choiceButtonSet.addOrUpdateChoice(choice);
     }
 
-    private void updateChoices(ChoiceModel choiceModel, @NonNull List<String> selectedChoices,
+    private void updateChoices(ChoiceMetadata choice, @NonNull List<String> selectedChoices,
                                boolean allowMultiSelect, boolean allowDeselect,
                                boolean allowReselect, boolean isEnabledForMe) {
         for (int i = 0; i < mChoiceSetsParentLayout.getChildCount(); i++) {
             ChoiceButtonSet choiceButtonSet = (ChoiceButtonSet) mChoiceSetsParentLayout.getChildAt(i);
-            if (choiceButtonSet.hasChoiceItem(choiceModel)) {
+            if (choiceButtonSet.hasChoiceItem(choice)) {
                 choiceButtonSet.setSelectionConditions(allowDeselect, allowReselect, allowMultiSelect, isEnabledForMe);
                 choiceButtonSet.setSelection(selectedChoices);
             }
+        }
+    }
+
+    @Override
+    public void onChoiceClick(ChoiceMetadata choice) {
+        ChoiceMessageModel viewModel = mBinding.getViewModel();
+        if (viewModel != null) {
+            viewModel.sendResponse(choice);
         }
     }
 }
