@@ -24,7 +24,7 @@ public class MessagePartUtils {
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
 
     @Nullable
-    public static String getMimeType(MessagePart messagePart) {
+    public static String getMimeType(@NonNull MessagePart messagePart) {
         String mimeType = messagePart.getMimeType();
         if (mimeType == null || mimeType.isEmpty()) return null;
 

@@ -61,11 +61,11 @@ public class ChoiceButtonSet extends LinearLayout {
     }
 
     public boolean hasChoiceItem(ChoiceMetadata item) {
-        return getRootView().findViewWithTag(item.getId()) != null;
+        return ((View) getParent()).findViewWithTag(item.getId()) != null;
     }
 
     public void addOrUpdateChoice(final ChoiceMetadata choice) {
-        AppCompatButton choiceButton = getRootView().findViewWithTag(choice.getId());
+        AppCompatButton choiceButton = ((View) getParent()).findViewWithTag(choice.getId());
         if (choiceButton == null) {
             // Instantiate
             choiceButton = new AppCompatButton((getContext()));
@@ -112,7 +112,7 @@ public class ChoiceButtonSet extends LinearLayout {
     public void setSelection(@NonNull List<String> choiceIds) {
         boolean somethingIsSelected = false;
         for (String choiceId : choiceIds) {
-            AppCompatButton choiceButton = getRootView().findViewWithTag(choiceId);
+            AppCompatButton choiceButton = ((View) getParent()).findViewWithTag(choiceId);
             if (choiceButton != null) {
                 choiceButton.setSelected(true);
                 choiceButton.setClickable(mAllowDeselect);

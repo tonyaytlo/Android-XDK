@@ -63,7 +63,7 @@ public class MessageViewer extends FrameLayout {
             throw new IllegalArgumentException("No mime type found in the root message part");
         }
 
-        MessageModel model = mMessageModelManager.getModel(mimeType);
+        MessageModel model = mMessageModelManager.getNewModel(mimeType);
         if (model == null) {
             if (Log.isLoggable(Log.DEBUG)) Log.d("No model found for mime type = " + mimeType);
 

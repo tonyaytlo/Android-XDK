@@ -30,6 +30,6 @@ public class MessageModelManagerTest {
     @Test
     public void testTextMessageModelRegistration() {
         mMessageModelManager.registerModel("TextMessageModel", TextMessageModel.class);
-        assertNotNull(mMessageModelManager.getModel("TextMessageModel"));
+        assertNotNull(mMessageModelManager.getNewModel("TextMessageModel"));
     }
 }

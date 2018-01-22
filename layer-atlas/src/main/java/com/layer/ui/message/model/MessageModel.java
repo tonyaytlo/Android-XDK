@@ -105,7 +105,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
                     String mimeType = MessagePartUtils.getMimeType(childMessagePart);
                     if (mimeType == null) continue;
-                    MessageModel childModel = mMessageModelManager.getModel(mimeType);
+                    MessageModel childModel = mMessageModelManager.getNewModel(mimeType);
                     if (childModel != null) {
                         mChildMessageModels.add(childModel);
                         childModel.setMessageModelManager(mMessageModelManager);

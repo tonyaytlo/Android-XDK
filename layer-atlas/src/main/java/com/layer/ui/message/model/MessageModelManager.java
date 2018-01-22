@@ -1,7 +1,6 @@
 package com.layer.ui.message.model;
 
 import android.content.Context;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -45,7 +44,7 @@ public class MessageModelManager {
     }
 
     @Nullable
-    public <T extends MessageModel> T getModel(@NonNull String modelIdentifier) {
+    public <T extends MessageModel> T getNewModel(@NonNull String modelIdentifier) {
         try {
             Constructor<T> constructor;
             if (mIdentifierToConstructorMap.containsKey(modelIdentifier)) {

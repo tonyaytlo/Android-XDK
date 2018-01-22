@@ -203,10 +203,12 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(ChoiceMessageModel.MIME_TYPE, ChoiceMessageModel.class);
     }
 
+    @SuppressWarnings("unused")
     public <T extends MessageModel> void registerModel(@NonNull String modelIdentifier, @NonNull Class<T> messageModelClass) {
         mMessageModelManager.registerModel(modelIdentifier, messageModelClass);
     }
 
+    @SuppressWarnings("unused")
     public boolean hasModel(@NonNull String modelIdentifier) {
         return mMessageModelManager.hasModel(modelIdentifier);
     }
