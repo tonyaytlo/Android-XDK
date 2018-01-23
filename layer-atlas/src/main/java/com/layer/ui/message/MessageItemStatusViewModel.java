@@ -61,6 +61,7 @@ public class MessageItemStatusViewModel extends ItemViewModel<Message> {
         if (!myMessage && mEnableReadReceipts) {
             message.markAsRead();
         }
+        notifyChange();
     }
 
     public void setEnableReadReceipts(boolean enableReadReceipts) {

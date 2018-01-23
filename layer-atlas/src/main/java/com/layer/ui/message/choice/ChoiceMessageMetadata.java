@@ -33,7 +33,7 @@ public class ChoiceMessageMetadata extends BaseObservable {
     @SerializedName("allow_reselect")
     private boolean mAllowReselect;
 
-    @SerializedName("allow_delselect")
+    @SerializedName("allow_deselect")
     private boolean mAllowDeselect;
 
     @SerializedName("allow_multiselect")

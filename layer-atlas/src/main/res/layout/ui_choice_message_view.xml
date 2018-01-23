@@ -14,6 +14,7 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/choice_message_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -33,11 +34,10 @@
             android:textSize="@dimen/ui_choice_button_message_label_text_size"
             app:visibleOrGone="@{viewModel.hasContent &amp;&amp; viewModel.choiceMessageMetadata.label!=null}"/>
 
-        <LinearLayout
-            android:id="@+id/choice_buttons_parent"
+        <com.layer.ui.message.choice.ChoiceButtonSet
+            android:id="@+id/choice_button_set"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </layout>

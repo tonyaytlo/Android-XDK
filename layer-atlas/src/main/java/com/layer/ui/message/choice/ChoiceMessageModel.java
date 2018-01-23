@@ -22,8 +22,10 @@ import com.layer.ui.util.json.AndroidFieldNamingStrategy;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class ChoiceMessageModel extends MessageModel {
@@ -31,13 +33,13 @@ public class ChoiceMessageModel extends MessageModel {
 
     private ChoiceMessageMetadata mMetadata;
     private ResponseSummary mResponseSummary;
-    private List<String> mSelectedChoices;
+    private Set<String> mSelectedChoices;
     private Gson mGson;
 
     public ChoiceMessageModel(Context context, LayerClient layerClient) {
         super(context, layerClient);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
-        mSelectedChoices = new ArrayList<>();
+        mSelectedChoices = new HashSet<>();
     }
 
     @Override
@@ -114,7 +116,7 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Bindable
     public List<String> getSelectedChoices() {
-        return mSelectedChoices;
+        return new ArrayList<>(mSelectedChoices);
     }
 
     @Bindable
@@ -136,6 +138,8 @@ public class ChoiceMessageModel extends MessageModel {
                 if (participantResponses.getValue().has(mMetadata.getResponseName())) {
                     String[] ids = participantResponses.getValue().get(mMetadata.getResponseName()).getAsString().split(",");
                     mSelectedChoices.addAll(Arrays.asList(ids));
+                    // If nothing is selected then we can get an empty string. Remove this
+                    mSelectedChoices.remove("");
                 }
             }
         } else if (mMetadata.getPreselectedChoice() != null) {
@@ -143,21 +147,28 @@ public class ChoiceMessageModel extends MessageModel {
         }
     }
 
-    void sendResponse(@NonNull ChoiceMetadata choice) {
+    void sendResponse(@NonNull ChoiceMetadata choice, boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
         String statusText;
         if (mMetadata.getLabel() == null) {
-            statusText = getContext().getString(R.string.response_message_status_text,
-                    userName, choice.getText());
+            statusText = getContext().getString(
+                    selected ? R.string.response_message_status_text_selected
+                            : R.string.response_message_status_text_deselected,
+                    userName,
+                    choice.getText());
         } else {
-            statusText = getContext().getString(R.string.response_message_status_text_with_label,
-                    userName, choice.getText(), mMetadata.getLabel());
+            statusText = getContext().getString(
+                    selected ? R.string.response_message_status_text_with_label_selected
+                            : R.string.response_message_status_text_with_label_deselected,
+                    userName,
+                    choice.getText(),
+                    mMetadata.getLabel());
         }
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);
-        choiceResponseModel.addChoice(mMetadata.getResponseName(), choice.getId());
+        choiceResponseModel.addChoices(mMetadata.getResponseName(), selectedChoices);
 
         MessageSenderRepository messageSenderRepository = getMessageSenderRepository();
         messageSenderRepository.sendChoiceResponse(getMessage().getConversation(), choiceResponseModel);

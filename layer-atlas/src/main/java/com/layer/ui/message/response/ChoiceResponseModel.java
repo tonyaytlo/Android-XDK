@@ -3,7 +3,9 @@ package com.layer.ui.message.response;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -30,17 +32,18 @@ public class ChoiceResponseModel extends ResponseModel {
     }
 
     /**
-     * Add a choice to the participant data map
+     * Adds choices to the participant data map
      *
      * @param responseName key for the map entry
-     * @param choiceId value for the map entry
+     * @param choiceIds values for the map entry
      */
-    public void addChoice(@NonNull String responseName, @NonNull String choiceId) {
+    public void addChoices(@NonNull String responseName, @NonNull Collection<String> choiceIds) {
         Map<Object, Object> participantData = getParticipantData();
         if (participantData == null) {
             participantData = new HashMap<>(1);
             setParticipantData(participantData);
         }
-        participantData.put(responseName, choiceId);
+
+        participantData.put(responseName, TextUtils.join(",", choiceIds));
     }
 }

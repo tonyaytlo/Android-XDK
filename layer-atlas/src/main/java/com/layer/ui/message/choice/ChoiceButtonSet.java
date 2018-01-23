@@ -17,18 +17,19 @@ import com.layer.ui.R;
 import com.layer.ui.util.Log;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ChoiceButtonSet extends LinearLayout {
     private ColorStateList mChoiceButtonColorStateList;
     private boolean mAllowReselect;
     private boolean mAllowDeselect;
     private boolean mAllowMultiSelect;
-    private boolean mIsEnabledForMe;
+    private boolean mEnabledForMe;
 
     private Map<String, ChoiceMetadata> mChoiceMetadata = new HashMap<>();
     private OnChoiceClickedListener mOnChoiceClickedListener;
+    private Set<String> mSelectedChoiceIds;
 
     public ChoiceButtonSet(Context context) {
         this(context, null, 0);
@@ -43,7 +44,7 @@ public class ChoiceButtonSet extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        setOrientation(HORIZONTAL);
+        setOrientation(VERTICAL);
 
         mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.ui_choice_button_selector);
     }
@@ -57,15 +58,11 @@ public class ChoiceButtonSet extends LinearLayout {
         mAllowDeselect = allowDeselect;
         mAllowReselect = allowReselect;
         mAllowMultiSelect = allowMultiSelect;
-        mIsEnabledForMe = isEnabledForMe;
-    }
-
-    public boolean hasChoiceItem(ChoiceMetadata item) {
-        return ((View) getParent()).findViewWithTag(item.getId()) != null;
+        mEnabledForMe = isEnabledForMe;
     }
 
     public void addOrUpdateChoice(final ChoiceMetadata choice) {
-        AppCompatButton choiceButton = ((View) getParent()).findViewWithTag(choice.getId());
+        AppCompatButton choiceButton = findViewWithTag(choice.getId());
         if (choiceButton == null) {
             // Instantiate
             choiceButton = new AppCompatButton((getContext()));
@@ -99,9 +96,12 @@ public class ChoiceButtonSet extends LinearLayout {
             @Override
             public void onClick(View view) {
                 String choiceId = (String) view.getTag();
+                boolean willBeSelected = !view.isSelected();
+                toggleChoice(choiceId);
+
                 ChoiceMetadata choice = mChoiceMetadata.get(choiceId);
                 if (mOnChoiceClickedListener != null) {
-                    mOnChoiceClickedListener.onChoiceClick(choice);
+                    mOnChoiceClickedListener.onChoiceClick(choice, willBeSelected, mSelectedChoiceIds);
                 } else if (Log.isLoggable(Log.VERBOSE)) {
                     Log.v("Clicked choice but no OnChoiceClickedListener is registered. Choice: " + choiceId);
                 }
@@ -109,40 +109,50 @@ public class ChoiceButtonSet extends LinearLayout {
         });
     }
 
-    public void setSelection(@NonNull List<String> choiceIds) {
+    private void toggleChoice(String choiceId) {
+        if (mSelectedChoiceIds.contains(choiceId)) {
+            // Currently selected, deselect if allowed
+            if (mAllowDeselect) {
+                mSelectedChoiceIds.remove(choiceId);
+            }
+        } else {
+            // Un-select others if multi-select is not allowed
+            if (!mAllowMultiSelect) {
+                mSelectedChoiceIds.clear();
+            }
+            mSelectedChoiceIds.add(choiceId);
+
+        }
+        setSelection(mSelectedChoiceIds);
+    }
+
+    public void setSelection(@NonNull Set<String> choiceIds) {
+        mSelectedChoiceIds = choiceIds;
         boolean somethingIsSelected = false;
-        for (String choiceId : choiceIds) {
-            AppCompatButton choiceButton = ((View) getParent()).findViewWithTag(choiceId);
-            if (choiceButton != null) {
+
+        for (int i = 0; i < getChildCount(); i++) {
+            AppCompatButton choiceButton = (AppCompatButton) getChildAt(i);
+            String tag = (String) choiceButton.getTag();
+            if (choiceIds.contains(tag)) {
                 choiceButton.setSelected(true);
-                choiceButton.setClickable(mAllowDeselect);
                 somethingIsSelected = true;
-                // Move on if further selections are not allowed
-                if (!mAllowMultiSelect) break;
+            } else {
+                choiceButton.setSelected(false);
             }
         }
 
-        if (!mAllowReselect) {
-            for (int i = 0; i < getChildCount(); i++) {
-                AppCompatButton button = (AppCompatButton) getChildAt(i);
-                String tag = (String) button.getTag();
-                if (!choiceIds.contains(tag)) {
-                    boolean enabled = false;
-                    if (mIsEnabledForMe) {
-                        if (somethingIsSelected) {
-                            enabled = mAllowMultiSelect || mAllowReselect || mAllowDeselect;
-                        } else {
-                            enabled = true;
-                        }
-                    }
-
-                    button.setEnabled(enabled);
-                }
+        for (int i = 0; i < getChildCount(); i++) {
+            AppCompatButton button = (AppCompatButton) getChildAt(i);
+            if (!mEnabledForMe || (somethingIsSelected && !mAllowReselect) || (button.isSelected() && !mAllowDeselect)) {
+                button.setEnabled(false);
+            } else {
+                button.setEnabled(true);
             }
+
         }
     }
 
     public interface OnChoiceClickedListener {
-        void onChoiceClick(ChoiceMetadata choice);
+        void onChoiceClick(ChoiceMetadata choice, boolean selected, Set<String> selectedChoices);
     }
 }
