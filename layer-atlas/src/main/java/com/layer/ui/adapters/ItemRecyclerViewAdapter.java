@@ -6,6 +6,7 @@ import android.databinding.ViewDataBinding;
 import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.query.Query;

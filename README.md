@@ -101,7 +101,6 @@ It uses databinding which takes an object of <a href="layer-atlas/src/main/java/
 
     <com.layer.ui.conversation.ConversationItemsListView
         app:adapter="@{viewModel.conversationItemsAdapter}"
-        app:itemSwipeListener = "@{viewModel.itemSwipeListener}
         ... />
 </layout>
 ```
@@ -115,7 +114,7 @@ Create an Object of ConversationItemsListViewModel and bind it to the Conversati
         ConversationItemsListViewModel conversationItemsListViewModel = new ConversationItemsListViewModel(this, App.getLayerClient(), Util.getConversationItemFormatter(), Util.getImageCacheWrapper(),new IdentityFormatterImpl());
         binding.setViewModel(conversationItemsListViewModel);
 ```
-An item click listener can be set via <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListViewModel.java#L66">`ConversationItemsListViewModel#setItemClickListener`</a> and the same can be done for the swipe listener <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListViewModel.java#L70">`ConversationItemsListViewModel#setItemSwipeListener`</a>
+An item click listener can be set via <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListViewModel.java#L66">`ConversationItemsListViewModel#setItemClickListener`</a>
 
 ### <a name="messages"></a>Messages
 
@@ -148,7 +147,6 @@ is used in <a href="layer-atlas/src/main/java/com/layer/ui/conversation/Conversa
         <com.layer.ui.message.MessageItemsListView
             app:adapter="@{viewModel.adapter}"
             app:cellFactories="@{viewModel.cellFactories}"
-            app:itemSwipeListener="@{viewModel.itemSwipeListener}"
              ... />
 
     </merge>

@@ -26,179 +26,154 @@
             type="com.layer.ui.message.MessageItemLegacyViewModel"/>
     </data>
 
-    <com.layer.ui.util.views.SwipeableItem
+    <LinearLayout
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@{viewModel.previousPartOfCluster ? 0.0f : @dimen/layer_ui_message_item_top_bottom_margin}"
         android:layout_marginBottom="@{viewModel.nextPartOfCluster ? @dimen/layer_ui_message_cluster_space : @dimen/layer_ui_message_item_top_bottom_margin}"
-        android:background="@drawable/ui_swipeable_item_background_selector">
+        android:layout_marginTop="@{viewModel.previousPartOfCluster ? 0.0f : @dimen/layer_ui_message_item_top_bottom_margin}"
+        android:background="@drawable/ui_item_foreground_selector"
+        android:duplicateParentState="true"
+        android:orientation="vertical"
+        android:paddingRight="@dimen/layer_ui_margin_large">
 
         <LinearLayout
-            android:id="@+id/leavebehind"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/layer_ui_item_leavebehind"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="@dimen/layer_ui_primary_icon_size"
-                android:layout_height="@dimen/layer_ui_primary_icon_size"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-                android:layout_marginStart="@dimen/layer_ui_padding_normal"
-                android:src="@drawable/ic_delete_white_24dp"
-                android:tint="@color/layer_ui_icon_enabled"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/swipeable"
+            android:id="@+id/time_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ui_swipeable_item_foreground_selector"
-            android:duplicateParentState="true"
-            android:orientation="vertical"
-            android:paddingRight="@dimen/layer_ui_margin_large">
-
-            <LinearLayout
-                android:id="@+id/time_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingBottom="@dimen/layer_ui_message_item_time_group_padding_bottom"
-                android:visibility="@{viewModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
-
-                <TextView
-                    android:id="@+id/time_group_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.timeGroupDay}"
-                    android:textColor="@color/layer_ui_text_gray"
-                    android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/time_group_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.groupTime}"
-                    android:textColor="@color/layer_ui_text_gray"
-                    android:textSize="@dimen/layer_ui_text_size_message_item_metadata"/>
-            </LinearLayout>
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/layer_ui_message_item_time_group_padding_bottom"
+            android:visibility="@{viewModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
 
             <TextView
-                android:id="@+id/senderName"
+                android:id="@+id/time_group_day"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.timeGroupDay}"
+                android:textColor="@color/layer_ui_text_gray"
+                android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/time_group_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.groupTime}"
+                android:textColor="@color/layer_ui_text_gray"
+                android:textSize="@dimen/layer_ui_text_size_message_item_metadata"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/senderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
+            android:layout_marginLeft="@dimen/layer_ui_message_item_sender_margin_left"
+            android:layout_marginStart="@dimen/layer_ui_message_item_sender_margin_left"
+            android:text="@{viewModel.senderName}"
+            android:textColor="@color/layer_ui_text_gray"
+            android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
+            android:visibility="@{viewModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/layer_ui_message_item_avatar_padding_left"
+            android:layout_marginStart="@dimen/layer_ui_message_item_avatar_padding_left">
+
+            <FrameLayout
+                android:id="@+id/avatar_container"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
-                android:layout_marginLeft="@dimen/layer_ui_message_item_sender_margin_left"
-                android:layout_marginStart="@dimen/layer_ui_message_item_sender_margin_left"
-                android:text="@{viewModel.senderName}"
-                android:textColor="@color/layer_ui_text_gray"
-                android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
-                android:visibility="@{viewModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{viewModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0"
+                app:layout_constraintWidth_default="wrap">
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
+                <com.layer.ui.avatar.AvatarView
+                    android:id="@+id/avatar"
+                    android:layout_width="@dimen/layer_ui_avatar_width"
+                    android:layout_height="@dimen/layer_ui_avatar_height"
+                    android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{viewModel.participants}"/>
+
+                <com.layer.ui.presence.PresenceView
+                    android:id="@+id/presence"
+                    android:layout_width="@dimen/layer_ui_avatar_presence_height"
+                    android:layout_height="@dimen/layer_ui_avatar_presence_height"
+                    android:layout_gravity="bottom|right"
+                    android:visibility="@{viewModel.presenceVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{viewModel.participants}"/>
+
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:id="@+id/current_user_avatar_container"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/layer_ui_message_item_avatar_padding_left"
-                android:layout_marginStart="@dimen/layer_ui_message_item_avatar_padding_left">
+                android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
+                android:visibility="@{viewModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_default="wrap">
 
-                <FrameLayout
-                    android:id="@+id/avatar_container"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
-                    android:visibility="@{viewModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:layout_constraintWidth_default="wrap">
+                <com.layer.ui.avatar.AvatarView
+                    android:id="@+id/current_user_avatar"
+                    android:layout_width="@dimen/layer_ui_avatar_width"
+                    android:layout_height="@dimen/layer_ui_avatar_height"
+                    android:visibility="@{viewModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{viewModel.participants}"/>
 
-                    <com.layer.ui.avatar.AvatarView
-                        android:id="@+id/avatar"
-                        android:layout_width="@dimen/layer_ui_avatar_width"
-                        android:layout_height="@dimen/layer_ui_avatar_height"
-                        android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
-                        app:participants="@{viewModel.participants}"/>
+                <com.layer.ui.presence.PresenceView
+                    android:id="@+id/current_user_presence"
+                    android:layout_width="@dimen/layer_ui_avatar_presence_height"
+                    android:layout_height="@dimen/layer_ui_avatar_presence_height"
+                    android:layout_gravity="bottom|right"
+                    android:visibility="@{viewModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{viewModel.participants}"/>
 
-                    <com.layer.ui.presence.PresenceView
-                        android:id="@+id/presence"
-                        android:layout_width="@dimen/layer_ui_avatar_presence_height"
-                        android:layout_height="@dimen/layer_ui_avatar_presence_height"
-                        android:layout_gravity="bottom|right"
-                        android:visibility="@{viewModel.presenceVisible ? View.VISIBLE : View.INVISIBLE}"
-                        app:participants="@{viewModel.participants}"/>
+            </FrameLayout>
 
-                </FrameLayout>
-
-
-                <FrameLayout
-                    android:id="@+id/current_user_avatar_container"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
-                    android:visibility="@{viewModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_default="wrap">
-
-                     <com.layer.ui.avatar.AvatarView
-                         android:id="@+id/current_user_avatar"
-                         android:layout_width="@dimen/layer_ui_avatar_width"
-                         android:visibility="@{viewModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                         android:layout_height="@dimen/layer_ui_avatar_height"
-                         app:participants="@{viewModel.participants}"/>
-
-                     <com.layer.ui.presence.PresenceView
-                         android:id="@+id/current_user_presence"
-                         android:layout_width="@dimen/layer_ui_avatar_presence_height"
-                         android:layout_height="@dimen/layer_ui_avatar_presence_height"
-                         android:visibility="@{viewModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                         android:layout_gravity="bottom|right"
-                         app:participants="@{viewModel.participants}"/>
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/cell"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
-                    android:layout_marginLeft="@dimen/layer_ui_padding_normal"
-                    android:layout_marginTop="@dimen/layer_ui_message_item_padding"
-                    android:alpha="@{viewModel.messageCellAlpha}"
-                    android:minHeight="@dimen/layer_ui_message_item_cell_min_height"
-                    android:minWidth="@dimen/layer_ui_message_item_cell_min_width"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintHeight_default="wrap"
-                    app:layout_constraintHorizontal_bias="@{viewModel.myCellType ? 1.0f : 0.0f}"
-                    app:layout_constraintStart_toEndOf="@+id/avatar_container"
-                    app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5"
-                    app:layout_constraintWidth_default="wrap"/>
-                
-            </android.support.constraint.ConstraintLayout>
-
-            <TextView
-                android:id="@+id/receipt"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/cell"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginEnd="@dimen/layer_ui_message_item_receipt_margin"
-                android:layout_marginRight="@dimen/layer_ui_message_item_receipt_margin"
-                android:text="@{viewModel.readReceipt}"
-                android:textColor="@color/layer_ui_text_gray"
-                android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
-                android:visibility="@{viewModel.readReceiptVisible ? View.VISIBLE : View.GONE}"/>
+                android:layout_marginBottom="@dimen/layer_ui_message_item_padding"
+                android:layout_marginLeft="@dimen/layer_ui_padding_normal"
+                android:layout_marginTop="@dimen/layer_ui_message_item_padding"
+                android:alpha="@{viewModel.messageCellAlpha}"
+                android:minHeight="@dimen/layer_ui_message_item_cell_min_height"
+                android:minWidth="@dimen/layer_ui_message_item_cell_min_width"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
+                app:layout_constraintHeight_default="wrap"
+                app:layout_constraintHorizontal_bias="@{viewModel.myCellType ? 1.0f : 0.0f}"
+                app:layout_constraintStart_toEndOf="@+id/avatar_container"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                app:layout_constraintWidth_default="wrap"/>
 
-        </LinearLayout>
-    </com.layer.ui.util.views.SwipeableItem>
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/receipt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="@dimen/layer_ui_message_item_receipt_margin"
+            android:layout_marginRight="@dimen/layer_ui_message_item_receipt_margin"
+            android:text="@{viewModel.readReceipt}"
+            android:textColor="@color/layer_ui_text_gray"
+            android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
+            android:visibility="@{viewModel.readReceiptVisible ? View.VISIBLE : View.GONE}"/>
+
+    </LinearLayout>
 </layout>

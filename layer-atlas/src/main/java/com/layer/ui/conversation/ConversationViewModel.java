@@ -13,7 +13,6 @@ import com.layer.ui.message.MessageItemsListViewModel;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.List;
 
@@ -25,12 +24,10 @@ public class ConversationViewModel extends BaseObservable {
 
     public ConversationViewModel(Context context, LayerClient layerClient, List<CellFactory> cellFactories,
                                  ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
-                                 IdentityFormatter identityFormatter,
-                                 SwipeableItem.OnItemSwipeListener<Message> onItemSwipeListener) {
+                                 IdentityFormatter identityFormatter) {
         mMessageItemsListViewModel = new MessageItemsListViewModel(context, layerClient,
                 imageCacheWrapper, dateFormatter, identityFormatter);
         mMessageItemsListViewModel.setCellFactories(cellFactories);
-        mMessageItemsListViewModel.setOnItemSwipeListener(onItemSwipeListener);
         mLayerClient = layerClient;
     }
 

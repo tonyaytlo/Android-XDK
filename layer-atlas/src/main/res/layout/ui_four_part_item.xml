@@ -22,6 +22,7 @@
         <import type="com.layer.ui.fourpartitem.FourPartItemViewModel"/>
 
         <import type="com.layer.ui.style.FourPartItemStyle"/>
+
         <import type="android.view.View"/>
 
         <variable
@@ -33,47 +34,24 @@
             type="FourPartItemViewModel"/>
     </data>
 
-    <com.layer.ui.util.views.SwipeableItem
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ui_swipeable_item_background_selector"
-        android:onClick="@{viewModel.onClickItem()}">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/leavebehind"
-            android:layout_width="match_parent"
-            android:layout_height="@{style.itemHeight, default=wrap_content}"
-            android:background="@color/layer_ui_item_leavebehind"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="@dimen/layer_ui_primary_icon_size"
-                android:layout_height="@dimen/layer_ui_primary_icon_size"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/layer_ui_margin_normal"
-                android:layout_marginStart="@dimen/layer_ui_margin_normal"
-                android:src="@drawable/ic_delete_white_24dp"
-                android:tint="@color/layer_ui_icon_enabled"/>
-
-        </LinearLayout>
-
-        <!-- Swipeable overlay -->
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/swipeable"
+            android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="@{style.itemHeight, default=wrap_content}"
-            android:background="@drawable/ui_swipeable_item_foreground_selector"
             android:layout_marginLeft="@dimen/layer_ui_margin_large"
             android:layout_marginStart="@dimen/layer_ui_margin_large"
             android:layout_marginTop="@dimen/layer_ui_margin_large"
-            android:duplicateParentState="true"
-            android:orientation="horizontal">
+            android:background="@drawable/ui_item_foreground_selector"
+            android:onClick="@{viewModel.onClickItem()}">
 
             <com.layer.ui.avatar.AvatarView
                 android:id="@+id/avatar"
-                android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
                 android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
+                android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
                 android:visibility="@{style.avatarVisibility}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -85,10 +63,10 @@
                 android:id="@+id/presence"
                 android:layout_width="@{style.avatarStyle.presenceRadius, default=wrap_content}"
                 android:layout_height="@{style.avatarStyle.presenceRadius, default=wrap_content}"
-                app:layout_constraintRight_toRightOf="@+id/avatar"
                 app:layout_constraintBottom_toBottomOf="@+id/avatar"
-                app:participants="@{viewModel.identities}"
-                app:layout_constraintVertical_bias="0.0"/>
+                app:layout_constraintRight_toRightOf="@+id/avatar"
+                app:layout_constraintVertical_bias="0.0"
+                app:participants="@{viewModel.identities}"/>
 
             <!-- right content part -->
 
@@ -113,7 +91,6 @@
                 android:id="@+id/right_accessory_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="@{style.accessoryTextVisibility}"
                 android:layout_marginEnd="@{style.marginHorizontal}"
                 android:layout_marginLeft="@{style.marginHorizontal}"
                 android:layout_marginRight="@{style.marginHorizontal}"
@@ -122,11 +99,11 @@
                 android:text="@{viewModel.accessoryText}"
                 android:textColor="@{viewModel.secondaryState ? style.accessoryUnreadTextColor : style.accessoryTextColor}"
                 android:textSize="@{style.accessoryTextSize}"
+                android:visibility="@{style.accessoryTextVisibility}"
+                app:layout_constraintBottom_toBottomOf="@+id/title"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintLeft_toRightOf="@+id/title"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/title"
-                app:layout_constraintBottom_toBottomOf="@+id/title"
                 app:layout_constraintVertical_bias="@{style.subtitleVisibility == View.VISIBLE ? 0.2f : 0.5f}"
                 app:typeface="@{viewModel.secondaryState ? style.accessoryUnreadTextTypeface : style.accessoryTextTypeface}"/>
 
@@ -135,21 +112,23 @@
                 android:id="@+id/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/layer_ui_margin_normal"
                 android:layout_marginLeft="@{style.marginHorizontal}"
                 android:layout_marginStart="@{style.marginHorizontal}"
-                android:maxLines="1"
+                android:layout_marginTop="@dimen/layer_ui_margin_normal"
                 android:ellipsize="end"
-                android:maxWidth="@dimen/max_width_four_part_subtitle_text_view"
+                android:maxLines="1"
+
                 android:text="@{viewModel.subtitle}"
                 android:textColor="@{viewModel.secondaryState ? style.subtitleUnreadTextColor : style.subtitleTextColor}"
                 android:textSize="@{style.subtitleTextSize}"
                 android:visibility="@{style.subtitleVisibility}"
+                app:layout_constraintBottom_toBottomOf="@+id/avatar"
+                app:layout_constraintEnd_toStartOf="@+id/right_accessory_text"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/avatar"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                app:layout_constraintBottom_toBottomOf="@+id/avatar"
                 app:typeface="@{viewModel.secondaryState ? style.subtitleUnreadTextTypeface : style.subtitleTextTypeface}"/>
 
         </android.support.constraint.ConstraintLayout>
-    </com.layer.ui.util.views.SwipeableItem>
+    </FrameLayout>
 </layout>

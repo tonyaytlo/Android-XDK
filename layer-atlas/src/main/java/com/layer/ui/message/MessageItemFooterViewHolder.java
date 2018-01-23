@@ -22,11 +22,11 @@ public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageIt
     }
 
     public void clear() {
-        getBinding().swipeable.removeAllViews();
+        getBinding().root.removeAllViews();
     }
 
     public void bind(Set<Identity> users, View mFooterView, boolean shouldAvatarBeVisible) {
-        getBinding().swipeable.addView(mFooterView);
+        getBinding().root.addView(mFooterView);
         getViewModel().setParticipants(users);
         getViewModel().setAvatarViewVisibilityType(shouldAvatarBeVisible);
         int numberOfUsers = users.size();

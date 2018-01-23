@@ -12,11 +12,6 @@
     <attr name="AvatarView" format="reference" />
     <attr name="PresenceView" format="reference" />
 
-    <declare-styleable name="SwipeableItemState">
-        <attr name="state_swiping" format="boolean" />
-        <attr name="onSwipe" format="string"/>
-    </declare-styleable>
-
     <!-- #################################### -->
     <!-- Styleable UI Component Attributes -->
     <!-- #################################### -->

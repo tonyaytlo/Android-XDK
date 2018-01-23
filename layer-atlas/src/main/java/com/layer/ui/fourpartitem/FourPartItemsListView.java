@@ -13,7 +13,6 @@ import com.layer.ui.R;
 import com.layer.ui.adapters.ItemRecyclerViewAdapter;
 import com.layer.ui.recyclerview.ItemsRecyclerView;
 import com.layer.ui.style.FourPartItemStyle;
-import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.List;
 
@@ -57,12 +56,7 @@ public abstract class FourPartItemsListView<ITEM extends Queryable, ADAPTER exte
         adapter.refresh();
     }
 
-    public void setItemSwipeListener(SwipeableItem.OnItemSwipeListener<ITEM> itemSwipeListener) {
-        mItemsRecyclerView.setItemSwipeListener(itemSwipeListener);
-    }
-
     public void onDestroy() {
         mItemsRecyclerView.onDestroy();
     }
-
 }

@@ -10,14 +10,12 @@ import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.List;
 
 public class MessageItemsListViewModel extends BaseObservable {
     protected MessageItemsAdapter mMessageItemsAdapter;
     protected List<CellFactory> mCellFactories;
-    protected SwipeableItem.OnItemSwipeListener<Message> mItemSwipeListener;
 
     public MessageItemsListViewModel(Context context, LayerClient layerClient,
                                      ImageCacheWrapper imageCacheWrapper,
@@ -40,14 +38,5 @@ public class MessageItemsListViewModel extends BaseObservable {
     public void setCellFactories(List<CellFactory> cellFactories) {
         mCellFactories = cellFactories;
         notifyChange();
-    }
-
-    public void setOnItemSwipeListener(SwipeableItem.OnItemSwipeListener<Message> onItemSwipeListener) {
-        mItemSwipeListener = onItemSwipeListener;
-        notifyChange();
-    }
-
-    public SwipeableItem.OnItemSwipeListener<Message> getItemSwipeListener() {
-        return mItemSwipeListener;
     }
 }

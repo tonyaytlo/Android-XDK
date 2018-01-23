@@ -15,7 +15,6 @@ import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.recyclerview.OnItemClickListener;
 import com.layer.ui.util.DateFormatter;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.Collection;
 
@@ -32,8 +31,6 @@ public class ConversationItemsListViewModel extends BaseObservable {
     }
 
     private ConversationItemsAdapter mConversationItemsAdapter;
-    private SwipeableItem.OnItemSwipeListener<Conversation> mItemSwipeListener;
-
     /**
      * Only show conversations we're still a member of, sorted by the last Message's receivedAt time
      */
@@ -65,14 +62,6 @@ public class ConversationItemsListViewModel extends BaseObservable {
 
     public void setItemClickListener(OnItemClickListener<Conversation> itemClickListener) {
         mConversationItemsAdapter.setItemClickListener(itemClickListener);
-    }
-
-    public void setItemSwipeListener(SwipeableItem.OnItemSwipeListener<Conversation> itemSwipeListener) {
-        mItemSwipeListener = itemSwipeListener;
-    }
-
-    public SwipeableItem.OnItemSwipeListener<Conversation> getItemSwipeListener() {
-        return mItemSwipeListener;
     }
 
     public void setIdentityFormatter(IdentityFormatter identityFormatter) {

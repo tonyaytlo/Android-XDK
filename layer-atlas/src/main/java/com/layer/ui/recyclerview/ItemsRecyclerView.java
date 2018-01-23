@@ -9,7 +9,6 @@ import android.view.View;
 
 import com.layer.sdk.query.Queryable;
 import com.layer.ui.adapters.ItemRecyclerViewAdapter;
-import com.layer.ui.util.views.SwipeableItem;
 
 public class ItemsRecyclerView<ITEM extends Queryable> extends RecyclerView {
 
@@ -69,19 +68,5 @@ public class ItemsRecyclerView<ITEM extends Queryable> extends RecyclerView {
      */
     public void setItemClickListener(OnItemClickListener<ITEM> listener) {
         mAdapter.setItemClickListener(listener);
-    }
-
-    public void setItemSwipeListener(SwipeableItem.OnItemSwipeListener<ITEM> listener) {
-        if (mSwipeItemTouchHelper != null) {
-            mSwipeItemTouchHelper.attachToRecyclerView(null);
-        }
-        if (listener == null) {
-            mSwipeItemTouchHelper = null;
-        } else {
-            listener.setAdapter(mAdapter);
-
-            mSwipeItemTouchHelper = new ItemTouchHelper(listener);
-            mSwipeItemTouchHelper.attachToRecyclerView(this);
-        }
     }
 }

@@ -31,7 +31,6 @@ import com.layer.ui.message.binder.BinderRegistry;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.message.messagetypes.MessageStyle;
 import com.layer.ui.recyclerview.ItemsRecyclerView;
-import com.layer.ui.util.views.SwipeableItem;
 
 import java.util.List;
 import java.util.Set;
@@ -124,10 +123,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
     public void removeHeaderView() {
         mAdapter.setHeaderView(null);
-    }
-
-    public void setItemSwipeListener(SwipeableItem.OnItemSwipeListener<Message> itemSwipeListener) {
-        mMessagesRecyclerView.setItemSwipeListener(itemSwipeListener);
     }
 
     public void onDestroy() {
