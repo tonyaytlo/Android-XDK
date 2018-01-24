@@ -5,8 +5,11 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.ui.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ public class MessagePartUtils {
     private static final String ROLE_ROOT = "root";
     private static final String ROLE_RESPONSE_SUMMARY = "response_summary";
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
+    public static final String PARAMETER_ITEM_ORDER = "item-order";
 
     @Nullable
     public static String getMimeType(@NonNull MessagePart messagePart) {
@@ -135,6 +139,41 @@ public class MessagePartUtils {
             }
         }
 
+        if (!children.isEmpty()) {
+            Collections.sort(children, new Comparator<MessagePart>() {
+                @Override
+                public int compare(MessagePart messagePart, MessagePart otherPart) {
+                    Map<String, String> messagePartArguments = getMimeTypeArguments(messagePart);
+                    Map<String, String> otherPartArguments = getMimeTypeArguments(otherPart);
+
+                    String messagePartOrder = messagePartArguments != null ? messagePartArguments.get(PARAMETER_ITEM_ORDER) : null;
+                    String otherPartOrder = otherPartArguments != null ? otherPartArguments.get(PARAMETER_ITEM_ORDER) : null;
+
+                    int result = 0;
+
+                    if (messagePartOrder != null && otherPartOrder != null) {
+                        Integer messageOrder = Integer.parseInt(messagePartOrder);
+                        Integer otherOrder = Integer.parseInt(otherPartOrder);
+                        result = messageOrder.compareTo(otherOrder);
+
+                    } else if (messagePartOrder != null) {
+                        if (Log.isLoggable(Log.WARN)) {
+                            Log.w("Found message part without item-order: " + otherPart.getId());
+                        }
+
+                        result = -1;
+                    } else if (otherPartOrder != null) {
+                        if (Log.isLoggable(Log.WARN)) {
+                            Log.w("Found message part without item-order: " + messagePart.getId());
+                        }
+
+                        result = 1;
+                    }
+
+                    return result;
+                }
+            });
+        }
         return children;
     }
 

@@ -81,6 +81,10 @@ public class LocationMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         if (mMetadata != null) {
             return mMetadata.getAction() != null ? mMetadata.getAction().getEvent() : ACTION_EVENT_OPEN_MAP;
         }
@@ -90,6 +94,10 @@ public class LocationMessageModel extends MessageModel {
 
     @Override
     public JsonObject getActionData() {
+        if (super.getActionData().size() > 0) {
+            return super.getActionData();
+        }
+
         JsonObject actionData;
 
         if (mMetadata != null) {
@@ -109,7 +117,7 @@ public class LocationMessageModel extends MessageModel {
                 }
             }
         } else {
-            actionData = super.getActionData();
+            actionData = null;
         }
         return actionData;
     }

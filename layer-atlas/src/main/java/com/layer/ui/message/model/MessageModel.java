@@ -3,6 +3,7 @@ package com.layer.ui.message.model;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.annotation.CallSuper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -44,6 +45,8 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     private MessageModelManager mMessageModelManager;
 
     private MessageSenderRepository mMessageSenderRepository;
+
+    private Action mAction;
 
     public MessageModel(Context context, LayerClient layerClient) {
         mIdentityFormatter = new IdentityFormatterImpl(context);
@@ -144,7 +147,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     }
 
     @Nullable
-    public List<MessageModel> getChildMessageModels() {
+    protected List<MessageModel> getChildMessageModels() {
         return mChildMessageModels;
     }
 
@@ -199,10 +202,20 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @Bindable
     public abstract String getFooter();
 
-    public abstract String getActionEvent();
+    public void setAction(Action action) {
+        mAction = action;
+    }
 
+    @CallSuper
+    @Nullable
+    public String getActionEvent() {
+        return mAction != null ? mAction.getEvent() : null;
+    }
+
+    @NonNull
+    @CallSuper
     public JsonObject getActionData() {
-        return new JsonObject();
+        return  mAction!=null ? mAction.getData() : new JsonObject();
     }
 
     @Bindable

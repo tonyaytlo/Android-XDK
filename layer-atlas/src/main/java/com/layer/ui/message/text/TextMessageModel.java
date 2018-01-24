@@ -76,16 +76,24 @@ public class TextMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         return mActionEvent;
     }
 
     @Override
     public JsonObject getActionData() {
-        if (mCustomData != null) {
-            return mCustomData;
-        } else {
+        if (super.getActionData().size() > 0) {
             return super.getActionData();
         }
+
+        if (mCustomData != null) {
+            return mCustomData;
+        }
+
+        return null;
     }
 
     @Override

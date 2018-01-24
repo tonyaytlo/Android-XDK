@@ -186,7 +186,7 @@
     <!-- # Text Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="ui_text_message_view_min_width">192dp</dimen>
+    <dimen name="ui_text_message_view_max_width">192dp</dimen>
     <dimen name="ui_text_message_view_text_size">14sp</dimen>
 
     <!-- ####################################################################################### -->
@@ -250,4 +250,11 @@
     <dimen name="ui_choice_button_message_label_text_size">17sp</dimen>
     <dimen name="ui_choice_button_message_button_text_size">17sp</dimen>
     <dimen name="ui_choice_button_message_button_stroke_width">1dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Choice Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_carousel_message_item_horizontal_margins">@dimen/layer_ui_margin_small</dimen>
+    <dimen name="ui_carousel_message_item_vertical_margins">0dp</dimen>
 </resources>

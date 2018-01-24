@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:autoLink="all"
+            android:maxWidth="@dimen/ui_text_message_view_max_width"
             android:linksClickable="true"
             android:gravity="center_vertical"
             android:text="@{viewModel.text}"

@@ -106,6 +106,10 @@ public class FileMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         if (mMetadata != null && mMetadata.getAction() != null) {
             return mMetadata.getAction().getEvent();
         }
@@ -115,6 +119,10 @@ public class FileMessageModel extends MessageModel {
 
     @Override
     public JsonObject getActionData() {
+        if (super.getActionData().size() > 0) {
+            return super.getActionData();
+        }
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty(ACTION_DATA_FILE_MIME_TYPE, mMetadata.getMimeType());
         if (getHasSourceMessagePart()) {

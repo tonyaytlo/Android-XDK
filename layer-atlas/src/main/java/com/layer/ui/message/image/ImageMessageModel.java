@@ -78,6 +78,10 @@ public class ImageMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         if (mMetadata.getAction() != null) {
             return mMetadata.getAction().getEvent();
         } else {
@@ -87,6 +91,10 @@ public class ImageMessageModel extends MessageModel {
 
     @Override
     public JsonObject getActionData() {
+        if (super.getActionData().size() > 0) {
+            return super.getActionData();
+        }
+
         if (mMetadata.getAction() != null) {
             return mMetadata.getAction().getData();
         } else {

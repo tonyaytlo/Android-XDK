@@ -73,6 +73,10 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         if (mLinkMessageMetadata != null && mLinkMessageMetadata.getAction() != null) {
             return mLinkMessageMetadata.getAction().getEvent();
         }
@@ -82,6 +86,10 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     public JsonObject getActionData() {
+        if (super.getActionData().size() > 0) {
+            return super.getActionData();
+        }
+
         JsonObject actionData;
         if (mLinkMessageMetadata != null) {
             if (mLinkMessageMetadata.getAction() != null) {

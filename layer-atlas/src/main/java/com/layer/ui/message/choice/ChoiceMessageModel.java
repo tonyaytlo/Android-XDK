@@ -95,6 +95,10 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Override
     public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
         return null;
     }
 
