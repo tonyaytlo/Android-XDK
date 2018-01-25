@@ -13,7 +13,6 @@ import com.layer.ui.databinding.UiChoiceMessageViewBinding;
 import com.layer.ui.message.container.TitledMessageContainer;
 import com.layer.ui.message.view.MessageView;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -67,19 +66,22 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implement
     private void processModel(ChoiceMessageModel model) {
         if (model.getChoiceMessageMetadata() != null) {
             List<ChoiceMetadata> choices = model.getChoiceMessageMetadata().getChoices();
-            List<String> selectedChoices = model.getSelectedChoices();
+            Set<String> selectedChoices = model.getSelectedChoices();
             boolean allowReselect = model.getChoiceMessageMetadata().getAllowReselect();
             boolean allowDeselect = model.getChoiceMessageMetadata().getAllowDeselect();
             boolean allowMultiSelect = model.getChoiceMessageMetadata().getAllowMultiselect();
             boolean isEnabledForMe = model.getIsEnabledForMe();
 
+            mChoiceButtonSet.setAllowDeselect(allowDeselect);
+            mChoiceButtonSet.setAllowReselect(allowReselect);
+            mChoiceButtonSet.setAllowMultiSelect(allowMultiSelect);
+            mChoiceButtonSet.setEnabledForMe(isEnabledForMe);
 
             for (ChoiceMetadata choice : choices) {
                 mChoiceButtonSet.addOrUpdateChoice(choice);
             }
 
-            mChoiceButtonSet.setSelectionConditions(allowDeselect, allowReselect, allowMultiSelect, isEnabledForMe);
-            mChoiceButtonSet.setSelection(new HashSet<>(selectedChoices));
+            mChoiceButtonSet.setSelection(selectedChoices);
         }
     }
 

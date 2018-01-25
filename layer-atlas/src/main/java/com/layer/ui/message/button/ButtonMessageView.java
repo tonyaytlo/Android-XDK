@@ -17,15 +17,21 @@ import android.widget.LinearLayout;
 import com.google.gson.JsonObject;
 import com.layer.ui.R;
 import com.layer.ui.databinding.UiButtonMessageViewBinding;
+import com.layer.ui.message.choice.ChoiceButtonSet;
+import com.layer.ui.message.choice.ChoiceMetadata;
 import com.layer.ui.message.container.StandardMessageContainer;
 import com.layer.ui.message.view.MessageView;
+import com.layer.ui.util.Log;
 
 import java.util.List;
+import java.util.Set;
 
 public class ButtonMessageView extends MessageView<ButtonMessageModel> {
     private UiButtonMessageViewBinding mBinding;
     private ColorStateList mActionButtonColorStateList;
     private ColorStateList mChoiceButtonColorStateList;
+
+    private List<ChoiceButtonSet> mChoiceButtonSets;
 
     public ButtonMessageView(Context context) {
         this(context, null, 0);
@@ -97,7 +103,7 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
         AppCompatButton actionButton = new AppCompatButton(getContext());
 
         // Style it
-        actionButton.setBackgroundResource(R.drawable.ui_button_message_button_background_selector);
+        actionButton.setBackgroundResource(R.drawable.ui_choice_set_button_background_selector);
         actionButton.setTransformationMethod(null);
         actionButton.setLines(1);
         actionButton.setEllipsize(TextUtils.TruncateAt.END);
@@ -128,43 +134,43 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
 
     private void addChoiceButtons(@NonNull ButtonModel buttonModel) {
         if (buttonModel.getChoices() == null || buttonModel.getChoices().isEmpty()) return;
-
-        // Add parent for buttons
-        LinearLayout choiceButtonContainerLayout = new LinearLayout(getContext());
-        choiceButtonContainerLayout.setOrientation(LinearLayout.HORIZONTAL);
-        addView(choiceButtonContainerLayout, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        for (ButtonModel.Choice choice : buttonModel.getChoices()) {
-            addChoiceButton(choiceButtonContainerLayout, choice);
-        }
-    }
-
-    private void addChoiceButton(@NonNull LinearLayout parent, @NonNull ButtonModel.Choice choice) {
-        //Instantiate
-        AppCompatButton choiceButton = new AppCompatButton((getContext()));
-
-        // Style it
-        choiceButton.setBackgroundResource(R.drawable.ui_button_message_button_background_selector);
-        choiceButton.setTransformationMethod(null);
-        choiceButton.setLines(1);
-        choiceButton.setEllipsize(TextUtils.TruncateAt.END);
-        choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                .getDimension(R.dimen.ui_button_message_choice_button_text_size));
-        choiceButton.setTextColor(mChoiceButtonColorStateList);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            choiceButton.setStateListAnimator(null);
+        final ButtonModel.ChoiceData choiceData = buttonModel.getChoiceData();
+        if (choiceData == null || choiceData.getResponseName() == null) {
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("No response name for this choice set, not adding choice buttons");
+            }
+            return;
         }
 
-        // Add it
-        parent.addView(choiceButton, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+        ChoiceButtonSet choiceButtonSet = new ChoiceButtonSet(getContext());
+        choiceButtonSet.setOrientation(LinearLayout.HORIZONTAL);
+        mBinding.uiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        // Bind data to it
-        choiceButton.setText(choice.getText());
+        for (ChoiceMetadata choiceMetadata : buttonModel.getChoices()) {
+            choiceButtonSet.addOrUpdateChoice(choiceMetadata);
+        }
 
+        choiceButtonSet.setEnabledForMe(choiceData.isEnabledForMe());
+        choiceButtonSet.setAllowDeselect(choiceData.isAllowDeselect());
+        choiceButtonSet.setAllowReselect(choiceData.isAllowReselect());
+        choiceButtonSet.setAllowMultiSelect(choiceData.isAllowMultiselect());
+
+        choiceButtonSet.setOnChoiceClickedListener(new ChoiceButtonSet.OnChoiceClickedListener() {
+            @Override
+            public void onChoiceClick(ChoiceMetadata choice, boolean selected,
+                    Set<String> selectedChoices) {
+                ButtonMessageModel viewModel = mBinding.getViewModel();
+                if (viewModel != null) {
+                    viewModel.onChoiceClicked(choiceData.getResponseName(), choice, selected, selectedChoices);
+                }
+            }
+        });
+
+        Set<String> selectedChoices = mBinding.getViewModel().getSelectedChoices(
+                choiceData.getResponseName());
+
+        choiceButtonSet.setSelection(selectedChoices);
     }
 }

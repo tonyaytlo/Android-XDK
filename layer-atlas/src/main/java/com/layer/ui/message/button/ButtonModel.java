@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import com.layer.ui.message.choice.ChoiceMetadata;
 
 import java.util.List;
 
@@ -21,10 +22,12 @@ public class ButtonModel extends BaseObservable{
     private String mEvent;
 
     @SerializedName("choices")
-    private List<Choice> mChoices;
+    private List<ChoiceMetadata> mChoices;
 
     @SerializedName("data")
     private JsonObject mData;
+
+    private transient ChoiceData mChoiceData;
 
     public String getType() {
         return mType;
@@ -42,7 +45,7 @@ public class ButtonModel extends BaseObservable{
         return mData;
     }
 
-    public List<Choice> getChoices() {
+    public List<ChoiceMetadata> getChoices() {
         return mChoices;
     }
 
@@ -58,7 +61,7 @@ public class ButtonModel extends BaseObservable{
         mEvent = event;
     }
 
-    public void setChoices(List<Choice> choices) {
+    public void setChoices(List<ChoiceMetadata> choices) {
         mChoices = choices;
     }
 
@@ -66,36 +69,91 @@ public class ButtonModel extends BaseObservable{
         mData = data;
     }
 
-    public static class Choice {
-        @SerializedName("id")
-        private String mId;
+    public ChoiceData getChoiceData() {
+        return mChoiceData;
+    }
 
-        @SerializedName("text")
-        private String mText;
+    public void setChoiceData(ChoiceData choiceData) {
+        mChoiceData = choiceData;
+    }
 
-        public String getId() {
-            return mId;
+    public class ChoiceData {
+
+        @SerializedName("response_name")
+        private String mResponseName;
+
+        @SerializedName("preselected_choice")
+        private String mPreselectedChoice;
+
+        @SerializedName("allow_reselect")
+        private boolean mAllowReselect;
+
+        @SerializedName("allow_deselect")
+        private boolean mAllowDeselect;
+
+        @SerializedName("allow_multiselect")
+        private boolean mAllowMultiselect;
+
+        @SerializedName("enabled_for")
+        private List<String> mEnabledFor;
+
+        private transient boolean mEnabledForMe;
+
+        public String getResponseName() {
+            return mResponseName;
         }
 
-        public String getText() {
-            return mText;
+        public void setResponseName(String responseName) {
+            mResponseName = responseName;
         }
 
-        public void setId(String id) {
-            mId = id;
+        public String getPreselectedChoice() {
+            return mPreselectedChoice;
         }
 
-        public void setText(String text) {
-            mText = text;
+        public void setPreselectedChoice(String preselectedChoice) {
+            mPreselectedChoice = preselectedChoice;
         }
 
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null) return false;
-            if (!(obj instanceof Choice)) return false;
+        public boolean isAllowReselect() {
+            return mAllowReselect;
+        }
 
-            Choice other = (Choice) obj;
-            return this.mId.equals(other.mId);
+        public void setAllowReselect(boolean allowReselect) {
+            mAllowReselect = allowReselect;
+        }
+
+        public boolean isAllowDeselect() {
+            return mAllowDeselect;
+        }
+
+        public void setAllowDeselect(boolean allowDeselect) {
+            mAllowDeselect = allowDeselect;
+        }
+
+        public boolean isAllowMultiselect() {
+            return mAllowMultiselect;
+        }
+
+        public void setAllowMultiselect(boolean allowMultiselect) {
+            mAllowMultiselect = allowMultiselect;
+        }
+
+        public List<String> getEnabledFor() {
+            return mEnabledFor;
+        }
+
+        public void setEnabledFor(List<String> enabledFor) {
+            mEnabledFor = enabledFor;
+        }
+
+        public boolean isEnabledForMe() {
+            return mEnabledForMe;
+        }
+
+        public void setEnabledForMe(boolean enabledForMe) {
+            mEnabledForMe = enabledForMe;
         }
     }
+
 }

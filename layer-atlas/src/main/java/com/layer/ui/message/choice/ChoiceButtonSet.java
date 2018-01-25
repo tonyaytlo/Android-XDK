@@ -17,6 +17,7 @@ import com.layer.ui.R;
 import com.layer.ui.util.Log;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class ChoiceButtonSet extends LinearLayout {
 
     private Map<String, ChoiceMetadata> mChoiceMetadata = new HashMap<>();
     private OnChoiceClickedListener mOnChoiceClickedListener;
-    private Set<String> mSelectedChoiceIds;
+    private Set<String> mSelectedChoiceIds = new HashSet<>();
 
     public ChoiceButtonSet(Context context) {
         this(context, null, 0);
@@ -44,6 +45,7 @@ public class ChoiceButtonSet extends LinearLayout {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        // Default orientation
         setOrientation(VERTICAL);
 
         mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.ui_choice_button_selector);
@@ -53,12 +55,20 @@ public class ChoiceButtonSet extends LinearLayout {
         mOnChoiceClickedListener = onChoiceClickedListener;
     }
 
-    public void setSelectionConditions(boolean allowDeselect, boolean allowReselect,
-                                       boolean allowMultiSelect, boolean isEnabledForMe) {
-        mAllowDeselect = allowDeselect;
+    public void setAllowReselect(boolean allowReselect) {
         mAllowReselect = allowReselect;
+    }
+
+    public void setAllowDeselect(boolean allowDeselect) {
+        mAllowDeselect = allowDeselect;
+    }
+
+    public void setAllowMultiSelect(boolean allowMultiSelect) {
         mAllowMultiSelect = allowMultiSelect;
-        mEnabledForMe = isEnabledForMe;
+    }
+
+    public void setEnabledForMe(boolean enabledForMe) {
+        mEnabledForMe = enabledForMe;
     }
 
     public void addOrUpdateChoice(final ChoiceMetadata choice) {
@@ -81,9 +91,14 @@ public class ChoiceButtonSet extends LinearLayout {
             }
 
             // Add it
-            addView(choiceButton, new ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            LayoutParams layoutParams;
+            if (getOrientation() == VERTICAL) {
+                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+                        .LayoutParams.WRAP_CONTENT);
+            } else {
+                layoutParams = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+            }
+            addView(choiceButton, layoutParams);
 
             choiceButton.setTag(choice.getId());
         }
@@ -153,6 +168,13 @@ public class ChoiceButtonSet extends LinearLayout {
     }
 
     public interface OnChoiceClickedListener {
+        /**
+         * Called when a choice button is clicked.
+         *
+         * @param choice Metadata of the choice button that was clicked
+         * @param selected true if button transitions from unselected -> selected state. False otherwise.
+         * @param selectedChoices choice IDs that are currently in a selected state in this set.
+         */
         void onChoiceClick(ChoiceMetadata choice, boolean selected, Set<String> selectedChoices);
     }
 }

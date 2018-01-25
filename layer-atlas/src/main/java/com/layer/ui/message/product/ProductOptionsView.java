@@ -44,7 +44,7 @@ public class ProductOptionsView extends LinearLayout {
         removeAllViews();
         if (mOptions != null && !mOptions.isEmpty()) {
             for (ChoiceMessageModel option : mOptions) {
-                String choiceId = option.getSelectedChoices() != null ? option.getSelectedChoices().get(0) : null;
+                String choiceId = option.getSelectedChoices() != null ? option.getSelectedChoices().iterator().next() : null;
                 List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().getChoices() : null;
 
                 if (choices != null && choices.size() > 0) {

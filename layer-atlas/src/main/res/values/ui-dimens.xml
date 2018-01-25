@@ -241,8 +241,8 @@
     <!-- # Button Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="ui_button_message_action_button_text_size">14sp</dimen>
-    <dimen name="ui_button_message_choice_button_text_size">14sp</dimen>
+    <dimen name="ui_button_message_action_button_text_size">17sp</dimen>
+    <dimen name="ui_button_message_choice_button_text_size">17sp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Choice Message View                                                                   # -->

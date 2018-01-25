@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
@@ -16,14 +15,13 @@ import com.layer.ui.BR;
 import com.layer.ui.R;
 import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.response.ChoiceResponseModel;
+import com.layer.ui.message.response.ResponseSummary;
 import com.layer.ui.repository.MessageSenderRepository;
 import com.layer.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -119,8 +117,8 @@ public class ChoiceMessageModel extends MessageModel {
     }
 
     @Bindable
-    public List<String> getSelectedChoices() {
-        return new ArrayList<>(mSelectedChoices);
+    public Set<String> getSelectedChoices() {
+        return new HashSet<>(mSelectedChoices);
     }
 
     @Bindable
@@ -178,16 +176,4 @@ public class ChoiceMessageModel extends MessageModel {
         messageSenderRepository.sendChoiceResponse(getMessage().getConversation(), choiceResponseModel);
     }
 
-    public static class ResponseSummary {
-        @SerializedName("participant_data")
-        private Map<String, JsonObject> mParticipantData;
-
-        public boolean hasData() {
-            return mParticipantData != null && !mParticipantData.isEmpty();
-        }
-
-        public Map<String, JsonObject> getParticipantData() {
-            return mParticipantData;
-        }
-    }
 }

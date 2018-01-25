@@ -24,7 +24,5 @@ public abstract class ActionHandler {
         return mLayerClient;
     }
 
-    public void performAction(@NonNull Context context, @Nullable JsonObject data) {
-        // Default behavior is no-op
-    }
+    public abstract void performAction(@NonNull Context context, @Nullable JsonObject data);
 }

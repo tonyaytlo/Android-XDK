@@ -1,18 +1,18 @@
 package com.layer.ui.message.action;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.JsonObject;
+import com.layer.ui.message.choice.ChoiceMetadata;
+import com.layer.ui.message.model.MessageModel;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ActionHandlerRegistry {
-    private static Map<String, ActionHandler> sActionHandlers;
-
-    static {
-        sActionHandlers = new HashMap<>();
-    }
+    private static Map<String, ActionHandler> sActionHandlers = new HashMap<>();
+    private static Map<String, ChoiceHandler> sChoiceHandlers = new HashMap<>();
 
     public static void registerHandler(ActionHandler handler) {
         sActionHandlers.put(handler.getEvent(), handler);
@@ -23,6 +23,18 @@ public class ActionHandlerRegistry {
             sActionHandlers.get(event).performAction(context, customData);
         } else {
             throw new UnsupportedOperationException("No registered action handler for event: " + event);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static void registerChoiceHandler(ChoiceHandler handler) {
+        sChoiceHandlers.put(handler.getChoiceId(), handler);
+    }
+
+    public static void dispatchChoiceSelection(@NonNull Context context, ChoiceMetadata choice,
+            MessageModel model, MessageModel rootModel) {
+        if (sChoiceHandlers.containsKey(choice.getId())) {
+            sChoiceHandlers.get(choice.getId()).onChoiceSelect(context, choice, model, rootModel);
         }
     }
 }

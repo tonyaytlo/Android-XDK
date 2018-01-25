@@ -133,10 +133,6 @@
     <!-- Button Message View -->
     <!-- ########## -->
 
-    <color name="ui_action_button_background_enabled">@android:color/white</color>
-    <color name="ui_action_button_background_disabled">@color/layer_ui_color_primary_gray_5</color>
-    <color name="ui_action_button_background_pressed">@color/layer_ui_color_primary_blue</color>
-
     <color name="ui_button_message_action_button_text_enabled">@color/layer_ui_text_blue</color>
     <color name="ui_button_message_action_button_text_disabled">@color/layer_ui_text_gray</color>
     <color name="ui_button_message_action_button_text_pressed">@android:color/black</color>
