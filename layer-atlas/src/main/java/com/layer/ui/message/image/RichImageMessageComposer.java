@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.UUID;
 
 public class RichImageMessageComposer extends ImageMessageComposer {
     private static final String ROOT_MIME_TYPE = ImageMessageModel.ROOT_MIME_TYPE;
@@ -45,19 +46,20 @@ public class RichImageMessageComposer extends ImageMessageComposer {
 
         inputStream = getContext().getContentResolver().openInputStream(imageUri);
         MessagePart root = buildRootMessagePart(inputStream, bounds);
+        UUID rootPartId = UUID.fromString(root.getId().getLastPathSegment());
 
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v("Creating Preview part from " + imageUri.toString());
         }
         inputStream = getContext().getContentResolver().openInputStream(imageUri);
-        MessagePart preview = buildPreviewPart(inputStream, bounds);
+        MessagePart preview = buildPreviewPart(inputStream, bounds, rootPartId);
 
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v("Creating Source part from " + imageUri.toString());
         }
         inputStream = getContext().getContentResolver().openInputStream(imageUri);
         MessagePart source = buildSourceMessagePart(inputStream, bounds,
-                getFileSizeFromUri(getContext(), imageUri));
+                getFileSizeFromUri(getContext(), imageUri), rootPartId);
 
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v(String.format(Locale.US, "Source image bytes: %d, preview bytes: %d, root bytes: %d",
@@ -80,8 +82,9 @@ public class RichImageMessageComposer extends ImageMessageComposer {
             Log.v("Creating Root part from " + file.getAbsolutePath());
         }
         MessagePart root = buildRootMessagePart(new FileInputStream(file.getAbsolutePath()), bounds);
-        MessagePart preview = buildPreviewPart(new FileInputStream(file.getAbsolutePath()), bounds);
-        MessagePart source = buildSourceMessagePart(new FileInputStream(file.getAbsolutePath()), bounds, file.length());
+        UUID rootPartId = UUID.fromString(root.getId().getLastPathSegment());
+        MessagePart preview = buildPreviewPart(new FileInputStream(file.getAbsolutePath()), bounds, rootPartId);
+        MessagePart source = buildSourceMessagePart(new FileInputStream(file.getAbsolutePath()), bounds, file.length(), rootPartId);
 
         return getLayerClient().newMessage(root, preview, source);
     }
@@ -102,8 +105,8 @@ public class RichImageMessageComposer extends ImageMessageComposer {
                 mGson.toJson(metadata).getBytes());
     }
 
-    private MessagePart buildPreviewPart(InputStream inputStream, BitmapFactory.Options bounds)
-            throws IOException {
+    private MessagePart buildPreviewPart(InputStream inputStream, BitmapFactory.Options bounds,
+            @NonNull UUID parentNodeId) throws IOException {
         Bitmap previewBitmap = getPreviewBitmap(bounds, inputStream);
         File temp = new File(getContext().getCacheDir(), getClass().getSimpleName() + "."
                 + System.nanoTime() + ".jpg");
@@ -122,11 +125,12 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         }
 
         return getLayerClient().newMessagePart(MessagePartUtils.getAsRoleWithParentId("image/jpeg",
-                "preview", "root"), new FileInputStream(temp), temp.length());
+                "preview", parentNodeId.toString()), new FileInputStream(temp), temp.length());
     }
 
-    private MessagePart buildSourceMessagePart(InputStream inputStream, BitmapFactory.Options bounds, long length) {
-        String mimeType = MessagePartUtils.getAsRoleWithParentId(bounds.outMimeType, "source", "root");
+    private MessagePart buildSourceMessagePart(InputStream inputStream,
+            BitmapFactory.Options bounds, long length, @NonNull UUID parentNodeId) {
+        String mimeType = MessagePartUtils.getAsRoleWithParentId(bounds.outMimeType, "source", parentNodeId.toString());
         return getLayerClient().newMessagePart(mimeType, inputStream, length);
     }
 }

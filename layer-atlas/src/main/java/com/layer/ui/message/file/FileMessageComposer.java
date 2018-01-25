@@ -20,6 +20,7 @@ import com.layer.ui.util.json.AndroidFieldNamingStrategy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.UUID;
 
 public class FileMessageComposer {
 
@@ -29,15 +30,17 @@ public class FileMessageComposer {
         FileMessageMetadata metadata = getFileMetadata(context, uri);
         MessagePart rootMessagePart = layerClient.newMessagePart(MessagePartUtils.getAsRoleRoot(FileMessageModel.ROOT_MIME_TYPE),
                 gson.toJson(metadata).getBytes());
+        UUID rootPartId = UUID.fromString(rootMessagePart.getId().getLastPathSegment());
 
         InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        MessagePart sourceMessagePart = getSourceMessagePart(layerClient, inputStream, metadata);
+        MessagePart sourceMessagePart = getSourceMessagePart(layerClient, inputStream, metadata,
+                rootPartId);
 
         return layerClient.newMessage(rootMessagePart, sourceMessagePart);
     }
 
     private String getMimeType(Context context, Uri uri) {
-        String mimeType = null;
+        String mimeType;
         if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
             ContentResolver cr = context.getContentResolver();
             mimeType = cr.getType(uri);
@@ -92,9 +95,10 @@ public class FileMessageComposer {
         return metadata;
     }
 
-    private MessagePart getSourceMessagePart(LayerClient layerClient,
-                                              InputStream inputStream, FileMessageMetadata metadata) {
-        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.getMimeType(), "source", "root");
+    private MessagePart getSourceMessagePart(LayerClient layerClient, InputStream inputStream,
+            FileMessageMetadata metadata, @NonNull UUID parentNodeId) {
+        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.getMimeType(), "source",
+                parentNodeId.toString());
         return layerClient.newMessagePart(mimeType, inputStream, metadata.getSize());
     }
 }
