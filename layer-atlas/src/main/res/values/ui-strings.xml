@@ -87,4 +87,5 @@
     <string name="response_message_status_text_deselected">%1$s deselected \"%2$s\"</string>
     <string name="response_message_status_text_with_label_deselected">%1$s deselected \"%2$s\" for \"%3$s\"</string>
 
+    <string name="product_message_model_default_currency">USD</string>
 </resources>

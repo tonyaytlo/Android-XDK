@@ -25,6 +25,7 @@ public class EmptyMessageContainer extends MessageContainer {
 
     public EmptyMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setCornerRadius(context.getResources().getDimension(R.dimen.ui_standard_message_container_corner_radius));
     }
 
     @Override

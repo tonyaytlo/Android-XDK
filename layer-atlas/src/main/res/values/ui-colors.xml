@@ -155,4 +155,17 @@
     <color name="ui_choice_button_text_disabled">@color/layer_ui_text_gray</color>
     <color name="ui_choice_button_text_pressed">@android:color/white</color>
     <color name="ui_choice_button_text_selected">@android:color/white</color>
+
+    <!-- ########## -->
+    <!-- Product Message View -->
+    <!-- ########## -->
+
+    <color name="ui_product_message_view_brand_text">@color/layer_ui_text_gray</color>
+
+    <!-- ########## -->
+    <!-- Product Option Item View -->
+    <!-- ########## -->
+
+    <color name="ui_product_option_item_view_title_text_color">@android:color/black</color>
+    <color name="ui_product_option_item_view_text_color">@color/layer_ui_text_gray</color>
 </resources>

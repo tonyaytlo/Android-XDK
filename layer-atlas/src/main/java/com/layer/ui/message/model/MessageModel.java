@@ -14,6 +14,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.ui.R;
 import com.layer.ui.identity.IdentityFormatter;
 import com.layer.ui.identity.IdentityFormatterImpl;
 import com.layer.ui.message.MessagePartUtils;
@@ -215,12 +216,14 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @NonNull
     @CallSuper
     public JsonObject getActionData() {
-        return  mAction!=null ? mAction.getData() : new JsonObject();
+        return mAction != null ? mAction.getData() : new JsonObject();
     }
 
     @Bindable
     @ColorRes
-    public abstract int getBackgroundColor();
+    public int getBackgroundColor() {
+        return R.color.transparent;
+    }
 
     @Bindable
     public boolean getHasMetadata() {

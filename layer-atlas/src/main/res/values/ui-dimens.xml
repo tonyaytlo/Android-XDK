@@ -19,6 +19,7 @@
     <!-- # Standard Dimensions                                                                 # -->
     <!-- ####################################################################################### -->
 
+    <dimen name="layer_ui_margin_x_large">16dp</dimen>
     <dimen name="layer_ui_margin_large">12dp</dimen>
     <dimen name="layer_ui_margin_medium">10dp</dimen>
     <dimen name="layer_ui_margin_small">8dp</dimen>
@@ -257,4 +258,25 @@
 
     <dimen name="ui_carousel_message_item_horizontal_margins">@dimen/layer_ui_margin_small</dimen>
     <dimen name="ui_carousel_message_item_vertical_margins">0dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Product Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_product_message_image_height">236dp</dimen>
+    <dimen name="ui_product_message_image_width">300dp</dimen>
+    <dimen name="ui_product_message_brand_text_size">12sp</dimen>
+    <dimen name="ui_product_message_name_text_size">14sp</dimen>
+    <dimen name="ui_product_message_name_price_size">14sp</dimen>
+    <dimen name="ui_product_message_quantity_price_size">14sp</dimen>
+    <dimen name="ui_product_message_description_size">14sp</dimen>
+    <dimen name="ui_product_message_max_width">300dp</dimen>
+    <dimen name="ui_product_message_field_max_width">300dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Product Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_product_options_view_item_text_size">14sp</dimen>
+    <dimen name="ui_product_options_view_item_title_min_width">60dp</dimen>
 </resources>
