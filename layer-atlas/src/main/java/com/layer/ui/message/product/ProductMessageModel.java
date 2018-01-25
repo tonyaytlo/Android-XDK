@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.ui.R;
 import com.layer.ui.message.choice.ChoiceMessageModel;
 import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.view.MessageView;
@@ -174,7 +175,9 @@ public class ProductMessageModel extends MessageModel {
                 return null;
             }
 
-            builder.fit(true)
+            builder.centerCrop(true)
+                    .resize(getContext().getResources().getDimensionPixelSize(R.dimen.ui_product_message_image_width),
+                            getContext().getResources().getDimensionPixelSize(R.dimen.ui_product_message_image_height))
                     .tag(getClass().getSimpleName());
 
             return builder.build();
