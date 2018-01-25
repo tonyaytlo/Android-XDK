@@ -27,6 +27,8 @@ public class MessageViewer extends FrameLayout {
     private MessageContainer mMessageContainer;
     private MessageView mMessageView;
 
+    private MessageModel mMessageModel;
+
     public MessageViewer(@NonNull Context context) {
         this(context, null);
     }
@@ -64,12 +66,18 @@ public class MessageViewer extends FrameLayout {
             throw new IllegalArgumentException("No mime type found in the root message part");
         }
 
+        if (mMessageModel != null) {
+            mMessageModel.setMessage(message, rootMessagePart);
+            return;
+        }
+
         MessageModel model = mMessageModelManager.getNewModel(mimeType);
         if (model == null) {
             if (Log.isLoggable(Log.DEBUG)) Log.d("No model found for mime type = " + mimeType);
 
             return;
         }
+        mMessageModel = model;
         model.setMessageModelManager(mMessageModelManager);
         model.setMessage(message, rootMessagePart);
 
