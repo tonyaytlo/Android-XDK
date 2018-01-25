@@ -371,7 +371,7 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
     @Override
     public int getItemViewType(int position) {
-        if ((mShouldShowHeader && mHeaderView != null && position == getHeaderPosition()) || getItem(position) == null) {
+        if (position == getHeaderPosition() && (mHeaderView != null || getItem(position) != null)) {
             return mBinderRegistry.VIEW_TYPE_HEADER;
         }
 

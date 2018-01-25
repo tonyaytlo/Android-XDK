@@ -64,6 +64,7 @@
     <dimen name="layer_ui_message_item_cell_padding_bottom">8dp</dimen>
     <dimen name="layer_ui_message_item_cell_padding_near">12dp</dimen>
     <dimen name="layer_ui_message_item_cell_padding_far">12dp</dimen>
+    <dimen name="layer_ui_message_item_footer_margin">30dp</dimen>
     <dimen name="layer_ui_message_item_cell_margin_far">@dimen/layer_ui_padding_normal</dimen>
 
     <dimen name="layer_ui_message_item_time_group_padding_top">14dp</dimen>
