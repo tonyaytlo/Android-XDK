@@ -48,35 +48,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     private int mNumberOfItemsPerSync = 20;
     private View mHeaderView;
 
-    private RecyclerView.AdapterDataObserver dataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-
-            //Check the default data source state of the Adapter, if HeaderView, FooterView are set on the Adapter
-            int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
-            if (mAdapter.getItemCount() == count && mAdapter.getHeaderView() == null) {
-                mAdapter.setShouldShowHeader(true);
-                mAdapter.setHeaderView(mHeaderView);
-            } else {
-                removeEmptyHeaderView();
-            }
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            removeEmptyHeaderView();
-            super.onItemRangeChanged(positionStart, itemCount, payload);
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            removeEmptyHeaderView();
-            super.onItemRangeInserted(positionStart, itemCount);
-        }
-    };
-
-
     public MessageItemsListView(Context context) {
         this(context, null);
     }
@@ -128,7 +99,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void onDestroy() {
         mMessagesRecyclerView.onDestroy();
         mLayerClient.unregisterEventListener(this);
-        mAdapter.unregisterAdapterDataObserver(dataObserver);
     }
 
     public void setHeaderView(View headerView) {
@@ -138,10 +108,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void setAdapter(final MessagesAdapter adapter) {
         mAdapter = adapter;
         mAdapter.setStyle(mMessageStyle);
-        if (!mAdapter.hasObservers()) {
-            mAdapter.registerAdapterDataObserver(dataObserver);
-            dataObserver.onChanged();
-        }
         mMessagesRecyclerView.setAdapter(adapter);
         setShouldShowAvatarInOneOnOneConversations(mShouldShowAvatarsInOneOnOneConversations);
 
