@@ -132,6 +132,12 @@ public class LocationMessageModel extends MessageModel {
         return mMetadata != null;
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        return getContext().getString(R.string.ui_location_message_preview_text);
+    }
+
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
             sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())

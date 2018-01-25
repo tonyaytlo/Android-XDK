@@ -139,6 +139,12 @@ public class ProductMessageModel extends MessageModel {
         return mMetadata != null ? mMetadata.getDescription() : null;
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        return getContext().getString(R.string.ui_product_message_preview_text);
+    }
+
     @Bindable
     @Nullable
     public String getPrice() {

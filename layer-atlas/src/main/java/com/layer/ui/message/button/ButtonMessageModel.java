@@ -143,6 +143,16 @@ public class ButtonMessageModel extends MessageModel {
         return null;
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        if (mMetadata != null) {
+            return getContext().getResources().getQuantityString(R.plurals.ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+        }
+
+        return "";
+    }
+
     @Override
     public String getActionEvent() {
         if (super.getActionEvent() != null) {
@@ -196,7 +206,7 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     public void onChoiceClicked(@NonNull String responseName, ChoiceMetadata choice,
-            boolean selected, Set<String> selectedChoices) {
+                                boolean selected, Set<String> selectedChoices) {
         sendResponse(responseName, choice, selected, selectedChoices);
 
         // TODO Use the correct models when dispatching (AND-1278)
@@ -206,7 +216,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @SuppressWarnings("WeakerAccess")
     void sendResponse(@NonNull String responseName, @NonNull ChoiceMetadata choice,
-            boolean selected, @NonNull Set<String> selectedChoices) {
+                      boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(
                 getLayerClient().getAuthenticatedUser());
         String statusText = getContext().getString(

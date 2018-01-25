@@ -2,12 +2,17 @@ package com.layer.ui.conversationitem;
 
 import android.content.Context;
 
+import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.ui.R;
+import com.layer.ui.identity.IdentityFormatter;
+import com.layer.ui.message.MessagePartUtils;
+import com.layer.ui.message.binder.BinderRegistry;
 import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.message.messagetypes.generic.GenericCellFactory;
+import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.util.Util;
 
 import java.text.DateFormat;
@@ -25,16 +30,22 @@ public class ConversationItemFormatter {
     protected static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
 
     protected Context mContext;
+    protected LayerClient mLayerClient;
+    protected IdentityFormatter mIdentityFormatter;
     protected DateFormat mTimeFormat;
     protected DateFormat mDateFormat;
-    // TODO : This is a bad place for this to exist. Need to find a better way in round 2
+    // TODO : This is a bad place for these to exist. Need to find a better way in round 2
     protected List<CellFactory> mCellFactories;
+    protected BinderRegistry mBinderRegistry;
 
-    public ConversationItemFormatter(Context context, DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
+    public ConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
         mContext = context;
+        mLayerClient = layerClient;
+        mIdentityFormatter = identityFormatter;
         mTimeFormat = timeFormat;
         mDateFormat = dateFormat;
         mCellFactories = cellFactories;
+        mBinderRegistry = new BinderRegistry(context, layerClient);
     }
 
     public void setMetaDataTitleOnConversation(Conversation conversation, String title) {
@@ -84,16 +95,38 @@ public class ConversationItemFormatter {
 
     public String getLastMessagePreview(Conversation conversation) {
         Message message = conversation.getLastMessage();
+        if (message == null) return "";
 
-        if (message!= null && mCellFactories != null && !mCellFactories.isEmpty()) {
-            for (CellFactory cellFactory : mCellFactories) {
-                if (cellFactory.isType(message)) {
-                    return cellFactory.getPreviewText(mContext, message);
+        if (!mBinderRegistry.isLegacyMessageType(message)) {
+            String previewText = null;
+            String modelIdentifier = MessagePartUtils.getRootMimeType(message);
+            if (modelIdentifier != null && mBinderRegistry.getMessageModelManager().hasModel(modelIdentifier)) {
+                MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(modelIdentifier);
+                model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
+                if (model != null) {
+                    model.setMessage(message);
+                    previewText = model.getPreviewText();
                 }
             }
-        }
 
-        return GenericCellFactory.getPreview(mContext, message);
+            previewText = previewText != null ? previewText : mContext.getString(R.string.ui_generic_message_preview_text);
+            boolean senderIsMe = message.getSender().equals(mLayerClient.getAuthenticatedUser());
+            if (senderIsMe) {
+                return mContext.getString(R.string.ui_preview_text_you_sent, previewText);
+            } else {
+                return mContext.getString(R.string.ui_preview_text_sent, mIdentityFormatter.getDisplayName(message.getSender()), previewText);
+            }
+        } else {
+            if (mCellFactories != null && !mCellFactories.isEmpty()) {
+                for (CellFactory cellFactory : mCellFactories) {
+                    if (cellFactory.isType(message)) {
+                        return cellFactory.getPreviewText(mContext, message);
+                    }
+                }
+            }
+
+            return GenericCellFactory.getPreview(mContext, message);
+        }
     }
 
     protected String formatTime(Date date) {

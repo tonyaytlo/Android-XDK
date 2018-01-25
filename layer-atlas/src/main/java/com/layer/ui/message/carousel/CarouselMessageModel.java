@@ -98,6 +98,17 @@ public class CarouselMessageModel extends MessageModel {
         return mMetadata.getAction().getData();
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        List<MessageModel> childMessageModels = getChildMessageModels();
+        if (childMessageModels != null) {
+            return getContext().getResources().getQuantityString(R.plurals.ui_carousel_message_preview_text, 0, childMessageModels.size());
+        }
+
+        return null;
+    }
+
     @Override
     public int getBackgroundColor() {
         return R.color.transparent;

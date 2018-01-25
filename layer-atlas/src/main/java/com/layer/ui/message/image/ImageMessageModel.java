@@ -127,6 +127,12 @@ public class ImageMessageModel extends MessageModel {
         }
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        return getContext().getString(R.string.ui_image_message_preview_text);
+    }
+
     /*
     * Private methods
     */

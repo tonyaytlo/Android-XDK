@@ -88,4 +88,30 @@
     <string name="response_message_status_text_with_label_deselected">%1$s deselected \"%2$s\" for \"%3$s\"</string>
 
     <string name="product_message_model_default_currency">USD</string>
+
+    <plurals name="ui_button_message_preview_text">
+        <item quantity="one">a button</item>
+        <item quantity="other">%d buttons</item>
+    </plurals>
+
+    <plurals name="ui_choice_message_preview_text">
+        <item quantity="one">a choice</item>
+        <item quantity="other">%d choices</item>
+    </plurals>
+
+    <plurals name="ui_carousel_message_preview_text">
+        <item quantity="one">an item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+
+    <string name="ui_product_message_preview_text">a product</string>
+    <string name="ui_file_message_preview_text">a file</string>
+    <string name="ui_image_message_preview_text">an image</string>
+    <string name="ui_location_message_preview_text">a location</string>
+    <string name="ui_link_message_preview_text">a link</string>
+    <string name="ui_text_message_preview_text">a message</string>
+    <string name="ui_generic_message_preview_text">a message</string>
+    <string name="ui_preview_text_you_sent">You: %s</string>
+    <string name="ui_preview_text_sent">%1$s: %2$s</string>
+
 </resources>

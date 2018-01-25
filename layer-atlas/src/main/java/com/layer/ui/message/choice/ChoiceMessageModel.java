@@ -111,6 +111,15 @@ public class ChoiceMessageModel extends MessageModel {
     }
 
     @Nullable
+    @Override
+    public String getPreviewText() {
+        if (mMetadata != null && mMetadata.getChoices().size() > 0) {
+            return getContext().getResources().getQuantityString(R.plurals.ui_choice_message_preview_text, 0, mMetadata.getChoices().size());
+        }
+        return null;
+    }
+
+    @Nullable
     @Bindable
     public ChoiceMessageMetadata getChoiceMessageMetadata() {
         return mMetadata;

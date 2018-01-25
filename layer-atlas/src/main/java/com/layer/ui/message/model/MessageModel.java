@@ -235,6 +235,10 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @Bindable
     public abstract boolean getHasContent();
 
+    @Bindable
+    @Nullable
+    public abstract String getPreviewText();
+
     private void incrementDownloadingPartCounter() {
         mDownloadingPartCounter.getAndIncrement();
     }

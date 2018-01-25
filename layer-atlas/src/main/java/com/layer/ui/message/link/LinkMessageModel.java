@@ -115,6 +115,12 @@ public class LinkMessageModel extends MessageModel {
         return mLinkMessageMetadata != null;
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        return getContext().getString(R.string.ui_link_message_preview_text);
+    }
+
     public LinkMessageMetadata getMetadata() {
         return mLinkMessageMetadata;
     }

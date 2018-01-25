@@ -28,9 +28,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ConversationItemTestActivity extends Activity {
 
@@ -45,7 +43,7 @@ public class ConversationItemTestActivity extends Activity {
 
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
-        mConversationItemFormatter = new ConversationItemFormatter(this, dateFormat, timeFormat, getCellFactories(layerClient));
+        mConversationItemFormatter = new ConversationItemFormatter(this, layerClient, dateFormat, timeFormat, getCellFactories(layerClient));
 
         IdentityFormatter identityFormatter = new IdentityFormatterImpl(getApplicationContext());
         Identity authenticatedUser = layerClient.getAuthenticatedUser();

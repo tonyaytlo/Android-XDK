@@ -2,6 +2,7 @@ package com.layer.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
@@ -15,6 +16,7 @@ import com.layer.ui.message.view.MessageView;
 public class TextMessageModel extends MessageModel {
 
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
+    private static final int PREVIEW_MAX_LENGTH = 100;
     private final JsonParser mJsonParser;
 
     private String mText;
@@ -104,6 +106,16 @@ public class TextMessageModel extends MessageModel {
     @Override
     public boolean getHasContent() {
         return !TextUtils.isEmpty(mText);
+    }
+
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        if (getHasContent()) {
+            return mText.length() > PREVIEW_MAX_LENGTH ? mText.substring(0, PREVIEW_MAX_LENGTH) : mText;
+        } else {
+            return getContext().getString(R.string.ui_text_message_preview_text);
+        }
     }
 
     @Override

@@ -144,6 +144,12 @@ public class FileMessageModel extends MessageModel {
         return jsonObject;
     }
 
+    @Nullable
+    @Override
+    public String getPreviewText() {
+        return getContext().getString(R.string.ui_file_message_preview_text);
+    }
+
     @Override
     public int getBackgroundColor() {
         return R.color.layer_ui_color_primary_gray;
