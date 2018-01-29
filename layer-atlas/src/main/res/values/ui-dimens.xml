@@ -71,6 +71,7 @@
     <dimen name="layer_ui_message_item_time_group_padding_bottom">7dp</dimen>
     <dimen name="layer_ui_message_item_receipt_margin">12dp</dimen>
     <dimen name="layer_ui_message_item_sender_margin_bottom">1dp</dimen>
+    <dimen name="layer_ui_message_item_group_day_and_time_margin">1dp</dimen>
     <dimen name="layer_ui_message_cluster_space">2dp</dimen>
     <dimen name="layer_ui_message_cluster_space_gap">8dp</dimen>
     <dimen name="layer_ui_message_item_padding">2dp</dimen>

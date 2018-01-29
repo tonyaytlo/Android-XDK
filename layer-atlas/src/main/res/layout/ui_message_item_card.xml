@@ -50,6 +50,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.timeGroupDay}"
+                android:layout_marginRight="@dimen/layer_ui_message_item_group_day_and_time_margin"
+                android:layout_marginEnd="@dimen/layer_ui_message_item_group_day_and_time_margin"
                 android:textColor="@color/layer_ui_text_gray"
                 android:textSize="@dimen/layer_ui_text_size_message_item_metadata"
                 android:textStyle="bold"/>
@@ -58,6 +60,8 @@
                 android:id="@+id/time_group_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/layer_ui_message_item_group_day_and_time_margin"
+                android:layout_marginStart="@dimen/layer_ui_message_item_group_day_and_time_margin"
                 android:text="@{viewModel.groupTime}"
                 android:textColor="@color/layer_ui_text_gray"
                 android:textSize="@dimen/layer_ui_text_size_message_item_metadata"/>
