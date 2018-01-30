@@ -178,7 +178,7 @@ public class ButtonMessageModel extends MessageModel {
             return contentModel.getActionData();
         }
 
-        return null;
+        return new JsonObject();
     }
 
     @Override

@@ -95,7 +95,7 @@ public class TextMessageModel extends MessageModel {
             return mCustomData;
         }
 
-        return null;
+        return new JsonObject();
     }
 
     @Override
