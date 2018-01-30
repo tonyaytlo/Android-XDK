@@ -8,7 +8,6 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.message.MessageCell;
-import com.layer.ui.message.MessageItemStatusViewModel;
 import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.message.button.ButtonMessageModel;
 import com.layer.ui.message.carousel.CarouselMessageModel;
@@ -21,6 +20,8 @@ import com.layer.ui.message.messagetypes.CellFactory;
 import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.model.MessageModelManager;
 import com.layer.ui.message.product.ProductMessageModel;
+import com.layer.ui.message.response.ResponseMessageModel;
+import com.layer.ui.message.status.StatusMessageModel;
 import com.layer.ui.message.text.TextMessageModel;
 
 import java.util.ArrayList;
@@ -98,8 +99,8 @@ public class BinderRegistry {
 
     public boolean isStatusMessageType(Message message) {
         String rootMimeType = MessagePartUtils.getRootMimeType(message);
-        return MessageItemStatusViewModel.STATUS_ROOT_MIME_TYPE.equals(rootMimeType)
-                || MessageItemStatusViewModel.RESPONSE_ROOT_MIME_TYPE.equals(rootMimeType);
+        return StatusMessageModel.MIME_TYPE.equals(rootMimeType)
+                || ResponseMessageModel.MIME_TYPE.equals(rootMimeType);
     }
 
     public int getViewType(Message message) {
@@ -205,6 +206,7 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(ChoiceMessageModel.MIME_TYPE, ChoiceMessageModel.class);
         mMessageModelManager.registerModel(CarouselMessageModel.MIME_TYPE, CarouselMessageModel.class);
         mMessageModelManager.registerModel(ProductMessageModel.MIME_TYPE, ProductMessageModel.class);
+        mMessageModelManager.registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
     }
 
     @SuppressWarnings("unused")

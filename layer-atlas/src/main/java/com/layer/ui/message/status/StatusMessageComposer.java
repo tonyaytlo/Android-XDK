@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
-import com.layer.ui.message.MessageItemStatusViewModel;
 import com.layer.ui.message.MessagePartUtils;
 import com.layer.ui.util.json.AndroidFieldNamingStrategy;
 
@@ -34,10 +33,10 @@ public class StatusMessageComposer {
                 .create();
 
         String statusMimeType = MessagePartUtils.getAsRoleWithParentId(
-                MessageItemStatusViewModel.STATUS_ROOT_MIME_TYPE,
+                StatusMessageModel.MIME_TYPE,
                 MIME_TYPE_ROLE,
                 parentNodeId.toString());
-        StatusMetadata statusMetadata = new StatusMetadata();
+        StatusMessageMetadata statusMetadata = new StatusMessageMetadata();
         statusMetadata.setText(status);
         return layerClient.newMessagePart(statusMimeType, gson.toJson(statusMetadata).getBytes());
     }
