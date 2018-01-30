@@ -22,6 +22,7 @@ import com.layer.ui.message.model.MessageModelManager;
 import com.layer.ui.message.product.ProductMessageModel;
 import com.layer.ui.message.response.ResponseMessageModel;
 import com.layer.ui.message.status.StatusMessageModel;
+import com.layer.ui.message.receipt.ReceiptMessageModel;
 import com.layer.ui.message.text.TextMessageModel;
 
 import java.util.ArrayList;
@@ -207,6 +208,7 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(CarouselMessageModel.MIME_TYPE, CarouselMessageModel.class);
         mMessageModelManager.registerModel(ProductMessageModel.MIME_TYPE, ProductMessageModel.class);
         mMessageModelManager.registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
+        mMessageModelManager.registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
     }
 
     @SuppressWarnings("unused")

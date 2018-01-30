@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,6 +14,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.ui.R;
 import com.layer.ui.message.choice.ChoiceMessageModel;
+import com.layer.ui.message.choice.ChoiceMetadata;
 import com.layer.ui.message.model.MessageModel;
 import com.layer.ui.message.view.MessageView;
 import com.layer.ui.util.imagecache.ImageCacheWrapper;
@@ -26,6 +28,7 @@ import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Currency;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -192,6 +195,11 @@ public class ProductMessageModel extends MessageModel {
         return null;
     }
 
+    @Nullable
+    public ProductMessageMetadata getMetadata() {
+        return mMetadata;
+    }
+
     @NonNull
     @Bindable
     public List<ChoiceMessageModel> getOptions() {
@@ -207,5 +215,32 @@ public class ProductMessageModel extends MessageModel {
         }
 
         return mOptions;
+    }
+
+    @Nullable
+    public String getSelectedOptionsAsCommaSeparatedList() {
+        List<String> productTexts = new ArrayList<>();
+        List<ChoiceMessageModel> options = getOptions();
+        if (options != null && !options.isEmpty()) {
+            for (ChoiceMessageModel option : options) {
+                Iterator<String> iterator = option.getSelectedChoices() != null ? option.getSelectedChoices().iterator() : null;
+                // Use just the first choice for now, the remaining will be displayed in an
+                // expanded product message view, to be built later.
+                String choiceId = iterator != null && iterator.hasNext() ? iterator.next() : null;
+                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().getChoices() : null;
+
+                if (choices != null && choices.size() > 0) {
+                    for (ChoiceMetadata choice : choices) {
+                        if (choice.getId().equals(choiceId)) {
+                            productTexts.add(choice.getText());
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return !productTexts.isEmpty() ? TextUtils.join(", ", productTexts) : null;
     }
 }

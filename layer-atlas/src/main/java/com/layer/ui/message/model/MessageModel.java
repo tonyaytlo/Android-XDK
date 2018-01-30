@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak {
+    protected static final String ROLE_ROOT = "root";
+
     private final AtomicInteger mDownloadingPartCounter;
 
     private IdentityFormatter mIdentityFormatter;
@@ -38,6 +40,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     private final LayerClient mLayerClient;
 
     private Message mMessage;
+    private String mRole;
     private MessagePart mRootMessagePart;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
@@ -84,6 +87,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
                 }
             }
 
+            setRole(ROLE_ROOT);
             // Deal with child parts
             processChildParts();
         }
@@ -93,27 +97,29 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         if (mRootMessagePart != null) {
             mChildMessageParts = MessagePartUtils.getChildParts(mMessage, mRootMessagePart);
 
-            if (mChildMessageParts != null) {
-                for (MessagePart childMessagePart : mChildMessageParts) {
-                    if (childMessagePart.isContentReady()) {
-                        parse(childMessagePart);
-                    } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
-                        download(childMessagePart);
-                    }
+            for (MessagePart childMessagePart : mChildMessageParts) {
+                if (childMessagePart.isContentReady()) {
+                    parse(childMessagePart);
+                } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
+                    download(childMessagePart);
+                }
 
-                    if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
-                        mResponseSummaryPart = childMessagePart;
-                        processResponseSummaryPart(childMessagePart);
-                        continue;
-                    }
+                if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
+                    mResponseSummaryPart = childMessagePart;
+                    processResponseSummaryPart(childMessagePart);
+                    continue;
+                }
 
-                    String mimeType = MessagePartUtils.getMimeType(childMessagePart);
-                    if (mimeType == null) continue;
-                    MessageModel childModel = mMessageModelManager.getNewModel(mimeType);
-                    if (childModel != null) {
-                        mChildMessageModels.add(childModel);
-                        childModel.setMessageModelManager(mMessageModelManager);
-                        childModel.setMessage(mMessage, childMessagePart);
+                String mimeType = MessagePartUtils.getMimeType(childMessagePart);
+                if (mimeType == null) continue;
+                MessageModel childModel = mMessageModelManager.getNewModel(mimeType);
+                if (childModel != null) {
+                    mChildMessageModels.add(childModel);
+                    childModel.setMessageModelManager(mMessageModelManager);
+                    childModel.setMessage(mMessage, childMessagePart);
+                    String role = MessagePartUtils.getRole(childMessagePart);
+                    if (role != null) {
+                        childModel.setRole(role);
                     }
                 }
             }
@@ -238,6 +244,37 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @Bindable
     @Nullable
     public abstract String getPreviewText();
+
+    public boolean isRoleRoot() {
+        return ROLE_ROOT.equals(mRole);
+    }
+
+    @Nullable
+    public String getRole() {
+        return mRole;
+    }
+
+    public void setRole(@NonNull String role) {
+        mRole = role;
+    }
+
+    @NonNull
+    public List<MessageModel> getChildMessageModelsWithRole(@NonNull String role) {
+        List<MessageModel> models = new ArrayList<>();
+        if (role.equals(mRole)) {
+            models.add(this);
+        }
+
+        if (mChildMessageModels != null && !mChildMessageModels.isEmpty()) {
+            for (MessageModel childModel : mChildMessageModels) {
+                if (role.equals(childModel.getRole())) {
+                    models.add(childModel);
+                }
+            }
+        }
+
+        return models;
+    }
 
     private void incrementDownloadingPartCounter() {
         mDownloadingPartCounter.getAndIncrement();

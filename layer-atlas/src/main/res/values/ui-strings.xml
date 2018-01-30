@@ -105,6 +105,7 @@
     </plurals>
 
     <string name="ui_product_message_preview_text">a product</string>
+    <string name="ui_receipt_message_preview_text">a receipt</string>
     <string name="ui_file_message_preview_text">a file</string>
     <string name="ui_image_message_preview_text">an image</string>
     <string name="ui_location_message_preview_text">a location</string>
@@ -115,4 +116,11 @@
     <string name="ui_preview_text_you_sent">You: %s</string>
     <string name="ui_preview_text_sent">%1$s: %2$s</string>
 
+    <string name="ui_receipt_message_payment_method_title">Paid with</string>
+    <string name="ui_receipt_message_shipping_address_title">Ship to</string>
+    <string name="ui_receipt_message_billing_address_title">Billing Address</string>
+    <string name="ui_receipt_message_total_title">Total</string>
+
+    <string name="ui_receipt_product_detail_options">Options: %s</string>
+    <string name="ui_receipt_product_detail_quantity">Quantity: %d</string>
 </resources>

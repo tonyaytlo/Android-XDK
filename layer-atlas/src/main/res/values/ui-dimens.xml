@@ -281,4 +281,21 @@
 
     <dimen name="ui_product_options_view_item_text_size">14sp</dimen>
     <dimen name="ui_product_options_view_item_title_min_width">60dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Receipt Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="ui_receipt_message_view_detail_title_size">12sp</dimen>
+    <dimen name="ui_receipt_message_view_detail_value_size">14sp</dimen>
+    <dimen name="ui_receipt_message_view_max_width">450dp</dimen>
+    <dimen name="ui_receipt_message_view_min_width">300dp</dimen>
+    <dimen name="ui_receipt_message_view_total_title_size">14sp</dimen>
+    <dimen name="ui_receipt_message_view_total_value_size">14sp</dimen>
+
+    <dimen name="ui_receipt_message_product_detail_image_width">50dp</dimen>
+    <dimen name="ui_receipt_message_product_detail_image_height">50dp</dimen>
+    <dimen name="ui_receipt_message_product_title_text_size">14sp</dimen>
+    <dimen name="ui_receipt_message_product_subtitle_text_size">12sp</dimen>
+    <dimen name="ui_receipt_message_product_quantity_text_size">11sp</dimen>
 </resources>

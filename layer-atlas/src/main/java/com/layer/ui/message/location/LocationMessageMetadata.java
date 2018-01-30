@@ -146,6 +146,7 @@ public class LocationMessageMetadata {
         }
 
         if (mCity != null) {
+            if (formattedAddress.length() > 0) formattedAddress.append("\n");
             formattedAddress.append(mCity).append(" ");
         }
 
@@ -158,6 +159,7 @@ public class LocationMessageMetadata {
         }
 
         if (mCountry != null) {
+            if (formattedAddress.length() > 0) formattedAddress.append("\n");
             formattedAddress.append("\n").append(mCountry);
         }
 

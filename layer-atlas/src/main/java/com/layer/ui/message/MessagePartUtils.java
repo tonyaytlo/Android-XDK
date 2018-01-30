@@ -25,7 +25,7 @@ public class MessagePartUtils {
     private static final String ROLE_ROOT = "root";
     private static final String ROLE_RESPONSE_SUMMARY = "response_summary";
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
-    public static final String PARAMETER_ITEM_ORDER = "item-order";
+    private static final String PARAMETER_ITEM_ORDER = "item-order";
 
     @Nullable
     public static String getMimeType(@NonNull MessagePart messagePart) {

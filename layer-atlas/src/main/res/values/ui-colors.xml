@@ -164,4 +164,11 @@
 
     <color name="ui_product_option_item_view_title_text_color">@android:color/black</color>
     <color name="ui_product_option_item_view_text_color">@color/layer_ui_text_gray</color>
+
+    <!-- ########## -->
+    <!-- Receipt Message Item View -->
+    <!-- ########## -->
+
+    <color name="ui_receipt_message_view_detail_title_text">@color/layer_ui_text_gray</color>
+    <color name="ui_receipt_message_view_detail_value_text">@color/layer_ui_text_black</color>
 </resources>
