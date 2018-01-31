@@ -42,6 +42,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     private Message mMessage;
     private String mRole;
     private MessagePart mRootMessagePart;
+    private MessageModel mParentMessageModel;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
     private MessagePart mResponseSummaryPart;
@@ -114,6 +115,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
                 if (mimeType == null) continue;
                 MessageModel childModel = mMessageModelManager.getNewModel(mimeType);
                 if (childModel != null) {
+                    childModel.setParentMessageModel(this);
                     mChildMessageModels.add(childModel);
                     childModel.setMessageModelManager(mMessageModelManager);
                     childModel.setMessage(mMessage, childMessagePart);
@@ -146,6 +148,15 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     @NonNull
     protected MessagePart getRootMessagePart() {
         return mRootMessagePart;
+    }
+
+    @Nullable
+    public MessageModel getParentMessageModel() {
+        return mParentMessageModel;
+    }
+
+    public void setParentMessageModel(@NonNull MessageModel parent) {
+        mParentMessageModel = parent;
     }
 
     @Nullable

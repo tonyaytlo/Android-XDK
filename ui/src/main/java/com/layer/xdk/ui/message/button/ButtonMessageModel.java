@@ -210,8 +210,16 @@ public class ButtonMessageModel extends MessageModel {
                                 boolean selected, Set<String> selectedChoices) {
         sendResponse(choiceData, choice, selected, selectedChoices);
 
-        // TODO Use the correct models when dispatching (AND-1278)
-        ActionHandlerRegistry.dispatchChoiceSelection(getContext(), choice, null, null);
+        // Get root model
+        MessageModel root = this;
+        while (true) {
+            MessageModel parent = root.getParentMessageModel();
+            if (parent == null) {
+                break;
+            }
+            root = parent;
+        }
+        ActionHandlerRegistry.dispatchChoiceSelection(getContext(), choice, this, root);
 
     }
 
