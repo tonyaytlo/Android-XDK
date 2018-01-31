@@ -17,6 +17,9 @@ android {
         minSdkVersion 14
         targetSdkVersion 26
         versionName = "${version}"
+
+        consumerProguardFiles 'proguard-rules.pro'
+
         multiDexEnabled true
         testInstrumentationRunner "com.layer.xdk.ui.TestButlerRunner"
     }
