@@ -1,54 +1,54 @@
-# Layer UI
+# Android XDK
 
 ## <a name="overview"></a>Overview
 
-Layer UI is an open source framework of customizable UI components for use with the Layer SDK designed to get messaging tested and integrated quickly.  This repository contains the Layer UI library.  For a fully-featured messaging app, see the open source [Atlas Messenger](https://github.com/layerhq/Atlas-Android-Messenger) project, which uses this Layer UI library and the Layer SDK.
+The Android XDK is an open source framework of customizable UI components for use with the Layer SDK designed to get messaging tested and integrated quickly.  This repository contains the Android XDK library.  For a fully-featured messaging app, see the open source [Android XDK Messenger](https://github.com/layerhq/Android-XDK-Messenger) project, which uses this Android XDK library and the Layer SDK.
 
 #### Requirements
 
-Layer UI requires Android API Level >= 14 (OS v4.0). The Layer SDK version requirements for each release are tightly coupled. See the release notes for details about specifics.
+The Android XDK requires Android API Level >= 14 (OS v4.0). The Layer SDK version requirements for each release are tightly coupled. See the release notes for details about specifics.
 
 ## <a name="key_concepts"></a>Key Concepts
-With Layer UI, Messages have types.  One type might be rich text, and another might be a map location or photo.  Anything that can be packaged into a set of MIME Types and data can be represented by Layer UI.
+With the XDK UI, Messages have types.  One type might be rich text, and another might be a map location or photo.  Anything that can be packaged into a set of MIME Types and data can be represented the XDK.
 
-Under the hood, <a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/MessageSender.java">MessageSenders</a> send individual Message types, and <a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/CellFactory.java">CellFactories</a> render them.  Additional Message types can be added to your app by extending these classes.  For a list of default types, see the <a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes">messagetypes</a> subpackage.
+Under the hood, <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/MessageSender.java">MessageSenders</a> send individual Message types, and <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/CellFactory.java">CellFactories</a> render them.  Additional Message types can be added to your app by extending these classes.  For a list of default types, see the <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes">messagetypes</a> subpackage.
 
 ## <a name="api_quickstart"></a>API Quickstart
-The Layer UI library is located in the `layer-atlas` directory.  The table below details the most important classes in Layer UI and is hyperlinked directly to the current java file.
+The XDK UI library is located in the `ui` directory.  The table below details the most important classes in the XDK UI and is hyperlinked directly to the current java file.
 
 <table>
     <tr><th colspan="2" style="text-align:center;">Views</th></tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListView.java">ConversationItemsListView</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationItemsListView.java">ConversationItemsListView</a></td>
         <td>A list of Conversations</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/message/MessageItemsListView.java">MessageItemsListView</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/message/MessageItemsListView.java">MessageItemsListView</a></td>
         <td>A list of Messages within a Conversation</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/composebar/ComposeBar.java">ComposeBar</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/composebar/ComposeBar.java">ComposeBar</a></td>
         <td>A View used to compose and send Messages</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/AddressBar.java">AddressBar</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/AddressBar.java">AddressBar</a></td>
         <td>Participant selection with dynamic filtering</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/TypingIndicatorLayout.java">TypingIndicatorLayout</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">TypingIndicatorLayout</a></td>
         <td>Displays TypingIndicator information for a Conversation</td>
     </tr>
     <tr><th colspan="2" style="text-align:center;">Factories and Senders</th></tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/CellFactory.java">CellFactory</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/CellFactory.java">CellFactory</a></td>
         <td>Classifies, parses, and renders Messages</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/MessageSender.java">MessageSender</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/MessageSender.java">MessageSender</a></td>
         <td>Sends Messages</td>
     </tr>
     <tr>
-        <td><a href="layer-atlas/src/main/java/com/layer/ui/TypingIndicatorLayout.java">TypingIndicatorLayout. TypingIndicatorFactory</a></td>
+        <td><a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">TypingIndicatorLayout. TypingIndicatorFactory</a></td>
         <td>Renders typing indicators</td>
     </tr>
 </table>
@@ -59,30 +59,30 @@ Add the following to the `build.gradle`:
 ```groovy
 repositories {
     maven { url "https://raw.githubusercontent.com/layerhq/releases-android/master/releases/" }
-    maven { url "https://raw.githubusercontent.com/layerhq/Atlas-Android/master/releases/" }
+    maven { url "https://raw.githubusercontent.com/layerhq/Android-XDK/master/releases/" }
 }
 
 dependencies {
-    compile 'com.layer.atlas:layer-atlas:0.4.6'
+    compile 'com.layer.xdk:xdk:1.0.0-pre1.0'
 }
 ```
 
 ### <a name="libraries"></a>Libraries
 
-Layer UI uses [Picasso](https://github.com/square/picasso) for image caching, resizing, and processing, and [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view) for image its in-app lightbox.  Other dependencies include the Android `recyclerview`, `appcompat`, and `design` libraries.
+The XDK UI uses [Picasso](https://github.com/square/picasso) for image caching, resizing, and processing, and [Subsampling Scale Image View](https://github.com/davemorrissey/subsampling-scale-image-view) for image its in-app lightbox.  Other dependencies include the Android `recyclerview`, `appcompat`, and `design` libraries.
 
 ## <a name="component_details"></a>Component Details
-Layer UI is divided into five basic `View` components, typically presented on a screen with a user's [conversations](#conversations), a screen with [messages](#messages) within a conversation, and a component that lets the user select [participants](#participants).
+The XDK UI is divided into five basic `View` components, typically presented on a screen with a user's [conversations](#conversations), a screen with [messages](#messages) within a conversation, and a component that lets the user select [participants](#participants).
 
 ### <a name="conversations"></a>Conversations
 
 #### ConversationItemsListView
 
-The <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListView.java">ConversationItemsListView</a> is a list of Conversations.
+The <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationItemsListView.java">ConversationItemsListView</a> is a list of Conversations.
 
 ##### XML
 
-It uses databinding which takes an object of <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListViewModel.java">ConversationItemsListViewModel</a> as a ViewModel. The ConversationItemsListViewModel creates an object of <a href="layer-atlas/src/main/java/com/layer/ui/adapters/ConversationItemsAdapter.java">ConversationItemsAdapter</a> which is passed as the Adapter in the xml.
+It uses databinding which takes an object of <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationItemsListViewModel.java">ConversationItemsListViewModel</a> as a ViewModel. The ConversationItemsListViewModel creates an object of <a href="ui/src/main/java/com/layer/xdk/ui/adapters/ConversationItemsAdapter.java">ConversationItemsAdapter</a> which is passed as the Adapter in the xml.
 
         mConversationItemsAdapter = new ConversationItemsAdapter(context, layerClient, query,
 
@@ -114,15 +114,15 @@ Create an Object of ConversationItemsListViewModel and bind it to the Conversati
         ConversationItemsListViewModel conversationItemsListViewModel = new ConversationItemsListViewModel(this, App.getLayerClient(), Util.getConversationItemFormatter(), Util.getImageCacheWrapper(),new IdentityFormatterImpl());
         binding.setViewModel(conversationItemsListViewModel);
 ```
-An item click listener can be set via <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationItemsListViewModel.java#L66">`ConversationItemsListViewModel#setItemClickListener`</a>
+An item click listener can be set via <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationItemsListViewModel.java#L66">`ConversationItemsListViewModel#setItemClickListener`</a>
 
 ### <a name="messages"></a>Messages
 
 ### MessageItemsListView
 
-The <a href="layer-atlas/src/main/java/com/layer/ui/message/MessageItemsListView.java">MessageItemsListView</a>
-is list of Messages, rendered by <a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/CellFactory.java">CellFactories</a>. MessageItemsListView
-is used in <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationView.java">ConversationView</a>
+The <a href="ui/src/main/java/com/layer/xdk/ui/message/MessageItemsListView.java">MessageItemsListView</a>
+is list of Messages, rendered by <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/CellFactory.java">CellFactories</a>. MessageItemsListView
+is used in <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationView.java">ConversationView</a>
 
 ##### XML
 
@@ -155,12 +155,12 @@ is used in <a href="layer-atlas/src/main/java/com/layer/ui/conversation/Conversa
 
 #### ComposeBar
 
-The <a href="layer-atlas/src/main/java/com/layer/ui/composebar/ComposeBar.java">ComposeBar</a> is a text entry area for composing messages and a menu of <a href="layer-atlas/src/main/java/com/layer/ui/message/messagetypes/AttachmentSender.java">AttachmentSenders</a>.
+The <a href="ui/src/main/java/com/layer/xdk/ui/composebar/ComposeBar.java">ComposeBar</a> is a text entry area for composing messages and a menu of <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/AttachmentSender.java">AttachmentSenders</a>.
 
 #### ConversationView
 
-The <a href="layer-atlas/src/main/java/com/layer/ui/conversation/ConversationView.java">ConversationView</a> is comprised of a <a href="layer-atlas/src/main/java/com/layer/ui/message/MessageItemsListView.java">MessageItemsListView</a>
-and a <a href="layer-atlas/src/main/java/com/layer/ui/composebar/ComposeBar.java">ComposeBar</a>.
+The <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationView.java">ConversationView</a> is comprised of a <a href="ui/src/main/java/com/layer/xdk/ui/message/MessageItemsListView.java">MessageItemsListView</a>
+and a <a href="ui/src/main/java/com/layer/xdk/ui/composebar/ComposeBar.java">ComposeBar</a>.
 
 ```xml
     <layout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -225,7 +225,7 @@ and a <a href="layer-atlas/src/main/java/com/layer/ui/composebar/ComposeBar.java
 
 #### TypingIndicator
 
-The <a href="layer-atlas/src/main/java/com/layer/ui/TypingIndicatorLayout.java">TypingIndicator</a> presents the user with active typists.
+The <a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">TypingIndicator</a> presents the user with active typists.
 
 ##### XML
 
@@ -251,7 +251,7 @@ The <a href="layer-atlas/src/main/java/com/layer/ui/TypingIndicatorLayout.java">
 ```
 
 ### <a name="Message Types"></a>Message Types
-By default, Layer UI supports the following types of messages.
+By default, the XDK UI supports the following types of messages.
 
 | Type            | Description |
 | ----------------|-------------|
@@ -297,9 +297,9 @@ An application server can directly upload user information to Layer server. This
 ```
 
 #### AvatarView
-`AvatarView`can be used to show information about one user, or a cluster of users. `AvatarView` uses <a href="layer-atlas/src/main/java/com/layer/ui/util/imagecache/ImageCacheWrapper.java">ImageCacheWrapper</a> to abstract any image caching & loading library you wish to use. An implementation of ImageCacheWrapper is available in layer-ui that uses [Picasso](https://github.com/square/picasso).
+`AvatarView`can be used to show information about one user, or a cluster of users. `AvatarView` uses <a href="ui/src/main/java/com/layer/xdk/ui/util/imagecache/ImageCacheWrapper.java">ImageCacheWrapper</a> to abstract any image caching & loading library you wish to use. An implementation of ImageCacheWrapper is available in layer-ui that uses [Picasso](https://github.com/square/picasso).
 
-<a href="layer-atlas/src/main/java/com/layer/ui/util/imagecache/PicassoImageCacheWrapper.java">PicassoImageCacheWrapper</a>
+<a href="ui/src/main/java/com/layer/xdk/ui/util/imagecache/PicassoImageCacheWrapper.java">PicassoImageCacheWrapper</a>
 
 ##### XML
 
@@ -324,15 +324,15 @@ An application server can directly upload user information to Layer server. This
 ```
 
 ## <a name="contributing"></a>Contributing
-Layer UI is an Open Source project maintained by Layer. Feedback and contributions are always welcome and the maintainers try to process patches as quickly as possible. Feel free to open up a Pull Request or Issue on Github.
+The Android XDK is an Open Source project maintained by Layer. Feedback and contributions are always welcome and the maintainers try to process patches as quickly as possible. Feel free to open up a Pull Request or Issue on Github.
 
 ## <a name="license"></a>License
 
-Layer UI is licensed under the terms of the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). Please see the [LICENSE](LICENSE) file for full details.
+The Android XDK is licensed under the terms of the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html). Please see the [LICENSE](LICENSE) file for full details.
 
 ## <a name="contact"></a>Contact
 
-Layer UI was developed in San Francisco by the Layer team. If you have any technical questions or concerns about this project feel free to reach out to [Layer Support](mailto:support@layer.com).
+The Android XDK was developed in San Francisco by the Layer team. If you have any technical questions or concerns about this project feel free to reach out to [Layer Support](mailto:support@layer.com).
 
 ### <a name="credits"></a>Credits
 
