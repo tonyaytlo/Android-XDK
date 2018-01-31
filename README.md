@@ -2,7 +2,7 @@
 
 ## <a name="overview"></a>Overview
 
-The Android XDK is an open source framework of customizable UI components for use with the Layer SDK designed to get messaging tested and integrated quickly.  This repository contains the Android XDK library.  For a fully-featured messaging app, see the open source [Android XDK Messenger](https://github.com/layerhq/Android-XDK-Messenger) project, which uses this Android XDK library and the Layer SDK.
+The Android XDK is an open source framework of customizable UI components built on top of Layer SDK to get messaging tested and integrated quickly.  This repository contains the Android XDK library.  For a fully-featured messaging app, see the open source [Android XDK Messenger](https://github.com/layerhq/Android-XDK-Messenger) project, which uses this Android XDK library and the Layer SDK.
 
 #### Requirements
 
