@@ -5,9 +5,9 @@
 
     <data>
 
-        <import type="com.layer.ui.message.link.LinkMessageModel"/>
+        <import type="com.layer.xdk.ui.message.link.LinkMessageModel"/>
 
-        <import type="com.layer.ui.message.link.LinkMessageMetadata"/>
+        <import type="com.layer.xdk.ui.message.link.LinkMessageMetadata"/>
 
         <variable
             name="viewModel"

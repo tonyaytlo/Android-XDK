@@ -22,7 +22,7 @@
 
         <variable
             name="viewModel"
-            type="com.layer.ui.message.MessageItemLegacyViewModel" />
+            type="com.layer.xdk.ui.message.MessageItemLegacyViewModel" />
     </data>
 
     <RelativeLayout
@@ -38,7 +38,7 @@
             android:id="@+id/messageFooterAnimation"
             android:visibility="@{viewModel.messageFooterAnimationVisibility ? View.VISIBLE : View.GONE}"
             android:orientation="horizontal">
-            <com.layer.ui.avatar.AvatarView
+            <com.layer.xdk.ui.avatar.AvatarView
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/layer_ui_avatar_width"
                 android:layout_height="@dimen/layer_ui_avatar_height"

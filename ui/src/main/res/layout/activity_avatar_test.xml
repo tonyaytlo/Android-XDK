@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.layer.ui.presence.PresenceView
+    <com.layer.xdk.ui.presence.PresenceView
         android:id="@+id/test_presence"
         android:layout_width="@dimen/layer_ui_avatar_presence_height"
         android:layout_height="@dimen/layer_ui_avatar_presence_height" />
 
-    <com.layer.ui.avatar.AvatarView
+    <com.layer.xdk.ui.avatar.AvatarView
         android:id="@+id/test_avatar"
         android:layout_width="@dimen/layer_ui_avatar_width"
         android:layout_height="@dimen/layer_ui_avatar_height" />

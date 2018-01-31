@@ -19,9 +19,9 @@
 
     <data>
 
-        <import type="com.layer.ui.fourpartitem.FourPartItemViewModel"/>
+        <import type="com.layer.xdk.ui.fourpartitem.FourPartItemViewModel"/>
 
-        <import type="com.layer.ui.style.FourPartItemStyle"/>
+        <import type="com.layer.xdk.ui.style.FourPartItemStyle"/>
 
         <import type="android.view.View"/>
 
@@ -48,7 +48,7 @@
             android:background="@drawable/ui_item_foreground_selector"
             android:onClick="@{viewModel.onClickItem()}">
 
-            <com.layer.ui.avatar.AvatarView
+            <com.layer.xdk.ui.avatar.AvatarView
                 android:id="@+id/avatar"
                 android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
                 android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
@@ -59,7 +59,7 @@
                 app:participants="@{viewModel.identities}"
                 app:style="@{style.avatarStyle}"/>
 
-            <com.layer.ui.presence.PresenceView
+            <com.layer.xdk.ui.presence.PresenceView
                 android:id="@+id/presence"
                 android:layout_width="@{style.avatarStyle.presenceRadius, default=wrap_content}"
                 android:layout_height="@{style.avatarStyle.presenceRadius, default=wrap_content}"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.layer.ui.recyclerview.ItemsRecyclerView
+    <com.layer.xdk.ui.recyclerview.ItemsRecyclerView
         android:id="@+id/ui_items_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -92,14 +92,14 @@ It uses databinding which takes an object of <a href="layer-atlas/src/main/java/
 
     <data>
 
-        <import type="com.layer.ui.conversation.ConversationItemsListViewModel"/>
+        <import type="com.layer.xdk.ui.conversation.ConversationItemsListViewModel"/>
 
         <variable
             name="viewModel"
             type="ConversationItemsListViewModel"/>
     </data>
 
-    <com.layer.ui.conversation.ConversationItemsListView
+    <com.layer.xdk.ui.conversation.ConversationItemsListView
         app:adapter="@{viewModel.conversationItemsAdapter}"
         ... />
 </layout>
@@ -133,7 +133,7 @@ is used in <a href="layer-atlas/src/main/java/com/layer/ui/conversation/Conversa
 
     <data>
 
-        <import type="com.layer.ui.message.MessageItemsListViewModel"/>
+        <import type="com.layer.xdk.ui.message.MessageItemsListViewModel"/>
 
         <variable
             name="viewModel"
@@ -144,7 +144,7 @@ is used in <a href="layer-atlas/src/main/java/com/layer/ui/conversation/Conversa
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.layer.ui.message.MessageItemsListView
+        <com.layer.xdk.ui.message.MessageItemsListView
             app:adapter="@{viewModel.adapter}"
             app:cellFactories="@{viewModel.cellFactories}"
              ... />
@@ -170,12 +170,12 @@ and a <a href="layer-atlas/src/main/java/com/layer/ui/composebar/ComposeBar.java
 
         <variable
             name="viewModel"
-            type="com.layer.ui.conversation.ConversationViewModel"/>
+            type="com.layer.xdk.ui.conversation.ConversationViewModel"/>
     </data>
 
     <LinearLayout ...>
 
-        <com.layer.ui.conversation.ConversationView
+        <com.layer.xdk.ui.conversation.ConversationView
             app:conversation="@{viewModel.conversation}"
             app:layerClient="@{viewModel.layerClient}"
             app:messageItemsListViewModel="@{viewModel.messageItemsListViewModel}"/>
@@ -230,7 +230,7 @@ The <a href="layer-atlas/src/main/java/com/layer/ui/TypingIndicatorLayout.java">
 ##### XML
 
 ```xml
-<com.layer.ui.TypingIndicatorLayout
+<com.layer.xdk.ui.TypingIndicatorLayout
     android:id="@+id/typing_indicator"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -273,7 +273,7 @@ An application server can directly upload user information to Layer server. This
 ##### XML
 
 ```xml
-<com.layer.ui.AddressBar
+<com.layer.xdk.ui.AddressBar
             android:id="@+id/conversation_launcher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -304,7 +304,7 @@ An application server can directly upload user information to Layer server. This
 ##### XML
 
 ```xml
-         <com.layer.ui.avatar.AvatarView
+         <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/avatar"
             android:layout_width="@dimen/layer_ui_avatar_width"
             android:layout_height="@dimen/layer_ui_avatar_height" />

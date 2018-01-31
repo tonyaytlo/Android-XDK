@@ -32,12 +32,12 @@
         android:layout_marginBottom="@dimen/layer_ui_padding_narrow"
         android:layout_marginTop="@dimen/layer_ui_padding_narrow">
 
-        <com.layer.ui.avatar.AvatarView
+        <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/avatar"
             android:layout_width="@dimen/layer_ui_avatar_width"
             android:layout_height="@dimen/layer_ui_avatar_height" />
 
-        <com.layer.ui.presence.PresenceView
+        <com.layer.xdk.ui.presence.PresenceView
             android:layout_width="@dimen/layer_ui_avatar_presence_height"
             android:layout_height="@dimen/layer_ui_avatar_presence_height"
             android:layout_gravity="bottom|right"

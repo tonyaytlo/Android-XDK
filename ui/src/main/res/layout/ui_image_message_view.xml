@@ -4,8 +4,8 @@
 
     <data>
 
-        <import type="com.layer.ui.message.image.ImageMessageModel"/>
-        <import type="com.layer.ui.message.image.ImageMessageMetadata"/>
+        <import type="com.layer.xdk.ui.message.image.ImageMessageModel"/>
+        <import type="com.layer.xdk.ui.message.image.ImageMessageMetadata"/>
 
         <variable
             name="viewModel"

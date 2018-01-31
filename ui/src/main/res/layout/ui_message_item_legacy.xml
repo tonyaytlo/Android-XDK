@@ -23,7 +23,7 @@
 
         <variable
             name="viewModel"
-            type="com.layer.ui.message.MessageItemLegacyViewModel"/>
+            type="com.layer.xdk.ui.message.MessageItemLegacyViewModel"/>
     </data>
 
     <LinearLayout
@@ -99,14 +99,14 @@
                 app:layout_constraintVertical_bias="1.0"
                 app:layout_constraintWidth_default="wrap">
 
-                <com.layer.ui.avatar.AvatarView
+                <com.layer.xdk.ui.avatar.AvatarView
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/layer_ui_avatar_width"
                     android:layout_height="@dimen/layer_ui_avatar_height"
                     android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
                     app:participants="@{viewModel.participants}"/>
 
-                <com.layer.ui.presence.PresenceView
+                <com.layer.xdk.ui.presence.PresenceView
                     android:id="@+id/presence"
                     android:layout_width="@dimen/layer_ui_avatar_presence_height"
                     android:layout_height="@dimen/layer_ui_avatar_presence_height"
@@ -129,14 +129,14 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_default="wrap">
 
-                <com.layer.ui.avatar.AvatarView
+                <com.layer.xdk.ui.avatar.AvatarView
                     android:id="@+id/current_user_avatar"
                     android:layout_width="@dimen/layer_ui_avatar_width"
                     android:layout_height="@dimen/layer_ui_avatar_height"
                     android:visibility="@{viewModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
                     app:participants="@{viewModel.participants}"/>
 
-                <com.layer.ui.presence.PresenceView
+                <com.layer.xdk.ui.presence.PresenceView
                     android:id="@+id/current_user_presence"
                     android:layout_width="@dimen/layer_ui_avatar_presence_height"
                     android:layout_height="@dimen/layer_ui_avatar_presence_height"

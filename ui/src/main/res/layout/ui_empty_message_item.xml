@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.layer.ui.message.MessageItemHeaderViewModel"/>
+            type="com.layer.xdk.ui.message.MessageItemHeaderViewModel"/>
     </data>
     <FrameLayout
         android:layout_width="match_parent"

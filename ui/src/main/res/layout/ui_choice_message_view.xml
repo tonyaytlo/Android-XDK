@@ -3,9 +3,9 @@
 
     <data>
 
-        <import type="com.layer.ui.message.choice.ChoiceMessageModel"/>
+        <import type="com.layer.xdk.ui.message.choice.ChoiceMessageModel"/>
 
-        <import type="com.layer.ui.message.choice.ChoiceMessageMetadata"/>
+        <import type="com.layer.xdk.ui.message.choice.ChoiceMessageMetadata"/>
 
         <variable
             name="viewModel"
@@ -34,7 +34,7 @@
             android:textSize="@dimen/ui_choice_button_message_label_text_size"
             app:visibleOrGone="@{viewModel.hasContent &amp;&amp; viewModel.choiceMessageMetadata.label!=null}"/>
 
-        <com.layer.ui.message.choice.ChoiceButtonSet
+        <com.layer.xdk.ui.message.choice.ChoiceButtonSet
             android:id="@+id/choice_button_set"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

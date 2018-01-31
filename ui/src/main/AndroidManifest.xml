@@ -14,11 +14,11 @@
      limitations under the License.    
 -->
 <manifest
-    package="com.layer.ui"
+    package="com.layer.xdk.ui"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity android:name="com.layer.ui.util.imagepopup.ImagePopupActivity"/>
+        <activity android:name="com.layer.xdk.ui.util.imagepopup.ImagePopupActivity"/>
 
     </application>
 

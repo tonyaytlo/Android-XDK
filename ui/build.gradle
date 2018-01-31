@@ -18,7 +18,7 @@ android {
         targetSdkVersion 26
         versionName = "${version}"
         multiDexEnabled true
-        testInstrumentationRunner "com.layer.ui.TestButlerRunner"
+        testInstrumentationRunner "com.layer.xdk.ui.TestButlerRunner"
     }
 
     dataBinding {

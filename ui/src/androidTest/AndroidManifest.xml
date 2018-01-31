@@ -1,6 +1,6 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.layer.ui"
+    package="com.layer.xdk.ui"
     android:theme="@style/Theme.AppCompat.Light">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,7 +11,7 @@
     <application>
 
         <activity
-            android:name="com.layer.ui.testactivity.AvatarActivityTestView">
+            android:name="com.layer.xdk.ui.testactivity.AvatarActivityTestView">
         </activity>
 
         <activity android:name=".testactivity.IdentityItemTestActivity"/>

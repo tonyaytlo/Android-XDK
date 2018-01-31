@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="com.layer.ui.message.button.ButtonMessageModel"/>
+        <import type="com.layer.xdk.ui.message.button.ButtonMessageModel"/>
 
         <variable
             name="viewModel"
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.layer.ui.message.viewer.MessageViewer
+        <com.layer.xdk.ui.message.viewer.MessageViewer
             android:id="@+id/ui_button_message_view_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

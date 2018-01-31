@@ -3,7 +3,7 @@
 
     <data>
 
-        <import type="com.layer.ui.message.product.ProductMessageModel"/>
+        <import type="com.layer.xdk.ui.message.product.ProductMessageModel"/>
 
         <variable
             name="viewModel"

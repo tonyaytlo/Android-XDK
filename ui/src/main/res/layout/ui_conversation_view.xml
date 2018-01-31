@@ -4,7 +4,7 @@
 
     <data>
 
-        <import type="com.layer.ui.message.MessageItemsListViewModel"/>
+        <import type="com.layer.xdk.ui.message.MessageItemsListViewModel"/>
 
         <variable
             name="viewModel"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.layer.ui.message.MessageItemsListView
+        <com.layer.xdk.ui.message.MessageItemsListView
             android:id="@+id/messages_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -26,7 +26,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <com.layer.ui.composebar.ComposeBar
+        <com.layer.xdk.ui.composebar.ComposeBar
             android:id="@+id/compose_bar"
             android:layout_width="match_parent"
             android:layout_height="48dp"

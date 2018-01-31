@@ -3,11 +3,11 @@
 
     <data>
 
-        <import type="com.layer.ui.message.receipt.ReceiptMessageModel"/>
+        <import type="com.layer.xdk.ui.message.receipt.ReceiptMessageModel"/>
 
-        <import type="com.layer.ui.message.location.LocationMessageModel"/>
+        <import type="com.layer.xdk.ui.message.location.LocationMessageModel"/>
 
-        <import type="com.layer.ui.message.location.LocationMessageMetadata"/>
+        <import type="com.layer.xdk.ui.message.location.LocationMessageMetadata"/>
 
         <variable
             name="viewModel"
