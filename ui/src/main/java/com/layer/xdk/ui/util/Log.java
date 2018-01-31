@@ -1,12 +1,12 @@
 package com.layer.xdk.ui.util;
 
 /**
- * Unified Log class used by Atlas classes that maintains similar signatures to `android.util.Log`.
- * Logs are tagged with `Atlas`.
+ * Unified Log class used by XDK UI classes that maintains similar signatures to `android.util.Log`.
+ * Logs are tagged with `LayerXDK-UI`.
  */
 public class Log {
-    public static final String TAG = "LayerAtlas";
-    private static final String PERF_TAG = "LayerPerf:Atlas";
+    public static final String TAG = "LayerXDK-UI";
+    private static final String PERF_TAG = "LayerPerf:XDK-UI";
 
     // Makes IDE auto-completion easy
     public static final int VERBOSE = android.util.Log.VERBOSE;

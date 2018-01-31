@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * MessagesAdapter drives an AtlasMessagesList.  The MessagesAdapter itself handles
+ * MessagesAdapter drives an MessageItemsListView.  The MessagesAdapter itself handles
  * rendering sender names, avatars, dates, left/right alignment, and message clustering, and leaves
  * rendering message content up to registered CellFactories.  Each CellFactory knows which Messages
  * it can render, can create new View hierarchies for its Message types, and can render (bind)
@@ -336,12 +336,11 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     //==============================================================================================
 
     /**
-     * Sets the OnAppendListener for this AtlasQueryAdapter.  The listener will be called when items
+     * Sets the OnAppendListener for this MessagesAdapter.  The listener will be called when items
      * are appended to the end of this adapter.  This is useful for implementing a scroll-to-bottom
      * feature.
      *
      * @param listener The OnAppendListener to notify about appended items.
-     * @return This AtlasQueryAdapter.
      */
     public void setOnMessageAppendListener(OnMessageAppendListener listener) {
         mAppendListener = listener;
@@ -622,15 +621,15 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     }
 
     /**
-     * Listens for inserts to the end of an AtlasQueryAdapter.
+     * Listens for inserts to the end of an MessagesAdapter.
      */
     public interface OnMessageAppendListener {
         /**
-         * Alerts the listener to inserts at the end of an AtlasQueryAdapter.  If a batch of items
+         * Alerts the listener to inserts at the end of an MessagesAdapter.  If a batch of items
          * were appended, only the last one will be alerted here.
          *
-         * @param adapter The AtlasQueryAdapter which had an item appended.
-         * @param message The item appended to the AtlasQueryAdapter.
+         * @param adapter The MessagesAdapter which had an item appended.
+         * @param message The item appended to the MessagesAdapter.
          */
         void onMessageAppend(MessagesAdapter adapter, Message message);
     }

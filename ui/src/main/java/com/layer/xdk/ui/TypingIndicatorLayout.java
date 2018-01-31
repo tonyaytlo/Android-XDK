@@ -30,10 +30,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * AtlasTypingIndicator provides feedback about typists within a Conversation.  When initialized
- * and registered with a LayerClient as a LayerTypingIndicatorListener, AtlasTypingIndicator
+ * TypingIndicatorLayout provides feedback about typists within a Conversation.  When initialized
+ * and registered with a LayerClient as a LayerTypingIndicatorListener, TypingIndicatorLayout
  * maintains a set of typists for the given Conversation, providing callbacks when UI updates are
- * needed.  AtlasTypingIndicator can provide a default UI updater if desired.
+ * needed.  TypingIndicatorLayout can provide a default UI updater if desired.
  */
 public class TypingIndicatorLayout extends FrameLayout implements LayerTypingIndicatorListener.Weak {
     private final ConcurrentHashMap<Identity, TypingIndicator> mTypists = new ConcurrentHashMap<>();
@@ -179,7 +179,7 @@ public class TypingIndicatorLayout extends FrameLayout implements LayerTypingInd
         /**
          * Typists transitioned from inactive to active.
          *
-         * @param typingIndicator AtlasTypingIndicator notifying this listener.
+         * @param typingIndicator TypingIndicatorLayout notifying this listener.
          * @param active          `true` if typists are now active, or `false` if inactive.
          */
         void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active, Set<Identity> users);

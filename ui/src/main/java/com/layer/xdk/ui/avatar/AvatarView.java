@@ -34,9 +34,9 @@ import java.util.Queue;
 import java.util.Set;
 
 /**
- * AtlasAvatar can be used to show information about one user, or as a cluster of multiple users.
+ * AvatarView can be used to show information about one user, or as a cluster of multiple users.
  * <p>
- * AtlasAvatar uses Picasso to render the avatar image. So, you need to init
+ * AvatarView uses Picasso to render the avatar image. So, you need to init
  */
 public class AvatarView extends View {
 
