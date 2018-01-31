@@ -21,6 +21,9 @@ public class ChoiceMessageMetadata extends BaseObservable {
     @SerializedName("label")
     private String mLabel;
 
+    @SerializedName("name")
+    private String mName;
+
     @SerializedName("choices")
     private List<ChoiceMetadata> mChoices;
 
@@ -65,6 +68,10 @@ public class ChoiceMessageMetadata extends BaseObservable {
     @Bindable
     public String getLabel() {
         return mLabel;
+    }
+
+    public String getName() {
+        return mName;
     }
 
     @Bindable
@@ -143,6 +150,10 @@ public class ChoiceMessageMetadata extends BaseObservable {
 
     public void setLabel(String label) {
         mLabel = label;
+    }
+
+    public void setName(String name) {
+        mName = name;
     }
 
     public void setChoices(List<ChoiceMetadata> choices) {

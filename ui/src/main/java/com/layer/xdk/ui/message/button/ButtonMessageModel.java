@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.button;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -205,9 +206,9 @@ public class ButtonMessageModel extends MessageModel {
         return mMetadata != null ? mMetadata.getButtonModels() : null;
     }
 
-    public void onChoiceClicked(@NonNull String responseName, ChoiceMetadata choice,
+    public void onChoiceClicked(ButtonModel.ChoiceData choiceData, ChoiceMetadata choice,
                                 boolean selected, Set<String> selectedChoices) {
-        sendResponse(responseName, choice, selected, selectedChoices);
+        sendResponse(choiceData, choice, selected, selectedChoices);
 
         // TODO Use the correct models when dispatching (AND-1278)
         ActionHandlerRegistry.dispatchChoiceSelection(getContext(), choice, null, null);
@@ -215,20 +216,31 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @SuppressWarnings("WeakerAccess")
-    void sendResponse(@NonNull String responseName, @NonNull ChoiceMetadata choice,
+    void sendResponse(ButtonModel.ChoiceData choiceData, @NonNull ChoiceMetadata choice,
                       boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(
                 getLayerClient().getAuthenticatedUser());
-        String statusText = getContext().getString(
-                selected ? R.string.response_message_status_text_selected
-                        : R.string.response_message_status_text_deselected,
-                userName,
-                choice.getText());
+        String statusText;
+        if (TextUtils.isEmpty(choiceData.getName())) {
+            statusText = getContext().getString(
+                    selected ? R.string.response_message_status_text_selected
+                            : R.string.response_message_status_text_deselected,
+                    userName,
+                    choice.getText());
+        } else {
+            statusText = getContext().getString(
+                    selected ? R.string.response_message_status_text_with_name_selected
+                            : R.string.response_message_status_text_with_name_deselected,
+                    userName,
+                    choice.getText(),
+                    choiceData.getName());
+        }
+
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);
-        choiceResponseModel.addChoices(responseName, selectedChoices);
+        choiceResponseModel.addChoices(choiceData.getResponseName(), selectedChoices);
 
         MessageSenderRepository messageSenderRepository = getMessageSenderRepository();
         messageSenderRepository.sendChoiceResponse(getMessage().getConversation(),

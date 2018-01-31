@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -161,7 +162,7 @@ public class ChoiceMessageModel extends MessageModel {
     void sendResponse(@NonNull ChoiceMetadata choice, boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
         String statusText;
-        if (mMetadata.getLabel() == null) {
+        if (TextUtils.isEmpty(mMetadata.getName())) {
             statusText = getContext().getString(
                     selected ? R.string.response_message_status_text_selected
                             : R.string.response_message_status_text_deselected,
@@ -169,11 +170,11 @@ public class ChoiceMessageModel extends MessageModel {
                     choice.getText());
         } else {
             statusText = getContext().getString(
-                    selected ? R.string.response_message_status_text_with_label_selected
-                            : R.string.response_message_status_text_with_label_deselected,
+                    selected ? R.string.response_message_status_text_with_name_selected
+                            : R.string.response_message_status_text_with_name_deselected,
                     userName,
                     choice.getText(),
-                    mMetadata.getLabel());
+                    mMetadata.getName());
         }
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 

@@ -82,6 +82,9 @@ public class ButtonModel extends BaseObservable{
         @SerializedName("response_name")
         private String mResponseName;
 
+        @SerializedName("name")
+        private String mName;
+
         @SerializedName("preselected_choice")
         private String mPreselectedChoice;
 
@@ -105,6 +108,14 @@ public class ButtonModel extends BaseObservable{
 
         public void setResponseName(String responseName) {
             mResponseName = responseName;
+        }
+
+        public String getName() {
+            return mName;
+        }
+
+        public void setName(String name) {
+            mName = name;
         }
 
         public String getPreselectedChoice() {

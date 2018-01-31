@@ -163,7 +163,7 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
                     Set<String> selectedChoices) {
                 ButtonMessageModel viewModel = mBinding.getViewModel();
                 if (viewModel != null) {
-                    viewModel.onChoiceClicked(choiceData.getResponseName(), choice, selected, selectedChoices);
+                    viewModel.onChoiceClicked(choiceData, choice, selected, selectedChoices);
                 }
             }
         });
