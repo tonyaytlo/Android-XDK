@@ -1,1 +1,2 @@
-include ':layer-atlas'
+include ':xdk-ui'
+project(':xdk-ui').projectDir = new File(rootDir, 'ui')

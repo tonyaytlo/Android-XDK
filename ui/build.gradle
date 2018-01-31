@@ -5,9 +5,9 @@ apply plugin: 'maven'
 
 apply from: project.file("version.gradle")
 
-ext.pomProjectName = 'Atlas library'
-ext.artifactIdName = 'layer-atlas'
-group 'com.layer.ui'
+ext.pomProjectName = 'Layer XDK'
+ext.artifactIdName = 'xdk'
+group 'com.layer.xdk'
 
 android {
     compileSdkVersion 26
@@ -48,8 +48,8 @@ repositories {
 
 ext {
     org = "layerhq"
-    repo = "Atlas-Android"
-    groupFolder = "com/layer/atlas"
+    repo = "Android-XDK"
+    groupFolder = "com/layer/xdk"
 }
 
 dependencies {
