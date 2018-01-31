@@ -17,5 +17,7 @@ public class FourPartItemViewHolder<ITEM extends Queryable, VIEW_MODEL extends F
         binding.setViewModel(viewModel);
         binding.setStyle(itemStyle);
         binding.avatar.init(new AvatarViewModelImpl(imageCacheWrapper), viewModel.getIdentityFormatter());
+        binding.getRoot().setOnClickListener(viewModel.getOnClickListener());
+        binding.getRoot().setOnLongClickListener(viewModel.getOnLongClickListener());
     }
 }

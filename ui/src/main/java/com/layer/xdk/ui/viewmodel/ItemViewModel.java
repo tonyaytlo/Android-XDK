@@ -23,12 +23,35 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
 
+    private View.OnClickListener mOnClickListener;
+    private View.OnLongClickListener mOnLongClickListener;
+
     public ItemViewModel(Context context, LayerClient layerClient) {
         mContext = context;
         mLayerClient = layerClient;
 
         mIdentityFormatter = new IdentityFormatterImpl(context);
         mDateFormatter = new DateFormatterImpl(context);
+
+        mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mItemClickListener != null) {
+                    mItemClickListener.onItemClick(mItem);
+                }
+            }
+        };
+
+        mOnLongClickListener = new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (mItemClickListener!=null) {
+                    return mItemClickListener.onItemLongClick(mItem);
+                } else {
+                    return false;
+                }
+            }
+        };
     }
 
     @Bindable
@@ -52,15 +75,12 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
         return mItemClickListener;
     }
 
-    public View.OnClickListener onClickItem() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(mItem);
-                }
-            }
-        };
+    public View.OnClickListener getOnClickListener() {
+        return mOnClickListener;
+    }
+
+    public View.OnLongClickListener getOnLongClickListener() {
+        return mOnLongClickListener;
     }
 
     public Context getContext() {

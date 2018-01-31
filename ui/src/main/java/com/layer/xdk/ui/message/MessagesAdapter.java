@@ -22,6 +22,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
+import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -398,6 +399,16 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
         } else {
             throw new IllegalStateException("Unknown View Type");
         }
+    }
+
+    @Override
+    public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
+        super.setItemClickListener(itemClickListener);
+    }
+
+    @Override
+    public OnItemClickListener<Message> getItemClickListener() {
+        return super.getItemClickListener();
     }
 
     protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createHeaderViewHolder(ViewGroup parent);

@@ -44,6 +44,7 @@ public class MessageItemsAdapter extends MessagesAdapter {
         viewModel.setShowPresence(getShouldShowPresence());
         viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
+        viewModel.setItemClickListener(super.getItemClickListener());
 
         return new MessageItemCardViewHolder(parent, viewModel, getBinderRegistry().getMessageModelManager());
     }
@@ -65,6 +66,7 @@ public class MessageItemsAdapter extends MessagesAdapter {
         viewModel.setShowPresence(getShouldShowPresence());
         viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
+        viewModel.setItemClickListener(super.getItemClickListener());
 
         return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
     }

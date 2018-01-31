@@ -3,7 +3,7 @@ package com.layer.xdk.ui.recyclerview;
 import com.layer.sdk.query.Queryable;
 
 /**
- * Listens for item clicks on an IntegrationConversationsAdapter.
+ * Listens for clicks on an item in ItemsListAdapter.
  */
 public interface OnItemClickListener<ITEM extends Queryable> {
     /**

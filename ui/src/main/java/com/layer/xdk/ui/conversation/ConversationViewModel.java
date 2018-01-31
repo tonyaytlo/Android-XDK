@@ -11,16 +11,17 @@ import com.layer.sdk.query.Query;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
+import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.List;
 
 public class ConversationViewModel extends BaseObservable {
-    protected Conversation mConversation;
-    protected MessageItemsListViewModel mMessageItemsListViewModel;
-    protected LayerClient mLayerClient;
-    protected Query<Message> mQuery;
+    private Conversation mConversation;
+    private MessageItemsListViewModel mMessageItemsListViewModel;
+    private LayerClient mLayerClient;
+    private Query<Message> mQuery;
 
     public ConversationViewModel(Context context, LayerClient layerClient, List<CellFactory> cellFactories,
                                  ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
@@ -41,6 +42,10 @@ public class ConversationViewModel extends BaseObservable {
         notifyChange();
     }
 
+    public Query<Message> getQuery() {
+        return mQuery;
+    }
+
     @Bindable
     public LayerClient getLayerClient() {
         return mLayerClient;
@@ -53,5 +58,9 @@ public class ConversationViewModel extends BaseObservable {
 
     public MessageItemsListViewModel getMessageItemsListViewModel() {
         return mMessageItemsListViewModel;
+    }
+
+    public void setOnItemClickListner(OnItemClickListener<Message> itemClickListner) {
+        mMessageItemsListViewModel.setItemClickListener(itemClickListner);
     }
 }

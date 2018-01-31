@@ -16,10 +16,10 @@ import com.layer.xdk.ui.viewmodel.ItemViewModel;
 public class ItemViewHolder<ITEM extends Queryable, VIEW_MODEL extends ItemViewModel<ITEM>, BINDING extends ViewDataBinding, STYLE extends ItemStyle>
         extends RecyclerView.ViewHolder {
 
-    protected VIEW_MODEL mViewModel;
-    protected STYLE mStyle;
+    private VIEW_MODEL mViewModel;
+    private STYLE mStyle;
     protected BINDING mBinding;
-    protected LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
 
     public ItemViewHolder(BINDING binding, VIEW_MODEL viewModel) {
         super(binding.getRoot());
@@ -43,18 +43,6 @@ public class ItemViewHolder<ITEM extends Queryable, VIEW_MODEL extends ItemViewM
     @CallSuper
     public void setItem(ITEM item) {
         mViewModel.setItem(item);
-
-        getBinding().getRoot().setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                if (getViewModel().getItemClickListener() != null) {
-                    return getViewModel().getItemClickListener().onItemLongClick(getItem());
-                }
-
-                return false;
-            }
-        });
     }
 
     @CallSuper

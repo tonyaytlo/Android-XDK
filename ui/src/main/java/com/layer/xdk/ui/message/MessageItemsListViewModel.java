@@ -5,8 +5,10 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
+import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -37,5 +39,9 @@ public class MessageItemsListViewModel extends BaseObservable {
     public void setCellFactories(List<CellFactory> cellFactories) {
         mCellFactories = cellFactories;
         notifyChange();
+    }
+
+    public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
+        mMessageItemsAdapter.setItemClickListener(itemClickListener);
     }
 }

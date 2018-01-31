@@ -4,7 +4,10 @@ import android.content.Context;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -26,8 +29,14 @@ public class MessageViewer extends FrameLayout {
 
     private MessageContainer mMessageContainer;
     private MessageView mMessageView;
-
     private MessageModel mMessageModel;
+
+    // Touch management
+    private OnClickListener mOnClickListener;
+    private OnLongClickListener mOnLongClickListener;
+    private GestureDetector.SimpleOnGestureListener mSimpleOnGestureListener;
+
+    private GestureDetectorCompat mGestureDetector;
 
     public MessageViewer(@NonNull Context context) {
         this(context, null);
@@ -39,6 +48,27 @@ public class MessageViewer extends FrameLayout {
 
     public MessageViewer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        mSimpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public void onLongPress(MotionEvent e) {
+                super.onLongPress(e);
+                if (mOnLongClickListener != null) {
+                    mOnLongClickListener.onLongClick(MessageViewer.this);
+                }
+            }
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (mOnClickListener != null) {
+                    mOnClickListener.onClick(MessageViewer.this);
+                }
+                return false;
+            }
+        };
+
+        mGestureDetector = new GestureDetectorCompat(getContext(), mSimpleOnGestureListener);
+        mGestureDetector.setOnDoubleTapListener(mSimpleOnGestureListener);
     }
 
     public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
@@ -137,5 +167,32 @@ public class MessageViewer extends FrameLayout {
         container.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         addView(container);
+    }
+
+    //==============================================================================================
+    //  Touch handling
+    //==============================================================================================
+
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener clickListener) {
+        super.setOnClickListener(clickListener);
+        mOnClickListener = clickListener;
+    }
+
+    @Override
+    public void setOnLongClickListener(@Nullable OnLongClickListener longClickListener) {
+        super.setOnLongClickListener(longClickListener);
+        mOnLongClickListener = longClickListener;
+        mGestureDetector.setIsLongpressEnabled(longClickListener != null);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        if (mGestureDetector != null) {
+            mGestureDetector.onTouchEvent(motionEvent);
+        }
+
+        return super.onInterceptTouchEvent(motionEvent);
     }
 }

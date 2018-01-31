@@ -45,8 +45,7 @@
             android:layout_marginLeft="@dimen/layer_ui_margin_large"
             android:layout_marginStart="@dimen/layer_ui_margin_large"
             android:layout_marginTop="@dimen/layer_ui_margin_large"
-            android:background="@drawable/ui_item_foreground_selector"
-            android:onClick="@{viewModel.onClickItem()}">
+            android:background="@drawable/ui_item_foreground_selector">
 
             <com.layer.xdk.ui.avatar.AvatarView
                 android:id="@+id/avatar"
