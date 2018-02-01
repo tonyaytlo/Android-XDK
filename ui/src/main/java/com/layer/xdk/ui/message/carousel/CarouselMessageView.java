@@ -34,8 +34,8 @@ public class CarouselMessageView extends MessageView<CarouselMessageModel> {
 
     public CarouselMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mItemVerticalMargins = Math.round(context.getResources().getDimension(R.dimen.ui_carousel_message_item_vertical_margins));
-        mItemHorizontalMargins = Math.round(context.getResources().getDimension(R.dimen.ui_carousel_message_item_horizontal_margins));
+        mItemVerticalMargins = Math.round(context.getResources().getDimension(R.dimen.xdk_ui_carousel_message_item_vertical_margins));
+        mItemHorizontalMargins = Math.round(context.getResources().getDimension(R.dimen.xdk_ui_carousel_message_item_horizontal_margins));
 
         mScrollView = new HorizontalScrollView(context, attrs, defStyleAttr);
         mScrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

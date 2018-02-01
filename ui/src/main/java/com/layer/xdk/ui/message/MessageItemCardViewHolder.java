@@ -4,12 +4,12 @@ import android.view.ViewGroup;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.UiMessageItemCardBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemCardBinding;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
-public class MessageItemCardViewHolder extends MessageItemViewHolder<MessageItemCardViewModel, UiMessageItemCardBinding> {
+public class MessageItemCardViewHolder extends MessageItemViewHolder<MessageItemCardViewModel, XdkUiMessageItemCardBinding> {
     public MessageItemCardViewHolder(ViewGroup parent, MessageItemCardViewModel viewModel, MessageModelManager modelRegistry) {
-        super(parent, R.layout.ui_message_item_card, viewModel);
+        super(parent, R.layout.xdk_ui_message_item_card, viewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());

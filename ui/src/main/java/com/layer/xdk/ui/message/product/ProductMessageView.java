@@ -6,13 +6,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.layer.xdk.ui.databinding.UiProductMessageBinding;
+import com.layer.xdk.ui.databinding.XdkUiProductMessageBinding;
 import com.layer.xdk.ui.message.container.EmptyMessageContainer;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class ProductMessageView extends MessageView<ProductMessageModel> {
-    private UiProductMessageBinding mBinding;
+    private XdkUiProductMessageBinding mBinding;
 
     public ProductMessageView(Context context) {
         this(context, null, 0);
@@ -24,7 +24,7 @@ public class ProductMessageView extends MessageView<ProductMessageModel> {
 
     public ProductMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mBinding = UiProductMessageBinding.inflate(LayoutInflater.from(context), this, true);
+        mBinding = XdkUiProductMessageBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
     @Override

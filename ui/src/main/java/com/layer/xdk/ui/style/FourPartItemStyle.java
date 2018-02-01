@@ -62,23 +62,23 @@ public class FourPartItemStyle extends ItemStyle {
         Resources resources = context.getResources();
 
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.FourPartItemsListView, R.attr.FourPartItemsListView, defStyle);
-        mTitleTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellTitleTextColor, resources.getColor(R.color.layer_ui_text_gray));
+        mTitleTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellTitleTextColor, resources.getColor(R.color.xdk_ui_text_gray));
         mTitleTextStyle = ta.getInt(R.styleable.FourPartItemsListView_cellTitleTextStyle, Typeface.NORMAL);
         String titleTextTypefaceName = ta.getString(R.styleable.FourPartItemsListView_cellTitleTextTypeface);
         mTitleTextTypeface = titleTextTypefaceName != null ? Typeface.create(titleTextTypefaceName, mTitleTextStyle) : null;
 
-        mTitleUnreadTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellTitleUnreadTextColor, resources.getColor(R.color.layer_ui_text_black));
+        mTitleUnreadTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellTitleUnreadTextColor, resources.getColor(R.color.xdk_ui_text_black));
         mTitleUnreadTextStyle = ta.getInt(R.styleable.FourPartItemsListView_cellTitleUnreadTextStyle, Typeface.BOLD);
         String titleUnreadTextTypefaceName = ta.getString(R.styleable.FourPartItemsListView_cellTitleUnreadTextTypeface);
         mTitleUnreadTextTypeface = titleUnreadTextTypefaceName != null ? Typeface.create(titleUnreadTextTypefaceName, mTitleUnreadTextStyle) : null;
 
-        mSubtitleTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellSubtitleTextColor, resources.getColor(R.color.layer_ui_text_gray));
+        mSubtitleTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellSubtitleTextColor, resources.getColor(R.color.xdk_ui_text_gray));
         mSubtitleTextStyle = ta.getInt(R.styleable.FourPartItemsListView_cellSubtitleTextStyle, Typeface.NORMAL);
         String subtitleTextTypefaceName = ta.getString(R.styleable.FourPartItemsListView_cellSubtitleTextTypeface);
         mSubtitleTextTypeface = subtitleTextTypefaceName != null ? Typeface.create(subtitleTextTypefaceName, mSubtitleTextStyle) : null;
         mSubtitleVisibility = View.VISIBLE;
 
-        mSubtitleUnreadTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellSubtitleUnreadTextColor, resources.getColor(R.color.layer_ui_text_black));
+        mSubtitleUnreadTextColor = ta.getColor(R.styleable.FourPartItemsListView_cellSubtitleUnreadTextColor, resources.getColor(R.color.xdk_ui_text_black));
         mSubtitleUnreadTextStyle = ta.getInt(R.styleable.FourPartItemsListView_cellSubtitleUnreadTextStyle, Typeface.NORMAL);
         String subtitleUnreadTextTypefaceName = ta.getString(R.styleable.FourPartItemsListView_cellSubtitleUnreadTextTypeface);
         mSubtitleUnreadTextTypeface = subtitleUnreadTextTypefaceName != null ? Typeface.create(subtitleUnreadTextTypefaceName, mSubtitleUnreadTextStyle) : null;
@@ -86,69 +86,69 @@ public class FourPartItemStyle extends ItemStyle {
         setCellBackgroundColor(ta.getColor(R.styleable.FourPartItemsListView_cellBackgroundColor, Color.TRANSPARENT));
         setCellUnreadBackgroundColor(ta.getColor(R.styleable.FourPartItemsListView_cellUnreadBackgroundColor, Color.TRANSPARENT));
 
-        setAccessoryTextColor(ta.getColor(R.styleable.FourPartItemsListView_accessoryTextColor, resources.getColor(R.color.layer_ui_color_primary_blue)));
-        setAccessoryUnreadTextColor(ta.getColor(R.styleable.FourPartItemsListView_accessoryUnreadTextColor, resources.getColor(R.color.layer_ui_color_primary_blue)));
+        setAccessoryTextColor(ta.getColor(R.styleable.FourPartItemsListView_accessoryTextColor, resources.getColor(R.color.xdk_ui_color_primary_blue)));
+        setAccessoryUnreadTextColor(ta.getColor(R.styleable.FourPartItemsListView_accessoryUnreadTextColor, resources.getColor(R.color.xdk_ui_color_primary_blue)));
         mAccessoryTextVisibility = View.VISIBLE;
 
         AvatarStyle.Builder avatarStyleBuilder = new AvatarStyle.Builder();
-        avatarStyleBuilder.avatarTextColor(ta.getColor(R.styleable.FourPartItemsListView_avatarTextColor, resources.getColor(R.color.layer_ui_avatar_text)));
-        avatarStyleBuilder.avatarBackgroundColor(ta.getColor(R.styleable.FourPartItemsListView_avatarBackgroundColor, resources.getColor(R.color.layer_ui_avatar_background)));
-        avatarStyleBuilder.avatarBorderColor(ta.getColor(R.styleable.FourPartItemsListView_avatarBorderColor, resources.getColor(R.color.layer_ui_avatar_border)));
+        avatarStyleBuilder.avatarTextColor(ta.getColor(R.styleable.FourPartItemsListView_avatarTextColor, resources.getColor(R.color.xdk_ui_avatar_text)));
+        avatarStyleBuilder.avatarBackgroundColor(ta.getColor(R.styleable.FourPartItemsListView_avatarBackgroundColor, resources.getColor(R.color.xdk_ui_avatar_background)));
+        avatarStyleBuilder.avatarBorderColor(ta.getColor(R.styleable.FourPartItemsListView_avatarBorderColor, resources.getColor(R.color.xdk_ui_avatar_border)));
         mAvatarVisibility = View.VISIBLE;
 
-        float heightLarge = resources.getDimension(R.dimen.layer_ui_item_height_large);
-        float heightMedium = resources.getDimension(R.dimen.layer_ui_item_height_medium);
-        float heightSmall = resources.getDimension(R.dimen.layer_ui_item_height_small);
+        float heightLarge = resources.getDimension(R.dimen.xdk_ui_item_height_large);
+        float heightMedium = resources.getDimension(R.dimen.xdk_ui_item_height_medium);
+        float heightSmall = resources.getDimension(R.dimen.xdk_ui_item_height_small);
 
-        mItemHeight = ta.getDimension(R.styleable.FourPartItemsListView_itemHeight, resources.getDimension(R.dimen.layer_ui_item_height_large));
+        mItemHeight = ta.getDimension(R.styleable.FourPartItemsListView_itemHeight, resources.getDimension(R.dimen.xdk_ui_item_height_large));
 
         if (mItemHeight >= heightLarge) {
-            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_large));
-            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_item_title_large);
-            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_item_subtitle_large);
-            mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_large);
-            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_large)));
-            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_large)));
-            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_large)));
+            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.xdk_ui_margin_large));
+            mTitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_title_large);
+            mSubtitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_subtitle_large);
+            mAccessoryTextSize = resources.getDimension(R.dimen.xdk_ui_item_right_accessory_text_large);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.xdk_ui_avatar_width_large)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.xdk_ui_avatar_height_large)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.xdk_ui_avatar_presence_large)));
 
         } else if (mItemHeight >= heightMedium && mItemHeight < heightLarge) {
 
-            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_medium));
-            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_item_title_medium);
-            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_item_subtitle_medium);
+            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.xdk_ui_margin_medium));
+            mTitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_title_medium);
+            mSubtitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_subtitle_medium);
             mSubtitleVisibility = View.GONE;
-            mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_medium);
-            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_medium)));
-            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_medium)));
-            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_medium)));
+            mAccessoryTextSize = resources.getDimension(R.dimen.xdk_ui_item_right_accessory_text_medium);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.xdk_ui_avatar_width_medium)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.xdk_ui_avatar_height_medium)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.xdk_ui_avatar_presence_medium)));
 
         } else if (mItemHeight >= heightSmall && mItemHeight < heightMedium) {
 
-            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_small));
-            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_small);
-            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_item_subtitle_small);
+            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.xdk_ui_margin_small));
+            mTitleTextSize = resources.getDimension(R.dimen.xdk_ui_conversation_item_title_small);
+            mSubtitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_subtitle_small);
             mSubtitleVisibility = View.GONE;
-            mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_small);
-            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_small)));
-            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_small)));
-            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.layer_ui_avatar_presence_small)));
+            mAccessoryTextSize = resources.getDimension(R.dimen.xdk_ui_item_right_accessory_text_small);
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.xdk_ui_avatar_width_small)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.xdk_ui_avatar_height_small)));
+            avatarStyleBuilder.presenceRadius(ta.getDimension(R.styleable.FourPartItemsListView_presenceRadius, resources.getDimension(R.dimen.xdk_ui_avatar_presence_small)));
 
         } else {
 
             mAvatarVisibility = View.GONE;
             mSubtitleVisibility = View.GONE;
 
-            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.layer_ui_margin_small));
-            mTitleTextSize = resources.getDimension(R.dimen.layer_ui_conversation_item_title_tiny);
-            mSubtitleTextSize = resources.getDimension(R.dimen.layer_ui_item_subtitle_tiny);
+            mMarginVertical = ta.getDimension(R.styleable.FourPartItemsListView_marginVertical, resources.getDimension(R.dimen.xdk_ui_margin_small));
+            mTitleTextSize = resources.getDimension(R.dimen.xdk_ui_conversation_item_title_tiny);
+            mSubtitleTextSize = resources.getDimension(R.dimen.xdk_ui_item_subtitle_tiny);
             mSubtitleVisibility = View.GONE;
-            mAccessoryTextSize = resources.getDimension(R.dimen.layer_ui_item_right_accessory_text_tiny);
+            mAccessoryTextSize = resources.getDimension(R.dimen.xdk_ui_item_right_accessory_text_tiny);
             mAccessoryTextVisibility = View.GONE;
-            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.layer_ui_avatar_width_tiny)));
-            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.layer_ui_avatar_height_tiny)));
+            avatarStyleBuilder.width(ta.getDimension(R.styleable.FourPartItemsListView_avatarWidth, resources.getDimension(R.dimen.xdk_ui_avatar_width_tiny)));
+            avatarStyleBuilder.height(ta.getDimension(R.styleable.FourPartItemsListView_avatarHeight, resources.getDimension(R.dimen.xdk_ui_avatar_height_tiny)));
         }
 
-        mMarginHorizontal = ta.getDimension(R.styleable.FourPartItemsListView_marginHorizontal, resources.getDimension(R.dimen.layer_ui_margin_large));
+        mMarginHorizontal = ta.getDimension(R.styleable.FourPartItemsListView_marginHorizontal, resources.getDimension(R.dimen.xdk_ui_margin_large));
 
         setAvatarStyle(avatarStyleBuilder.build());
         ta.recycle();

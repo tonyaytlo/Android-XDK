@@ -8,10 +8,10 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiEmptyMessageItemBinding;
+import com.layer.xdk.ui.databinding.XdkUiEmptyMessageItemBinding;
 
 public final class EmptyMessageListHeaderView extends FrameLayout {
-    private UiEmptyMessageItemBinding mUiEmptyMessageItemsListBinding;
+    private XdkUiEmptyMessageItemBinding mUiEmptyMessageItemsListBinding;
 
     public EmptyMessageListHeaderView(Context context) {
         this(context, null);
@@ -26,11 +26,11 @@ public final class EmptyMessageListHeaderView extends FrameLayout {
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         mUiEmptyMessageItemsListBinding =
-                DataBindingUtil.inflate(inflater, R.layout.ui_empty_message_item, this,
+                DataBindingUtil.inflate(inflater, R.layout.xdk_ui_empty_message_item, this,
                         true);
     }
 
-    public UiEmptyMessageItemBinding getUiEmptyMessageItemsListBinding() {
+    public XdkUiEmptyMessageItemBinding getUiEmptyMessageItemsListBinding() {
         return mUiEmptyMessageItemsListBinding;
     }
 }

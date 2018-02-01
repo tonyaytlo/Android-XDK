@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 
 import com.google.gson.JsonObject;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiButtonMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
@@ -30,7 +30,7 @@ import java.util.Set;
 public class ButtonMessageView extends MessageView<ButtonMessageModel> {
     private static final String BUTTON_SET_TAG_PREFIX = "ChoiceButtonSet-";
 
-    private UiButtonMessageViewBinding mBinding;
+    private XdkUiButtonMessageViewBinding mBinding;
     private ColorStateList mActionButtonColorStateList;
     private ColorStateList mChoiceButtonColorStateList;
 
@@ -47,16 +47,16 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
     public ButtonMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = UiButtonMessageViewBinding.inflate(inflater, this, true);
+        mBinding = XdkUiButtonMessageViewBinding.inflate(inflater, this, true);
 
         mActionButtonColorStateList = new ColorStateList(new int[][]{
                 new int[]{android.R.attr.state_enabled},
                 new int[]{-android.R.attr.state_enabled},
                 new int[]{android.R.attr.state_pressed}},
                 new int[]{
-                        getResources().getColor(R.color.ui_button_message_action_button_text_enabled),
-                        getResources().getColor(R.color.ui_button_message_action_button_text_disabled),
-                        getResources().getColor(R.color.ui_button_message_action_button_text_pressed)
+                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_enabled),
+                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_disabled),
+                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_pressed)
                 });
 
         mChoiceButtonColorStateList = new ColorStateList(new int[][]{
@@ -64,9 +64,9 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
                 new int[]{-android.R.attr.state_enabled},
                 new int[]{android.R.attr.state_pressed}},
                 new int[]{
-                        getResources().getColor(R.color.ui_button_message_choice_button_text_enabled),
-                        getResources().getColor(R.color.ui_button_message_choice_button_text_disabled),
-                        getResources().getColor(R.color.ui_button_message_choice_button_text_pressed)
+                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_enabled),
+                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_disabled),
+                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_pressed)
                 });
     }
 
@@ -74,10 +74,10 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
     public void setMessageModel(ButtonMessageModel model) {
         mBinding.setViewModel(model);
         if (model.getContentModel() != null) {
-            mBinding.uiButtonMessageViewContent.setVisibility(VISIBLE);
-            mBinding.uiButtonMessageViewContent.setModel(model.getContentModel());
+            mBinding.xdkUiButtonMessageViewContent.setVisibility(VISIBLE);
+            mBinding.xdkUiButtonMessageViewContent.setModel(model.getContentModel());
         } else {
-            mBinding.uiButtonMessageViewContent.setVisibility(GONE);
+            mBinding.xdkUiButtonMessageViewContent.setVisibility(GONE);
         }
 
         addOrUpdateButtonsFromModel();
@@ -123,12 +123,12 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             actionButton = new AppCompatButton(getContext());
 
             // Style it
-            actionButton.setBackgroundResource(R.drawable.ui_choice_set_button_background_selector);
+            actionButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
             actionButton.setTransformationMethod(null);
             actionButton.setLines(1);
             actionButton.setEllipsize(TextUtils.TruncateAt.END);
             actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                    .getDimension(R.dimen.ui_button_message_action_button_text_size));
+                    .getDimension(R.dimen.xdk_ui_button_message_action_button_text_size));
             actionButton.setTextColor(mActionButtonColorStateList);
             actionButton.setTag(buttonModel.getText());
 
@@ -137,7 +137,7 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             }
 
             // Add it
-            mBinding.uiButtonMessageViewButtonsContainer.addView(actionButton,
+            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,
                     new ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -172,7 +172,7 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             choiceButtonSet = new ChoiceButtonSet(getContext());
             choiceButtonSet.setOrientation(LinearLayout.HORIZONTAL);
             choiceButtonSet.setTag(buttonSetTag);
-            mBinding.uiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
+            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
                     new ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT));

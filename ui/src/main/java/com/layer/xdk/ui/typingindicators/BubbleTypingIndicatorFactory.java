@@ -23,7 +23,7 @@ import java.util.Map;
 public class BubbleTypingIndicatorFactory implements TypingIndicatorLayout.TypingIndicatorFactory<LinearLayout> {
     private static final String TAG = BubbleTypingIndicatorFactory.class.getSimpleName();
 
-    private static final int DOT_RES_ID = R.drawable.ui_typing_indicator_dot;
+    private static final int DOT_RES_ID = R.drawable.xdk_ui_typing_indicator_dot;
     private static final float DOT_ON_ALPHA = 0.31f;
     private static final long ANIMATION_PERIOD = 600;
     private static final long ANIMATION_OFFSET = ANIMATION_PERIOD / 3;
@@ -32,10 +32,10 @@ public class BubbleTypingIndicatorFactory implements TypingIndicatorLayout.Typin
     public LinearLayout onCreateView(Context context) {
         Resources r = context.getResources();
 
-        int minWidth = r.getDimensionPixelSize(R.dimen.layer_ui_message_item_cell_min_width);
-        int minHeight = r.getDimensionPixelSize(R.dimen.layer_ui_message_item_cell_min_height);
-        int dotSize = r.getDimensionPixelSize(R.dimen.layer_ui_typing_indicator_dot_size);
-        int dotSpace = r.getDimensionPixelSize(R.dimen.layer_ui_typing_indicator_dot_space);
+        int minWidth = r.getDimensionPixelSize(R.dimen.xdk_ui_message_item_cell_min_width);
+        int minHeight = r.getDimensionPixelSize(R.dimen.xdk_ui_message_item_cell_min_height);
+        int dotSize = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_size);
+        int dotSpace = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_space);
 
         LinearLayout l = new LinearLayout(context);
         l.setMinimumWidth(minWidth);
@@ -43,7 +43,7 @@ public class BubbleTypingIndicatorFactory implements TypingIndicatorLayout.Typin
         l.setGravity(Gravity.CENTER);
         l.setOrientation(LinearLayout.HORIZONTAL);
         l.setLayoutParams(new TypingIndicatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        l.setBackgroundDrawable(r.getDrawable(R.drawable.ui_message_item_cell_them));
+        l.setBackgroundDrawable(r.getDrawable(R.drawable.xdk_ui_message_item_cell_them));
 
         ImageView v;
         LinearLayout.LayoutParams vp;

@@ -146,7 +146,7 @@ public class ProductMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String name = getName();
-        return name != null ? name : getContext().getString(R.string.ui_product_message_preview_text);
+        return name != null ? name : getContext().getString(R.string.xdk_ui_product_message_preview_text);
     }
 
     @Bindable
@@ -186,8 +186,8 @@ public class ProductMessageModel extends MessageModel {
             }
 
             builder.centerCrop(true)
-                    .resize(getContext().getResources().getDimensionPixelSize(R.dimen.ui_product_message_image_width),
-                            getContext().getResources().getDimensionPixelSize(R.dimen.ui_product_message_image_height))
+                    .resize(getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_width),
+                            getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_height))
                     .tag(getClass().getSimpleName());
 
             return builder.build();

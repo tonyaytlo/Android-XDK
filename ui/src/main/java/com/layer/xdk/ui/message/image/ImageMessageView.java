@@ -7,13 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.layer.xdk.ui.databinding.UiImageMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiImageMessageViewBinding;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class ImageMessageView extends MessageView<ImageMessageModel> {
 
-    private UiImageMessageViewBinding mBinding;
+    private XdkUiImageMessageViewBinding mBinding;
 
     public ImageMessageView(Context context) {
         this(context, null, 0);
@@ -26,7 +26,7 @@ public class ImageMessageView extends MessageView<ImageMessageModel> {
     public ImageMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = UiImageMessageViewBinding.inflate(inflater, this, true);
+        mBinding = XdkUiImageMessageViewBinding.inflate(inflater, this, true);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

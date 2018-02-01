@@ -11,7 +11,7 @@ import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
 import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
-import com.layer.xdk.ui.databinding.UiFourPartItemBinding;
+import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
@@ -25,7 +25,7 @@ import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import java.util.Collection;
 
 public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversation,
-        ConversationItemViewModel, UiFourPartItemBinding, FourPartItemStyle,
+        ConversationItemViewModel, XdkUiFourPartItemBinding, FourPartItemStyle,
         FourPartItemViewHolder<Conversation, ConversationItemViewModel>> {
     private static final String TAG = "ConversationItemsAdapter";
 
@@ -61,7 +61,7 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
 
     @Override
     public FourPartItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        UiFourPartItemBinding binding = UiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
+        XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
         ConversationItemViewModel viewModel = new ConversationItemViewModel(getContext(), getLayerClient());
         viewModel.setIdentityFormatter(mIdentityFormatter);
         viewModel.setDateFormatter(mDateFormatter);

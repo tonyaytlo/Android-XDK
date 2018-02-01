@@ -152,12 +152,12 @@ public class FileMessageModel extends MessageModel {
                 return mMetadata.getTitle();
             }
         }
-        return getContext().getString(R.string.ui_file_message_preview_text);
+        return getContext().getString(R.string.xdk_ui_file_message_preview_text);
     }
 
     @Override
     public int getBackgroundColor() {
-        return R.color.layer_ui_color_primary_gray;
+        return R.color.xdk_ui_color_primary_gray;
     }
 
     @Override

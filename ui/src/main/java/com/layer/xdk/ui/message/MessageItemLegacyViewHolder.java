@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.UiMessageItemLegacyBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemLegacyBinding;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 
-public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageItemLegacyViewModel, UiMessageItemLegacyBinding> {
+public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageItemLegacyViewModel, XdkUiMessageItemLegacyBinding> {
 
     // Cell
     protected MessageCell mMessageCell;
@@ -17,7 +17,7 @@ public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageIt
     protected CellFactory.CellHolderSpecs mCellHolderSpecs;
 
     public MessageItemLegacyViewHolder(ViewGroup parent, MessageItemLegacyViewModel messageItemViewModel, MessageCell messageCell) {
-        super(parent, R.layout.ui_message_item_legacy, messageItemViewModel);
+        super(parent, R.layout.xdk_ui_message_item_legacy, messageItemViewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(messageItemViewModel.getImageCacheWrapper()),
                 messageItemViewModel.getIdentityFormatter());
@@ -45,7 +45,7 @@ public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageIt
             maxWidth -= avatarParams.width + avatarParams.rightMargin + avatarParams.leftMargin;
         }
 
-        int maxHeight = (int) rootView.getContext().getResources().getDimension(R.dimen.layer_ui_messages_max_cell_height);
+        int maxHeight = (int) rootView.getContext().getResources().getDimension(R.dimen.xdk_ui_messages_max_cell_height);
 
         mCellHolderSpecs.isMe = mMessageCell.mMe;
         mCellHolderSpecs.maxWidth = maxWidth;

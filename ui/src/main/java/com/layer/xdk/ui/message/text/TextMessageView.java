@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.gson.JsonObject;
-import com.layer.xdk.ui.databinding.UiTextMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiTextMessageViewBinding;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class TextMessageView extends MessageView<TextMessageModel> {
-    private UiTextMessageViewBinding mBinding;
+    private XdkUiTextMessageViewBinding mBinding;
 
     public TextMessageView(Context context) {
         this(context, null, 0);
@@ -27,9 +27,7 @@ public class TextMessageView extends MessageView<TextMessageModel> {
     public TextMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = UiTextMessageViewBinding.inflate(inflater, this, true);
-
-        setClickable(true);
+        mBinding = XdkUiTextMessageViewBinding.inflate(inflater, this, true);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

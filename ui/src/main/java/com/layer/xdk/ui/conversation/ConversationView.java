@@ -14,7 +14,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Query;
 import com.layer.xdk.ui.TypingIndicatorLayout;
 import com.layer.xdk.ui.composebar.ComposeBar;
-import com.layer.xdk.ui.databinding.UiConversationViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiConversationViewBinding;
 import com.layer.xdk.ui.message.MessageItemsListView;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.typingindicators.BubbleTypingIndicatorFactory;
@@ -28,7 +28,7 @@ public class ConversationView extends ConstraintLayout {
     protected ComposeBar mComposeBar;
     protected TypingIndicatorLayout mTypingIndicator;
 
-    protected UiConversationViewBinding mBinding;
+    protected XdkUiConversationViewBinding mBinding;
 
     public ConversationView(Context context) {
         this(context, null);
@@ -40,7 +40,7 @@ public class ConversationView extends ConstraintLayout {
 
     public ConversationView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mBinding = UiConversationViewBinding.inflate(LayoutInflater.from(context), this, true);
+        mBinding = XdkUiConversationViewBinding.inflate(LayoutInflater.from(context), this, true);
 
         mMessageItemListView = mBinding.messagesList;
         mComposeBar = mBinding.composeBar;

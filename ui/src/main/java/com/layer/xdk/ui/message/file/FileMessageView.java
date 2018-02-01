@@ -6,13 +6,13 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.layer.xdk.ui.databinding.UiFileMessageLayoutBinding;
+import com.layer.xdk.ui.databinding.XdkUiFileMessageLayoutBinding;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class FileMessageView extends MessageView<FileMessageModel> {
-    private UiFileMessageLayoutBinding mBinding;
+    private XdkUiFileMessageLayoutBinding mBinding;
 
     public FileMessageView(Context context) {
         this(context, null, 0);
@@ -25,7 +25,7 @@ public class FileMessageView extends MessageView<FileMessageModel> {
     public FileMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        mBinding = UiFileMessageLayoutBinding.inflate(layoutInflater, this, true);
+        mBinding = XdkUiFileMessageLayoutBinding.inflate(layoutInflater, this, true);
 
         setOnClickListener(new OnClickListener() {
             @Override

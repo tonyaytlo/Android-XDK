@@ -189,13 +189,13 @@ public class MessageItemCardViewModel extends ItemViewModel<Message> {
                 // Use 2 to include one other participant plus the current user
                 if (statuses.size() > 2) {
                     mReadReceipt = getContext().getResources()
-                            .getQuantityString(R.plurals.layer_ui_message_item_read_muliple_participants, readCount, readCount);
+                            .getQuantityString(R.plurals.xdk_ui_message_item_read_muliple_participants, readCount, readCount);
                 } else {
-                    mReadReceipt = getContext().getString(R.string.layer_ui_message_item_read);
+                    mReadReceipt = getContext().getString(R.string.xdk_ui_message_item_read);
                 }
             } else if (delivered) {
                 mIsReadReceiptVisible = true;
-                mReadReceipt = getContext().getString(R.string.layer_ui_message_item_delivered);
+                mReadReceipt = getContext().getString(R.string.xdk_ui_message_item_delivered);
             } else {
                 mIsReadReceiptVisible = false;
             }

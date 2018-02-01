@@ -40,7 +40,7 @@ public class ReceiptMessageMetadata {
 
     @NonNull
     public String getCurrency(Context context) {
-        return mCurrency != null ? mCurrency : context.getString(R.string.product_message_model_default_currency);
+        return mCurrency != null ? mCurrency : context.getString(R.string.xdk_ui_product_message_model_default_currency);
     }
 
     public List<Discount> getDiscounts() {

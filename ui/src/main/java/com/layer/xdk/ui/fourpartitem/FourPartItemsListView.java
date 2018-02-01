@@ -33,8 +33,8 @@ public abstract class FourPartItemsListView<ITEM extends Queryable, ADAPTER exte
     }
 
     protected void init() {
-        inflate(getContext(), R.layout.ui_four_part_items_list, this);
-        mItemsRecyclerView = (ItemsRecyclerView<ITEM>) findViewById(R.id.ui_items_recycler);
+        inflate(getContext(), R.layout.xdk_ui_four_part_items_list, this);
+        mItemsRecyclerView = (ItemsRecyclerView<ITEM>) findViewById(R.id.xdk_ui_items_recycler);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         manager.setStackFromEnd(false);

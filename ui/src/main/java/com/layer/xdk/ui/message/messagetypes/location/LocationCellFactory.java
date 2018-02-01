@@ -15,7 +15,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiMessageItemCellImageBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemCellImageBinding;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;
@@ -36,7 +36,7 @@ public class LocationCellFactory extends
     public static final String KEY_LONGITUDE = "lon";
     public static final String KEY_LABEL = "label";
 
-    private static final int PLACEHOLDER = R.drawable.ui_message_item_cell_placeholder;
+    private static final int PLACEHOLDER = R.drawable.xdk_ui_message_item_cell_placeholder;
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5.0)) / 2.0;
     private static final int CACHE_SIZE_BYTES = 256 * 1024;
 
@@ -56,7 +56,7 @@ public class LocationCellFactory extends
     @Override
     public String getPreviewText(Context context, Message message) {
         if (isType(message)) {
-            return context.getString(R.string.layer_ui_message_preview_location);
+            return context.getString(R.string.xdk_ui_message_preview_location);
         }
         else {
             throw new IllegalArgumentException("Message is not of the correct type - Location");
@@ -71,7 +71,7 @@ public class LocationCellFactory extends
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
 
-        return new CellHolder(UiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
+        return new CellHolder(XdkUiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
     }
 
     @Override
@@ -171,9 +171,9 @@ public class LocationCellFactory extends
         ContentLoadingProgressBar mProgressBar;
 
         public CellHolder(ViewDataBinding viewDataBinding) {
-            if (viewDataBinding instanceof  UiMessageItemCellImageBinding) {
-                mImageView = ((UiMessageItemCellImageBinding) viewDataBinding).cellImage;
-                mProgressBar = ((UiMessageItemCellImageBinding) viewDataBinding).cellProgress;
+            if (viewDataBinding instanceof  XdkUiMessageItemCellImageBinding) {
+                mImageView = ((XdkUiMessageItemCellImageBinding) viewDataBinding).cellImage;
+                mProgressBar = ((XdkUiMessageItemCellImageBinding) viewDataBinding).cellProgress;
             }
         }
     }

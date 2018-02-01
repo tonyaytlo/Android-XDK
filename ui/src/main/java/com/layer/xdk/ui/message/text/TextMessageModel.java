@@ -113,13 +113,13 @@ public class TextMessageModel extends MessageModel {
         if (getHasContent()) {
             return mTitle != null ? mTitle : mText;
         } else {
-            return getContext().getString(R.string.ui_text_message_preview_text);
+            return getContext().getString(R.string.xdk_ui_text_message_preview_text);
         }
     }
 
     @Override
     public int getBackgroundColor() {
-        return isMessageFromMe() ? R.color.ui_text_message_view_background_me : R.color.ui_text_message_view_background_them;
+        return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
     }
 
     @Bindable

@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.layer.xdk.ui.databinding.UiLinkMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiLinkMessageViewBinding;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class LinkMessageView extends MessageView<LinkMessageModel> implements View.OnClickListener {
-    private UiLinkMessageViewBinding mBinding;
+    private XdkUiLinkMessageViewBinding mBinding;
 
     public LinkMessageView(Context context) {
         this(context, null, 0);
@@ -27,7 +27,7 @@ public class LinkMessageView extends MessageView<LinkMessageModel> implements Vi
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        mBinding = UiLinkMessageViewBinding.inflate(inflater, this, true);
+        mBinding = XdkUiLinkMessageViewBinding.inflate(inflater, this, true);
         TextView textView = mBinding.linkMessageTextView;
         textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         textView.setLinksClickable(false);

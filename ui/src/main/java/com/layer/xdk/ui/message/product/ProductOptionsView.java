@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
-import com.layer.xdk.ui.databinding.UiProductOptionViewItemBinding;
+import com.layer.xdk.ui.databinding.XdkUiProductOptionViewItemBinding;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 
@@ -51,7 +51,7 @@ public class ProductOptionsView extends LinearLayout {
                     for (ChoiceMetadata choice : choices) {
                         if (choice.getId().equals(choiceId)) {
                             // Instantiate and add view
-                            UiProductOptionViewItemBinding binding = UiProductOptionViewItemBinding.inflate(LayoutInflater.from(getContext()), this, true);
+                            XdkUiProductOptionViewItemBinding binding = XdkUiProductOptionViewItemBinding.inflate(LayoutInflater.from(getContext()), this, true);
 
                             // Set data on it
                             binding.optionTitle.setText(option.getChoiceMessageMetadata().getLabel());

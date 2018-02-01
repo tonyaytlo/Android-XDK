@@ -31,7 +31,7 @@ public class OpenFileActionHandler extends ActionHandler {
             intent.setDataAndType(uri, mimeType);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-            Intent chooser = Intent.createChooser(intent, context.getString(R.string.open_file_action_handler_activity_picker_title));
+            Intent chooser = Intent.createChooser(intent, context.getString(R.string.xdk_ui_open_file_action_handler_activity_picker_title));
             context.startActivity(chooser);
         }
     }

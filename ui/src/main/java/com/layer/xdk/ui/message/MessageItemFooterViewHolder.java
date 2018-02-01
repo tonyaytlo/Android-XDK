@@ -7,17 +7,17 @@ import android.view.ViewGroup;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.UiMessageItemFooterBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemFooterBinding;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Set;
 
-public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageItemLegacyViewModel, UiMessageItemFooterBinding> {
+public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageItemLegacyViewModel, XdkUiMessageItemFooterBinding> {
 
     public MessageItemFooterViewHolder(ViewGroup parent, MessageItemLegacyViewModel messageItemViewModel,
                                        ImageCacheWrapper imageCacheWrapper) {
-        super(parent, R.layout.ui_message_item_footer, messageItemViewModel);
+        super(parent, R.layout.xdk_ui_message_item_footer, messageItemViewModel);
         getBinding().avatar.init(new AvatarViewModelImpl(imageCacheWrapper), new IdentityFormatterImpl(parent.getContext()));
     }
 
@@ -48,7 +48,7 @@ public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageIt
             }
             Resources resources = mFooterView.getContext().getResources();
             int remainingUsers = numberOfUsers % 2;
-            String typingIndicatorMessage = resources.getQuantityString(R.plurals.layer_ui_typing_indicator_message,
+            String typingIndicatorMessage = resources.getQuantityString(R.plurals.xdk_ui_typing_indicator_message,
                     remainingUsers, firstUser, secondUser, remainingUsers);
             getViewModel().setTypingIndicatorMessage(typingIndicatorMessage);
         } else {

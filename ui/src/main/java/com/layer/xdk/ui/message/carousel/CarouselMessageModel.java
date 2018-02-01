@@ -104,8 +104,7 @@ public class CarouselMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         List<MessageModel> childMessageModels = getChildMessageModelsWithRole(ROLE_CAROUSEL_ITEM);
-        return getContext().getResources().getQuantityString(R.plurals.ui_carousel_message_preview_text, 0, childMessageModels.size());
-
+        return getContext().getResources().getQuantityString(R.plurals.xdk_ui_carousel_message_preview_text, 0, childMessageModels.size());
     }
 
     @Override

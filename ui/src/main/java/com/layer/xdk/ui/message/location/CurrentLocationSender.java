@@ -191,7 +191,7 @@ public class CurrentLocationSender extends AttachmentSender {
             locationMessageMetadata.setLatitude(location.getLatitude());
             locationMessageMetadata.setLongitude(location.getLongitude());
 
-            String notification = context.getString(R.string.layer_ui_notification_location, myName);
+            String notification = context.getString(R.string.xdk_ui_notification_location, myName);
             String mimeType = MessagePartUtils.getAsRoleRoot(LocationMessageModel.ROOT_MIME_TYPE);
 
             MessagePart part = client.newMessagePart(mimeType, sender.mGson.toJson(locationMessageMetadata).getBytes());

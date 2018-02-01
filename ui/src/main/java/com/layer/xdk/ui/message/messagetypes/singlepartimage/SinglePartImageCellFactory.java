@@ -17,7 +17,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiMessageItemCellImageBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemCellImageBinding;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
@@ -31,7 +31,7 @@ import java.util.Set;
 public class SinglePartImageCellFactory extends
         CellFactory<SinglePartImageCellFactory.CellHolder, SinglePartImageCellFactory.PartId> implements View.OnClickListener {
     private static final String IMAGE_CACHING_TAG = SinglePartImageCellFactory.class.getSimpleName();
-    private static final int PLACEHOLDER = com.layer.xdk.ui.R.drawable.ui_message_item_cell_placeholder;
+    private static final int PLACEHOLDER = com.layer.xdk.ui.R.drawable.xdk_ui_message_item_cell_placeholder;
     private static final int CACHE_SIZE_BYTES = 256 * 1024;
 
     private final LayerClient mLayerClient;
@@ -50,7 +50,7 @@ public class SinglePartImageCellFactory extends
 
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
-        return new CellHolder(UiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
+        return new CellHolder(XdkUiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class SinglePartImageCellFactory extends
     @Override
     public String getPreviewText(Context context, Message message) {
         if (isType(message)) {
-            return context.getString(R.string.layer_ui_message_preview_image);
+            return context.getString(R.string.xdk_ui_message_preview_image);
         }
         else {
             throw new IllegalArgumentException("Message is not of the correct type - SinglePartImage");
@@ -147,10 +147,10 @@ public class SinglePartImageCellFactory extends
     public static class CellHolder extends CellFactory.CellHolder {
         ImageView mImageView;
         ContentLoadingProgressBar mProgressBar;
-        UiMessageItemCellImageBinding mUiMessageItemCellImageBinding;
+        XdkUiMessageItemCellImageBinding mXdkUiMessageItemCellImageBinding;
 
-        public CellHolder(UiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
-            mUiMessageItemCellImageBinding = uiMessageItemCellImageBinding;
+        public CellHolder(XdkUiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
+            mXdkUiMessageItemCellImageBinding = uiMessageItemCellImageBinding;
             mImageView = uiMessageItemCellImageBinding.cellImage;
             mProgressBar = uiMessageItemCellImageBinding.cellProgress;
         }

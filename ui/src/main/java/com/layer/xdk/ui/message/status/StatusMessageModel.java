@@ -79,7 +79,7 @@ public class StatusMessageModel extends MessageModel {
             String text = mMetadata.getText();
             return text.length() > PREVIEW_MAX_LENGTH ? text.substring(0, PREVIEW_MAX_LENGTH) : text;
         }
-        return getContext().getString(R.string.ui_status_message_preview_text);
+        return getContext().getString(R.string.xdk_ui_status_message_preview_text);
     }
 
     @Override

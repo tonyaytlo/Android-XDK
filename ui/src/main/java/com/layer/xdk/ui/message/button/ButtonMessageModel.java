@@ -159,7 +159,7 @@ public class ButtonMessageModel extends MessageModel {
             if (title != null) {
                 return title;
             } else {
-                return getContext().getResources().getQuantityString(R.plurals.ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+                return getContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
             }
         }
 
@@ -243,14 +243,14 @@ public class ButtonMessageModel extends MessageModel {
         String statusText;
         if (TextUtils.isEmpty(choiceData.getName())) {
             statusText = getContext().getString(
-                    selected ? R.string.response_message_status_text_selected
-                            : R.string.response_message_status_text_deselected,
+                    selected ? R.string.xdk_ui_response_message_status_text_selected
+                            : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
                     choice.getText());
         } else {
             statusText = getContext().getString(
-                    selected ? R.string.response_message_status_text_with_name_selected
-                            : R.string.response_message_status_text_with_name_deselected,
+                    selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
+                            : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,
                     choice.getText(),
                     choiceData.getName());

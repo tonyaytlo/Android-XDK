@@ -306,8 +306,8 @@ An application server can directly upload user information to Layer server. This
 ```xml
          <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/layer_ui_avatar_width"
-            android:layout_height="@dimen/layer_ui_avatar_height" />
+            android:layout_width="@dimen/xdk_ui_avatar_width"
+            android:layout_height="@dimen/xdk_ui_avatar_height" />
 ```
 
 ##### Java

@@ -148,7 +148,7 @@ public class CameraSender extends AttachmentSender {
             Message message = mImageMessageComposer.newImageMessage(new File(mPhotoFilePath.get()));
 
             PushNotificationPayload payload = new PushNotificationPayload.Builder()
-                    .text(getContext().getString(R.string.layer_ui_notification_image, myName))
+                    .text(getContext().getString(R.string.xdk_ui_notification_image, myName))
                     .build();
             message.getOptions().defaultPushNotificationPayload(payload);
             send(message);

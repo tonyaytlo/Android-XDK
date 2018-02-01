@@ -6,12 +6,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.layer.xdk.ui.databinding.UiLocationMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiLocationMessageViewBinding;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class LocationMessageView extends MessageView<LocationMessageModel> {
-    private UiLocationMessageViewBinding mBinding;
+    private XdkUiLocationMessageViewBinding mBinding;
 
     public LocationMessageView(Context context) {
         this(context, null, 0);
@@ -24,7 +24,7 @@ public class LocationMessageView extends MessageView<LocationMessageModel> {
     public LocationMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        mBinding = UiLocationMessageViewBinding.inflate(layoutInflater, this, true);
+        mBinding = XdkUiLocationMessageViewBinding.inflate(layoutInflater, this, true);
 
         setOnClickListener(new OnClickListener() {
             @Override

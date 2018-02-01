@@ -30,8 +30,8 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerTypingIndicatorListener;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiComposeBarAttachmentMenuItemBinding;
-import com.layer.xdk.ui.databinding.UiComposeBarBinding;
+import com.layer.xdk.ui.databinding.XdkUiComposeBarAttachmentMenuItemBinding;
+import com.layer.xdk.ui.databinding.XdkUiComposeBarBinding;
 import com.layer.xdk.ui.message.messagetypes.AttachmentSender;
 import com.layer.xdk.ui.message.messagetypes.MessageSender;
 import com.layer.xdk.ui.message.text.TextSender;
@@ -81,20 +81,20 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
     public ComposeBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        UiComposeBarBinding binding = UiComposeBarBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        XdkUiComposeBarBinding binding = XdkUiComposeBarBinding.inflate(LayoutInflater.from(getContext()), this, true);
 
-        mEditText = binding.layerUiComposeBarEditText;
-        mSendButton = binding.layerUiComposeBarSendButton;
+        mEditText = binding.xdkUiComposeBarEditText;
+        mSendButton = binding.xdkUiComposeBarSendButton;
 
-        mLeftButton1 = binding.layerUiComposeBarButtonLeft1;
-        mLeftButton2 = binding.layerUiComposeBarButtonLeft2;
-        mLeftButton3 = binding.layerUiComposeBarButtonLeft3;
-        mDefaultAttachButton = binding.layerUiComposeBarButtonLeft4;
+        mLeftButton1 = binding.xdkUiComposeBarButtonLeft1;
+        mLeftButton2 = binding.xdkUiComposeBarButtonLeft2;
+        mLeftButton3 = binding.xdkUiComposeBarButtonLeft3;
+        mDefaultAttachButton = binding.xdkUiComposeBarButtonLeft4;
 
-        mRightButton1 = binding.layerUiComposeBarButtonRight1;
-        mRightButton2 = binding.layerUiComposeBarButtonRight2;
-        mRightButton3 = binding.layerUiComposeBarButtonRight3;
-        mRightButton4 = binding.layerUiComposeBarButtonRight4;
+        mRightButton1 = binding.xdkUiComposeBarButtonRight1;
+        mRightButton2 = binding.xdkUiComposeBarButtonRight2;
+        mRightButton3 = binding.xdkUiComposeBarButtonRight3;
+        mRightButton4 = binding.xdkUiComposeBarButtonRight4;
 
         mEditText.addTextChangedListener(this);
 
@@ -138,7 +138,7 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         } else {
             mAttachmentMenu = new PopupWindow(context, attrs, defStyleAttr);
         }
-        mAttachmentMenu.setContentView(LayoutInflater.from(context).inflate(R.layout.ui_compose_bar_attachment_menu, null));
+        mAttachmentMenu.setContentView(LayoutInflater.from(context).inflate(R.layout.xdk_ui_compose_bar_attachment_menu, null));
         mAttachmentMenu.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mAttachmentMenu.setOutsideTouchable(true);
 
@@ -151,24 +151,24 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ComposeBar, R.attr.ComposeBar, defStyle);
         setEnabled(ta.getBoolean(R.styleable.ComposeBar_android_enabled, true));
 
-        mEditText.setTextColor(ta.getColor(R.styleable.ComposeBar_android_textColor, context.getResources().getColor(R.color.layer_ui_compose_bar_text)));
+        mEditText.setTextColor(ta.getColor(R.styleable.ComposeBar_android_textColor, context.getResources().getColor(R.color.xdk_ui_compose_bar_text)));
 
-        int textSize = ta.getDimensionPixelSize(R.styleable.ComposeBar_android_textSize, context.getResources().getDimensionPixelSize(R.dimen.layer_ui_compose_bar_text_size));
+        int textSize = ta.getDimensionPixelSize(R.styleable.ComposeBar_android_textSize, context.getResources().getDimensionPixelSize(R.dimen.xdk_ui_compose_bar_text_size));
         mEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
 
         String typeFaceName = ta.getString(R.styleable.ComposeBar_inputTextTypeface);
         Typeface typeface = typeFaceName != null ? Typeface.create(typeFaceName, ta.getInt(R.styleable.ComposeBar_android_textStyle, Typeface.NORMAL)) : null;
         mEditText.setTypeface(typeface);
 
-        int underlineColor = ta.getColor(R.styleable.ComposeBar_inputUnderlineColor, context.getResources().getColor(R.color.layer_ui_compose_bar_underline));
-        int cursorColor = ta.getColor(R.styleable.ComposeBar_inputCursorColor, context.getResources().getColor(R.color.layer_ui_compose_bar_cursor));
+        int underlineColor = ta.getColor(R.styleable.ComposeBar_inputUnderlineColor, context.getResources().getColor(R.color.xdk_ui_compose_bar_underline));
+        int cursorColor = ta.getColor(R.styleable.ComposeBar_inputCursorColor, context.getResources().getColor(R.color.xdk_ui_compose_bar_cursor));
 
         EditTextUtil.setCursorDrawableColor(mEditText, cursorColor);
         EditTextUtil.setUnderlineColor(mEditText, underlineColor);
 
         Drawable attachmentSendersBackground = ta.getDrawable(R.styleable.ComposeBar_attachmentSendersBackground);
         if (mAttachmentSendersBackground == null) {
-            mAttachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.ui_popup_background);
+            mAttachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.xdk_ui_popup_background);
         }
 
         mAttachmentMenu.setBackgroundDrawable(attachmentSendersBackground);
@@ -225,7 +225,7 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         mRightButton3.setEnabled(enabled);
         mRightButton4.setEnabled(enabled);
 
-        int color = enabled ? ContextCompat.getColor(this.getContext(), R.color.transparent) : ContextCompat.getColor(this.getContext(), R.color.layer_ui_color_primary_gray_1);
+        int color = enabled ? ContextCompat.getColor(this.getContext(), R.color.transparent) : ContextCompat.getColor(this.getContext(), R.color.xdk_ui_color_primary_gray_1);
         this.setBackgroundColor(color);
     }
 
@@ -292,14 +292,14 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
             menuLayout.setBackgroundDrawable(mAttachmentSendersBackground);
         }
 
-        UiComposeBarAttachmentMenuItemBinding binding = UiComposeBarAttachmentMenuItemBinding.inflate(inflater, menuLayout, false);
+        XdkUiComposeBarAttachmentMenuItemBinding binding = XdkUiComposeBarAttachmentMenuItemBinding.inflate(inflater, menuLayout, false);
         binding.setSender(sender);
         binding.executePendingBindings();
 
         if (sender.getIcon() != null) {
             Drawable iconDrawable = ContextCompat.getDrawable(getContext(), sender.getIcon());
             iconDrawable = DrawableCompat.wrap(iconDrawable);
-            DrawableCompat.setTint(iconDrawable, getResources().getColor(R.color.layer_ui_icon_enabled));
+            DrawableCompat.setTint(iconDrawable, getResources().getColor(R.color.xdk_ui_icon_enabled));
             binding.title.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null);
         }
 

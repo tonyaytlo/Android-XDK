@@ -25,7 +25,7 @@ public class EmptyMessageContainer extends MessageContainer {
 
     public EmptyMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setCornerRadius(context.getResources().getDimension(R.dimen.ui_standard_message_container_corner_radius));
+        setCornerRadius(context.getResources().getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class EmptyMessageContainer extends MessageContainer {
 
     @Override
     protected <T extends MessageModel> void setContentBackground(T model) {
-        GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.ui_standard_message_container_content_background);
+        GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));
         setBackgroundDrawable(background);
     }

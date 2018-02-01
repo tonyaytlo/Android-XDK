@@ -107,7 +107,7 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     public int getBackgroundColor() {
-        return isMessageFromMe() ? R.color.ui_text_message_view_background_me : R.color.ui_text_message_view_background_them;
+        return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
     }
 
     @Override
@@ -119,7 +119,7 @@ public class LinkMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.ui_link_message_preview_text);
+        return title != null ? title : getContext().getString(R.string.xdk_ui_link_message_preview_text);
     }
 
     public LinkMessageMetadata getMetadata() {

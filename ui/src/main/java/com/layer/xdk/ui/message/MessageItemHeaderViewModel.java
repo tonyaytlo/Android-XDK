@@ -46,29 +46,29 @@ public class MessageItemHeaderViewModel extends ItemViewModel<Message> {
         switch (participants.size()) {
             case 0:
                 headerText = mContext.getResources().getString(
-                        R.string.empty_conversation_with_zero_participant);
+                        R.string.xdk_ui_empty_conversation_with_zero_participant);
                 break;
             case 1:
                 headerText = mContext.getResources().getString(
-                        R.string.empty_conversation_with_one_participant,
+                        R.string.xdk_ui_empty_conversation_with_one_participant,
                         participantList.get(0).getDisplayName());
                 break;
             case 2:
                 headerText = mContext.getResources().getString(
-                        R.string.empty_conversation_with_two_participants,
+                        R.string.xdk_ui_empty_conversation_with_two_participants,
                         participantList.get(0).getDisplayName(),
                         participantList.get(1).getDisplayName());
                 break;
             case 3:
                 headerText = mContext.getResources().getString(
-                        R.string.empty_conversation_with_three_participants,
+                        R.string.xdk_ui_empty_conversation_with_three_participants,
                         participantList.get(0).getDisplayName(),
                         participantList.get(1).getDisplayName());
                 break;
             default:
                 int remainder = participantList.size() - 2;
                 headerText = mContext.getResources().getString(
-                        R.string.empty_conversation_with_many_participants,
+                        R.string.xdk_ui_empty_conversation_with_many_participants,
                         participantList.get(0).getDisplayName(),
                         participantList.get(1).getDisplayName(), remainder);
         }

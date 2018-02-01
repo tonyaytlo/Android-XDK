@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.layer.xdk.ui.BR;
-import com.layer.xdk.ui.databinding.UiChoiceMessageViewBinding;
+import com.layer.xdk.ui.databinding.XdkUiChoiceMessageViewBinding;
 import com.layer.xdk.ui.message.container.TitledMessageContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implements
         ChoiceButtonSet.OnChoiceClickedListener {
-    private UiChoiceMessageViewBinding mBinding;
+    private XdkUiChoiceMessageViewBinding mBinding;
     private ChoiceButtonSet mChoiceButtonSet;
     private TextView mTitle;
 
@@ -34,7 +34,7 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implement
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        mBinding = UiChoiceMessageViewBinding.inflate(inflater, this, true);
+        mBinding = XdkUiChoiceMessageViewBinding.inflate(inflater, this, true);
         mChoiceButtonSet = mBinding.choiceButtonSet;
         mChoiceButtonSet.setOnChoiceClickedListener(this);
         mTitle = mBinding.choiceMessageLabel;

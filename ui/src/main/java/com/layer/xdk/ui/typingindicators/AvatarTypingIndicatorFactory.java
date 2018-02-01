@@ -30,7 +30,7 @@ import java.util.Set;
 public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.TypingIndicatorFactory<LinearLayout> {
     private static final String TAG = AvatarTypingIndicatorFactory.class.getSimpleName();
 
-    private static final int DOT_RES_ID = R.drawable.ui_typing_indicator_dot;
+    private static final int DOT_RES_ID = R.drawable.xdk_ui_typing_indicator_dot;
     private static final float DOT_ON_ALPHA = 0.31f;
     private static final long ANIMATION_PERIOD = 600;
     private static final long ANIMATION_OFFSET = ANIMATION_PERIOD / 3;
@@ -45,8 +45,8 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
         Tag tag = new Tag();
 
         Resources r = context.getResources();
-        int dotSize = r.getDimensionPixelSize(R.dimen.layer_ui_typing_indicator_dot_size);
-        int dotSpace = r.getDimensionPixelSize(R.dimen.layer_ui_typing_indicator_dot_space);
+        int dotSize = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_size);
+        int dotSpace = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_space);
 
         LinearLayout l = new LinearLayout(context);
         l.setGravity(Gravity.CENTER);
@@ -88,8 +88,8 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
         @SuppressWarnings("unchecked")
         Tag tag = (Tag) l.getTag();
 
-        int avatarSpace = l.getResources().getDimensionPixelSize(R.dimen.layer_ui_padding_narrow);
-        int avatarDim = l.getResources().getDimensionPixelSize(R.dimen.layer_ui_avatar_height);
+        int avatarSpace = l.getResources().getDimensionPixelSize(R.dimen.xdk_ui_padding_narrow);
+        int avatarDim = l.getResources().getDimensionPixelSize(R.dimen.xdk_ui_avatar_height);
 
         // Iterate over existing typists and remove non-typists
         List<AvatarView> newlyFinished = new ArrayList<AvatarView>();

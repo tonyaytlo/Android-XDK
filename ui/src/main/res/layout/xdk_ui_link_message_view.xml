@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <data>
+
+        <import type="com.layer.xdk.ui.message.link.LinkMessageModel"/>
+
+        <import type="com.layer.xdk.ui.message.link.LinkMessageMetadata"/>
+
+        <variable
+            name="viewModel"
+            type="LinkMessageModel"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="@dimen/xdk_ui_link_message_image_width"
+            android:layout_height="@dimen/xdk_ui_link_message_image_height"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="wrap"
+            app:loadFrom="@{viewModel.imageRequestParameters}"
+            app:usingImageLoader="@{viewModel.imageCacheWrapper}"
+            app:visibleOrGone="@{viewModel.metadata.imageUrl!=null}"/>
+
+        <TextView
+            android:id="@+id/link_message_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:layout_marginLeft="@dimen/xdk_ui_margin_large"
+            android:layout_marginStart="@dimen/xdk_ui_margin_large"
+            android:layout_marginRight="@dimen/xdk_ui_margin_large"
+            android:layout_marginEnd="@dimen/xdk_ui_margin_large"
+            android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
+            android:layout_marginBottom="@dimen/xdk_ui_margin_tiny"
+            android:gravity="start"
+            android:text="@{viewModel.metadata.url}"
+            android:textColor="@{viewModel.messageFromMe ? @color/xdk_ui_text_message_view_body_me : @color/xdk_ui_text_message_view_body_them}"
+            android:textSize="@dimen/xdk_ui_link_message_url_text_size"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_default="wrap"
+            app:layout_constraintHeight_percent="100"
+            app:visibleOrGone="@{viewModel.metadata.imageUrl==null}"/>
+    </android.support.constraint.ConstraintLayout>
+</layout>

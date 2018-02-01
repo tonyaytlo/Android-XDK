@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/xdk_ui_avatar_left_padding_user_list"
+        android:layout_marginRight="@dimen/xdk_ui_avatar_right_padding_user_list">
+
+        <com.layer.xdk.ui.avatar.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/xdk_ui_avatar_width"
+            android:layout_height="@dimen/xdk_ui_avatar_height"/>
+
+        <com.layer.xdk.ui.presence.PresenceView
+            android:layout_width="@dimen/xdk_ui_avatar_presence_height"
+            android:layout_height="@dimen/xdk_ui_avatar_presence_height"
+            android:layout_gravity="bottom|right"
+            android:id="@+id/presence" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/xdk_ui_padding_narrow"
+        android:gravity="center"
+        android:text="[name]"
+        android:textColor="@color/xdk_ui_text_gray"
+        android:textSize="@dimen/xdk_ui_text_size_chip"/>
+
+    <ImageView
+        android:id="@+id/remove"
+        android:layout_width="@dimen/xdk_ui_chip_height"
+        android:layout_height="@dimen/xdk_ui_chip_height"
+        android:scaleType="center"
+        android:src="@drawable/ic_cancel_white_24dp"
+        android:tint="@color/xdk_ui_icon_enabled" />
+
+</merge>

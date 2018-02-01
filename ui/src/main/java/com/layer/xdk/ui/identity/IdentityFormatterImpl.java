@@ -70,6 +70,6 @@ public class IdentityFormatterImpl implements IdentityFormatter {
 
     @Override
     public String getUnknownNameString() {
-        return mContext.getString(R.string.layer_ui_message_item_unknown_user);
+        return mContext.getString(R.string.xdk_ui_message_item_unknown_user);
     }
 }

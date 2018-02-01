@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.layer.xdk.ui.databinding.UiReceiptMessageBinding;
+import com.layer.xdk.ui.databinding.XdkUiReceiptMessageBinding;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.container.TitledMessageContainer;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
@@ -18,7 +18,7 @@ import com.layer.xdk.ui.message.view.MessageView;
 import java.util.List;
 
 public class ReceiptMessageView extends MessageView<ReceiptMessageModel> {
-    private UiReceiptMessageBinding mBinding;
+    private XdkUiReceiptMessageBinding mBinding;
 
     public ReceiptMessageView(Context context) {
         this(context, null, 0);
@@ -31,7 +31,7 @@ public class ReceiptMessageView extends MessageView<ReceiptMessageModel> {
     public ReceiptMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(context);
-        mBinding = UiReceiptMessageBinding.inflate(inflater, this, true);
+        mBinding = XdkUiReceiptMessageBinding.inflate(inflater, this, true);
     }
 
     @Override

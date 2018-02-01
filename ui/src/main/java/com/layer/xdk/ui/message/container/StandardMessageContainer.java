@@ -11,13 +11,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiStandardMessageContainerBinding;
+import com.layer.xdk.ui.databinding.XdkUiStandardMessageContainerBinding;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class StandardMessageContainer extends MessageContainer {
 
-    private UiStandardMessageContainerBinding mBinding;
+    private XdkUiStandardMessageContainerBinding mBinding;
     private MessageView mMessageView;
 
     public StandardMessageContainer(@NonNull Context context) {
@@ -31,10 +31,10 @@ public class StandardMessageContainer extends MessageContainer {
     public StandardMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = UiStandardMessageContainerBinding.inflate(inflater, this, true);
-        mBinding.uiStandardMessageContainerTitle.setVisibility(GONE);
-        mBinding.uiStandardMessageContainerSubtitle.setVisibility(GONE);
-        setCornerRadius(context.getResources().getDimension(R.dimen.ui_standard_message_container_corner_radius));
+        mBinding = XdkUiStandardMessageContainerBinding.inflate(inflater, this, true);
+        mBinding.xdkUiStandardMessageContainerTitle.setVisibility(GONE);
+        mBinding.xdkUiStandardMessageContainerSubtitle.setVisibility(GONE);
+        setCornerRadius(context.getResources().getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
     }
 
     public void setMessageView(MessageView view) {
@@ -46,8 +46,8 @@ public class StandardMessageContainer extends MessageContainer {
         // TODO: AND-1242 Figure out how to not have to remove all the subviews in the content view
         //       This is needed because containers in inner messageviewers have problems related to
         //       recycling due to model type mismatches
-        mBinding.uiStandardMessageContainerContentView.removeAllViews();
-        mBinding.uiStandardMessageContainerContentView.addView(view);
+        mBinding.xdkUiStandardMessageContainerContentView.removeAllViews();
+        mBinding.xdkUiStandardMessageContainerContentView.addView(view);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class StandardMessageContainer extends MessageContainer {
 
     @Override
     protected <T extends MessageModel> void setContentBackground(T model) {
-        GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.ui_standard_message_container_content_background);
+        GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));
-        mBinding.uiStandardMessageContainerContentView.setBackgroundDrawable(background);
+        mBinding.xdkUiStandardMessageContainerContentView.setBackgroundDrawable(background);
     }
 }

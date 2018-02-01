@@ -112,7 +112,7 @@ public class ConversationItemFormatter {
             if (previewText != null) {
                 return previewText.length() > PREVIEW_MAX_LENGTH ? previewText.substring(0, PREVIEW_MAX_LENGTH) : previewText;
             } else {
-                return mContext.getString(R.string.ui_generic_message_preview_text);
+                return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
             }
         } else {
             if (mCellFactories != null && !mCellFactories.isEmpty()) {
@@ -140,10 +140,10 @@ public class ConversationItemFormatter {
         if (date.getTime() > todayMidnight) {
             timeText = mTimeFormat.format(date.getTime());
         } else if (date.getTime() > yesterMidnight) {
-            timeText = mContext.getString(R.string.layer_ui_time_yesterday);
+            timeText = mContext.getString(R.string.xdk_ui_time_yesterday);
         } else if (date.getTime() > weekAgoMidnight) {
             cal.setTime(date);
-            timeText = mContext.getResources().getStringArray(R.array.layer_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
+            timeText = mContext.getResources().getStringArray(R.array.xdk_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
         } else {
             timeText = mDateFormat.format(date);
         }

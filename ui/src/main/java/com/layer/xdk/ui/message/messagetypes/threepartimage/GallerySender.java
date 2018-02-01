@@ -68,7 +68,7 @@ public class GallerySender extends AttachmentSender {
         } else {
             intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         }
-        activity.startActivityForResult(Intent.createChooser(intent, getContext().getString(R.string.layer_ui_gallery_sender_chooser)), ACTIVITY_REQUEST_CODE);
+        activity.startActivityForResult(Intent.createChooser(intent, getContext().getString(R.string.xdk_ui_gallery_sender_chooser)), ACTIVITY_REQUEST_CODE);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class GallerySender extends AttachmentSender {
             Message message = mImageMessageComposer.newImageMessage(uri);
 
             PushNotificationPayload payload = new PushNotificationPayload.Builder()
-                    .text(getContext().getString(R.string.layer_ui_notification_image, myName))
+                    .text(getContext().getString(R.string.xdk_ui_notification_image, myName))
                     .build();
             message.getOptions().defaultPushNotificationPayload(payload);
             send(message);

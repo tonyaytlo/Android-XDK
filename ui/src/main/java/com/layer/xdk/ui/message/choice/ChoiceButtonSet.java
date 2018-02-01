@@ -48,7 +48,7 @@ public class ChoiceButtonSet extends LinearLayout {
         // Default orientation
         setOrientation(VERTICAL);
 
-        mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.ui_choice_button_selector);
+        mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.xdk_ui_choice_button_selector);
     }
 
     public void setOnChoiceClickedListener(OnChoiceClickedListener onChoiceClickedListener) {
@@ -78,11 +78,11 @@ public class ChoiceButtonSet extends LinearLayout {
             choiceButton = new AppCompatButton((getContext()));
 
             // Style it
-            choiceButton.setBackgroundResource(R.drawable.ui_choice_set_button_background_selector);
+            choiceButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
             choiceButton.setTransformationMethod(null);
             choiceButton.setLines(1);
             choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                    .getDimension(R.dimen.ui_choice_button_message_button_text_size));
+                    .getDimension(R.dimen.xdk_ui_choice_button_message_button_text_size));
             choiceButton.setTextColor(mChoiceButtonColorStateList);
             choiceButton.setSingleLine(false);
 

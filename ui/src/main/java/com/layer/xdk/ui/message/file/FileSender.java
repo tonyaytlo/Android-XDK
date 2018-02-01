@@ -112,7 +112,7 @@ public class FileSender extends AttachmentSender {
             Identity me = getLayerClient().getAuthenticatedUser();
             String myName = me == null ? "" : Util.getDisplayName(me);
             PushNotificationPayload payload = new PushNotificationPayload.Builder()
-                    .text(getContext().getString(R.string.layer_ui_notification_image, myName))
+                    .text(getContext().getString(R.string.xdk_ui_notification_image, myName))
                     .build();
 
             Message message;

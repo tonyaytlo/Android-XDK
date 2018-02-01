@@ -21,7 +21,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.UiMessageItemCellImageBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemCellImageBinding;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;
@@ -43,7 +43,7 @@ public class ThreePartImageCellFactory extends
         CellFactory<ThreePartImageCellFactory.CellHolder, ThreePartImageCellFactory.Info> implements View.OnClickListener {
     private static final String IMAGE_CACHING_TAG = ThreePartImageCellFactory.class.getSimpleName();
 
-    private static final int PLACEHOLDER = R.drawable.ui_message_item_cell_placeholder;
+    private static final int PLACEHOLDER = R.drawable.xdk_ui_message_item_cell_placeholder;
     private static final int CACHE_SIZE_BYTES = 256 * 1024;
 
     private final LayerClient mLayerClient;
@@ -63,7 +63,7 @@ public class ThreePartImageCellFactory extends
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
 
-        return new CellHolder(UiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
+        return new CellHolder(XdkUiMessageItemCellImageBinding.inflate(layoutInflater, cellView, true));
     }
 
     @Override
@@ -214,7 +214,7 @@ public class ThreePartImageCellFactory extends
     @Override
     public String getPreviewText(Context context, Message message) {
         if (isType(message)) {
-            return context.getString(R.string.layer_ui_message_preview_image);
+            return context.getString(R.string.xdk_ui_message_preview_image);
         }
         else {
             throw new IllegalArgumentException("Message is not of the correct type - ThreePartImage");
@@ -290,7 +290,7 @@ public class ThreePartImageCellFactory extends
         private ImageView mImageView;
         private ContentLoadingProgressBar mProgressBar;
 
-        public CellHolder(UiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
+        public CellHolder(XdkUiMessageItemCellImageBinding uiMessageItemCellImageBinding) {
                 mImageView = uiMessageItemCellImageBinding.cellImage;
                 mProgressBar = uiMessageItemCellImageBinding.cellProgress;
         }

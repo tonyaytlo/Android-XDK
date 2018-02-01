@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="viewModel"
+            type="com.layer.xdk.ui.message.MessageItemStatusViewModel"/>
+    </data>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/xdk_ui_message_item_top_bottom_margin"
+        android:layout_marginEnd="@dimen/xdk_ui_padding_normal"
+        android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
+        android:layout_marginRight="@dimen/xdk_ui_padding_normal"
+        android:layout_marginStart="@dimen/xdk_ui_padding_normal"
+        android:layout_marginTop="@dimen/xdk_ui_message_item_top_bottom_margin"
+        android:autoLink="all"
+        android:gravity="center"
+        android:linksClickable="true"
+        android:text="@{viewModel.text}"
+        android:textColor="@color/xdk_ui_text_light_gray"
+        android:textSize="@dimen/xdk_ui_text_size_status"
+        android:visibility="@{viewModel.visible ? View.VISIBLE : View.GONE}"
+        tools:text="Test Status"/>
+
+</layout>

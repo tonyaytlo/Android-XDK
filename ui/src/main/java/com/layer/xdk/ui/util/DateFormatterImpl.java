@@ -39,12 +39,12 @@ public class DateFormatterImpl implements DateFormatter {
 
         String timeBarDayText;
         if (date.getTime() > todayMidnight) {
-            timeBarDayText = mContext.getString(com.layer.xdk.ui.R.string.layer_ui_time_today);
+            timeBarDayText = mContext.getString(com.layer.xdk.ui.R.string.xdk_ui_time_today);
         } else if (date.getTime() > yesterdayMidnight) {
-            timeBarDayText = mContext.getString(com.layer.xdk.ui.R.string.layer_ui_time_yesterday);
+            timeBarDayText = mContext.getString(com.layer.xdk.ui.R.string.xdk_ui_time_yesterday);
         } else if (date.getTime() > weekAgoMidnight) {
             cal.setTime(date);
-            timeBarDayText = mContext.getResources().getStringArray(com.layer.xdk.ui.R.array.layer_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
+            timeBarDayText = mContext.getResources().getStringArray(com.layer.xdk.ui.R.array.xdk_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
         } else {
             timeBarDayText = DAY_OF_WEEK.format(date);
         }
@@ -70,10 +70,10 @@ public class DateFormatterImpl implements DateFormatter {
         if (date.getTime() > todayMidnight) {
             timeText = timeFormat.format(date.getTime());
         } else if (date.getTime() > yesterMidnight) {
-            timeText = mContext.getString(com.layer.xdk.ui.R.string.layer_ui_time_yesterday);
+            timeText = mContext.getString(com.layer.xdk.ui.R.string.xdk_ui_time_yesterday);
         } else if (date.getTime() > weekAgoMidnight) {
             cal.setTime(date);
-            timeText = mContext.getResources().getStringArray(com.layer.xdk.ui.R.array.layer_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
+            timeText = mContext.getResources().getStringArray(com.layer.xdk.ui.R.array.xdk_ui_time_days_of_week)[cal.get(Calendar.DAY_OF_WEEK) - 1];
         } else {
             timeText = dateFormat.format(date);
         }

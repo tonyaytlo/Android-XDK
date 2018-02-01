@@ -34,7 +34,7 @@ public class ImageMessageModel extends MessageModel {
 
     private static ImageCacheWrapper sImageCacheWrapper;
 
-    private static final int PLACEHOLDER = R.drawable.ui_message_item_cell_placeholder;
+    private static final int PLACEHOLDER = R.drawable.xdk_ui_message_item_cell_placeholder;
 
     private final Gson mGson;
     private ImageMessageMetadata mMetadata;
@@ -131,7 +131,7 @@ public class ImageMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.ui_image_message_preview_text);
+        return title != null ? title : getContext().getString(R.string.xdk_ui_image_message_preview_text);
     }
 
     /*

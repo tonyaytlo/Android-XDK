@@ -41,8 +41,8 @@ public class TextCellFactory extends
 
     @Override
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
-        View v = layoutInflater.inflate(R.layout.ui_message_item_cell_text, cellView, true);
-        v.setBackgroundResource(isMe ? R.drawable.ui_message_item_cell_me : R.drawable.ui_message_item_cell_them);
+        View v = layoutInflater.inflate(R.layout.xdk_ui_message_item_cell_text, cellView, true);
+        v.setBackgroundResource(isMe ? R.drawable.xdk_ui_message_item_cell_me : R.drawable.xdk_ui_message_item_cell_them);
         ((GradientDrawable) v.getBackground()).setColor(isMe ? mMessageStyle.getMyBubbleColor() : mMessageStyle.getOtherBubbleColor());
 
         TextView t = (TextView) v.findViewById(R.id.cell_text);
@@ -152,8 +152,8 @@ public class TextCellFactory extends
     public boolean onLongClick(View v) {
         TextInfo parsed = (TextInfo) v.getTag();
         String text = parsed.getClipboardPrefix() + parsed.getString();
-        Util.copyToClipboard(v.getContext(), R.string.layer_ui_text_cell_factory_clipboard_description, text);
-        Toast.makeText(v.getContext(), R.string.layer_ui_text_cell_factory_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+        Util.copyToClipboard(v.getContext(), R.string.xdk_ui_text_cell_factory_clipboard_description, text);
+        Toast.makeText(v.getContext(), R.string.xdk_ui_text_cell_factory_copied_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     }
 

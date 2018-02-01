@@ -32,7 +32,7 @@ public abstract class TextSender extends MessageSender {
     public String getNotificationString(String text) {
         Identity me = getLayerClient().getAuthenticatedUser();
         String myName = me == null ? "" : mIdentityFormatter.getDisplayName(me);
-        return getContext().getString(R.string.layer_ui_notification_text, myName,
+        return getContext().getString(R.string.xdk_ui_notification_text, myName,
                 (text.length() < mMaxNotificationLength) ?
                         text : (text.substring(0, mMaxNotificationLength) + "…"));
     }

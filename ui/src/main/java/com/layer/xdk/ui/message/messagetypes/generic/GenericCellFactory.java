@@ -45,11 +45,11 @@ public class GenericCellFactory extends
     public CellHolder createCellHolder(ViewGroup cellView, boolean isMe, LayoutInflater layoutInflater) {
         Context context = cellView.getContext();
 
-        View v = layoutInflater.inflate(R.layout.ui_message_item_cell_text, cellView, true);
-        v.setBackgroundResource(isMe ? R.drawable.ui_message_item_cell_me : R.drawable.ui_message_item_cell_them);
+        View v = layoutInflater.inflate(R.layout.xdk_ui_message_item_cell_text, cellView, true);
+        v.setBackgroundResource(isMe ? R.drawable.xdk_ui_message_item_cell_me : R.drawable.xdk_ui_message_item_cell_them);
 
         TextView t = (TextView) v.findViewById(R.id.cell_text);
-        t.setTextColor(context.getResources().getColor(isMe ? R.color.layer_ui_text_white : R.color.layer_ui_text_black));
+        t.setTextColor(context.getResources().getColor(isMe ? R.color.xdk_ui_text_white : R.color.xdk_ui_text_black));
         return new CellHolder(v);
     }
 

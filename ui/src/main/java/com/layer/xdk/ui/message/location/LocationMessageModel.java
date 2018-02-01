@@ -124,7 +124,7 @@ public class LocationMessageModel extends MessageModel {
 
     @Override
     public int getBackgroundColor() {
-        return R.color.ui_location_message_background;
+        return R.color.xdk_ui_location_message_background;
     }
 
     @Override
@@ -136,7 +136,7 @@ public class LocationMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.ui_location_message_preview_text);
+        return title != null ? title : getContext().getString(R.string.xdk_ui_location_message_preview_text);
     }
 
     @Nullable
@@ -177,7 +177,7 @@ public class LocationMessageModel extends MessageModel {
 
             // Set dimensions
             // Google Static Map API has max dimension 640
-            int mapWidth = (int) getContext().getResources().getDimension(R.dimen.layer_ui_location_message_map_width);
+            int mapWidth = (int) getContext().getResources().getDimension(R.dimen.xdk_ui_location_message_map_width);
             int mapHeight = (int) Math.round((double) mapWidth / GOLDEN_RATIO);
 
             url.append("&size=").append(mapWidth).append("x").append(mapHeight);

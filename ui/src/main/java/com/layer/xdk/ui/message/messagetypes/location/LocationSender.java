@@ -173,7 +173,7 @@ public class LocationSender extends AttachmentSender {
                         .put(LocationCellFactory.KEY_LATITUDE, location.getLatitude())
                         .put(LocationCellFactory.KEY_LONGITUDE, location.getLongitude())
                         .put(LocationCellFactory.KEY_LABEL, myName);
-                String notification = context.getString(R.string.layer_ui_notification_location, myName);
+                String notification = context.getString(R.string.xdk_ui_notification_location, myName);
                 MessagePart part = client.newMessagePart(LocationCellFactory.MIME_TYPE, o.toString().getBytes());
                 PushNotificationPayload payload = new PushNotificationPayload.Builder()
                         .text(notification)
