@@ -189,6 +189,11 @@ public class ImagePopupActivity extends Activity implements LayerProgressListene
         mProgressBar.hide();
     }
 
+    @Override
+    public void onPreviewReleased() {
+
+    }
+
 
     //==============================================================================================
     // LayerProgressListener: update progress bar while downloading

@@ -14,6 +14,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.Log;
+import com.layer.xdk.ui.util.Util;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.File;
@@ -45,7 +46,10 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         BitmapFactory.Options bounds = getBounds(inputStream);
 
         inputStream = getContext().getContentResolver().openInputStream(imageUri);
-        MessagePart root = buildRootMessagePart(inputStream, bounds);
+        BitmapFactory.Options previewBounds = getPreviewBounds(inputStream);
+
+        inputStream = getContext().getContentResolver().openInputStream(imageUri);
+        MessagePart root = buildRootMessagePart(inputStream, bounds, previewBounds);
         UUID rootPartId = UUID.fromString(root.getId().getLastPathSegment());
 
         if (Log.isLoggable(Log.VERBOSE)) {
@@ -76,12 +80,13 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         if (!file.canRead()) throw new IllegalArgumentException("Cannot read image file");
 
         BitmapFactory.Options bounds = getBounds(new FileInputStream(file.getAbsolutePath()));
-        ExifInterface exifData = getExifData(file);
+        BitmapFactory.Options previewBounds = getPreviewBounds(new FileInputStream(file.getAbsolutePath()));
 
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v("Creating Root part from " + file.getAbsolutePath());
         }
-        MessagePart root = buildRootMessagePart(new FileInputStream(file.getAbsolutePath()), bounds);
+
+        MessagePart root = buildRootMessagePart(new FileInputStream(file.getAbsolutePath()), bounds, previewBounds);
         UUID rootPartId = UUID.fromString(root.getId().getLastPathSegment());
         MessagePart preview = buildPreviewPart(new FileInputStream(file.getAbsolutePath()), bounds, rootPartId);
         MessagePart source = buildSourceMessagePart(new FileInputStream(file.getAbsolutePath()), bounds, file.length(), rootPartId);
@@ -89,16 +94,16 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         return getLayerClient().newMessage(root, preview, source);
     }
 
-    private MessagePart buildRootMessagePart(InputStream inputStream, BitmapFactory.Options bounds)
+    private MessagePart buildRootMessagePart(InputStream inputStream, BitmapFactory.Options sourceBounds, BitmapFactory.Options previewBounds)
             throws IOException {
         ExifInterface exifData = getExifData(inputStream);
 
         ImageMessageMetadata metadata = new ImageMessageMetadata();
-        metadata.setHeight(bounds.outHeight);
-        metadata.setWidth(bounds.outWidth);
-        metadata.setPreviewHeight(bounds.outHeight);
-        metadata.setPreviewWidth(bounds.outWidth);
-        metadata.setMimeType(bounds.outMimeType);
+        metadata.setHeight(sourceBounds.outHeight);
+        metadata.setWidth(sourceBounds.outWidth);
+        metadata.setPreviewHeight(previewBounds.outHeight);
+        metadata.setPreviewWidth(previewBounds.outWidth);
+        metadata.setMimeType(sourceBounds.outMimeType);
         metadata.setOrientation(exifData.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0));
 
         return getLayerClient().newMessagePart(MessagePartUtils.getAsRoleRoot(ROOT_MIME_TYPE),

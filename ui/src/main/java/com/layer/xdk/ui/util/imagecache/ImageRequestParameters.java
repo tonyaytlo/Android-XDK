@@ -54,7 +54,7 @@ public class ImageRequestParameters {
     private boolean mOnlyScaleDown;
 
     private float mRotationDegrees;
-    private int mExifOrientation;
+    private Integer mExifOrientation;
 
     public ImageRequestParameters(Builder builder) {
         mUri = builder.mUri;
@@ -157,16 +157,14 @@ public class ImageRequestParameters {
 
     public float getExifRotationInDegrees(Context context) {
         int exifOrientation = 0;
-        if (mUri != null) {
+        if (mExifOrientation != null) {
+            exifOrientation = mExifOrientation;
+        } else if (mUri != null) {
             if (SCHEME_FILE.equals(mUri.getScheme())) {
                 exifOrientation = getFileExifRotation(mUri);
             } else if (SCHEME_CONTENT.equals(mUri.getScheme())) {
                 exifOrientation = getExifOrientationFromContentUri(context, mUri);
             }
-        } else if (mResourceId > 0) {
-            exifOrientation = 0;
-        } else {
-            exifOrientation = mExifOrientation;
         }
 
         switch (exifOrientation) {
@@ -243,7 +241,7 @@ public class ImageRequestParameters {
         private boolean mOnlyScaleDown;
 
         private float mRotationDegrees = 0.0f;
-        private int mExifOrientation;
+        private Integer mExifOrientation;
 
         @Px
         private int mTargetWidth;
@@ -388,7 +386,7 @@ public class ImageRequestParameters {
             return this;
         }
 
-        public Builder exifOrientation(int exifOrientation) {
+        public Builder exifOrientation(Integer exifOrientation) {
             mExifOrientation = exifOrientation;
             return this;
         }

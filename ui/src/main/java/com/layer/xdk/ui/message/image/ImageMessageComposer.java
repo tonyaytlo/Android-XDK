@@ -27,8 +27,8 @@ import java.io.OutputStream;
 public abstract class ImageMessageComposer {
 
     public static final int PREVIEW_COMPRESSION_QUALITY = 75;
-    public static final int PREVIEW_MAX_WIDTH = 512;
-    public static final int PREVIEW_MAX_HEIGHT = 512;
+    public static final int PREVIEW_MAX_WIDTH = 300;
+    public static final int PREVIEW_MAX_HEIGHT = 300;
 
     private Context mContext;
     private LayerClient mLayerClient;
@@ -96,6 +96,42 @@ public abstract class ImageMessageComposer {
             }
             throw e;
         }
+    }
+
+    protected BitmapFactory.Options getPreviewBounds(InputStream inputStream) {
+        BitmapFactory.Options bounds = new BitmapFactory.Options();
+        bounds.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(inputStream, null, bounds);
+        int[] previewDimensions = Util.scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
+        if (Log.isLoggable(Log.VERBOSE)) {
+            Log.v("Preview size: " + previewDimensions[0] + "x" + previewDimensions[1]);
+        }
+
+        // Determine sample size for preview
+        int sampleSize = 1;
+        int sampleWidth = bounds.outWidth;
+        int sampleHeight = bounds.outHeight;
+        while (sampleWidth > previewDimensions[0] && sampleHeight > previewDimensions[1]) {
+            sampleWidth >>= 1;
+            sampleHeight >>= 1;
+            sampleSize <<= 1;
+        }
+        if (sampleSize != 1) sampleSize >>= 1; // Back off 1 for scale-down instead of scale-up
+
+        BitmapFactory.Options previewOptions = new BitmapFactory.Options();
+        previewOptions.inSampleSize = sampleSize;
+
+        if (Log.isLoggable(Log.VERBOSE)) {
+            Log.v("Preview sampled size: " + (sampleWidth << 1) + "x" + (sampleHeight << 1));
+        }
+
+        if (previewDimensions[0] != sampleWidth && previewDimensions[1] != sampleHeight) {
+            bounds.outWidth = previewDimensions[0];
+            bounds.outHeight = previewDimensions[1];
+        }
+
+
+        return bounds;
     }
 
     protected BitmapFactory.Options getBounds(InputStream inputStream) {

@@ -17,6 +17,7 @@ public class OpenUrlActionHandler extends ActionHandler {
     public static final String KEY_MIME_TYPE = "mime-type";
     public static final String KEY_HEIGHT = "height";
     public static final String KEY_WIDTH = "width";
+    public static final String KEY_ORIENTATION = "orientation";
 
     private Intent mBrowserIntent;
 
@@ -53,7 +54,10 @@ public class OpenUrlActionHandler extends ActionHandler {
 
         int width = data.get(KEY_WIDTH).getAsInt();
         int height = data.get(KEY_HEIGHT).getAsInt();
+        int orientation = data.get(KEY_ORIENTATION).getAsInt();
+
         parameters.dimensions(width, height);
+        parameters.orientation(orientation);
 
         intent.putExtra(ImagePopupActivity.EXTRA_PARAMS, parameters);
         context.startActivity(intent);

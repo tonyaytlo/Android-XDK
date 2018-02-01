@@ -70,7 +70,7 @@ public class ImageMessageModel extends MessageModel {
         } else if (MessagePartUtils.isRole(messagePart, ROLE_PREVIEW)) {
             return true;
         } else if (MessagePartUtils.isRole(messagePart, ROLE_SOURCE)) {
-            return !MessagePartUtils.hasMessagePartWithRole(getMessage(), ROLE_PREVIEW);
+            return true;
         }
 
         return false;
@@ -110,10 +110,10 @@ public class ImageMessageModel extends MessageModel {
                 width = mMetadata.getWidth();
                 height = mMetadata.getHeight();
             } else {
-                if (mPreviewRequestParameters != null && mPreviewRequestParameters.getUri() != null) {
-                    url = mPreviewRequestParameters.getUri().toString();
-                } else {
+                if (mSourceRequestParameters != null && mSourceRequestParameters.getUri() != null) {
                     url = mSourceRequestParameters.getUri().toString();
+                } else {
+                    url = mPreviewRequestParameters.getUri().toString();
                 }
                 width = mMetadata.getWidth();
                 height = mMetadata.getHeight();
@@ -123,6 +123,7 @@ public class ImageMessageModel extends MessageModel {
             action.getData().addProperty("mime-type", mMetadata.getMimeType());
             action.getData().addProperty("width", width);
             action.getData().addProperty("height", height);
+            action.getData().addProperty("orientation", mMetadata.getOrientation());
             return action.getData();
         }
     }
