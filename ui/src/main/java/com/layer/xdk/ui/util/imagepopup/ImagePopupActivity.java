@@ -83,37 +83,33 @@ public class ImagePopupActivity extends Activity implements LayerProgressListene
         mMessagePartId = Uri.parse(parameters.mSourceUri);
         mProgressBar.show();
         int orientation;
-        if (parameters.mOrientation == SubsamplingScaleImageView.ORIENTATION_USE_EXIF) {
-            orientation = parameters.mOrientation;
-        } else {
-            Uri uri = Uri.parse(parameters.mPreviewUri != null ? parameters.mPreviewUri : parameters.mSourceUri);
-            switch (parameters.mOrientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    orientation = SubsamplingScaleImageView.ORIENTATION_90;
-                    mImageView.setImage(
-                            ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
-                            ImageSource.uri(uri));
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    orientation = SubsamplingScaleImageView.ORIENTATION_180;
-                    mImageView.setImage(
-                            ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
-                            ImageSource.uri(uri));
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    orientation = SubsamplingScaleImageView.ORIENTATION_270;
-                    mImageView.setImage(
-                            ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
-                            ImageSource.uri(uri));
-                    break;
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    orientation = SubsamplingScaleImageView.ORIENTATION_0;
-                    mImageView.setImage(
-                            ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
-                            ImageSource.uri(uri));
-                    break;
-            }
+        Uri uri = Uri.parse(parameters.mPreviewUri != null ? parameters.mPreviewUri : parameters.mSourceUri);
+        switch (parameters.mOrientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                orientation = SubsamplingScaleImageView.ORIENTATION_90;
+                mImageView.setImage(
+                        ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
+                        ImageSource.uri(uri));
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                orientation = SubsamplingScaleImageView.ORIENTATION_180;
+                mImageView.setImage(
+                        ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
+                        ImageSource.uri(uri));
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                orientation = SubsamplingScaleImageView.ORIENTATION_270;
+                mImageView.setImage(
+                        ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
+                        ImageSource.uri(uri));
+                break;
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                orientation = SubsamplingScaleImageView.ORIENTATION_0;
+                mImageView.setImage(
+                        ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
+                        ImageSource.uri(uri));
+                break;
         }
 
         mImageView.setOrientation(orientation);
