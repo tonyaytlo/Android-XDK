@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ButtonMessageView extends MessageView<ButtonMessageModel> {
+    private static final String BUTTON_SET_TAG_PREFIX = "ChoiceButtonSet-";
+
     private UiButtonMessageViewBinding mBinding;
     private ColorStateList mActionButtonColorStateList;
     private ColorStateList mChoiceButtonColorStateList;
@@ -163,11 +165,13 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             return;
         }
 
-        ChoiceButtonSet choiceButtonSet = findViewWithTag(choiceData.getResponseName());
+        // Prefix this tag in case buttons have the same response name
+        String buttonSetTag = BUTTON_SET_TAG_PREFIX + choiceData.getResponseName();
+        ChoiceButtonSet choiceButtonSet = findViewWithTag(buttonSetTag);
         if (choiceButtonSet == null) {
             choiceButtonSet = new ChoiceButtonSet(getContext());
             choiceButtonSet.setOrientation(LinearLayout.HORIZONTAL);
-            choiceButtonSet.setTag(choiceData.getResponseName());
+            choiceButtonSet.setTag(buttonSetTag);
             mBinding.uiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
                     new ViewGroup.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
