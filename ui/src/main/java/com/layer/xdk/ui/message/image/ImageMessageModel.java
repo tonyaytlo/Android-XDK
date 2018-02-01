@@ -54,7 +54,7 @@ public class ImageMessageModel extends MessageModel {
 
     @Override
     protected void parse(MessagePart messagePart) {
-        if (MessagePartUtils.isRoleRoot(messagePart)) {
+        if (getRootMessagePart().equals(messagePart)) {
             parseRootMessagePart(messagePart);
         } else if (MessagePartUtils.isRole(messagePart, ROLE_PREVIEW)) {
             parsePreviewPart(messagePart);

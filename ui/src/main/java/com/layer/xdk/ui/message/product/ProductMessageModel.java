@@ -59,7 +59,7 @@ public class ProductMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        if (messagePart == getRootMessagePart()) {
+        if (getRootMessagePart().equals(messagePart)) {
             reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
             mMetadata = mGson.fromJson(reader, ProductMessageMetadata.class);
             mOptions.clear();

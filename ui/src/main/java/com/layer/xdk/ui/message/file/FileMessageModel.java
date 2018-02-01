@@ -71,7 +71,7 @@ public class FileMessageModel extends MessageModel {
     @Override
     protected void parse(MessagePart messagePart) {
         JsonReader reader;
-        if (MessagePartUtils.isRoleRoot(messagePart)) {
+        if (getRootMessagePart().equals(messagePart)) {
             reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
             mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
             setupFileIconDrawable(mMetadata.getMimeType());
