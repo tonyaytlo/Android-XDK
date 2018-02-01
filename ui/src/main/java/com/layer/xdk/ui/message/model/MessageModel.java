@@ -75,23 +75,27 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     }
 
     public void setMessage(@NonNull Message message, @Nullable MessagePart rootMessagePart) {
-        if (!message.equals(mMessage)) {
-            mMessage = message;
-            mRootMessagePart = rootMessagePart;
+        mMessage = message;
+        mRootMessagePart = rootMessagePart;
 
-            if (mRootMessagePart != null) {
-                // Always download and parse the root part
-                if (mRootMessagePart.isContentReady()) {
-                    parse(mRootMessagePart);
-                } else {
-                    download(mRootMessagePart);
-                }
-            }
-
-            setRole(ROLE_ROOT);
-            // Deal with child parts
-            processChildParts();
+        mChildMessageModels.clear();
+        if (mChildMessageParts != null) {
+            mChildMessageParts.clear();
         }
+        mResponseSummaryPart = null;
+
+        if (mRootMessagePart != null) {
+            // Always download and parse the root part
+            if (mRootMessagePart.isContentReady()) {
+                parse(mRootMessagePart);
+            } else {
+                download(mRootMessagePart);
+            }
+        }
+
+        setRole(ROLE_ROOT);
+        // Deal with child parts
+        processChildParts();
     }
 
     protected void processChildParts() {
@@ -125,9 +129,6 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
                     }
                 }
             }
-        } else {
-            mChildMessageModels.clear();
-            mChildMessageParts.clear();
         }
     }
 

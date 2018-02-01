@@ -77,6 +77,7 @@ public class ButtonMessageModel extends MessageModel {
                 }
 
             }
+            notifyChange();
         }
     }
 
@@ -100,6 +101,7 @@ public class ButtonMessageModel extends MessageModel {
                 }
             }
         }
+        notifyChange();
     }
 
     private boolean getIsEnabledForMe(ButtonModel.ChoiceData choiceData) {

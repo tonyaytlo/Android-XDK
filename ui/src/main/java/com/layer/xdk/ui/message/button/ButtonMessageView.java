@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.button;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.databinding.Observable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -77,10 +78,25 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             mBinding.uiButtonMessageViewContent.setVisibility(GONE);
         }
 
-        List<ButtonModel> buttonModels = model.getButtonModels();
+        addOrUpdateButtonsFromModel();
+
+        model.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                addOrUpdateButtonsFromModel();
+            }
+        });
+    }
+
+    private void addOrUpdateButtonsFromModel() {
+        ButtonMessageModel viewModel = mBinding.getViewModel();
+        if (viewModel == null) {
+            return;
+        }
+        List<ButtonModel> buttonModels = viewModel.getButtonModels();
         if (buttonModels != null) {
             for (ButtonModel buttonModel : buttonModels) {
-                addButton(buttonModel);
+                addOrUpdateButton(buttonModel);
             }
         }
     }
@@ -90,35 +106,40 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
         return StandardMessageContainer.class;
     }
 
-    private void addButton(ButtonModel buttonModel) {
+    private void addOrUpdateButton(ButtonModel buttonModel) {
         if (buttonModel.getType().equals(ButtonModel.TYPE_ACTION)) {
-            addActionButton(buttonModel);
+            addOrUpdateActionButton(buttonModel);
         } else if (buttonModel.getType().equals(ButtonModel.TYPE_CHOICE)) {
-            addChoiceButtons(buttonModel);
+            addOrUpdateChoiceButtons(buttonModel);
         }
     }
 
-    private void addActionButton(@NonNull final ButtonModel buttonModel) {
+    private void addOrUpdateActionButton(@NonNull final ButtonModel buttonModel) {
         //Instantiate
-        AppCompatButton actionButton = new AppCompatButton(getContext());
+        AppCompatButton actionButton = findViewWithTag(buttonModel.getText());
+        if (actionButton == null) {
+            actionButton = new AppCompatButton(getContext());
 
-        // Style it
-        actionButton.setBackgroundResource(R.drawable.ui_choice_set_button_background_selector);
-        actionButton.setTransformationMethod(null);
-        actionButton.setLines(1);
-        actionButton.setEllipsize(TextUtils.TruncateAt.END);
-        actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                .getDimension(R.dimen.ui_button_message_action_button_text_size));
-        actionButton.setTextColor(mActionButtonColorStateList);
+            // Style it
+            actionButton.setBackgroundResource(R.drawable.ui_choice_set_button_background_selector);
+            actionButton.setTransformationMethod(null);
+            actionButton.setLines(1);
+            actionButton.setEllipsize(TextUtils.TruncateAt.END);
+            actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
+                    .getDimension(R.dimen.ui_button_message_action_button_text_size));
+            actionButton.setTextColor(mActionButtonColorStateList);
+            actionButton.setTag(buttonModel.getText());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            actionButton.setStateListAnimator(null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                actionButton.setStateListAnimator(null);
+            }
+
+            // Add it
+            mBinding.uiButtonMessageViewButtonsContainer.addView(actionButton,
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-
-        // Add it
-        mBinding.uiButtonMessageViewButtonsContainer.addView(actionButton, new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Bind data to it
         actionButton.setText(buttonModel.getText());
@@ -132,7 +153,7 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
         });
     }
 
-    private void addChoiceButtons(@NonNull ButtonModel buttonModel) {
+    private void addOrUpdateChoiceButtons(@NonNull ButtonModel buttonModel) {
         if (buttonModel.getChoices() == null || buttonModel.getChoices().isEmpty()) return;
         final ButtonModel.ChoiceData choiceData = buttonModel.getChoiceData();
         if (choiceData == null || choiceData.getResponseName() == null) {
@@ -142,11 +163,16 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             return;
         }
 
-        ChoiceButtonSet choiceButtonSet = new ChoiceButtonSet(getContext());
-        choiceButtonSet.setOrientation(LinearLayout.HORIZONTAL);
-        mBinding.uiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
-                new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ChoiceButtonSet choiceButtonSet = findViewWithTag(choiceData.getResponseName());
+        if (choiceButtonSet == null) {
+            choiceButtonSet = new ChoiceButtonSet(getContext());
+            choiceButtonSet.setOrientation(LinearLayout.HORIZONTAL);
+            choiceButtonSet.setTag(choiceData.getResponseName());
+            mBinding.uiButtonMessageViewButtonsContainer.addView(choiceButtonSet,
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
 
         for (ChoiceMetadata choiceMetadata : buttonModel.getChoices()) {
             choiceButtonSet.addOrUpdateChoice(choiceMetadata);
