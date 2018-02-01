@@ -1,6 +1,8 @@
 package com.layer.xdk.ui.message;
 
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.message.response.ResponseMessageModel;
+import com.layer.xdk.ui.message.status.StatusMessageModel;
 
 import java.util.Date;
 
@@ -16,7 +18,8 @@ public class MessageCluster {
         NEW_SENDER,
         LESS_THAN_MINUTE,
         LESS_THAN_HOUR,
-        MORE_THAN_HOUR;
+        MORE_THAN_HOUR,
+        STATUS;
 
         private static final long MILLIS_MINUTE = 60 * 1000;
         private static final long MILLIS_HOUR = 60 * MILLIS_MINUTE;
@@ -24,6 +27,13 @@ public class MessageCluster {
         public static Type fromMessages(Message older, Message newer) {
             // Different users?
             if (!older.getSender().equals(newer.getSender())) return NEW_SENDER;
+
+            // Status message?
+            boolean olderIsStatus = isStatusMessage(older);
+            boolean newerIsStatus = isStatusMessage(newer);
+            if (olderIsStatus || newerIsStatus) {
+                return STATUS;
+            }
 
             // Time clustering for same user?
             Date oldReceivedAt = older.getReceivedAt();
@@ -33,6 +43,12 @@ public class MessageCluster {
             if (delta <= MILLIS_MINUTE) return LESS_THAN_MINUTE;
             if (delta <= MILLIS_HOUR) return LESS_THAN_HOUR;
             return MORE_THAN_HOUR;
+        }
+
+        private static boolean isStatusMessage(Message message) {
+            String rootMimeType = MessagePartUtils.getRootMimeType(message);
+            return StatusMessageModel.MIME_TYPE.equals(rootMimeType)
+                    || ResponseMessageModel.MIME_TYPE.equals(rootMimeType);
         }
     }
 

@@ -65,19 +65,19 @@
     <dimen name="layer_ui_message_item_cell_padding_near">12dp</dimen>
     <dimen name="layer_ui_message_item_cell_padding_far">12dp</dimen>
     <dimen name="layer_ui_message_item_footer_margin">30dp</dimen>
+    <dimen name="layer_ui_message_item_footer_name_top_margin">14dp</dimen>
     <dimen name="layer_ui_message_item_cell_margin_far">@dimen/layer_ui_padding_normal</dimen>
 
-    <dimen name="layer_ui_message_item_time_group_padding_top">14dp</dimen>
-    <dimen name="layer_ui_message_item_time_group_padding_bottom">7dp</dimen>
+    <dimen name="layer_ui_message_item_time_group_padding_top">8dp</dimen>
+    <dimen name="layer_ui_message_item_time_group_padding_bottom">14dp</dimen>
     <dimen name="layer_ui_message_item_receipt_margin">12dp</dimen>
     <dimen name="layer_ui_message_item_sender_margin_bottom">1dp</dimen>
     <dimen name="layer_ui_message_item_group_day_and_time_margin">1dp</dimen>
     <dimen name="layer_ui_message_cluster_space">2dp</dimen>
-    <dimen name="layer_ui_message_cluster_space_gap">8dp</dimen>
     <dimen name="layer_ui_message_item_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_time_group_padding">2dp</dimen>
     <dimen name="layer_ui_message_item_avatar_padding_left">12dp</dimen>
-    <dimen name="layer_ui_message_item_top_bottom_margin">4dp</dimen>
+    <dimen name="layer_ui_message_item_top_bottom_margin">6dp</dimen>
     <dimen name="layer_ui_zero_padding">0dp</dimen>
 
 

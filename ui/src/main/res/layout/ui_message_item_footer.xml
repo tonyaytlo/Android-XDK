@@ -61,7 +61,7 @@
         <TextView
             android:id="@+id/messageFooterNames"
             android:layout_below="@id/messageFooterAnimation"
-            android:layout_marginTop="@dimen/layer_ui_message_item_time_group_padding_top"
+            android:layout_marginTop="@dimen/layer_ui_message_item_footer_name_top_margin"
             android:visibility="@{viewModel.typingIndicatorMessageVisibility ? View.VISIBLE : View.GONE}"
             android:text="@{viewModel.typingIndicatorMessage}"
             android:layout_width="match_parent"

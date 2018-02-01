@@ -42,7 +42,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/layer_ui_message_item_time_group_padding_bottom"
+            android:layout_marginTop="@dimen/layer_ui_message_item_time_group_padding_top"
+            android:layout_marginBottom="@dimen/layer_ui_message_item_time_group_padding_bottom"
             android:visibility="@{viewModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
 
             <TextView
