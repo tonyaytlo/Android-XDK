@@ -28,7 +28,9 @@ public class TextMessageView extends MessageView<TextMessageModel> {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         mBinding = UiTextMessageViewBinding.inflate(inflater, this, true);
-        mBinding.getRoot().setOnClickListener(new OnClickListener() {
+
+        setClickable(true);
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mBinding.getViewModel() != null) {

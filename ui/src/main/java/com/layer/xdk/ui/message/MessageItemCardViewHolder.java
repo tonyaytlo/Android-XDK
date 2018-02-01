@@ -21,6 +21,10 @@ public class MessageItemCardViewHolder extends MessageItemViewHolder<MessageItem
         getBinding().messageViewer.setMessageModelManager(modelRegistry);
         getBinding().messageViewer.setOnClickListener(viewModel.getOnClickListener());
         getBinding().messageViewer.setOnLongClickListener(viewModel.getOnLongClickListener());
+
+        getBinding().getRoot().setClickable(true);
+        getBinding().getRoot().setOnClickListener(viewModel.getOnClickListener());
+        getBinding().getRoot().setOnLongClickListener(viewModel.getOnLongClickListener());
     }
 
     public void bind(MessageCluster messageCluster, int position, int recipientStatusPosition, int parentWidth) {

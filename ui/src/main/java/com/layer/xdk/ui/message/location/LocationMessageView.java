@@ -26,7 +26,7 @@ public class LocationMessageView extends MessageView<LocationMessageModel> {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         mBinding = UiLocationMessageViewBinding.inflate(layoutInflater, this, true);
 
-        mBinding.mapImage.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 LocationMessageModel model = mBinding.getViewModel();

@@ -27,7 +27,7 @@ public class ImageMessageView extends MessageView<ImageMessageModel> {
         super(context, attrs, defStyleAttr);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         mBinding = UiImageMessageViewBinding.inflate(inflater, this, true);
-        mBinding.image.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mBinding.getViewModel() != null) {

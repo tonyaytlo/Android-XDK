@@ -30,7 +30,7 @@ public class ProductMessageView extends MessageView<ProductMessageModel> {
     @Override
     public void setMessageModel(final ProductMessageModel model) {
         mBinding.setViewModel(model);
-        mBinding.getRoot().setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (model.getActionEvent() != null) {

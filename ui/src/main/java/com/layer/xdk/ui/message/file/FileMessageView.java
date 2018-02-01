@@ -27,7 +27,7 @@ public class FileMessageView extends MessageView<FileMessageModel> {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         mBinding = UiFileMessageLayoutBinding.inflate(layoutInflater, this, true);
 
-        mBinding.root.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 FileMessageModel model = mBinding.getViewModel();
