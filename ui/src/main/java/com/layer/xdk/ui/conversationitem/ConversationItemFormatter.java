@@ -13,7 +13,6 @@ import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.messagetypes.generic.GenericCellFactory;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.util.Util;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -26,19 +25,20 @@ import java.util.Set;
  */
 
 public class ConversationItemFormatter {
-    protected static final String METADATA_KEY_CONVERSATION_TITLE = "conversationName";
-    protected static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
+    private static final String METADATA_KEY_CONVERSATION_TITLE = "conversationName";
+    private static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
+    private static final int PREVIEW_MAX_LENGTH = 40;
 
-    protected Context mContext;
-    protected LayerClient mLayerClient;
-    protected IdentityFormatter mIdentityFormatter;
-    protected DateFormat mTimeFormat;
-    protected DateFormat mDateFormat;
-    // TODO : This is a bad place for these to exist. Need to find a better way in round 2
-    protected List<CellFactory> mCellFactories;
-    protected BinderRegistry mBinderRegistry;
+    private Context mContext;
+    private LayerClient mLayerClient;
+    private IdentityFormatter mIdentityFormatter;
+    private DateFormat mTimeFormat;
+    private DateFormat mDateFormat;
+    private List<CellFactory> mCellFactories;
+    private BinderRegistry mBinderRegistry;
 
-    public ConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
+    public ConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter,
+                                     DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
         mContext = context;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
@@ -65,11 +65,12 @@ public class ConversationItemFormatter {
         if (metadataTitle != null) return metadataTitle.trim();
 
         StringBuilder sb = new StringBuilder();
+        boolean getOnlyFirstName = participants.size() > 2;
         for (Identity participant : participants) {
             if (participant.equals(authenticatedUser)) continue;
-            String initials = participants.size() > 2 ? Util.getInitials(participant) : Util.getDisplayName(participant);
+            String displayName = getOnlyFirstName ? mIdentityFormatter.getFirstName(participant) : mIdentityFormatter.getDisplayName(participant);
             if (sb.length() > 0) sb.append(", ");
-            sb.append(initials);
+            sb.append(displayName);
         }
         return sb.toString();
     }
@@ -97,24 +98,21 @@ public class ConversationItemFormatter {
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        if (!mBinderRegistry.isLegacyMessageType(message)) {
+        if (!mBinderRegistry.isLegacyMessageType(message) || mBinderRegistry.isStatusMessageType(message)) {
             String previewText = null;
             String modelIdentifier = MessagePartUtils.getRootMimeType(message);
             if (modelIdentifier != null && mBinderRegistry.getMessageModelManager().hasModel(modelIdentifier)) {
                 MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(modelIdentifier);
-                model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
                 if (model != null) {
+                    model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
                     model.setMessage(message);
                     previewText = model.getPreviewText();
                 }
             }
-
-            previewText = previewText != null ? previewText : mContext.getString(R.string.ui_generic_message_preview_text);
-            boolean senderIsMe = message.getSender().equals(mLayerClient.getAuthenticatedUser());
-            if (senderIsMe) {
-                return mContext.getString(R.string.ui_preview_text_you_sent, previewText);
+            if (previewText != null) {
+                return previewText.length() > PREVIEW_MAX_LENGTH ? previewText.substring(0, PREVIEW_MAX_LENGTH) : previewText;
             } else {
-                return mContext.getString(R.string.ui_preview_text_sent, mIdentityFormatter.getDisplayName(message.getSender()), previewText);
+                return mContext.getString(R.string.ui_generic_message_preview_text);
             }
         } else {
             if (mCellFactories != null && !mCellFactories.isEmpty()) {

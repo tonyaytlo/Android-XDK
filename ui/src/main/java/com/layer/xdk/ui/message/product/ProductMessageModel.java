@@ -145,7 +145,8 @@ public class ProductMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        return getContext().getString(R.string.ui_product_message_preview_text);
+        String name = getName();
+        return name != null ? name : getContext().getString(R.string.ui_product_message_preview_text);
     }
 
     @Bindable

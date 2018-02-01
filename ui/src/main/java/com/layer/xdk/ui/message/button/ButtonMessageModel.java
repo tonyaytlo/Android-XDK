@@ -147,8 +147,18 @@ public class ButtonMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        if (mMetadata != null) {
-            return getContext().getResources().getQuantityString(R.plurals.ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+        if (getHasContent()) {
+            String title = null;
+            List<MessageModel> childMessageModels = getChildMessageModelsWithRole("content");
+            if (childMessageModels.size() > 0) {
+                title = childMessageModels.get(0).getPreviewText();
+            }
+
+            if (title != null) {
+                return title;
+            } else {
+                return getContext().getResources().getQuantityString(R.plurals.ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+            }
         }
 
         return "";

@@ -16,7 +16,6 @@ import com.layer.xdk.ui.message.view.MessageView;
 public class TextMessageModel extends MessageModel {
 
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
-    private static final int PREVIEW_MAX_LENGTH = 100;
     private final JsonParser mJsonParser;
 
     private String mText;
@@ -112,7 +111,7 @@ public class TextMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (getHasContent()) {
-            return mText.length() > PREVIEW_MAX_LENGTH ? mText.substring(0, PREVIEW_MAX_LENGTH) : mText;
+            return mTitle != null ? mTitle : mText;
         } else {
             return getContext().getString(R.string.ui_text_message_preview_text);
         }

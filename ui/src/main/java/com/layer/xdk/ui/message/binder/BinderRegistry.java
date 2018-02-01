@@ -20,9 +20,9 @@ import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
+import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
 
 import java.util.ArrayList;
@@ -209,6 +209,7 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(ProductMessageModel.MIME_TYPE, ProductMessageModel.class);
         mMessageModelManager.registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
         mMessageModelManager.registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
+        mMessageModelManager.registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
     }
 
     @SuppressWarnings("unused")

@@ -147,6 +147,11 @@ public class FileMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
+        if (getHasContent()) {
+            if (mMetadata.getTitle() != null) {
+                return mMetadata.getTitle();
+            }
+        }
         return getContext().getString(R.string.ui_file_message_preview_text);
     }
 

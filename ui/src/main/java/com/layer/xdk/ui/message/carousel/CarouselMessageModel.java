@@ -20,6 +20,8 @@ import java.util.List;
 
 public class CarouselMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.carousel+json";
+    private static final String ROLE_CAROUSEL_ITEM = "carousel-item";
+
     private Gson mGson;
     private CarouselModelMetadata mMetadata;
 
@@ -101,12 +103,9 @@ public class CarouselMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        List<MessageModel> childMessageModels = getChildMessageModels();
-        if (childMessageModels != null) {
-            return getContext().getResources().getQuantityString(R.plurals.ui_carousel_message_preview_text, 0, childMessageModels.size());
-        }
+        List<MessageModel> childMessageModels = getChildMessageModelsWithRole(ROLE_CAROUSEL_ITEM);
+        return getContext().getResources().getQuantityString(R.plurals.ui_carousel_message_preview_text, 0, childMessageModels.size());
 
-        return null;
     }
 
     @Override

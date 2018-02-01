@@ -104,17 +104,15 @@
         <item quantity="other">%d items</item>
     </plurals>
 
-    <string name="ui_product_message_preview_text">a product</string>
-    <string name="ui_receipt_message_preview_text">a receipt</string>
-    <string name="ui_file_message_preview_text">a file</string>
-    <string name="ui_image_message_preview_text">an image</string>
-    <string name="ui_location_message_preview_text">a location</string>
-    <string name="ui_link_message_preview_text">a link</string>
-    <string name="ui_text_message_preview_text">a message</string>
-    <string name="ui_status_message_preview_text">a status</string>
-    <string name="ui_generic_message_preview_text">a message</string>
-    <string name="ui_preview_text_you_sent">You: %s</string>
-    <string name="ui_preview_text_sent">%1$s: %2$s</string>
+    <string name="ui_product_message_preview_text">Product</string>
+    <string name="ui_receipt_message_preview_text">Receipt</string>
+    <string name="ui_file_message_preview_text">File</string>
+    <string name="ui_image_message_preview_text">Image</string>
+    <string name="ui_location_message_preview_text">Location</string>
+    <string name="ui_link_message_preview_text">Link</string>
+    <string name="ui_text_message_preview_text">Message</string>
+    <string name="ui_status_message_preview_text">Status</string>
+    <string name="ui_generic_message_preview_text">Message</string>
 
     <string name="ui_receipt_message_payment_method_title">Paid with</string>
     <string name="ui_receipt_message_shipping_address_title">Ship to</string>

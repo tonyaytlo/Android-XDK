@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class MessagePartUtils {
     public static final String ROLE_SOURCE = "source";
 
-    private static final Pattern PARAMETER_ROLE = Pattern.compile("\\s*role\\s*=\\s*\\w+");
+    private static final Pattern PARAMETER_ROLE = Pattern.compile("\\s*role\\s*=\\s*\\w+-*\\w*");
     private static final Pattern PARAMETER_IS_ROOT = Pattern.compile(".*;\\s*role\\s*=\\s*root\\s*;?");
 
     private static final String ROLE_ROOT = "root";
