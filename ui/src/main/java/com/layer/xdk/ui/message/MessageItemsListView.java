@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,10 +28,11 @@ import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
+import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
-import com.layer.xdk.ui.recyclerview.ItemsRecyclerView;
+import com.layer.xdk.ui.util.Log;
 
 import java.util.List;
 import java.util.Set;
@@ -39,9 +41,9 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
     protected boolean mShouldShowAvatarsInOneOnOneConversations;
     protected MessageStyle mMessageStyle;
-    protected ItemsRecyclerView<Message> mMessagesRecyclerView;
+    protected RecyclerView mMessagesRecyclerView;
     protected LinearLayoutManager mLinearLayoutManager;
-    protected MessagesAdapter mAdapter;
+    protected MessagesAdapter2 mAdapter;
 
     protected LayerClient mLayerClient;
     protected Conversation mConversation;
@@ -57,11 +59,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         parseStyle(context, attrs, 0);
 
         inflate(getContext(), R.layout.xdk_ui_message_items_list, this);
-        mMessagesRecyclerView = (ItemsRecyclerView<Message>) findViewById(R.id.xdk_ui_message_recycler);
+        mMessagesRecyclerView = findViewById(R.id.xdk_ui_message_recycler);
         mHeaderView = new EmptyMessageListHeaderView(getContext());
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        mLinearLayoutManager.setStackFromEnd(true);
+//        mLinearLayoutManager.setStackFromEnd(true);
+        mLinearLayoutManager.setReverseLayout(true);
         mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         DefaultItemAnimator noChangeAnimator = new DefaultItemAnimator() {
@@ -73,51 +76,109 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         noChangeAnimator.setSupportsChangeAnimations(false);
         mMessagesRecyclerView.setItemAnimator(noChangeAnimator);
 
-        setOnRefreshListener(new OnRefreshListener() {
+        mMessagesRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onRefresh() {
-                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
-                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
-                }
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                    RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
             }
         });
+
+//        setOnRefreshListener(new OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
+//                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
+//                }
+//            }
+//        });
+
+
     }
 
     private void removeEmptyHeaderView() {
         //Check the default data source state of the Adapter, if HeaderView, FooterView are set on the Adapter
-        int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
-        if (mAdapter.getHeaderView() == mHeaderView && count != mAdapter.getItemCount()) {
-            mAdapter.setHeaderView(null);
-            mAdapter.setShouldShowHeader(false);
-        }
+//        int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
+//        if (mAdapter.getHeaderView() == mHeaderView && count != mAdapter.getItemCount()) {
+//            mAdapter.setHeaderView(null);
+//            mAdapter.setShouldShowHeader(false);
+//        }
     }
 
     public void removeHeaderView() {
-        mAdapter.setHeaderView(null);
+//        mAdapter.setHeaderView(null);
     }
 
     public void onDestroy() {
-        mMessagesRecyclerView.onDestroy();
+//        mMessagesRecyclerView.onDestroy();
         mLayerClient.unregisterEventListener(this);
     }
 
     public void setHeaderView(View headerView) {
-        mAdapter.setHeaderView(headerView);
+//        mAdapter.setHeaderView(headerView);
     }
 
-    public void setAdapter(final MessagesAdapter adapter) {
+    public void setAdapter(final MessagesAdapter2 adapter) {
         mAdapter = adapter;
-        mAdapter.setStyle(mMessageStyle);
+//        mAdapter.setStyle(mMessageStyle);
         mMessagesRecyclerView.setAdapter(adapter);
         setShouldShowAvatarInOneOnOneConversations(mShouldShowAvatarsInOneOnOneConversations);
 
-        // Create an adapter that auto-scrolls if we're already at the bottom
-        adapter.setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
-            public void onMessageAppend(MessagesAdapter adapter, Message message) {
-                autoScroll();
+            public void onChanged() {
+                super.onChanged();
+                Log.d("ZZZZZ onChanged");
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                super.onItemRangeChanged(positionStart, itemCount);
+                Log.d("ZZZZZ onItemRangeChanged. positionStart: " + positionStart + " itemCount: " + itemCount);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+                super.onItemRangeChanged(positionStart, itemCount, payload);
+                Log.d("ZZZZZ onItemRangeChangedWithPayload. positionStart: " + positionStart + " itemCount: " + itemCount);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+//                mMessagesRecyclerView.scrollToPosition(0);
+                Log.d("ZZZZZ onItemRangeInserted. positionStart: " + positionStart + " itemCount: " + itemCount);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                Log.d("ZZZZZ onItemRangeRemoved. positionStart: " + positionStart + " itemCount: " + itemCount);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                super.onItemRangeMoved(fromPosition, toPosition, itemCount);
+                Log.d("ZZZZZ onItemRangeMoved. fromPosition: " + fromPosition + " toPosition:" + toPosition + " itemCount: " + itemCount);
             }
         });
+
+//        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+//            @Override
+//            public void onItemRangeInserted(int positionStart, int itemCount) {
+//                super.onItemRangeInserted(positionStart, itemCount);
+//                autoScroll();
+//
+//            }
+//        });
+
+        // Create an adapter that auto-scrolls if we're already at the bottom
+//        adapter.setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
+//            @Override
+//            public void onMessageAppend(MessagesAdapter adapter, Message message) {
+//                autoScroll();
+//            }
+//        });
     }
 
     //============================================================================================
@@ -186,7 +247,8 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * @see MessagesAdapter#getShouldShowAvatarInOneOnOneConversations()
      */
     public boolean getShouldShowAvatarInOneOnOneConversations() {
-        return mAdapter.getShouldShowAvatarInOneOnOneConversations();
+//        return mAdapter.getShouldShowAvatarInOneOnOneConversations();
+        return true;
     }
 
     /**
@@ -195,7 +257,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * @see MessagesAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
      */
     public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
-        mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
+//        mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
     }
 
     /**
@@ -204,7 +266,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * @see BinderRegistry#setCellFactories(List)
      */
     public void setCellFactories(List<CellFactory> cellFactories) {
-        mAdapter.getBinderRegistry().setCellFactories(cellFactories);
+//        mAdapter.getBinderRegistry().setCellFactories(cellFactories);
     }
 
     public void setTextTypeface(Typeface myTypeface, Typeface otherTypeface) {
@@ -229,7 +291,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * @see MessagesAdapter#setFooterView(View, Set)
      */
     public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
-        mAdapter.setFooterView(footerView, users);
+//        mAdapter.setFooterView(footerView, users);
         autoScroll();
     }
 
@@ -273,15 +335,15 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mConversation = conversation;
         mLayerClient = layerClient;
 
-        mAdapter.setQuery(query, null);
-        if (conversation != null) {
-            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
-            mAdapter.setIsOneOnOneConversation(conversation.getParticipants().size() == 2);
-            mAdapter.setConversation(conversation);
-        }
-
-        mLayerClient.registerEventListener(this);
-        mAdapter.refresh();
+//        mAdapter.setQuery(query, null);
+//        if (conversation != null) {
+//            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
+//            mAdapter.setIsOneOnOneConversation(conversation.getParticipants().size() == 2);
+//            mAdapter.setConversation(conversation);
+//        }
+//
+//        mLayerClient.registerEventListener(this);
+//        mAdapter.refresh();
     }
 
     protected void parseStyle(Context context, AttributeSet attrs, int defStyle) {

@@ -107,14 +107,15 @@ public class MessageItemsAdapter extends MessagesAdapter {
 
     @Override
     protected MessageItemViewHolder createStatusMessageItemViewHolder(ViewGroup parent) {
-        MessageItemStatusViewModel viewModel = new MessageItemStatusViewModel(parent.getContext(), getLayerClient(), getBinderRegistry().getMessageModelManager());
-        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-        return new MessageItemStatusViewHolder(parent, viewModel);
+//        MessageItemStatusViewModel viewModel = new MessageItemStatusViewModel(parent.getContext(), getLayerClient(), getBinderRegistry().getMessageModelManager());
+//        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
+//        return new MessageItemStatusViewHolder(parent, viewModel);
+        return null;
     }
 
     @Override
     public void bindStatusMessageItem(MessageItemViewHolder viewHolder) {
-        MessageItemStatusViewHolder holder = (MessageItemStatusViewHolder) viewHolder;
-        holder.bind();
+//        MessageItemStatusViewHolder holder = (MessageItemStatusViewHolder) viewHolder;
+//        holder.bind();
     }
 }

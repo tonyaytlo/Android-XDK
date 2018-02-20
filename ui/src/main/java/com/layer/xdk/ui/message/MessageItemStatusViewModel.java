@@ -11,10 +11,10 @@ import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.viewmodel.ItemViewModel;
+import com.layer.xdk.ui.viewmodel.MessageModelViewModel;
 
 @SuppressWarnings("WeakerAccess")
-public class MessageItemStatusViewModel extends ItemViewModel<Message> {
+public class MessageItemStatusViewModel extends MessageModelViewModel {
     private boolean mEnableReadReceipts;
     private boolean mVisible;
     private String mText;
@@ -29,7 +29,7 @@ public class MessageItemStatusViewModel extends ItemViewModel<Message> {
     }
 
     public void update() {
-        Message message = getItem();
+        Message message = getItem().getMessage();
         if (mMessageModel != null && mMessageModel.getMessage().equals(message)) {
             // Skip as this is an unnecessary update
             return;
@@ -42,7 +42,7 @@ public class MessageItemStatusViewModel extends ItemViewModel<Message> {
             mMessageModel = createStatusModel(message);
         }
 
-        boolean myMessage = getItem().getSender().equals(getLayerClient().getAuthenticatedUser());
+        boolean myMessage = getItem().getMessage().getSender().equals(getLayerClient().getAuthenticatedUser());
         if (!myMessage && mEnableReadReceipts) {
             message.markAsRead();
         }

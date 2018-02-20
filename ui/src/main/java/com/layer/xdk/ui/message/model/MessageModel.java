@@ -321,6 +321,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         mDateFormatter = dateFormatter;
     }
 
+    // TODO AND-1242 - Make this final and set in the constructor
     public Message getMessage() {
         return mMessage;
     }

@@ -47,6 +47,10 @@ public class MessageViewer extends FrameLayout {
     }
 
     public void setMessage(@NonNull Message message) {
+        if (message == null) {
+            // TODO AND-1242 Need to hande null messages if placeholders are enabled
+            return;
+        }
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(message);
         if (rootMessagePart == null) {
             if (Log.isLoggable(Log.ERROR)) {

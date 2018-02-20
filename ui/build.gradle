@@ -84,6 +84,10 @@ dependencies {
     api 'com.android.support.constraint:constraint-layout:1.1.0-beta1'
     implementation "com.android.support:exifinterface:27.0.2"
 
+
+    compile "android.arch.paging:runtime:1.0.0-alpha5"
+    compile "android.arch.lifecycle:livedata:1.1.0"
+
     // Testing
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.8.47'

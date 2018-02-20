@@ -22,9 +22,6 @@
         <import type="android.view.View"/>
 
         <variable
-            name="viewModel"
-            type="com.layer.xdk.ui.message.MessageItemCardViewModel"/>
-        <variable
             name="messageModel"
             type="com.layer.xdk.ui.message.MessageModelCardViewModel"/>
     </data>
@@ -33,8 +30,8 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@{viewModel.nextPartOfCluster ? @dimen/xdk_ui_message_cluster_space : @dimen/xdk_ui_message_item_top_bottom_margin}"
-        android:layout_marginTop="@{viewModel.previousPartOfCluster ? 0.0f : @dimen/xdk_ui_message_item_top_bottom_margin}"
+        android:layout_marginBottom="@{messageModel.nextPartOfCluster ? @dimen/xdk_ui_message_cluster_space : @dimen/xdk_ui_message_item_top_bottom_margin}"
+        android:layout_marginTop="@{messageModel.previousPartOfCluster ? 0.0f : @dimen/xdk_ui_message_item_top_bottom_margin}"
         android:background="@drawable/xdk_ui_item_foreground_selector"
         android:duplicateParentState="true"
         android:orientation="vertical">
@@ -47,13 +44,13 @@
             android:orientation="horizontal"
             android:layout_marginTop="@dimen/xdk_ui_message_item_time_group_padding_top"
             android:layout_marginBottom="@dimen/xdk_ui_message_item_time_group_padding_bottom"
-            android:visibility="@{viewModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
+            android:visibility="@{messageModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
 
             <TextView
                 android:id="@+id/time_group_day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.timeGroupDay}"
+                android:text="@{messageModel.timeGroupDay}"
                 android:layout_marginRight="@dimen/xdk_ui_message_item_group_day_and_time_margin"
                 android:layout_marginEnd="@dimen/xdk_ui_message_item_group_day_and_time_margin"
                 android:textColor="@color/xdk_ui_text_gray"
@@ -66,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/xdk_ui_message_item_group_day_and_time_margin"
                 android:layout_marginStart="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-                android:text="@{viewModel.groupTime}"
+                android:text="@{messageModel.groupTime}"
                 android:textColor="@color/xdk_ui_text_gray"
                 android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"/>
         </LinearLayout>
@@ -78,10 +75,10 @@
             android:layout_marginBottom="@dimen/xdk_ui_message_item_sender_margin_bottom"
             android:layout_marginLeft="@dimen/xdk_ui_message_item_sender_margin_left"
             android:layout_marginStart="@dimen/xdk_ui_message_item_sender_margin_left"
-            android:text="@{viewModel.senderName}"
+            android:text="@{messageModel.senderName}"
             android:textColor="@color/xdk_ui_text_gray"
             android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:visibility="@{viewModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{messageModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"/>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -94,7 +91,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
-                android:visibility="@{viewModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
+                android:visibility="@{messageModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,16 +103,16 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/xdk_ui_avatar_width"
                     android:layout_height="@dimen/xdk_ui_avatar_height"
-                    android:visibility="@{viewModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{viewModel.participants}"/>
+                    android:visibility="@{messageModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{messageModel.participants}"/>
 
                 <com.layer.xdk.ui.presence.PresenceView
                     android:id="@+id/presence"
                     android:layout_width="@dimen/xdk_ui_avatar_presence_height"
                     android:layout_height="@dimen/xdk_ui_avatar_presence_height"
                     android:layout_gravity="bottom|right"
-                    android:visibility="@{viewModel.presenceVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{viewModel.participants}"/>
+                    android:visibility="@{messageModel.presenceVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{messageModel.participants}"/>
 
             </FrameLayout>
 
@@ -127,7 +124,7 @@
                 android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
                 android:layout_marginRight="@dimen/xdk_ui_padding_normal"
                 android:layout_marginStart="@dimen/xdk_ui_padding_normal"
-                android:alpha="@{viewModel.messageCellAlpha}"
+                android:alpha="@{messageModel.messageCellAlpha}"
                 android:background="@drawable/xdk_ui_message_viewer_background"
                 android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
                 android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
@@ -135,12 +132,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
                 app:layout_constraintHeight_default="wrap"
-                app:layout_constraintHorizontal_bias="@{viewModel.myMessage ? 1.0f : 0.0f}"
+                app:layout_constraintHorizontal_bias="@{messageModel.myMessage ? 1.0f : 0.0f}"
                 app:layout_constraintStart_toEndOf="@id/avatar_container"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
                 app:layout_constraintWidth_default="wrap"
-                app:message="@{viewModel.item}"/>
+                app:message="@{messageModel.item.message}"/>
 
             <FrameLayout
                 android:id="@+id/current_user_avatar_container"
@@ -149,7 +146,7 @@
                 android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
                 android:paddingLeft="@dimen/xdk_ui_avatar_left_padding_message"
                 android:paddingStart="@dimen/xdk_ui_avatar_left_padding_message"
-                android:visibility="@{viewModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
+                android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_default="wrap"
@@ -160,16 +157,16 @@
                     android:id="@+id/current_user_avatar"
                     android:layout_width="@dimen/xdk_ui_avatar_width"
                     android:layout_height="@dimen/xdk_ui_avatar_height"
-                    android:visibility="@{viewModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{viewModel.participants}"/>
+                    android:visibility="@{messageModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{messageModel.participants}"/>
 
                 <com.layer.xdk.ui.presence.PresenceView
                     android:id="@+id/current_user_presence"
                     android:layout_width="@dimen/xdk_ui_avatar_presence_height"
                     android:layout_height="@dimen/xdk_ui_avatar_presence_height"
                     android:layout_gravity="bottom|right"
-                    android:visibility="@{viewModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{viewModel.participants}"/>
+                    android:visibility="@{messageModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
+                    app:participants="@{messageModel.participants}"/>
 
             </FrameLayout>
 
@@ -182,10 +179,10 @@
             android:layout_gravity="right"
             android:layout_marginEnd="@dimen/xdk_ui_message_item_receipt_margin"
             android:layout_marginRight="@dimen/xdk_ui_message_item_receipt_margin"
-            android:text="@{viewModel.readReceipt}"
+            android:text="@{messageModel.readReceipt}"
             android:textColor="@color/xdk_ui_text_gray"
             android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:visibility="@{viewModel.readReceiptVisible ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{messageModel.readReceiptVisible ? View.VISIBLE : View.GONE}"/>
 
     </LinearLayout>
 </layout>
