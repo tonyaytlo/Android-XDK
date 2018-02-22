@@ -116,15 +116,14 @@
 
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/message_view_container"
+            <ViewStub
+                android:id="@+id/message_view_stub"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/xdk_ui_padding_normal"
                 android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
                 android:layout_marginRight="@dimen/xdk_ui_padding_normal"
                 android:layout_marginStart="@dimen/xdk_ui_padding_normal"
-                android:alpha="@{messageModel.messageCellAlpha}"
                 android:background="@drawable/xdk_ui_message_viewer_background"
                 android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
                 android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
@@ -132,7 +131,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
                 app:layout_constraintHeight_default="wrap"
-                app:layout_constraintHorizontal_bias="@{messageModel.myMessage ? 1.0f : 0.0f}"
                 app:layout_constraintStart_toEndOf="@id/avatar_container"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"

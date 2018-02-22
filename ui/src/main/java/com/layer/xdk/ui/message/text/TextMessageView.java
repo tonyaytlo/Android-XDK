@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.google.gson.JsonObject;
+import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiTextMessageViewBinding;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
@@ -47,6 +48,11 @@ public class TextMessageView extends MessageView<TextMessageModel> {
     @Override
     public Class<StandardMessageContainer> getContainerClass() {
         return StandardMessageContainer.class;
+    }
+
+    @Override
+    public int getContainerLayoutId() {
+        return R.layout.xdk_ui_standard_message_container_wrapper;
     }
 
     @Override

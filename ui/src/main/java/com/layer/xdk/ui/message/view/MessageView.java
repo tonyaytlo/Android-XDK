@@ -35,6 +35,10 @@ public abstract class MessageView<VIEW_MODEL extends MessageModel> extends Frame
 
     public abstract Class<? extends MessageContainer> getContainerClass();
 
+    public int getContainerLayoutId() {
+        return 0;
+    }
+
     public void performAction(String event, JsonObject customData) {
         if (event != null) {
             ActionHandlerRegistry.dispatchEvent(getContext(), event, customData);

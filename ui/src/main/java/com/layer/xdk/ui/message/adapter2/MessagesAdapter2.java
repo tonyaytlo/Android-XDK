@@ -12,11 +12,9 @@ import android.support.v7.recyclerview.extensions.DiffCallback;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
-import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.MessageItemStatusViewHolder;
@@ -153,17 +151,20 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         Constructor<? extends MessageView> rootMessageViewConstructor = rootMessageViewClass.getConstructor(Context.class);
         MessageView rootMessageView = rootMessageViewConstructor.newInstance(parent.getContext());
 
-        Class<? extends MessageContainer> rootMessageContainerClass = rootMessageView.getContainerClass();
-        Constructor<? extends MessageContainer> rootMessageContainerConstructor = rootMessageContainerClass.getConstructor(Context.class);
-        MessageContainer rootMessageContainer = rootMessageContainerConstructor.newInstance(parent.getContext());
+//        Class<? extends MessageContainer> rootMessageContainerClass = rootMessageView.getContainerClass();
+//        Constructor<? extends MessageContainer> rootMessageContainerConstructor = rootMessageContainerClass.getConstructor(Context.class);
+//        MessageContainer rootMessageContainer = rootMessageContainerConstructor.newInstance(parent.getContext());
+
+        MessageContainer rootMessageContainer =
+                (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(rootMessageView.getContainerLayoutId());
 
         rootMessageContainer.setMessageView(rootMessageView);
-        rootMessageContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+//        rootMessageContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Add to card's frame layout
-        ViewGroup rootLayoutContainer = cardMessageItemViewHolder.itemView.findViewById(R.id.message_view_container);
-        rootLayoutContainer.addView(rootMessageContainer);
+//        ViewGroup rootLayoutContainer = cardMessageItemViewHolder.itemView.findViewById(R.id.message_view_container);
+//        rootLayoutContainer.addView(rootMessageContainer);
 
         // TODO child views
         return cardMessageItemViewHolder;
