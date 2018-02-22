@@ -34,6 +34,7 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     private String mTimeGroupDay;
     private float mMessageCellAlpha;
     private String mSenderName;
+    // TODO AND-1242 I'm not sure we should call this participants... It seems like it's only ever set to the sender
     private Set<Identity> mParticipants = Collections.emptySet();
     private String mReadReceipt;
     private String mGroupTime;
@@ -61,7 +62,7 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     public void update(MessageCluster cluster, int position, Integer recipientStatusPosition) {
         Message message = getItem().getMessage();
         mParticipants = Collections.singleton(message.getSender());
-        mIsMyMessage = getItem().getMessage().getSender().equals(getLayerClient().getAuthenticatedUser());
+        mIsMyMessage = getItem().getMessage().getSender().getId().equals(getItem().getAuthenticatedUserId());
 
         // Clustering and dates
         updateClusteringAndDates(message, cluster);
@@ -204,7 +205,7 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     }
 
     protected boolean isInAOneOnOneConversation() {
-        return getItem().getMessage().getConversation().getParticipants().size() == 2;
+        return getItem().getParticipants().size() == 2;
     }
 
     // Setters

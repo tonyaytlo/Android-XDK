@@ -3,7 +3,6 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
@@ -20,7 +19,6 @@ import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +41,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         mConversation = conversation;
         mBinderRegistry = binderRegistry;
 
-        Log.d("ZZZZ Creating datasource: " + id);
+//        Log.d("ZZZZ Creating datasource: " + id);
 
         listener = new LayerChangeEventListener.BackgroundThread.Weak() {
             @Override
@@ -62,7 +60,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
                     mLayerClient.unregisterEventListener(listener);
 
                     // TODO these are too quick and it's still picking up the old changes. Delay?
-                    Log.d("ZZZZ Invalidating datasource: " + id);
+//                    Log.d("ZZZZ Invalidating datasource: " + id);
                     invalidate();
                 }
             }
@@ -79,7 +77,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         } else {
             int position = computeInitialLoadPosition(params, count);
             int size = computeInitialLoadSize(params, position, count);
-            Log.d("ZZZZ ID:" + id + " Load initial position: " + position + " size: " + size + " params: " + paramsToString(params));
+//            Log.d("ZZZZ ID:" + id + " Load initial position: " + position + " size: " + size + " params: " + paramsToString(params));
 
             List<Message> messages = loadRangeInternal(position, size);
             if (messages != null && messages.size() == size) {
@@ -110,19 +108,19 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
                 .offset(position)
                 .limit(loadSize)
                 .build());
-        Log.d("ZZZZ ID:" + id + " Queried for messages at pos: " + position + " with size: " + loadSize + " and retrieved message count: " + messages.size());
+//        Log.d("ZZZZ ID:" + id + " Queried for messages at pos: " + position + " with size: " + loadSize + " and retrieved message count: " + messages.size());
         List<String> databaseIds = new ArrayList<>();
         for (Queryable message : messages) {
             databaseIds.add(((i) message).i().toString());
         }
-        Log.d("ZZZZZ Message Db ids:\n" + TextUtils.join("\n", databaseIds));
+//        Log.d("ZZZZZ Message Db ids:\n" + TextUtils.join("\n", databaseIds));
         return (List<Message>) messages;
     }
 
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
             @NonNull LoadRangeCallback<MessageModel> callback) {
-        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
+//        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
 
         List<Message> messages = loadRangeInternal(params.startPosition, params.loadSize);
         callback.onResult(convertMessagesToModels(messages));
@@ -147,6 +145,8 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType);
             model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
             model.setMessage(message);
+//            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
+
             models.add(model);
         }
         return models;

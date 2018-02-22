@@ -48,7 +48,7 @@ public class MessageViewer extends FrameLayout {
 
     public void setMessage(@NonNull Message message) {
         if (message == null) {
-            // TODO AND-1242 Need to hande null messages if placeholders are enabled
+            // TODO AND-1242 Need to handle null messages if placeholders are enabled
             return;
         }
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(message);
@@ -90,7 +90,10 @@ public class MessageViewer extends FrameLayout {
     }
 
     public void setModel(@NonNull MessageModel rootModel) {
-        bindModelToView(rootModel);
+        // TODO AND-1242 Model can be null if placeholders are enabled
+        if (rootModel != null) {
+            bindModelToView(rootModel);
+        }
     }
 
     //==============================================================================================

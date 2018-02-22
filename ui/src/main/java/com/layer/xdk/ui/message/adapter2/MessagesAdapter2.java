@@ -10,29 +10,32 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v7.recyclerview.extensions.DiffCallback;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.MessageCell;
 import com.layer.xdk.ui.message.MessageCluster;
-import com.layer.xdk.ui.message.MessageItemFooterViewHolder;
-import com.layer.xdk.ui.message.MessageItemHeaderViewHolder;
-import com.layer.xdk.ui.message.MessageItemHeaderViewModel;
-import com.layer.xdk.ui.message.MessageItemLegacyViewHolder;
-import com.layer.xdk.ui.message.MessageItemLegacyViewModel;
 import com.layer.xdk.ui.message.MessageItemStatusViewHolder;
 import com.layer.xdk.ui.message.MessageItemStatusViewModel;
 import com.layer.xdk.ui.message.MessageModelCardViewHolder;
 import com.layer.xdk.ui.message.MessageModelCardViewModel;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
+import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.response.ResponseMessageModel;
+import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +67,10 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
     private OnItemClickListener<Message> mItemClickListener;
 
 
+
+    private MessageModel mLastModelForViewTypeLookup;
+
+
     public MessagesAdapter2(Context context, LayerClient layerClient, BinderRegistry binderRegistry,
             ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
@@ -79,11 +86,35 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
+        MessageModel model = getModelForViewType(viewType);
+        if (model == null) {
+            // TODO AND-1242 This should be a placeholder
+            return createPlaceholder(parent);
+        }
+
+        if (model instanceof StatusMessageModel || model instanceof ResponseMessageModel) {
             return createStatusMessageItemViewHolder(parent);
         }
 
-        return createCardMessageItemViewHolder(parent);
+        try {
+            return createViewForModel(parent, model);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return createPlaceholder(parent);
+
+
+//        if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
+//            return createStatusMessageItemViewHolder(parent);
+//        }
+//
+//        return createCardMessageItemViewHolder(parent);
 
 //        if (viewType == mBinderRegistry.VIEW_TYPE_HEADER) {
 //            return createHeaderViewHolder(parent);
@@ -102,6 +133,42 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 //        }
     }
 
+    private RecyclerView.ViewHolder createPlaceholder(ViewGroup parent) {
+        return new RecyclerView.ViewHolder(new View(parent.getContext())) {
+
+        };
+    }
+
+    private MessageModelCardViewHolder createViewForModel(ViewGroup parent, MessageModel model)
+            throws NoSuchMethodException, InstantiationException, IllegalAccessException,
+            java.lang.reflect.InvocationTargetException {
+
+        // TODO This should likely move to the model or somewhere so status messages can create different types
+
+        MessageModelCardViewHolder cardMessageItemViewHolder = createCardMessageItemViewHolder(
+                parent);
+
+        // Root
+        Class<? extends MessageView> rootMessageViewClass = model.getRendererType();
+        Constructor<? extends MessageView> rootMessageViewConstructor = rootMessageViewClass.getConstructor(Context.class);
+        MessageView rootMessageView = rootMessageViewConstructor.newInstance(parent.getContext());
+
+        Class<? extends MessageContainer> rootMessageContainerClass = rootMessageView.getContainerClass();
+        Constructor<? extends MessageContainer> rootMessageContainerConstructor = rootMessageContainerClass.getConstructor(Context.class);
+        MessageContainer rootMessageContainer = rootMessageContainerConstructor.newInstance(parent.getContext());
+
+        rootMessageContainer.setMessageView(rootMessageView);
+        rootMessageContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        // Add to card's frame layout
+        ViewGroup rootLayoutContainer = cardMessageItemViewHolder.itemView.findViewById(R.id.message_view_container);
+        rootLayoutContainer.addView(rootMessageContainer);
+
+        // TODO child views
+        return cardMessageItemViewHolder;
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         MessageModel item = getItem(position);
@@ -116,7 +183,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
                         mRecyclerView.getWidth());
             }
         }
-        // TODO And-1242 CLear if it is a placeholder
+        // TODO And-1242 Clear if it is a placeholder
 
 
     }
@@ -125,13 +192,16 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
     public int getItemViewType(int position) {
         // TODO AND-1242 Header/footer
 
-        MessageModel item = getItem(position);
-        if (item == null) {
+        mLastModelForViewTypeLookup = getItem(position);
+        if (mLastModelForViewTypeLookup == null) {
             // TODO AND-1242 Return invalid (placeholder)
             return -1;
         }
-        // TODO AND-1242 Move this out of the binder registry?
-        return mBinderRegistry.getViewType(item.getMessage());
+
+
+        return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
+//        // TODO AND-1242 Move this out of the binder registry?
+//        return mBinderRegistry.getViewType(item.getMessage());
     }
 
 
@@ -165,35 +235,35 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
 
 
-    protected MessageItemHeaderViewHolder createHeaderViewHolder(ViewGroup parent) {
-        return new MessageItemHeaderViewHolder(parent,
-                new MessageItemHeaderViewModel(mContext, mLayerClient));
-    }
-
-    protected MessageItemFooterViewHolder createFooterViewHolder(ViewGroup parent) {
-        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
-                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
-
-        viewModel.setEnableReadReceipts(false);
-        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-        viewModel.setShowPresence(false);
-
-        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
-    }
-
-    protected MessageItemLegacyViewHolder createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell) {
-        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
-                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
-
-        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-        viewModel.setShowPresence(getShouldShowPresence());
-        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
-        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
-        viewModel.setItemClickListener(getItemClickListener());
-
-        return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
-    }
+//    protected MessageItemHeaderViewHolder createHeaderViewHolder(ViewGroup parent) {
+//        return new MessageItemHeaderViewHolder(parent,
+//                new MessageItemHeaderViewModel(mContext, mLayerClient));
+//    }
+//
+//    protected MessageItemFooterViewHolder createFooterViewHolder(ViewGroup parent) {
+//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
+//                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
+//
+//        viewModel.setEnableReadReceipts(false);
+//        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
+//        viewModel.setShowPresence(false);
+//
+//        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
+//    }
+//
+//    protected MessageItemLegacyViewHolder createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell) {
+//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
+//                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
+//
+//        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
+//        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
+//        viewModel.setShowPresence(getShouldShowPresence());
+//        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
+//        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
+//        viewModel.setItemClickListener(getItemClickListener());
+//
+//        return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
+//    }
 
     protected MessageModelCardViewHolder createCardMessageItemViewHolder(ViewGroup parent) {
         MessageModelCardViewModel viewModel = new MessageModelCardViewModel(parent.getContext(),
@@ -329,7 +399,8 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         }
 
         int previousPosition = position - 1;
-        Message previousMessage = (previousPosition >= 0) ? getItem(previousPosition).getMessage() : null;
+        MessageModel previousMessageModel = (previousPosition >= 0) ? getItem(previousPosition) : null;
+        Message previousMessage = previousMessageModel == null ? null : previousMessageModel.getMessage();
         if (previousMessage != null) {
             result.mDateBoundaryWithPrevious = isDateBoundary(previousMessage.getReceivedAt(),
                     message.getReceivedAt());
@@ -394,6 +465,39 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
             }
         });
     }
+
+
+
+
+
+    /**
+     * Copying this from Groupie which copied it from Epoxy.
+     */
+    private MessageModel getModelForViewType(int viewType) {
+        if (mLastModelForViewTypeLookup != null
+                && mLastModelForViewTypeLookup.getMimeTypeTree().hashCode() == viewType) {
+            // We expect this to be a hit 100% of the time
+            return mLastModelForViewTypeLookup;
+        }
+
+        // To be extra safe in case RecyclerView implementation details change...
+        for (int i = 0; i < getItemCount(); i++) {
+            MessageModel item = getItem(i);
+            if (item == null) {
+                return null;
+            }
+            if (item.getMimeTypeTree().hashCode() == viewType) {
+                return item;
+            }
+        }
+
+        throw new IllegalStateException("Could not find model for view type: " + viewType);
+    }
+
+
+
+
+
 
 
 

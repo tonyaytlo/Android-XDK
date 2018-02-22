@@ -116,8 +116,8 @@
 
             </FrameLayout>
 
-            <com.layer.xdk.ui.message.viewer.MessageViewer
-                android:id="@+id/message_viewer"
+            <FrameLayout
+                android:id="@+id/message_view_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/xdk_ui_padding_normal"
@@ -136,8 +136,7 @@
                 app:layout_constraintStart_toEndOf="@id/avatar_container"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
-                app:layout_constraintWidth_default="wrap"
-                app:message="@{messageModel.item.message}"/>
+                app:layout_constraintWidth_default="wrap"/>
 
             <FrameLayout
                 android:id="@+id/current_user_avatar_container"

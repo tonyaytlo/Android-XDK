@@ -29,11 +29,11 @@ public class MessageCluster {
             if (!older.getSender().equals(newer.getSender())) return NEW_SENDER;
 
             // Status message?
-            boolean olderIsStatus = isStatusMessage(older);
-            boolean newerIsStatus = isStatusMessage(newer);
-            if (olderIsStatus || newerIsStatus) {
-                return STATUS;
-            }
+//            boolean olderIsStatus = isStatusMessage(older);
+//            boolean newerIsStatus = isStatusMessage(newer);
+//            if (olderIsStatus || newerIsStatus) {
+//                return STATUS;
+//            }
 
             // Time clustering for same user?
             Date oldReceivedAt = older.getReceivedAt();

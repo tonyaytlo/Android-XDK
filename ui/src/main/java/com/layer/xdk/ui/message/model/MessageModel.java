@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.model;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
@@ -26,6 +28,7 @@ import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class MessageModel extends BaseObservable implements LayerProgressListener.Weak {
@@ -53,6 +56,14 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     private Action mAction;
 
+    // TODO AND-1242 It's safe to cache this since no model will live after a de-auth
+    private final Uri mAuthenticatedUserId;
+
+    // TODO AND-1242 Are we sure we want to do this? Cache the participants since it's an expensive call. Will need to handle other changes in the data source then
+    private Set<Identity> mParticipants;
+
+    private String mMimeTypeTree;
+
     public MessageModel(Context context, LayerClient layerClient) {
         mIdentityFormatter = new IdentityFormatterImpl(context);
         mDateFormatter = new DateFormatterImpl(context);
@@ -60,6 +71,8 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         mContext = context;
         mLayerClient = layerClient;
         mChildMessageModels = new ArrayList<>();
+
+        mAuthenticatedUserId = layerClient.getAuthenticatedUser().getId();
     }
 
     public void setMessage(@NonNull Message message) {
@@ -77,6 +90,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
     public void setMessage(@NonNull Message message, @Nullable MessagePart rootMessagePart) {
         mMessage = message;
         mRootMessagePart = rootMessagePart;
+        mParticipants = mMessage.getConversation().getParticipants();
 
         mChildMessageModels.clear();
         if (mChildMessageParts != null) {
@@ -96,6 +110,33 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         setRole(ROLE_ROOT);
         // Deal with child parts
         processChildParts();
+
+        // Set View type
+        setMimeTypeTree();
+    }
+
+    private void setMimeTypeTree() {
+        StringBuilder sb = new StringBuilder();
+        if (mRootMessagePart != null) {
+            sb.append(MessagePartUtils.getMimeType(mRootMessagePart));
+            sb.append("[");
+        }
+        boolean prependComma = false;
+        for (MessagePart childPart : mChildMessageParts) {
+            if (prependComma) {
+                sb.append(",");
+            }
+            sb.append(MessagePartUtils.getMimeType(childPart));
+            prependComma = true;
+        }
+        if (mRootMessagePart != null) {
+            sb.append("]");
+        }
+        mMimeTypeTree = sb.toString();
+    }
+
+    public String getMimeTypeTree() {
+        return mMimeTypeTree;
     }
 
     protected void processChildParts() {
@@ -332,7 +373,7 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
 
     @Bindable
     public boolean isMessageFromMe() {
-        return getLayerClient().getAuthenticatedUser().equals(getMessage().getSender());
+        return mAuthenticatedUserId.equals(getMessage().getSender().getId());
     }
 
     @NonNull
@@ -341,5 +382,13 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
             mMessageSenderRepository = new MessageSenderRepository(mContext, mLayerClient);
         }
         return mMessageSenderRepository;
+    }
+
+    public Set<Identity> getParticipants() {
+        return mParticipants;
+    }
+
+    public Uri getAuthenticatedUserId() {
+        return mAuthenticatedUserId;
     }
 }

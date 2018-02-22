@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemCardNewBinding;
+import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
@@ -37,9 +38,9 @@ public class MessageModelCardViewHolder extends RecyclerView.ViewHolder {
 
 //        getBinding().set(viewModel);
         getBinding().setMessageModel(viewModel);
-        getBinding().messageViewer.setMessageModelManager(modelRegistry);
-        getBinding().messageViewer.setOnClickListener(viewModel.getOnClickListener());
-        getBinding().messageViewer.setOnLongClickListener(viewModel.getOnLongClickListener());
+//        getBinding().messageViewer.setMessageModelManager(modelRegistry);
+//        getBinding().messageViewer.setOnClickListener(viewModel.getOnClickListener());
+//        getBinding().messageViewer.setOnLongClickListener(viewModel.getOnLongClickListener());
 
         getBinding().getRoot().setClickable(true);
         getBinding().getRoot().setOnClickListener(viewModel.getOnClickListener());
@@ -48,6 +49,11 @@ public class MessageModelCardViewHolder extends RecyclerView.ViewHolder {
 
     public void bind(MessageModel messageModel, MessageCluster messageCluster, int position, int recipientStatusPosition, int parentWidth) {
         getViewModel().setItem(messageModel);
+
+        // TODO AND-1242 This is super ugly. Rework
+        ViewGroup containerRoot = getBinding().getRoot().findViewById(R.id.message_view_container);
+        ((MessageContainer) containerRoot.getChildAt(0)).setMessageModel(messageModel);
+
         getViewModel().update(messageCluster, position, recipientStatusPosition);
     }
 
