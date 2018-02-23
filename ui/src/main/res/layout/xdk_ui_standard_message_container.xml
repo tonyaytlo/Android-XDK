@@ -12,28 +12,20 @@
 
         <variable
             name="viewModel"
-            type="MessageModel"/>
+            type="com.layer.xdk.ui.message.model.MessageModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@{viewModel.hasMetadata ? @dimen/xdk_ui_margin_tiny : 0}">
+    <merge>
 
-        <FrameLayout
+        <ViewStub
             android:id="@+id/xdk_ui_standard_message_container_content_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="@{viewModel.hasMetadata ? @dimen/xdk_ui_margin_tiny : 0}"
-            android:minWidth="@{viewModel.hasMetadata ? @dimen/xdk_ui_standard_message_container_min_width : @dimen/xdk_ui_standard_message_container_min_width_zero}"
-            android:visibility="@{viewModel.hasContent ? View.VISIBLE : View.GONE}"
             app:layout_constraintHeight_default="wrap"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="wrap">
-        </FrameLayout>
+            app:layout_constraintWidth_default="wrap"/>
 
         <TextView
             android:id="@+id/xdk_ui_standard_message_container_title"
@@ -105,6 +97,5 @@
             app:layout_constraintWidth_default="spread"
             app:layout_goneMarginTop="@dimen/xdk_ui_margin_large"/>
 
-
-    </android.support.constraint.ConstraintLayout>
+    </merge>
 </layout>

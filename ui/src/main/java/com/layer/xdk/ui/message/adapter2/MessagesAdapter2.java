@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,13 +27,11 @@ import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
@@ -145,26 +144,13 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
         MessageModelCardViewHolder cardMessageItemViewHolder = createCardMessageItemViewHolder(
                 parent);
-
-        // Root
-        Class<? extends MessageView> rootMessageViewClass = model.getRendererType();
-        Constructor<? extends MessageView> rootMessageViewConstructor = rootMessageViewClass.getConstructor(Context.class);
-        MessageView rootMessageView = rootMessageViewConstructor.newInstance(parent.getContext());
-
-//        Class<? extends MessageContainer> rootMessageContainerClass = rootMessageView.getContainerClass();
-//        Constructor<? extends MessageContainer> rootMessageContainerConstructor = rootMessageContainerClass.getConstructor(Context.class);
-//        MessageContainer rootMessageContainer = rootMessageContainerConstructor.newInstance(parent.getContext());
-
         MessageContainer rootMessageContainer =
-                (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(rootMessageView.getContainerLayoutId());
+                (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 
-        rootMessageContainer.setMessageView(rootMessageView);
-//        rootMessageContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        // Add to card's frame layout
-//        ViewGroup rootLayoutContainer = cardMessageItemViewHolder.itemView.findViewById(R.id.message_view_container);
-//        rootLayoutContainer.addView(rootMessageContainer);
+        // TODO AND-1242 - I don't think this is the best way to add functionality on top of the view
+        View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
+        model.createNewViewController(DataBindingUtil.getBinding(messageView));
 
         // TODO child views
         return cardMessageItemViewHolder;

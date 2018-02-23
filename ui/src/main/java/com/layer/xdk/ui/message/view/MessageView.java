@@ -33,11 +33,8 @@ public abstract class MessageView<VIEW_MODEL extends MessageModel> extends Frame
 
     public abstract void setMessageModel(VIEW_MODEL model);
 
+    @Deprecated
     public abstract Class<? extends MessageContainer> getContainerClass();
-
-    public int getContainerLayoutId() {
-        return 0;
-    }
 
     public void performAction(String event, JsonObject customData) {
         if (event != null) {

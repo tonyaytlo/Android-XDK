@@ -5,15 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.AttrRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.view.View;
 
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.MessageView;
 
-public abstract class MessageContainer extends FrameLayout {
+public abstract class MessageContainer extends ConstraintLayout {
     private Path mCornerClippingPath;
     private float mCornerRadius;
 
@@ -30,7 +32,13 @@ public abstract class MessageContainer extends FrameLayout {
         mCornerRadius = 0;
     }
 
+    @Deprecated
     public abstract void setMessageView(MessageView view);
+
+    // TODO AND-1242 make abstract
+    public View inflateMessageView(@LayoutRes int messageViewLayoutId) {
+        return null;
+    }
 
     public abstract <T extends MessageModel> void setMessageModel(T model);
 
