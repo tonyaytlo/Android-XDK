@@ -2,6 +2,10 @@ package com.layer.xdk.ui.message;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.graphics.Typeface;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
@@ -31,13 +35,12 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     private boolean mNextPartOfCluster;
     private boolean mShouldShowDisplayName;
     private boolean mShouldShowDateTimeForMessage;
-    private String mTimeGroupDay;
     private float mMessageCellAlpha;
     private String mSenderName;
     // TODO AND-1242 I'm not sure we should call this participants... It seems like it's only ever set to the sender
     private Set<Identity> mParticipants = Collections.emptySet();
     private String mReadReceipt;
-    private String mGroupTime;
+    private SpannableString mDateTime;
     private boolean mIsReadReceiptVisible;
     private boolean mShouldDisplayAvatarSpace;
     private boolean mIsMyMessage;
@@ -100,8 +103,11 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
         Date receivedAt = message.getReceivedAt();
         if (receivedAt == null) receivedAt = new Date();
 
-        mTimeGroupDay = getDateFormatter().formatTimeDay(receivedAt);
-        mGroupTime = getDateFormatter().formatTime(receivedAt);
+        String day = getDateFormatter().formatTimeDay(receivedAt);
+        String time = getDateFormatter().formatTime(receivedAt);
+        mDateTime = new SpannableString(String.format("%s %s", day, time));
+        mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
+                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         mShouldShowDateTimeForMessage = true;
     }
@@ -264,11 +270,6 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     }
 
     @Bindable
-    public String getTimeGroupDay() {
-        return mTimeGroupDay;
-    }
-
-    @Bindable
     public boolean getShouldShowDateTimeForMessage() {
         return mShouldShowDateTimeForMessage;
     }
@@ -294,8 +295,8 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     }
 
     @Bindable
-    public String getGroupTime() {
-        return mGroupTime;
+    public CharSequence getDateTime() {
+        return mDateTime;
     }
 
     @Bindable

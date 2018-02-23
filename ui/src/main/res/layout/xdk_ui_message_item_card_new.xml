@@ -36,37 +36,19 @@
         android:duplicateParentState="true"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/time_group"
+        <TextView
+            android:id="@+id/date_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:text="@{messageModel.dateTime}"
+            android:layout_marginRight="@dimen/xdk_ui_message_item_group_day_and_time_margin"
+            android:layout_marginEnd="@dimen/xdk_ui_message_item_group_day_and_time_margin"
             android:layout_marginTop="@dimen/xdk_ui_message_item_time_group_padding_top"
             android:layout_marginBottom="@dimen/xdk_ui_message_item_time_group_padding_bottom"
-            android:visibility="@{messageModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}">
-
-            <TextView
-                android:id="@+id/time_group_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{messageModel.timeGroupDay}"
-                android:layout_marginRight="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-                android:layout_marginEnd="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-                android:textColor="@color/xdk_ui_text_gray"
-                android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/time_group_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-                android:layout_marginStart="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-                android:text="@{messageModel.groupTime}"
-                android:textColor="@color/xdk_ui_text_gray"
-                android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"/>
-        </LinearLayout>
+            android:textColor="@color/xdk_ui_text_gray"
+            android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
+            android:visibility="@{messageModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}"/>
 
         <TextView
             android:id="@+id/senderName"
