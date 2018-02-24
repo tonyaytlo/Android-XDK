@@ -2,7 +2,6 @@ package com.layer.xdk.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
-import android.databinding.ViewDataBinding;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -11,7 +10,6 @@ import com.google.gson.JsonParser;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.databinding.XdkUiTextMessageViewBinding;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 public class TextMessageModel extends MessageModel {
@@ -39,12 +37,6 @@ public class TextMessageModel extends MessageModel {
     @Override
     public int getContainerViewLayoutId() {
         return R.layout.xdk_ui_standard_message_container;
-    }
-
-    @Override
-    public Object createNewViewController(ViewDataBinding binding) {
-        // TODO AND-1242 refactor out cast
-        return new TextMessageViewController((XdkUiTextMessageViewBinding) binding);
     }
 
     @Override

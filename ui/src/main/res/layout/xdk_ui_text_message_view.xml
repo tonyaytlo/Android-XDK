@@ -5,15 +5,15 @@
 
         <import type="com.layer.xdk.ui.message.text.TextMessageModel"/>
 
-        <import type="android.view.View"/>
-
         <variable
-            name="viewModel"
+            name="messageModel"
             type="TextMessageModel"/>
     </data>
 
-    <TextView
+
+    <com.layer.xdk.ui.message.text.TextMessageView
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/text_message_view_text"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -27,8 +27,9 @@
         android:paddingRight="@dimen/xdk_ui_margin_large"
         android:paddingStart="@dimen/xdk_ui_margin_large"
         android:paddingTop="@dimen/xdk_ui_margin_small"
-        android:text="@{viewModel.text}"
-        android:textColor="@{viewModel.messageFromMe ? @color/xdk_ui_text_message_view_body_me : @color/xdk_ui_text_message_view_body_them}"
-        android:textSize="@dimen/xdk_ui_text_message_view_text_size"/>
+        android:text="@{messageModel.text}"
+        android:textColor="@{messageModel.messageFromMe ? @color/xdk_ui_text_message_view_body_me : @color/xdk_ui_text_message_view_body_them}"
+        android:textSize="@dimen/xdk_ui_text_message_view_text_size"
+        app:messageModel="@{messageModel}"/>
 
 </layout>

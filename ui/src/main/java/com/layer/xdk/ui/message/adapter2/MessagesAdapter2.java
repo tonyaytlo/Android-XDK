@@ -3,7 +3,6 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -132,8 +131,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         // TODO AND-1242 Inflate nested layouts if needed
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
-        // TODO AND-1242 - I don't think this is the best way to add functionality on top of the view
-        model.createNewViewController(DataBindingUtil.getBinding(messageView));
 
         return cardMessageItemViewHolder;
     }

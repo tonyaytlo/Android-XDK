@@ -6,28 +6,25 @@ import android.databinding.Observable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.gson.JsonObject;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
-import com.layer.xdk.ui.message.container.StandardMessageContainer;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.List;
 import java.util.Set;
 
-public class ButtonMessageView extends MessageView<ButtonMessageModel> {
+public class ButtonMessageLayout extends ConstraintLayout {
     private static final String BUTTON_SET_TAG_PREFIX = "ChoiceButtonSet-";
 
     private XdkUiButtonMessageViewBinding mBinding;
@@ -36,18 +33,16 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
 
     private List<ChoiceButtonSet> mChoiceButtonSets;
 
-    public ButtonMessageView(Context context) {
+    public ButtonMessageLayout(Context context) {
         this(context, null, 0);
     }
 
-    public ButtonMessageView(Context context, @Nullable AttributeSet attrs) {
+    public ButtonMessageLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ButtonMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ButtonMessageLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = XdkUiButtonMessageViewBinding.inflate(inflater, this, true);
 
         mActionButtonColorStateList = new ColorStateList(new int[][]{
                 new int[]{android.R.attr.state_enabled},
@@ -68,16 +63,19 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
                         getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_disabled),
                         getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_pressed)
                 });
+
     }
 
-    @Override
     public void setMessageModel(ButtonMessageModel model) {
-        mBinding.setViewModel(model);
+        if (model == null) {
+            return;
+        }
+//        mBinding.setMessageModel(model);
         if (model.getContentModel() != null) {
-            mBinding.xdkUiButtonMessageViewContent.setVisibility(VISIBLE);
-            mBinding.xdkUiButtonMessageViewContent.setModel(model.getContentModel());
+//            mBinding.xdkUiButtonMessageViewContent.setVisibility(VISIBLE);
+//            mBinding.xdkUiButtonMessageViewContent.setModel(model.getContentModel());
         } else {
-            mBinding.xdkUiButtonMessageViewContent.setVisibility(GONE);
+//            mBinding.xdkUiButtonMessageViewContent.setVisibility(GONE);
         }
 
         addOrUpdateButtonsFromModel();
@@ -91,16 +89,16 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
     }
 
     private void addOrUpdateButtonsFromModel() {
-        ButtonMessageModel viewModel = mBinding.getViewModel();
-        if (viewModel == null) {
-            return;
-        }
-        List<ButtonModel> buttonModels = viewModel.getButtonModels();
-        if (buttonModels != null) {
-            for (ButtonModel buttonModel : buttonModels) {
-                addOrUpdateButton(buttonModel);
-            }
-        }
+//        ButtonMessageModel model = mBinding.getMessageModel();
+//        if (model == null) {
+//            return;
+//        }
+//        List<ButtonModel> buttonModels = model.getButtonModels();
+//        if (buttonModels != null) {
+//            for (ButtonModel buttonModel : buttonModels) {
+//                addOrUpdateButton(buttonModel);
+//            }
+//        }
     }
 
     private void addOrUpdateButton(ButtonModel buttonModel) {
@@ -132,10 +130,10 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             }
 
             // Add it
-            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,
-                    new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT));
+//            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,
+//                    new ViewGroup.LayoutParams(
+//                            ViewGroup.LayoutParams.MATCH_PARENT,
+//                            ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         // Bind data to it
@@ -143,9 +141,9 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JsonObject data = mBinding.getViewModel().getActionData();
-                String event = mBinding.getViewModel().getActionEvent();
-                performAction(event, data);
+//                JsonObject data = mBinding.getMessageModel().getActionData();
+//                String event = mBinding.getMessageModel().getActionEvent();
+//                performAction(event, data);
             }
         });
     }
@@ -186,16 +184,16 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
             @Override
             public void onChoiceClick(ChoiceMetadata choice, boolean selected,
                     Set<String> selectedChoices) {
-                ButtonMessageModel viewModel = mBinding.getViewModel();
-                if (viewModel != null) {
-                    viewModel.onChoiceClicked(choiceData, choice, selected, selectedChoices);
+                ButtonMessageModel messageModel = mBinding.getMessageModel();
+                if (messageModel != null) {
+                    messageModel.onChoiceClicked(choiceData, choice, selected, selectedChoices);
                 }
             }
         });
 
-        Set<String> selectedChoices = mBinding.getViewModel().getSelectedChoices(
-                choiceData.getResponseName());
-
-        choiceButtonSet.setSelection(selectedChoices);
+//        Set<String> selectedChoices = mBinding.getMessageModel().getSelectedChoices(
+//                choiceData.getResponseName());
+//
+//        choiceButtonSet.setSelection(selectedChoices);
     }
 }

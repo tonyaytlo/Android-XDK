@@ -3,7 +3,6 @@ package com.layer.xdk.ui.message.model;
 import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.databinding.ViewDataBinding;
 import android.net.Uri;
 import android.support.annotation.CallSuper;
 import android.support.annotation.ColorRes;
@@ -74,10 +73,6 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         mChildMessageModels = new ArrayList<>();
 
         mAuthenticatedUserId = layerClient.getAuthenticatedUser().getId();
-    }
-
-    public Object createNewViewController(ViewDataBinding binding) {
-        return null;
     }
 
     public void setMessage(@NonNull Message message) {
