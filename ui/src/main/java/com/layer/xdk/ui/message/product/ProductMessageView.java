@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.layer.xdk.ui.databinding.XdkUiProductMessageBinding;
 import com.layer.xdk.ui.message.container.EmptyMessageContainer;
-import com.layer.xdk.ui.message.container.MessageContainer;
+import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class ProductMessageView extends MessageView<ProductMessageModel> {
@@ -41,7 +41,8 @@ public class ProductMessageView extends MessageView<ProductMessageModel> {
     }
 
     @Override
-    public Class<? extends MessageContainer> getContainerClass() {
-        return EmptyMessageContainer.class;
+    public Class<? extends MessageConstraintContainer> getContainerClass() {
+        return null;
+//        return EmptyMessageContainer.class;
     }
 }

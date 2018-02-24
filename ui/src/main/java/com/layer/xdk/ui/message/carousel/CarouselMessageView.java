@@ -8,8 +8,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.container.EmptyMessageContainer;
-import com.layer.xdk.ui.message.container.MessageContainer;
+import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.message.viewer.MessageViewer;
@@ -75,7 +74,8 @@ public class CarouselMessageView extends MessageView<CarouselMessageModel> {
     }
 
     @Override
-    public Class<? extends MessageContainer> getContainerClass() {
-        return EmptyMessageContainer.class;
+    public Class<? extends MessageConstraintContainer> getContainerClass() {
+        return null;
+//        return EmptyMessageContainer.class;
     }
 }

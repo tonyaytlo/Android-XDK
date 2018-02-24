@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.databinding.XdkUiReceiptMessageBinding;
-import com.layer.xdk.ui.message.container.MessageContainer;
+import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.container.TitledMessageContainer;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
@@ -69,7 +69,7 @@ public class ReceiptMessageView extends MessageView<ReceiptMessageModel> {
     }
 
     @Override
-    public Class<? extends MessageContainer> getContainerClass() {
+    public Class<? extends MessageConstraintContainer> getContainerClass() {
         return TitledMessageContainer.class;
     }
 

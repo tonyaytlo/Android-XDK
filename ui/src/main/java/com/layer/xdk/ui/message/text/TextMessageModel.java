@@ -46,7 +46,7 @@ public class TextMessageModel extends MessageModel {
 
     @Override
     public int getContainerViewLayoutId() {
-        return R.layout.xdk_ui_standard_message_container_wrapper;
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override
