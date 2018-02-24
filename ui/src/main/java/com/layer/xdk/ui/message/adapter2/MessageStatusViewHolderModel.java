@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message;
+package com.layer.xdk.ui.message.adapter2;
 
 
 import android.content.Context;
@@ -7,14 +7,15 @@ import android.databinding.Observable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.viewmodel.MessageModelViewModel;
+import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 @SuppressWarnings("WeakerAccess")
-public class MessageItemStatusViewModel extends MessageModelViewModel {
+public class MessageStatusViewHolderModel extends MessageViewHolderModel {
     private boolean mEnableReadReceipts;
     private boolean mVisible;
     private String mText;
@@ -22,7 +23,7 @@ public class MessageItemStatusViewModel extends MessageModelViewModel {
 
     private MessageModel mMessageModel;
 
-    public MessageItemStatusViewModel(Context context, LayerClient layerClient, MessageModelManager modelRegistry) {
+    public MessageStatusViewHolderModel(Context context, LayerClient layerClient, MessageModelManager modelRegistry) {
         super(context, layerClient);
         mModelRegistry = modelRegistry;
 

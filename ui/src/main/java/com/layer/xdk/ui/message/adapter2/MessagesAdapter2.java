@@ -18,10 +18,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
-import com.layer.xdk.ui.message.MessageItemStatusViewHolder;
-import com.layer.xdk.ui.message.MessageItemStatusViewModel;
-import com.layer.xdk.ui.message.MessageModelCardViewHolder;
-import com.layer.xdk.ui.message.MessageModelCardViewModel;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -32,7 +28,6 @@ import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -89,29 +84,20 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
             return createPlaceholder(parent);
         }
 
+        // TODO AND-1242 Header/footer creations
+
         if (model instanceof StatusMessageModel || model instanceof ResponseMessageModel) {
-            return createStatusMessageItemViewHolder(parent);
+            return createStatusViewHolder(parent);
         }
 
-        try {
-            return createViewForModel(parent, model);
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return createPlaceholder(parent);
+        return createDefaultViewHolder(parent, model);
 
 
 //        if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
-//            return createStatusMessageItemViewHolder(parent);
+//            return createStatusViewHolder(parent);
 //        }
 //
-//        return createCardMessageItemViewHolder(parent);
+//        return createMessageModelDefaultViewHolder(parent);
 
 //        if (viewType == mBinderRegistry.VIEW_TYPE_HEADER) {
 //            return createHeaderViewHolder(parent);
@@ -122,9 +108,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 ////            messageCell.mCellFactory.setStyle(getStyle());
 //            return createLegacyMessageItemViewHolder(parent, messageCell);
 //        } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
-//            return createStatusMessageItemViewHolder(parent);
+//            return createStatusViewHolder(parent);
 //        } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN){
-//            return createCardMessageItemViewHolder(parent);
+//            return createMessageModelDefaultViewHolder(parent);
 //        } else {
 //            throw new IllegalStateException("Unknown View Type");
 //        }
@@ -136,23 +122,19 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         };
     }
 
-    private MessageModelCardViewHolder createViewForModel(ViewGroup parent, MessageModel model)
-            throws NoSuchMethodException, InstantiationException, IllegalAccessException,
-            java.lang.reflect.InvocationTargetException {
-
-        // TODO This should likely move to the model or somewhere so status messages can create different types
-
-        MessageModelCardViewHolder cardMessageItemViewHolder = createCardMessageItemViewHolder(
+    private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, MessageModel model) {
+        MessageDefaultViewHolder cardMessageItemViewHolder = createMessageModelDefaultViewHolder(
                 parent);
         MessageContainer rootMessageContainer =
                 (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
+
+        // TODO AND-1242 Inflate nested layouts if needed
 
 
         // TODO AND-1242 - I don't think this is the best way to add functionality on top of the view
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
         model.createNewViewController(DataBindingUtil.getBinding(messageView));
 
-        // TODO child views
         return cardMessageItemViewHolder;
     }
 
@@ -162,11 +144,11 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
 
         if (item != null) {
-            if (holder instanceof MessageItemStatusViewHolder) {
-                ((MessageItemStatusViewHolder) holder).bind(item);
-            } else if (holder instanceof MessageModelCardViewHolder) {
+            if (holder instanceof MessageStatusViewHolder) {
+                ((MessageStatusViewHolder) holder).bind(item);
+            } else if (holder instanceof MessageDefaultViewHolder) {
                 MessageCluster messageCluster = getClustering(item.getMessage(), position);
-                ((MessageModelCardViewHolder) holder).bind(item, messageCluster, position, getRecipientStatusPosition(),
+                ((MessageDefaultViewHolder) holder).bind(item, messageCluster, position, getRecipientStatusPosition(),
                         mRecyclerView.getWidth());
             }
         }
@@ -185,10 +167,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
             return -1;
         }
 
-
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
-//        // TODO AND-1242 Move this out of the binder registry?
-//        return mBinderRegistry.getViewType(item.getMessage());
     }
 
 
@@ -237,23 +216,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 //
 //        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
 //    }
-//
-//    protected MessageItemLegacyViewHolder createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell) {
-//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
-//                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
-//
-//        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-//        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-//        viewModel.setShowPresence(getShouldShowPresence());
-//        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
-//        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
-//        viewModel.setItemClickListener(getItemClickListener());
-//
-//        return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
-//    }
 
-    protected MessageModelCardViewHolder createCardMessageItemViewHolder(ViewGroup parent) {
-        MessageModelCardViewModel viewModel = new MessageModelCardViewModel(parent.getContext(),
+    protected MessageDefaultViewHolder createMessageModelDefaultViewHolder(ViewGroup parent) {
+        MessageDefaultViewHolderModel viewModel = new MessageDefaultViewHolderModel(parent.getContext(),
                 mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
 
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
@@ -263,14 +228,14 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
         viewModel.setItemClickListener(getItemClickListener());
 
-        return new MessageModelCardViewHolder(parent, viewModel, mBinderRegistry.getMessageModelManager());
+        return new MessageDefaultViewHolder(parent, viewModel, mBinderRegistry.getMessageModelManager());
     }
 
 
-    protected MessageItemStatusViewHolder createStatusMessageItemViewHolder(ViewGroup parent) {
-        MessageItemStatusViewModel viewModel = new MessageItemStatusViewModel(parent.getContext(), mLayerClient, mBinderRegistry.getMessageModelManager());
+    protected MessageStatusViewHolder createStatusViewHolder(ViewGroup parent) {
+        MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(), mLayerClient, mBinderRegistry.getMessageModelManager());
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-        return new MessageItemStatusViewHolder(parent, viewModel);
+        return new MessageStatusViewHolder(parent, viewModel);
     }
 
     // TODO AND-1242 - Rework this

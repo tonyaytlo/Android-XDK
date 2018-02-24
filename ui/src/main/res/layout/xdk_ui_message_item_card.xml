@@ -24,9 +24,6 @@
         <variable
             name="viewModel"
             type="com.layer.xdk.ui.message.MessageItemCardViewModel"/>
-        <variable
-            name="messageModel"
-            type="com.layer.xdk.ui.message.MessageModelCardViewModel"/>
     </data>
 
     <LinearLayout

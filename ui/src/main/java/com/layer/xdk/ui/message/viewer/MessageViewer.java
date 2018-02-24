@@ -21,6 +21,7 @@ import com.layer.xdk.ui.util.Log;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+@Deprecated
 public class MessageViewer extends FrameLayout {
     private MessageModelManager mMessageModelManager;
 

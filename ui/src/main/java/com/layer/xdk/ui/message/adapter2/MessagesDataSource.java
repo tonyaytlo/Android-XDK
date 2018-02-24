@@ -58,8 +58,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
                 }
                 if (needsInvalidation) {
                     mLayerClient.unregisterEventListener(listener);
-
-                    // TODO these are too quick and it's still picking up the old changes. Delay?
 //                    Log.d("ZZZZ Invalidating datasource: " + id);
                     invalidate();
                 }
@@ -141,7 +139,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         List<MessageModel> models = new ArrayList<>();
         for (Message message : messages) {
             String rootMimeType = MessagePartUtils.getRootMimeType(message);
-            // TODO handle nulls (create legacy MessageModel)
+            // TODO AND-1242 handle nulls (create legacy MessageModel)
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType);
             model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
             model.setMessage(message);

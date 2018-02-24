@@ -23,7 +23,7 @@
 
         <variable
             name="messageModel"
-            type="com.layer.xdk.ui.message.MessageModelCardViewModel"/>
+            type="com.layer.xdk.ui.message.adapter2.MessageDefaultViewHolderModel"/>
     </data>
 
     <!-- TODO AND-1242 Fix margin constants -->

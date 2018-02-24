@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message;
+package com.layer.xdk.ui.message.adapter2;
 
 import android.content.Context;
 import android.databinding.Bindable;
@@ -11,17 +11,17 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.viewmodel.MessageModelViewModel;
+import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-// TODO AND-1242 Terrible name. Copy of MessageItemCardViewModel
-public class MessageModelCardViewModel extends MessageModelViewModel {
+public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     // Config
     private boolean mEnableReadReceipts;
@@ -51,7 +51,7 @@ public class MessageModelCardViewModel extends MessageModelViewModel {
     private boolean mShouldCurrentUserPresenceBeVisible;
     private boolean mShouldShowPresenceForCurrentUser;
 
-    public MessageModelCardViewModel(Context context, LayerClient layerClient,
+    public MessageDefaultViewHolderModel(Context context, LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper,
             IdentityRecyclerViewEventListener identityEventListener) {
         super(context, layerClient);

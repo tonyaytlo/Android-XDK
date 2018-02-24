@@ -14,8 +14,7 @@ import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
 
-// TODO AND-1242 Terrible name
-public class MessageModelViewModel extends BaseObservable {
+public class MessageViewHolderModel extends BaseObservable {
     private Context mContext;
     private LayerClient mLayerClient;
 
@@ -28,7 +27,7 @@ public class MessageModelViewModel extends BaseObservable {
     private View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
 
-    public MessageModelViewModel(Context context, LayerClient layerClient) {
+    public MessageViewHolderModel(Context context, LayerClient layerClient) {
         mContext = context;
         mLayerClient = layerClient;
 

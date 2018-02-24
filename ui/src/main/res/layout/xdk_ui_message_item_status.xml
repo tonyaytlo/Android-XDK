@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.layer.xdk.ui.message.MessageItemStatusViewModel"/>
+            type="com.layer.xdk.ui.message.adapter2.MessageStatusViewHolderModel"/>
     </data>
 
     <TextView

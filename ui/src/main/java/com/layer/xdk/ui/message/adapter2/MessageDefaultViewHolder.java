@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message;
+package com.layer.xdk.ui.message.adapter2;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
@@ -12,23 +12,24 @@ import android.view.ViewStub;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.XdkUiMessageItemCardNewBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
+import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
-public class MessageModelCardViewHolder extends RecyclerView.ViewHolder {
+public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
 
-    private final XdkUiMessageItemCardNewBinding mBinding;
-    private final MessageModelCardViewModel mViewModel;
+    private final XdkUiMessageItemDefaultBinding mBinding;
+    private final MessageDefaultViewHolderModel mViewModel;
     private final LayoutInflater mLayoutInflater;
 
-    public MessageModelCardViewHolder(ViewGroup parent, MessageModelCardViewModel viewModel,
+    public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel,
             MessageModelManager modelRegistry) {
-        this(DataBindingUtil.<XdkUiMessageItemCardNewBinding>inflate(LayoutInflater.from(parent.getContext()), R.layout.xdk_ui_message_item_card_new, parent, false), viewModel, modelRegistry);
+        this(DataBindingUtil.<XdkUiMessageItemDefaultBinding>inflate(LayoutInflater.from(parent.getContext()), R.layout.xdk_ui_message_item_default, parent, false), viewModel, modelRegistry);
     }
 
-    public MessageModelCardViewHolder(XdkUiMessageItemCardNewBinding binding, final MessageModelCardViewModel viewModel, MessageModelManager modelRegistry) {
+    public MessageDefaultViewHolder(XdkUiMessageItemDefaultBinding binding, final MessageDefaultViewHolderModel viewModel, MessageModelManager modelRegistry) {
         super(binding.getRoot());
         mBinding = binding;
         mViewModel = viewModel;
@@ -40,7 +41,6 @@ public class MessageModelCardViewHolder extends RecyclerView.ViewHolder {
         getBinding().currentUserAvatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
 
-//        getBinding().set(viewModel);
         getBinding().setMessageModel(viewModel);
 //        getBinding().messageViewer.setMessageModelManager(modelRegistry);
 //        getBinding().messageViewer.setOnClickListener(viewModel.getOnClickListener());
@@ -81,11 +81,11 @@ public class MessageModelCardViewHolder extends RecyclerView.ViewHolder {
         getViewModel().update(messageCluster, position, recipientStatusPosition);
     }
 
-    private XdkUiMessageItemCardNewBinding getBinding() {
+    private XdkUiMessageItemDefaultBinding getBinding() {
         return mBinding;
     }
 
-    private MessageModelCardViewModel getViewModel() {
+    private MessageDefaultViewHolderModel getViewModel() {
         return mViewModel;
     }
 
