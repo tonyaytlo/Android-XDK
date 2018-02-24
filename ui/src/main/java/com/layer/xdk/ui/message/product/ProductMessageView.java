@@ -39,10 +39,4 @@ public class ProductMessageView extends MessageView<ProductMessageModel> {
             }
         });
     }
-
-    @Override
-    public Class<? extends MessageConstraintContainer> getContainerClass() {
-        return null;
-//        return EmptyMessageContainer.class;
-    }
 }

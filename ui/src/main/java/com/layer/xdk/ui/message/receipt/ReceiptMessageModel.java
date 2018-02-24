@@ -38,9 +38,18 @@ public class ReceiptMessageModel extends MessageModel {
         mGson = gsonBuilder.create();
     }
 
-    @Override
     public Class<? extends MessageView> getRendererType() {
         return ReceiptMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_titled_message_container;
     }
 
     @Override

@@ -42,9 +42,4 @@ public class FileMessageView extends MessageView<FileMessageModel> {
     public void setMessageModel(FileMessageModel model) {
         mBinding.setViewModel(model);
     }
-
-    @Override
-    public Class<? extends MessageConstraintContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
 }

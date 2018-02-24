@@ -40,11 +40,6 @@ public class LocationMessageView extends MessageView<LocationMessageModel> {
         mBinding.setViewModel(model);
     }
 
-    @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
-
     public void hideMap(boolean hideMap) {
         mBinding.setHideMap(hideMap);
     }

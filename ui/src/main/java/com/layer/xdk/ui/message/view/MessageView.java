@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 
 import com.google.gson.JsonObject;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
-import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
@@ -32,9 +31,6 @@ public abstract class MessageView<VIEW_MODEL extends MessageModel> extends Frame
     }
 
     public abstract void setMessageModel(VIEW_MODEL model);
-
-    @Deprecated
-    public abstract Class<? extends MessageConstraintContainer> getContainerClass();
 
     public void performAction(String event, JsonObject customData) {
         if (event != null) {

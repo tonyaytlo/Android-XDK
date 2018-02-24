@@ -68,11 +68,6 @@ public class ReceiptMessageView extends MessageView<ReceiptMessageModel> {
         });
     }
 
-    @Override
-    public Class<? extends MessageConstraintContainer> getContainerClass() {
-        return TitledMessageContainer.class;
-    }
-
     public void onClickBillingAddress() {
         LocationMessageModel model = mBinding.getViewModel().getBillingAddressLocationModel();
         if (model != null) {

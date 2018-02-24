@@ -13,7 +13,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
@@ -21,7 +20,6 @@ import java.io.InputStreamReader;
 public class StatusMessageModel extends MessageModel {
 
     public static final String MIME_TYPE = "application/vnd.layer.status+json";
-    private static final int PREVIEW_MAX_LENGTH = 100;
 
     private StatusMessageMetadata mMetadata;
     private final Gson mGson;
@@ -31,11 +29,16 @@ public class StatusMessageModel extends MessageModel {
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
+    @Override
+    public int getViewLayoutId() {
+        // No view layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
+    }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        // No renderer type since this is rendered inside a MessageItemStatusViewModel
-        return null;
+    public int getContainerViewLayoutId() {
+        // No container layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
     }
 
     @Override
@@ -76,8 +79,7 @@ public class StatusMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (mMetadata != null && mMetadata.getText() != null) {
-            String text = mMetadata.getText();
-            return text.length() > PREVIEW_MAX_LENGTH ? text.substring(0, PREVIEW_MAX_LENGTH) : text;
+            return mMetadata.getText();
         }
         return getContext().getString(R.string.xdk_ui_status_message_preview_text);
     }

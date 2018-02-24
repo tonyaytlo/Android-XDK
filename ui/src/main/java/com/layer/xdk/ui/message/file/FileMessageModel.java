@@ -63,9 +63,18 @@ public class FileMessageModel extends MessageModel {
         mFileProviderAuthority = context.getPackageName() + ".file_provider";
     }
 
-    @Override
     public Class<FileMessageView> getRendererType() {
         return FileMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override

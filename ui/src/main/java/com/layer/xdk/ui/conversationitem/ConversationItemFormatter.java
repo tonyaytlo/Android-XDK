@@ -27,7 +27,6 @@ import java.util.Set;
 public class ConversationItemFormatter {
     private static final String METADATA_KEY_CONVERSATION_TITLE = "conversationName";
     private static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
-    private static final int PREVIEW_MAX_LENGTH = 40;
 
     private Context mContext;
     private LayerClient mLayerClient;

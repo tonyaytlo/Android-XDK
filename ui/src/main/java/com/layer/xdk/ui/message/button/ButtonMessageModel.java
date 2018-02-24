@@ -46,8 +46,13 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @Override
-    public Class<ButtonMessageView> getRendererType() {
-        return ButtonMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_button_message_view;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override

@@ -22,7 +22,6 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
@@ -183,18 +182,9 @@ public abstract class MessageModel extends BaseObservable implements LayerProgre
         // Standard operation is no-op
     }
 
-    @Deprecated
-    public abstract Class<? extends MessageView> getRendererType();
+    public abstract @LayoutRes int getViewLayoutId();
 
-    // TODO AND-1242 make abstract
-    public @LayoutRes int getViewLayoutId() {
-        return 0;
-    }
-
-    // TODO AND-1242 make abstract
-    public @LayoutRes int getContainerViewLayoutId() {
-        return 0;
-    }
+    public abstract  @LayoutRes int getContainerViewLayoutId();
 
     protected void download(@NonNull MessagePart messagePart) {
         messagePart.download(this);

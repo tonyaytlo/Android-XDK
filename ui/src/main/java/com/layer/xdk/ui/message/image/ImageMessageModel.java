@@ -47,9 +47,18 @@ public class ImageMessageModel extends MessageModel {
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
-    @Override
     public Class<ImageMessageView> getRendererType() {
         return ImageMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override

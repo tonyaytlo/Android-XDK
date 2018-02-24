@@ -44,11 +44,6 @@ public class ImageMessageView extends MessageView<ImageMessageModel> {
         setupImageViewDimensions(model);
     }
 
-    @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
-
     private void setupImageViewDimensions(ImageMessageModel model) {
         ImageMessageMetadata metadata = model.getMetadata();
         if (metadata != null) {

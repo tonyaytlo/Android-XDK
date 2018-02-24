@@ -9,7 +9,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 
 public class ResponseMessageModel extends MessageModel {
 
@@ -20,9 +19,15 @@ public class ResponseMessageModel extends MessageModel {
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        // No renderer type since this type is not rendered
-        return null;
+    public int getViewLayoutId() {
+        // No view layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        // No container layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
     }
 
     @Override

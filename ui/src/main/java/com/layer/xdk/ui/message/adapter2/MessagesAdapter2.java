@@ -125,14 +125,14 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
     private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, MessageModel model) {
         MessageDefaultViewHolder cardMessageItemViewHolder = createMessageModelDefaultViewHolder(
                 parent);
+
         MessageContainer rootMessageContainer =
                 (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 
         // TODO AND-1242 Inflate nested layouts if needed
 
-
-        // TODO AND-1242 - I don't think this is the best way to add functionality on top of the view
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
+        // TODO AND-1242 - I don't think this is the best way to add functionality on top of the view
         model.createNewViewController(DataBindingUtil.getBinding(messageView));
 
         return cardMessageItemViewHolder;

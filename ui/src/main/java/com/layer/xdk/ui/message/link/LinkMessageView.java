@@ -41,11 +41,6 @@ public class LinkMessageView extends MessageView<LinkMessageModel> implements Vi
     }
 
     @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
-
-    @Override
     public void onClick(View view) {
         LinkMessageModel model = mBinding.getViewModel();
         if (model != null && model.getActionEvent() != null) {

@@ -37,9 +37,18 @@ public class LinkMessageModel extends MessageModel {
         mGson = gsonBuilder.create();
     }
 
-    @Override
     public Class<LinkMessageView> getRendererType() {
         return LinkMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override

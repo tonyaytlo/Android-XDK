@@ -102,33 +102,33 @@ public class MessageViewer extends FrameLayout {
     //==============================================================================================
 
     public void bindModelToView(@NonNull MessageModel model) {
-        Class<? extends MessageView> modelType = model.getRendererType();
-
-        try {
-            /** TODO: AND-1242 Fix problem with recycling inner message viewers where the type of model
-             *        being set does not match the existing model and views already in there
-             *        This code, formerly would only instantiate and add message views
-             *        and containers iff they were null (i.e. a freshly instantiated message viewer)
-             */
-            mMessageView = instantiateView(modelType);
-            mMessageView.setContainingClickListener(mPassThroughClickListener);
-            mMessageView.setContainingLongClickListener(mPassThroughLongClickListener);
-
-            mMessageContainer = instantiateContainer(mMessageView.getContainerClass());
-            addContainer(mMessageContainer);
+//        Class<? extends MessageView> modelType = model.getRendererType();
+//
+//        try {
+//            /** TODO: AND-1242 Fix problem with recycling inner message viewers where the type of model
+//             *        being set does not match the existing model and views already in there
+//             *        This code, formerly would only instantiate and add message views
+//             *        and containers iff they were null (i.e. a freshly instantiated message viewer)
+//             */
+//            mMessageView = instantiateView(modelType);
+//            mMessageView.setContainingClickListener(mPassThroughClickListener);
+//            mMessageView.setContainingLongClickListener(mPassThroughLongClickListener);
+//
+//            mMessageContainer = instantiateContainer(mMessageView.getContainerClass());
+//            addContainer(mMessageContainer);
 //            mMessageContainer.setMessageView(mMessageView);
-
-            mMessageContainer.setMessageModel(model);
-
-        } catch (NoSuchMethodException e) {
-            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
-        } catch (InvocationTargetException e) {
-            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
-        } catch (InstantiationException e) {
-            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
-        }
+//
+//            mMessageContainer.setMessageModel(model);
+//
+//        } catch (NoSuchMethodException e) {
+//            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
+//        } catch (IllegalAccessException e) {
+//            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
+//        } catch (InvocationTargetException e) {
+//            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
+//        } catch (InstantiationException e) {
+//            throw new IllegalStateException("Cannot instantiate view with class: " + modelType.getName() + " : " + e.getMessage());
+//        }
     }
 
     protected MessageView instantiateView(@NonNull Class<? extends MessageView> viewTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {

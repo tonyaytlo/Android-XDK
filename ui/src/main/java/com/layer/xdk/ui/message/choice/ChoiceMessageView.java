@@ -58,11 +58,6 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implement
         processModel(model);
     }
 
-    @Override
-    public Class<TitledMessageContainer> getContainerClass() {
-        return TitledMessageContainer.class;
-    }
-
     private void processModel(ChoiceMessageModel model) {
         if (model.getChoiceMessageMetadata() != null) {
             List<ChoiceMetadata> choices = model.getChoiceMessageMetadata().getChoices();

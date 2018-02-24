@@ -12,9 +12,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiTextMessageViewBinding;
-import com.layer.xdk.ui.message.button.ButtonMessageView;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 
 public class TextMessageModel extends MessageModel {
 
@@ -31,12 +29,6 @@ public class TextMessageModel extends MessageModel {
     public TextMessageModel(Context context, LayerClient layerClient) {
         super(context, layerClient);
         mJsonParser = new JsonParser();
-    }
-
-    @Override
-    @Deprecated
-    public Class<? extends MessageView> getRendererType() {
-        return ButtonMessageView.class;
     }
 
     @Override

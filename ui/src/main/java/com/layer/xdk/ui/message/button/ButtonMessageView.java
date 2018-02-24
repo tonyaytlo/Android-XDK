@@ -103,11 +103,6 @@ public class ButtonMessageView extends MessageView<ButtonMessageModel> {
         }
     }
 
-    @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
-
     private void addOrUpdateButton(ButtonModel buttonModel) {
         if (buttonModel.getType().equals(ButtonModel.TYPE_ACTION)) {
             addOrUpdateActionButton(buttonModel);

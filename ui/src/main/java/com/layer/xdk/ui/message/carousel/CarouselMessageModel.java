@@ -30,9 +30,18 @@ public class CarouselMessageModel extends MessageModel {
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
-    @Override
     public Class<? extends MessageView> getRendererType() {
         return CarouselMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_empty_message_container;
     }
 
     @Override

@@ -51,9 +51,18 @@ public class ProductMessageModel extends MessageModel {
         mOptions = new ArrayList<>();
     }
 
-    @Override
     public Class<? extends MessageView> getRendererType() {
         return ProductMessageView.class;
+    }
+
+    @Override
+    public int getViewLayoutId() {
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_empty_message_container;
     }
 
     @Override
