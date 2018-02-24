@@ -110,7 +110,7 @@ public class ConversationItemFormatter {
                 }
             }
             if (previewText != null) {
-                return previewText.length() > PREVIEW_MAX_LENGTH ? previewText.substring(0, PREVIEW_MAX_LENGTH) : previewText;
+                return previewText;
             } else {
                 return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
             }
