@@ -15,7 +15,8 @@
 -->
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -45,7 +46,8 @@
             android:layout_marginLeft="@dimen/xdk_ui_margin_large"
             android:layout_marginStart="@dimen/xdk_ui_margin_large"
             android:layout_marginTop="@dimen/xdk_ui_margin_large"
-            android:background="@drawable/xdk_ui_item_foreground_selector">
+            android:background="@drawable/xdk_ui_item_foreground_selector"
+            tools:layout_height="wrap_content">
 
             <com.layer.xdk.ui.avatar.AvatarView
                 android:id="@+id/avatar"
@@ -55,8 +57,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:participants="@{viewModel.identities}"
-                app:style="@{style.avatarStyle}"/>
+                app:layout_constraintVertical_bias="0.0"
+                app:participants="@{viewModel.identities}" app:style="@{style.avatarStyle}"
+                tools:layout_width="@dimen/xdk_ui_avatar_height"
+                tools:layout_height="@dimen/xdk_ui_avatar_height"
+                tools:background="@color/xdk_ui_color_primary_blue"/>
 
             <com.layer.xdk.ui.presence.PresenceView
                 android:id="@+id/presence"
@@ -65,7 +70,10 @@
                 app:layout_constraintBottom_toBottomOf="@+id/avatar"
                 app:layout_constraintRight_toRightOf="@+id/avatar"
                 app:layout_constraintVertical_bias="0.0"
-                app:participants="@{viewModel.identities}"/>
+                app:participants="@{viewModel.identities}"
+                tools:layout_width="@dimen/xdk_ui_avatar_presence_height"
+                tools:layout_height="@dimen/xdk_ui_avatar_presence_height"
+                tools:background="@color/xdk_ui_presence_away"/>
 
             <!-- right content part -->
 
@@ -81,10 +89,10 @@
                 android:text="@{viewModel.title}"
                 android:textColor="@{viewModel.secondaryState ? style.titleUnreadTextColor : style.titleTextColor}"
                 android:textSize="@{style.titleTextSize}"
-                app:layout_constraintBottom_toTopOf="@+id/subtitle"
                 app:layout_constraintLeft_toRightOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="@+id/avatar"
-                app:typeface="@{viewModel.secondaryState ? style.titleUnreadTextTypeface : style.titleTextTypeface}"/>
+                app:typeface="@{viewModel.secondaryState ? style.titleUnreadTextTypeface : style.titleTextTypeface}"
+                tools:text="Title"/>
 
             <TextView
                 android:id="@+id/right_accessory_text"
@@ -104,29 +112,29 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/title"
                 app:layout_constraintVertical_bias="@{style.subtitleVisibility == View.VISIBLE ? 0.2f : 0.5f}"
-                app:typeface="@{viewModel.secondaryState ? style.accessoryUnreadTextTypeface : style.accessoryTextTypeface}"/>
+                app:typeface="@{viewModel.secondaryState ? style.accessoryUnreadTextTypeface : style.accessoryTextTypeface}"
+                tools:text="Right accessory text"/>
 
 
             <TextView
                 android:id="@+id/subtitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@{style.marginHorizontal}"
                 android:layout_marginStart="@{style.marginHorizontal}"
-                android:layout_marginTop="@dimen/xdk_ui_margin_normal"
+                android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:ellipsize="end"
-                android:maxLines="1"
-
+                android:singleLine="true"
                 android:text="@{viewModel.subtitle}"
                 android:textColor="@{viewModel.secondaryState ? style.subtitleUnreadTextColor : style.subtitleTextColor}"
                 android:textSize="@{style.subtitleTextSize}"
                 android:visibility="@{style.subtitleVisibility}"
-                app:layout_constraintBottom_toBottomOf="@+id/avatar"
-                app:layout_constraintEnd_toStartOf="@+id/right_accessory_text"
+                app:layout_constraintEnd_toEndOf="@id/right_accessory_text"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toRightOf="@+id/avatar"
+                app:layout_constraintStart_toEndOf="@+id/avatar"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                app:typeface="@{viewModel.secondaryState ? style.subtitleUnreadTextTypeface : style.subtitleTextTypeface}"/>
+                app:typeface="@{viewModel.secondaryState ? style.subtitleUnreadTextTypeface : style.subtitleTextTypeface}"
+                tools:text="Subtitle"/>
 
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>

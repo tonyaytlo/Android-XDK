@@ -61,7 +61,7 @@ public abstract class MessageContainer extends ConstraintLayout {
     protected abstract <T extends MessageModel> void setContentBackground(T model);
 
     @Override
-    protected void dispatchDraw(Canvas canvas) {
+    public void dispatchDraw(Canvas canvas) {
         if (mCornerRadius > 0) {
             int save = canvas.save();
             canvas.clipPath(getCornerClippingPath());
