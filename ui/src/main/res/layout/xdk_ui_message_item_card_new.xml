@@ -68,35 +68,28 @@
             android:layout_marginLeft="@dimen/xdk_ui_message_item_avatar_padding_left"
             android:layout_marginStart="@dimen/xdk_ui_message_item_avatar_padding_left">
 
-            <FrameLayout
-                android:id="@+id/avatar_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <com.layer.xdk.ui.avatar.AvatarView
+                android:id="@+id/avatar"
+                android:layout_width="@dimen/xdk_ui_avatar_width"
+                android:layout_height="@dimen/xdk_ui_avatar_height"
                 android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
-                android:visibility="@{messageModel.shouldDisplayAvatarSpace ? View.VISIBLE : View.GONE}"
+                android:visibility="@{messageModel.shouldDisplayAvatarSpace ? (messageModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0"
-                app:layout_constraintWidth_default="wrap">
+                app:layout_constraintWidth_default="wrap"
+                app:participants="@{messageModel.participants}"/>
 
-                <com.layer.xdk.ui.avatar.AvatarView
-                    android:id="@+id/avatar"
-                    android:layout_width="@dimen/xdk_ui_avatar_width"
-                    android:layout_height="@dimen/xdk_ui_avatar_height"
-                    android:visibility="@{messageModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{messageModel.participants}"/>
-
-                <com.layer.xdk.ui.presence.PresenceView
-                    android:id="@+id/presence"
-                    android:layout_width="@dimen/xdk_ui_avatar_presence_height"
-                    android:layout_height="@dimen/xdk_ui_avatar_presence_height"
-                    android:layout_gravity="bottom|right"
-                    android:visibility="@{messageModel.presenceVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{messageModel.participants}"/>
-
-            </FrameLayout>
+            <com.layer.xdk.ui.presence.PresenceView
+                android:id="@+id/presence"
+                android:layout_width="@dimen/xdk_ui_avatar_presence_height"
+                android:layout_height="@dimen/xdk_ui_avatar_presence_height"
+                android:visibility="@{messageModel.shouldDisplayAvatarSpace ? (messageModel.presenceVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/avatar"
+                app:layout_constraintEnd_toEndOf="@id/avatar"
+                app:participants="@{messageModel.participants}"/>
 
             <ViewStub
                 android:id="@+id/message_view_stub"
@@ -111,43 +104,36 @@
                 android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
                 android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/current_user_avatar_container"
+                app:layout_constraintEnd_toStartOf="@+id/current_user_avatar"
                 app:layout_constraintHeight_default="wrap"
-                app:layout_constraintStart_toEndOf="@id/avatar_container"
+                app:layout_constraintStart_toEndOf="@id/avatar"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
                 app:layout_constraintWidth_default="wrap"/>
 
-            <FrameLayout
-                android:id="@+id/current_user_avatar_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+            <com.layer.xdk.ui.avatar.AvatarView
+                android:id="@+id/current_user_avatar"
+                android:layout_width="@dimen/xdk_ui_avatar_width"
+                android:layout_height="@dimen/xdk_ui_avatar_height"
                 android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
-                android:paddingLeft="@dimen/xdk_ui_avatar_left_padding_message"
-                android:paddingStart="@dimen/xdk_ui_avatar_left_padding_message"
-                android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? View.VISIBLE : View.GONE}"
+                android:layout_marginLeft="@dimen/xdk_ui_avatar_left_padding_message"
+                android:layout_marginStart="@dimen/xdk_ui_avatar_left_padding_message"
+                android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? (messageModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHeight_default="wrap"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_default="wrap">
+                app:layout_constraintWidth_default="wrap"
+                app:participants="@{messageModel.participants}"/>
 
-                <com.layer.xdk.ui.avatar.AvatarView
-                    android:id="@+id/current_user_avatar"
-                    android:layout_width="@dimen/xdk_ui_avatar_width"
-                    android:layout_height="@dimen/xdk_ui_avatar_height"
-                    android:visibility="@{messageModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{messageModel.participants}"/>
-
-                <com.layer.xdk.ui.presence.PresenceView
-                    android:id="@+id/current_user_presence"
-                    android:layout_width="@dimen/xdk_ui_avatar_presence_height"
-                    android:layout_height="@dimen/xdk_ui_avatar_presence_height"
-                    android:layout_gravity="bottom|right"
-                    android:visibility="@{messageModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE}"
-                    app:participants="@{messageModel.participants}"/>
-
-            </FrameLayout>
+            <com.layer.xdk.ui.presence.PresenceView
+                android:id="@+id/current_user_presence"
+                android:layout_width="@dimen/xdk_ui_avatar_presence_height"
+                android:layout_height="@dimen/xdk_ui_avatar_presence_height"
+                android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? (messageModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@id/current_user_avatar"
+                app:layout_constraintEnd_toEndOf="@id/current_user_avatar"
+                app:participants="@{messageModel.participants}"/>
 
         </android.support.constraint.ConstraintLayout>
 
