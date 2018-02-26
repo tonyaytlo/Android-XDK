@@ -75,11 +75,9 @@
             android:layout_height="@dimen/xdk_ui_avatar_height"
             android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
             android:visibility="@{messageModel.shouldDisplayAvatarSpace ? (messageModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
-            app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/senderName"
             app:layout_constraintVertical_bias="1.0"
-            app:layout_constraintWidth_default="wrap"
             app:participants="@{messageModel.participants}"/>
 
         <com.layer.xdk.ui.presence.PresenceView
@@ -93,7 +91,7 @@
 
         <ViewStub
             android:id="@+id/message_view_stub"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/xdk_ui_padding_normal"
             android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
@@ -102,12 +100,12 @@
             android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
             android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
             android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"
+            app:layout_constrainedHeight="true"
+            app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@+id/current_user_avatar"
-            app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/senderName"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintWidth_default="wrap"/>
+            app:layout_constraintVertical_bias="0.5"/>
 
         <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/current_user_avatar"
@@ -118,9 +116,7 @@
             android:layout_marginStart="@dimen/xdk_ui_avatar_left_padding_message"
             android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? (messageModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
             app:layout_constraintTop_toBottomOf="@id/senderName"
-            app:layout_constraintWidth_default="wrap"
             app:participants="@{messageModel.participants}"/>
 
         <com.layer.xdk.ui.presence.PresenceView
