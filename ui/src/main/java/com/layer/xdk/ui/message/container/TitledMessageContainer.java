@@ -51,7 +51,6 @@ public class TitledMessageContainer extends MessageConstraintContainer {
         View messageView = mBinding.xdkUiTitledMessageContainerContentView.getRoot();
         ViewDataBinding messageBinding = DataBindingUtil.getBinding(messageView);
         messageBinding.setVariable(BR.viewModel, model);
-        // TODO AND-1242 Execute bindings on ^?
 
         mBinding.setViewModel(model);
         mBinding.getViewModel().addOnPropertyChangedCallback(new HasContentOrMetadataCallback());

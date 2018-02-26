@@ -64,7 +64,6 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
         }
         ViewDataBinding messageBinding = DataBindingUtil.getBinding(getChildAt(0));
         messageBinding.setVariable(BR.viewModel, model);
-        // TODO AND-1242 Execute bindings on ^?
 
         model.addOnPropertyChangedCallback(new HasContentCallback());
 

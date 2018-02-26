@@ -23,7 +23,6 @@ import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
 import com.layer.xdk.ui.message.MessageViewHelper;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
-import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.ParentMessageView;
@@ -91,8 +90,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
             return;
         }
         if (model.getContentModel() != null) {
-            MessageConstraintContainer messageContainer =
-                    (MessageConstraintContainer) mBinding.xdkUiButtonMessageViewContent.getRoot();
+            MessageContainer messageContainer =
+                    (MessageContainer) mBinding.xdkUiButtonMessageViewContent.getRoot();
             if (messageContainer != null) {
                 messageContainer.setMessageModel(model.getContentModel());
             }
