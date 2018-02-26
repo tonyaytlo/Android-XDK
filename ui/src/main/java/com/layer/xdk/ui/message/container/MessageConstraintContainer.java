@@ -16,7 +16,7 @@ public abstract class MessageConstraintContainer extends ConstraintLayout implem
     }
 
     public MessageConstraintContainer(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, null, 0);
+        this(context, attrs, 0);
     }
 
     public MessageConstraintContainer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {

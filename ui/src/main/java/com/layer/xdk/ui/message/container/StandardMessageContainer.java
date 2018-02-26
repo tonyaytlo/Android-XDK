@@ -59,7 +59,7 @@ public class StandardMessageContainer extends MessageConstraintContainer {
     }
 
     @Override
-    public <T extends MessageModel> void setContentBackground(T model) {
+    public <T extends MessageModel> void setContentBackground(@NonNull T model) {
         GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         if (background != null) {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));

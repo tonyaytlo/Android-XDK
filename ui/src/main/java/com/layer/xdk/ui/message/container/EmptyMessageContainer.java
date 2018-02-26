@@ -63,15 +63,16 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
             throw new IllegalStateException("No message view set on this container");
         }
         ViewDataBinding messageBinding = DataBindingUtil.getBinding(getChildAt(0));
-        messageBinding.setVariable(BR.viewModel, model);
+        messageBinding.setVariable(BR.messageModel, model);
 
-        model.addOnPropertyChangedCallback(new HasContentCallback());
-
-        setContentBackground(model);
+        if (model != null) {
+            model.addOnPropertyChangedCallback(new HasContentCallback());
+            setContentBackground(model);
+        }
     }
 
     @Override
-    public <T extends MessageModel> void setContentBackground(T model) {
+    public <T extends MessageModel> void setContentBackground(@NonNull T model) {
         GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         if (background != null) {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));

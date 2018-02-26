@@ -17,8 +17,8 @@
     </data>
 
     <com.layer.xdk.ui.message.container.StandardMessageContainer
-        android:layout_height="match_parent"
-        android:layout_width="wrap_content">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <ViewStub
             android:id="@+id/xdk_ui_standard_message_container_content_view"
