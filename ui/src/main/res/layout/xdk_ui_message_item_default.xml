@@ -99,7 +99,6 @@
             android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
             android:layout_marginRight="@dimen/xdk_ui_padding_normal"
             android:layout_marginStart="@dimen/xdk_ui_padding_normal"
-            android:background="@drawable/xdk_ui_message_viewer_background"
             android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
             android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
             android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"

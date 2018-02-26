@@ -22,7 +22,6 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
 
     private final XdkUiMessageItemDefaultBinding mBinding;
     private final MessageDefaultViewHolderModel mViewModel;
-    private final LayoutInflater mLayoutInflater;
 
     public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel,
             MessageModelManager modelRegistry) {
@@ -33,7 +32,6 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         super(binding.getRoot());
         mBinding = binding;
         mViewModel = viewModel;
-        mLayoutInflater = LayoutInflater.from(binding.getRoot().getContext());
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
@@ -52,6 +50,12 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, final View inflated) {
+                // TODO AND-1242 - This doesn't quite work since the subviews will overdraw this.
+                // TODO AND-1242 rename resource
+                inflated.setBackgroundResource(R.drawable.xdk_ui_message_viewer_background);
+                int padding = inflated.getContext().getResources().getDimensionPixelSize(
+                        R.dimen.xdk_ui_message_viewer_background_border_stroke_width);
+                inflated.setPadding(padding, padding, padding, padding);
                 getViewModel().addOnPropertyChangedCallback(
                         new Observable.OnPropertyChangedCallback() {
                             @Override

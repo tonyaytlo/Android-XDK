@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.button;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -13,25 +14,30 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.LinearLayout;
 
+import com.google.gson.JsonObject;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
+import com.layer.xdk.ui.message.MessageViewHelper;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
+import com.layer.xdk.ui.message.container.MessageConstraintContainer;
+import com.layer.xdk.ui.message.container.MessageContainer;
+import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.List;
 import java.util.Set;
 
-public class ButtonMessageLayout extends ConstraintLayout {
+public class ButtonMessageLayout extends ConstraintLayout implements ParentMessageView {
     private static final String BUTTON_SET_TAG_PREFIX = "ChoiceButtonSet-";
 
     private XdkUiButtonMessageViewBinding mBinding;
+    private MessageViewHelper mMessageViewHelper;
     private ColorStateList mActionButtonColorStateList;
-    private ColorStateList mChoiceButtonColorStateList;
-
-    private List<ChoiceButtonSet> mChoiceButtonSets;
 
     public ButtonMessageLayout(Context context) {
         this(context, null, 0);
@@ -44,6 +50,8 @@ public class ButtonMessageLayout extends ConstraintLayout {
     public ButtonMessageLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        mMessageViewHelper = new MessageViewHelper(context);
+
         mActionButtonColorStateList = new ColorStateList(new int[][]{
                 new int[]{android.R.attr.state_enabled},
                 new int[]{-android.R.attr.state_enabled},
@@ -53,29 +61,41 @@ public class ButtonMessageLayout extends ConstraintLayout {
                         getResources().getColor(R.color.xdk_ui_button_message_action_button_text_disabled),
                         getResources().getColor(R.color.xdk_ui_button_message_action_button_text_pressed)
                 });
+    }
 
-        mChoiceButtonColorStateList = new ColorStateList(new int[][]{
-                new int[]{android.R.attr.state_enabled},
-                new int[]{-android.R.attr.state_enabled},
-                new int[]{android.R.attr.state_pressed}},
-                new int[]{
-                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_enabled),
-                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_disabled),
-                        getResources().getColor(R.color.xdk_ui_button_message_choice_button_text_pressed)
-                });
-
+    @Override
+    public <T extends MessageModel> void inflateChildLayouts(T model) {
+        if (!(model instanceof ButtonMessageModel)) {
+            // Nothing to do with a non button model
+            return;
+        }
+        ButtonMessageModel buttonModel = (ButtonMessageModel) model;
+        MessageModel contentModel = buttonModel.getContentModel();
+        if (contentModel == null) {
+            // Nothing to do
+            return;
+        }
+        mBinding = DataBindingUtil.getBinding(this);
+        ViewStub viewStub = mBinding.xdkUiButtonMessageViewContent.getViewStub();
+        viewStub.setLayoutResource(contentModel.getContainerViewLayoutId());
+        MessageContainer container = (MessageContainer) viewStub.inflate();
+        View contentView = container.inflateMessageView(contentModel.getViewLayoutId());
+        if (contentView instanceof ParentMessageView) {
+            ((ParentMessageView) contentView).inflateChildLayouts(contentModel);
+        }
     }
 
     public void setMessageModel(ButtonMessageModel model) {
+        mBinding = DataBindingUtil.getBinding(this);
         if (model == null) {
             return;
         }
-//        mBinding.setMessageModel(model);
         if (model.getContentModel() != null) {
-//            mBinding.xdkUiButtonMessageViewContent.setVisibility(VISIBLE);
-//            mBinding.xdkUiButtonMessageViewContent.setModel(model.getContentModel());
-        } else {
-//            mBinding.xdkUiButtonMessageViewContent.setVisibility(GONE);
+            MessageConstraintContainer messageContainer =
+                    (MessageConstraintContainer) mBinding.xdkUiButtonMessageViewContent.getRoot();
+            if (messageContainer != null) {
+                messageContainer.setMessageModel(model.getContentModel());
+            }
         }
 
         addOrUpdateButtonsFromModel();
@@ -86,19 +106,21 @@ public class ButtonMessageLayout extends ConstraintLayout {
                 addOrUpdateButtonsFromModel();
             }
         });
+
+
     }
 
     private void addOrUpdateButtonsFromModel() {
-//        ButtonMessageModel model = mBinding.getMessageModel();
-//        if (model == null) {
-//            return;
-//        }
-//        List<ButtonModel> buttonModels = model.getButtonModels();
-//        if (buttonModels != null) {
-//            for (ButtonModel buttonModel : buttonModels) {
-//                addOrUpdateButton(buttonModel);
-//            }
-//        }
+        ButtonMessageModel model = mBinding.getMessageModel();
+        if (model == null) {
+            return;
+        }
+        List<ButtonModel> buttonModels = model.getButtonModels();
+        if (buttonModels != null) {
+            for (ButtonModel buttonModel : buttonModels) {
+                addOrUpdateButton(buttonModel);
+            }
+        }
     }
 
     private void addOrUpdateButton(ButtonModel buttonModel) {
@@ -130,10 +152,10 @@ public class ButtonMessageLayout extends ConstraintLayout {
             }
 
             // Add it
-//            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,
-//                    new ViewGroup.LayoutParams(
-//                            ViewGroup.LayoutParams.MATCH_PARENT,
-//                            ViewGroup.LayoutParams.WRAP_CONTENT));
+            mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,
+                    new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
         // Bind data to it
@@ -141,9 +163,9 @@ public class ButtonMessageLayout extends ConstraintLayout {
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-//                JsonObject data = mBinding.getMessageModel().getActionData();
-//                String event = mBinding.getMessageModel().getActionEvent();
-//                performAction(event, data);
+                JsonObject data = mBinding.getMessageModel().getActionData();
+                String event = mBinding.getMessageModel().getActionEvent();
+                mMessageViewHelper.performAction(event, data);
             }
         });
     }
@@ -191,9 +213,9 @@ public class ButtonMessageLayout extends ConstraintLayout {
             }
         });
 
-//        Set<String> selectedChoices = mBinding.getMessageModel().getSelectedChoices(
-//                choiceData.getResponseName());
-//
-//        choiceButtonSet.setSelection(selectedChoices);
+        Set<String> selectedChoices = mBinding.getMessageModel().getSelectedChoices(
+                choiceData.getResponseName());
+
+        choiceButtonSet.setSelection(selectedChoices);
     }
 }

@@ -13,31 +13,34 @@
     <com.layer.xdk.ui.message.button.ButtonMessageLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:messageModel="@{messageModel}">
+        app:messageModel="@{messageModel}"
+        tools:parentTag="android.support.constraint.ConstraintLayout">
 
         <ViewStub
             android:id="@+id/xdk_ui_button_message_view_content"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/xdk_ui_margin_tiny"
+            android:inflatedId="@id/xdk_ui_button_message_view_content"
+            app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="spread"/>
+            app:layout_constraintWidth_min="wrap"/>
 
         <LinearLayout
             android:id="@+id/xdk_ui_button_message_view_buttons_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintWidth_default="spread"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_button_message_view_content"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/xdk_ui_button_message_view_content"
+            app:layout_constraintWidth_min="wrap"/>
 
     </com.layer.xdk.ui.message.button.ButtonMessageLayout>
 </layout>

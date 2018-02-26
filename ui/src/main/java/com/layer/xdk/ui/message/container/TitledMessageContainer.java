@@ -19,7 +19,6 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiTitledMessageContainerMergeBinding;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 
 public class TitledMessageContainer extends MessageConstraintContainer {
     private XdkUiTitledMessageContainerMergeBinding mBinding;

@@ -22,6 +22,7 @@ import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
@@ -131,6 +132,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         // TODO AND-1242 Inflate nested layouts if needed
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
+        if (messageView instanceof ParentMessageView) {
+            ((ParentMessageView) messageView).inflateChildLayouts(model);
+        }
 
         return cardMessageItemViewHolder;
     }
