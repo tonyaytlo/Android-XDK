@@ -2,7 +2,6 @@ package com.layer.xdk.ui.message;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -63,7 +62,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mHeaderView = new EmptyMessageListHeaderView(getContext());
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-//        mLinearLayoutManager.setStackFromEnd(true);
         mLinearLayoutManager.setReverseLayout(true);
         mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 
@@ -75,14 +73,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         };
         noChangeAnimator.setSupportsChangeAnimations(false);
         mMessagesRecyclerView.setItemAnimator(noChangeAnimator);
-
-        mMessagesRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                    RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-            }
-        });
 
 //        setOnRefreshListener(new OnRefreshListener() {
 //            @Override
