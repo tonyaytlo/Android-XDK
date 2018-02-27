@@ -52,9 +52,8 @@ public class MessageStatusViewHolderModel extends MessageViewHolderModel {
 
     private ResponseMessageModel createResponseModel(Message message) {
         final ResponseMessageModel responseModel = new ResponseMessageModel(getContext(),
-                getLayerClient());
+                getLayerClient(), message);
         responseModel.setMessageModelManager(mModelRegistry);
-        responseModel.setMessage(message);
         mText = responseModel.getText();
         mVisible = responseModel.getHasContent();
         responseModel.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
@@ -70,9 +69,8 @@ public class MessageStatusViewHolderModel extends MessageViewHolderModel {
 
     private StatusMessageModel createStatusModel(Message message) {
         final StatusMessageModel statusModel = new StatusMessageModel(getContext(),
-                getLayerClient());
+                getLayerClient(), message);
         statusModel.setMessageModelManager(mModelRegistry);
-        statusModel.setMessage(message);
         mText = statusModel.getText();
         mVisible = statusModel.getHasContent();
         statusModel.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {

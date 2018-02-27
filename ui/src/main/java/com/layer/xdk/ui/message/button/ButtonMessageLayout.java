@@ -105,8 +105,6 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                 addOrUpdateButtonsFromModel();
             }
         });
-
-
     }
 
     private void addOrUpdateButtonsFromModel() {

@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
@@ -31,8 +32,8 @@ public class ReceiptMessageModel extends MessageModel {
     private Gson mGson;
     private ReceiptMessageMetadata mMetadata;
 
-    public ReceiptMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ReceiptMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
@@ -54,10 +55,8 @@ public class ReceiptMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
-        }
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
     }
 
     @Override

@@ -18,13 +18,15 @@ import com.layer.sdk.query.Queryable;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-public class MessagesDataSource extends PositionalDataSource<MessageModel> {
+public class MessagesDataSource extends PositionalDataSource<AbstractMessageModel> {
 
     static int ID_SOURCE = 0;
     private final int id = ID_SOURCE++;
@@ -68,10 +70,10 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     }
 
     @Override
-    public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<MessageModel> callback) {
+    public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<AbstractMessageModel> callback) {
         int count = (int) computeCount();
         if (count == 0) {
-            callback.onResult(Collections.<MessageModel>emptyList(), 0, 0);
+            callback.onResult(Collections.<AbstractMessageModel>emptyList(), 0, 0);
         } else {
             int position = computeInitialLoadPosition(params, count);
             int size = computeInitialLoadSize(params, position, count);
@@ -117,7 +119,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
-            @NonNull LoadRangeCallback<MessageModel> callback) {
+            @NonNull LoadRangeCallback<AbstractMessageModel> callback) {
 //        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
 
         List<Message> messages = loadRangeInternal(params.startPosition, params.loadSize);
@@ -135,14 +137,28 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     }
 
     @NonNull
-    private List<MessageModel> convertMessagesToModels(List<Message> messages) {
-        List<MessageModel> models = new ArrayList<>();
+    private List<AbstractMessageModel> convertMessagesToModels(List<Message> messages) {
+        List<AbstractMessageModel> models = new ArrayList<>();
         for (Message message : messages) {
             String rootMimeType = MessagePartUtils.getRootMimeType(message);
-            // TODO AND-1242 handle nulls (create legacy MessageModel)
-            MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType);
-            model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
-            model.setMessage(message);
+            MessageModel modelToProcessParts = null;
+            AbstractMessageModel model;
+            if (rootMimeType == null) {
+                // This is a legacy message
+                // Create set of mime types then get the model based on that type
+                Set<String> legacyMimeTypes = MessagePartUtils.getLegacyMessageMimeTypes(
+                        message);
+                model = mBinderRegistry.getMessageModelManager().getNewLegacyModel(legacyMimeTypes, message);
+            } else {
+                modelToProcessParts = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
+                model = modelToProcessParts;
+            }
+            if (modelToProcessParts != null) {
+                modelToProcessParts.processParts();
+            }
+            if (model == null) {
+                // TODO AND-1242 handle no model available for type
+            }
 //            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
 
             models.add(model);

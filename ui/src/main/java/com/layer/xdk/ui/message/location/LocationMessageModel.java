@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.location;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -32,8 +34,8 @@ public class LocationMessageModel extends MessageModel {
 
     private LocationMessageMetadata mMetadata;
 
-    public LocationMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public LocationMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
@@ -54,13 +56,13 @@ public class LocationMessageModel extends MessageModel {
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
+    protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
         mMetadata = mGson.fromJson(reader, LocationMessageMetadata.class);
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 

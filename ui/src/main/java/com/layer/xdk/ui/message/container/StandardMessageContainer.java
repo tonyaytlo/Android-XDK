@@ -18,6 +18,7 @@ import android.view.ViewStub;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiStandardMessageContainerBinding;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 public class StandardMessageContainer extends MessageConstraintContainer {
@@ -44,7 +45,7 @@ public class StandardMessageContainer extends MessageConstraintContainer {
     }
 
     @Override
-    public <T extends MessageModel> void setMessageModel(T model) {
+    public <T extends AbstractMessageModel> void setMessageModel(T model) {
         View messageView = getBinding().xdkUiStandardMessageContainerContentView.getRoot();
         ViewDataBinding messageBinding = DataBindingUtil.getBinding(messageView);
         messageBinding.setVariable(BR.messageModel, model);
@@ -59,7 +60,7 @@ public class StandardMessageContainer extends MessageConstraintContainer {
     }
 
     @Override
-    public <T extends MessageModel> void setContentBackground(@NonNull T model) {
+    public <T extends AbstractMessageModel> void setContentBackground(@NonNull T model) {
         GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         if (background != null) {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));

@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
@@ -35,8 +36,8 @@ public class ChoiceMessageModel extends MessageModel {
     private Set<String> mSelectedChoices;
     private Gson mGson;
 
-    public ChoiceMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ChoiceMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
         mSelectedChoices = new HashSet<>();
     }
@@ -57,12 +58,10 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
-            processSelections();
-            notifyPropertyChanged(BR.choiceMessageMetadata);
-        }
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
+        processSelections();
+        notifyPropertyChanged(BR.choiceMessageMetadata);
     }
 
     @Override

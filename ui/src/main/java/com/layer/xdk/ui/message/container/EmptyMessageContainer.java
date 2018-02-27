@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
 
@@ -55,7 +56,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     }
 
     @Override
-    public <T extends MessageModel> void setMessageModel(T model) {
+    public <T extends AbstractMessageModel> void setMessageModel(T model) {
         if (getChildCount() == 0) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.w("No message view set on this container");
@@ -72,7 +73,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     }
 
     @Override
-    public <T extends MessageModel> void setContentBackground(@NonNull T model) {
+    public <T extends AbstractMessageModel> void setContentBackground(@NonNull T model) {
         GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         if (background != null) {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));

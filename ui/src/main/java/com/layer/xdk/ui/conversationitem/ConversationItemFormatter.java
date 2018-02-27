@@ -11,7 +11,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
-import com.layer.xdk.ui.message.messagetypes.generic.GenericCellFactory;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.text.DateFormat;
@@ -97,33 +97,26 @@ public class ConversationItemFormatter {
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        if (!mBinderRegistry.isLegacyMessageType(message) || mBinderRegistry.isStatusMessageType(message)) {
-            String previewText = null;
-            String modelIdentifier = MessagePartUtils.getRootMimeType(message);
-            if (modelIdentifier != null && mBinderRegistry.getMessageModelManager().hasModel(modelIdentifier)) {
-                MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(modelIdentifier);
-                if (model != null) {
-                    model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
-                    model.setMessage(message);
-                    previewText = model.getPreviewText();
-                }
-            }
-            if (previewText != null) {
-                return previewText;
-            } else {
-                return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
-            }
+        String rootMimeType = MessagePartUtils.getRootMimeType(message);
+        MessageModel modelToProcessParts = null;
+        AbstractMessageModel model;
+        if (rootMimeType == null) {
+            // This is a legacy message
+            // Create set of mime types then get the model based on that type
+            Set<String> legacyMimeTypes = MessagePartUtils.getLegacyMessageMimeTypes(
+                    message);
+            model = mBinderRegistry.getMessageModelManager().getNewLegacyModel(legacyMimeTypes, message);
         } else {
-            if (mCellFactories != null && !mCellFactories.isEmpty()) {
-                for (CellFactory cellFactory : mCellFactories) {
-                    if (cellFactory.isType(message)) {
-                        return cellFactory.getPreviewText(mContext, message);
-                    }
-                }
-            }
-
-            return GenericCellFactory.getPreview(mContext, message);
+            modelToProcessParts = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
+            model = modelToProcessParts;
         }
+        if (modelToProcessParts != null) {
+            modelToProcessParts.processParts();
+        }
+        if (model != null && model.getPreviewText() != null) {
+            return model.getPreviewText();
+        }
+        return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
     }
 
     protected String formatTime(Date date) {

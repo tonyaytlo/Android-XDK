@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
@@ -40,8 +41,8 @@ public class ButtonMessageModel extends MessageModel {
 
     private Map<String, Set<String>> mSelectedChoiceIds = new HashMap<>();
 
-    public ButtonMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ButtonMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
@@ -57,33 +58,31 @@ public class ButtonMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (getRootMessagePart().equals(messagePart)) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ButtonMessageMetadata.class);
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, ButtonMessageMetadata.class);
 
-            // Populate choice data objects
-            for (ButtonModel buttonModel : mMetadata.getButtonModels()) {
-                if (ButtonModel.TYPE_CHOICE.equals(buttonModel.getType())) {
-                    JsonObject data = buttonModel.getData();
-                    if (data != null) {
-                        ButtonModel.ChoiceData choiceData = mGson.fromJson(data,
-                                ButtonModel.ChoiceData.class);
-                        buttonModel.setChoiceData(choiceData);
-                        choiceData.setEnabledForMe(getIsEnabledForMe(choiceData));
+        // Populate choice data objects
+        for (ButtonModel buttonModel : mMetadata.getButtonModels()) {
+            if (ButtonModel.TYPE_CHOICE.equals(buttonModel.getType())) {
+                JsonObject data = buttonModel.getData();
+                if (data != null) {
+                    ButtonModel.ChoiceData choiceData = mGson.fromJson(data,
+                            ButtonModel.ChoiceData.class);
+                    buttonModel.setChoiceData(choiceData);
+                    choiceData.setEnabledForMe(getIsEnabledForMe(choiceData));
 
-                        String responseName = choiceData.getResponseName();
+                    String responseName = choiceData.getResponseName();
 
-                        Set<String> selectedChoices = getSelectedChoices(responseName);
-                        selectedChoices.clear();
-                        if (choiceData.getPreselectedChoice() != null) {
-                            selectedChoices.add(choiceData.getPreselectedChoice());
-                        }
+                    Set<String> selectedChoices = getSelectedChoices(responseName);
+                    selectedChoices.clear();
+                    if (choiceData.getPreselectedChoice() != null) {
+                        selectedChoices.add(choiceData.getPreselectedChoice());
                     }
                 }
-
             }
-            notifyChange();
+
         }
+        notifyChange();
     }
 
     @Override

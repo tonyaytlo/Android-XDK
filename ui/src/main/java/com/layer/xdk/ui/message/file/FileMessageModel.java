@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.MessagePartUtils;
@@ -55,8 +57,8 @@ public class FileMessageModel extends MessageModel {
 
     private String mFileProviderAuthority;
 
-    public FileMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public FileMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
@@ -78,13 +80,11 @@ public class FileMessageModel extends MessageModel {
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
+    protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        if (getRootMessagePart().equals(messagePart)) {
-            reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
-            setupFileIconDrawable(mMetadata.getMimeType());
-        }
+        reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
+        setupFileIconDrawable(mMetadata.getMimeType());
     }
 
     @Override

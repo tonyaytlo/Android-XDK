@@ -18,6 +18,7 @@ import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
@@ -46,7 +47,7 @@ public class ConversationViewModel extends BaseObservable {
 
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
-        final LiveData<PagedList<MessageModel>> messageList = new LivePagedListBuilder<>(
+        final LiveData<PagedList<AbstractMessageModel>> messageList = new LivePagedListBuilder<>(
                 new MessagesDataSourceFactory(getLayerClient(), mBinderRegistry, conversation),
                 new PagedList.Config.Builder()
                         .setEnablePlaceholders(true)
@@ -54,9 +55,9 @@ public class ConversationViewModel extends BaseObservable {
                         .build()
         ).build();
 
-        messageList.observeForever(new Observer<PagedList<MessageModel>>() {
+        messageList.observeForever(new Observer<PagedList<AbstractMessageModel>>() {
             @Override
-            public void onChanged(@Nullable PagedList<MessageModel> messages) {
+            public void onChanged(@Nullable PagedList<AbstractMessageModel> messages) {
                 mMessageItemsListViewModel.getAdapter().setList(messages);
             }
         });

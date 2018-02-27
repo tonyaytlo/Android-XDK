@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -25,8 +26,8 @@ public class CarouselMessageModel extends MessageModel {
     private Gson mGson;
     private CarouselModelMetadata mMetadata;
 
-    public CarouselMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public CarouselMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
@@ -59,10 +60,8 @@ public class CarouselMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, CarouselModelMetadata.class);
-        }
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, CarouselModelMetadata.class);
     }
 
     @Override

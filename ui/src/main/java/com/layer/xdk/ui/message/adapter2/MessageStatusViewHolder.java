@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemStatusBinding;
-import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 
 public class MessageStatusViewHolder extends RecyclerView.ViewHolder {
 
@@ -27,7 +27,7 @@ public class MessageStatusViewHolder extends RecyclerView.ViewHolder {
         mBinding.setViewModel(viewModel);
     }
 
-    public void bind(MessageModel messageModel) {
+    public void bind(AbstractMessageModel messageModel) {
         mViewModel.setItem(messageModel);
         mViewModel.update();
     }

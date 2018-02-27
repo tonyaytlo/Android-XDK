@@ -6,9 +6,9 @@ import android.arch.paging.DataSource;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 
-public class MessagesDataSourceFactory implements DataSource.Factory<Integer, MessageModel> {
+public class MessagesDataSourceFactory implements DataSource.Factory<Integer, AbstractMessageModel> {
 
     private final LayerClient mLayerClient;
     private final Conversation mConversation;
@@ -22,7 +22,7 @@ public class MessagesDataSourceFactory implements DataSource.Factory<Integer, Me
     }
 
     @Override
-    public DataSource<Integer, MessageModel> create() {
+    public DataSource<Integer, AbstractMessageModel> create() {
         return new MessagesDataSource(mLayerClient, mConversation, mBinderRegistry);
     }
 }

@@ -2,12 +2,14 @@ package com.layer.xdk.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -24,8 +26,8 @@ public class TextMessageModel extends MessageModel {
     private String mActionEvent;
     private JsonObject mCustomData;
 
-    public TextMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public TextMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mJsonParser = new JsonParser();
     }
 
@@ -40,12 +42,12 @@ public class TextMessageModel extends MessageModel {
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
+    protected void parse(@NonNull MessagePart messagePart) {
         String data = new String(messagePart.getData());
         JsonObject jsonObject = mJsonParser.parse(data).getAsJsonObject();
         mText = jsonObject.has("text") ? jsonObject.get("text").getAsString() : null;
@@ -133,6 +135,8 @@ public class TextMessageModel extends MessageModel {
 
     @Bindable
     public boolean isDownloadingParts() {
-        return getNumberOfPartsCurrentlyDownloading() > 0;
+        // TODO AND-1242
+        return true;
+//        return getNumberOfPartsCurrentlyDownloading() > 0;
     }
 }

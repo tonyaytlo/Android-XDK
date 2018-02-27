@@ -15,7 +15,7 @@ import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
 import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.container.MessageContainer;
-import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
 public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
@@ -72,7 +72,7 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(MessageModel messageModel, MessageCluster messageCluster, int position, int recipientStatusPosition, int parentWidth) {
+    public void bind(AbstractMessageModel messageModel, MessageCluster messageCluster, int position, int recipientStatusPosition, int parentWidth) {
         getViewModel().setItem(messageModel);
 
         MessageContainer messageContainer =

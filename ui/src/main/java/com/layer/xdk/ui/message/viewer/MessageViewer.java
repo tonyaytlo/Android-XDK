@@ -73,21 +73,21 @@ public class MessageViewer extends FrameLayout {
         }
 
         if (mMessageModel != null && mMessageModel.getMessage().equals(message)) {
-            mMessageModel.setMessage(message, rootMessagePart);
+//            mMessageModel.setMessage(message, rootMessagePart);
             return;
         }
 
-        MessageModel model = mMessageModelManager.getNewModel(mimeType);
-        if (model == null) {
-            if (Log.isLoggable(Log.DEBUG)) Log.d("No model found for mime type = " + mimeType);
-
-            return;
-        }
-        mMessageModel = model;
-        model.setMessageModelManager(mMessageModelManager);
-        model.setMessage(message, rootMessagePart);
-
-        bindModelToView(model);
+//        MessageModel model = mMessageModelManager.getNewModel(mimeType);
+//        if (model == null) {
+//            if (Log.isLoggable(Log.DEBUG)) Log.d("No model found for mime type = " + mimeType);
+//
+//            return;
+//        }
+//        mMessageModel = model;
+//        model.setMessageModelManager(mMessageModelManager);
+////        model.setMessage(message, rootMessagePart);
+//
+//        bindModelToView(model);
     }
 
     public void setModel(@NonNull MessageModel rootModel) {

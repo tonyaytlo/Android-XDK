@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -207,5 +209,15 @@ public class MessagePartUtils {
         }
 
         return builder.toString();
+    }
+
+    @NonNull
+    public static Set<String> getLegacyMessageMimeTypes(@NonNull Message message) {
+        Set<MessagePart> messageParts = message.getMessageParts();
+        Set<String> mimeTypes = new HashSet<>(messageParts.size());
+        for (MessagePart part : messageParts) {
+            mimeTypes.add(part.getMimeType());
+        }
+        return mimeTypes;
     }
 }

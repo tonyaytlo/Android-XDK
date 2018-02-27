@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.image;
 
 import android.content.Context;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -42,8 +43,8 @@ public class ImageMessageModel extends MessageModel {
     private ImageRequestParameters mPreviewRequestParameters;
     private ImageRequestParameters mSourceRequestParameters;
 
-    public ImageMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ImageMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
@@ -62,13 +63,16 @@ public class ImageMessageModel extends MessageModel {
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
-        if (getRootMessagePart().equals(messagePart)) {
-            parseRootMessagePart(messagePart);
-        } else if (MessagePartUtils.isRole(messagePart, ROLE_PREVIEW)) {
-            parsePreviewPart(messagePart);
-        } else if (MessagePartUtils.isRole(messagePart, ROLE_SOURCE)) {
-            parseSourcePart(messagePart);
+    protected void parse(@NonNull MessagePart messagePart) {
+        parseRootMessagePart(messagePart);
+    }
+
+    @Override
+    protected void parseChildPart(@NonNull MessagePart childMessagePart) {
+        if (MessagePartUtils.isRole(childMessagePart, ROLE_PREVIEW)) {
+            parsePreviewPart(childMessagePart);
+        } else if (MessagePartUtils.isRole(childMessagePart, ROLE_SOURCE)) {
+            parseSourcePart(childMessagePart);
         }
     }
 

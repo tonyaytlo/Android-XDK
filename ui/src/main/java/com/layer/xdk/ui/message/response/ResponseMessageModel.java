@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
@@ -14,8 +15,8 @@ public class ResponseMessageModel extends MessageModel {
 
     public static final String MIME_TYPE = "application/vnd.layer.response+json";
 
-    public ResponseMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ResponseMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
     }
 
     @Override

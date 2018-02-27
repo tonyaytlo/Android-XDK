@@ -19,6 +19,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.container.MessageContainer;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
@@ -33,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO AND-1242 Abstract a view holder base class
-public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerView.ViewHolder> {
+public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, RecyclerView.ViewHolder> {
 
     private final Map<Uri, MessageCluster> mClusterCache = new HashMap<>();
     private final Handler mUiThreadHandler;
@@ -60,7 +61,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
 
 
-    private MessageModel mLastModelForViewTypeLookup;
+    private AbstractMessageModel mLastModelForViewTypeLookup;
 
 
     public MessagesAdapter2(Context context, LayerClient layerClient, BinderRegistry binderRegistry,
@@ -78,7 +79,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        MessageModel model = getModelForViewType(viewType);
+        AbstractMessageModel model = getModelForViewType(viewType);
         if (model == null) {
             // TODO AND-1242 This should be a placeholder
             return createPlaceholder(parent);
@@ -122,7 +123,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         };
     }
 
-    private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, MessageModel model) {
+    private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, AbstractMessageModel model) {
         MessageDefaultViewHolder cardMessageItemViewHolder = createMessageModelDefaultViewHolder(
                 parent);
 
@@ -132,8 +133,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         // TODO AND-1242 Inflate nested layouts if needed
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
-        if (messageView instanceof ParentMessageView) {
-            ((ParentMessageView) messageView).inflateChildLayouts(model);
+        // TODO AND-1242 Do wee need the model cast here?
+        if (messageView instanceof ParentMessageView && model instanceof MessageModel) {
+            ((ParentMessageView) messageView).inflateChildLayouts((MessageModel) model);
         }
 
         return cardMessageItemViewHolder;
@@ -141,7 +143,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        MessageModel item = getItem(position);
+        AbstractMessageModel item = getItem(position);
 
 
         if (item != null) {
@@ -352,7 +354,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
         }
 
         int previousPosition = position - 1;
-        MessageModel previousMessageModel = (previousPosition >= 0) ? getItem(previousPosition) : null;
+        AbstractMessageModel previousMessageModel = (previousPosition >= 0) ? getItem(previousPosition) : null;
         Message previousMessage = previousMessageModel == null ? null : previousMessageModel.getMessage();
         if (previousMessage != null) {
             result.mDateBoundaryWithPrevious = isDateBoundary(previousMessage.getReceivedAt(),
@@ -426,7 +428,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
     /**
      * Copying this from Groupie which copied it from Epoxy.
      */
-    private MessageModel getModelForViewType(int viewType) {
+    private AbstractMessageModel getModelForViewType(int viewType) {
         if (mLastModelForViewTypeLookup != null
                 && mLastModelForViewTypeLookup.getMimeTypeTree().hashCode() == viewType) {
             // We expect this to be a hit 100% of the time
@@ -435,7 +437,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
         // To be extra safe in case RecyclerView implementation details change...
         for (int i = 0; i < getItemCount(); i++) {
-            MessageModel item = getItem(i);
+            AbstractMessageModel item = getItem(i);
             if (item == null) {
                 return null;
             }
@@ -454,14 +456,14 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, RecyclerVie
 
 
 
-    private static final DiffCallback<MessageModel> DIFF_CALLBACK = new DiffCallback<MessageModel>() {
+    private static final DiffCallback<AbstractMessageModel> DIFF_CALLBACK = new DiffCallback<AbstractMessageModel>() {
         @Override
-        public boolean areItemsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
+        public boolean areItemsTheSame(@NonNull AbstractMessageModel oldItem, @NonNull AbstractMessageModel newItem) {
             return oldItem.getMessage().getId().equals(newItem.getMessage().getId());
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
+        public boolean areContentsTheSame(@NonNull AbstractMessageModel oldItem, @NonNull AbstractMessageModel newItem) {
             // TODO we should do a deep equals here
             if (newItem.getMessage().getUpdatedAt() == null) {
                 return oldItem.getMessage().getUpdatedAt() == null;

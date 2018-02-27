@@ -23,9 +23,11 @@ import com.layer.xdk.ui.message.product.ProductMessageModel;
 import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,6 +212,8 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
         mMessageModelManager.registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
         mMessageModelManager.registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
+
+        mMessageModelManager.registerLegacyModel(Collections.singleton(LegacyTextMessageModel.MIME_TYPE), LegacyTextMessageModel.class);
     }
 
     @SuppressWarnings("unused")
