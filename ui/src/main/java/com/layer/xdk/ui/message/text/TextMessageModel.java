@@ -127,16 +127,4 @@ public class TextMessageModel extends MessageModel {
     public int getBackgroundColor() {
         return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
     }
-
-    @Bindable
-    public String getAuthorName() {
-        return getIdentityFormatter().getDisplayName(getMessage().getSender());
-    }
-
-    @Bindable
-    public boolean isDownloadingParts() {
-        // TODO AND-1242
-        return true;
-//        return getNumberOfPartsCurrentlyDownloading() > 0;
-    }
 }

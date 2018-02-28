@@ -49,8 +49,8 @@ public abstract class MessageModel extends AbstractMessageModel {
             throw new IllegalArgumentException("Message has no message part with role = root");
         }
         // Always download the message's root part
-        if (!mRootMessagePart.isContentReady()) {
-            download(mRootMessagePart);
+        if (!rootMessagePart.isContentReady()) {
+            download(rootMessagePart);
         }
 
         processParts(rootMessagePart);
