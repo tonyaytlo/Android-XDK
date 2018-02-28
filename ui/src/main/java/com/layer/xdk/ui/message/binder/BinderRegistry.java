@@ -14,6 +14,8 @@ import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
@@ -23,11 +25,9 @@ import com.layer.xdk.ui.message.product.ProductMessageModel;
 import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,7 +213,8 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
         mMessageModelManager.registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
 
-        mMessageModelManager.registerLegacyModel(Collections.singleton(LegacyTextMessageModel.MIME_TYPE), LegacyTextMessageModel.class);
+        mMessageModelManager.registerLegacyModel(LegacyTextMessageModel.MIME_TYPES, LegacyTextMessageModel.class);
+        mMessageModelManager.registerLegacyModel(LegacyThreePartImageMessageModel.MIME_TYPES, LegacyThreePartImageMessageModel.class);
     }
 
     @SuppressWarnings("unused")

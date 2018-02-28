@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.messagetypes.threepartimage;
+package com.layer.xdk.ui.message.legacy;
 
 public interface ThreePartImageConstants {
     int ORIENTATION_0 = 0;
@@ -8,7 +8,8 @@ public interface ThreePartImageConstants {
 
     String MIME_TYPE_PREVIEW = "image/jpeg+preview";
     String MIME_TYPE_INFO = "application/json+imageSize";
-
+    String MIME_TYPE_IMAGE_PREFIX = "image/";
+    
     int PART_INDEX_FULL = 0;
     int PART_INDEX_PREVIEW = 1;
     int PART_INDEX_INFO = 2;

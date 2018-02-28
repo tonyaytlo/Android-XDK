@@ -9,6 +9,7 @@ import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemLegacyBinding;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 
+@Deprecated
 public class MessageItemLegacyViewHolder extends MessageItemViewHolder<MessageItemLegacyViewModel, XdkUiMessageItemLegacyBinding> {
 
     // Cell

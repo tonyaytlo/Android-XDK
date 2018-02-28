@@ -11,8 +11,11 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 
+import java.util.Collections;
+import java.util.Set;
+
 public class LegacyTextMessageModel extends LegacyMessageModel {
-    public final static String MIME_TYPE = "text/plain";
+    public final static Set<String> MIME_TYPES = Collections.singleton("text/plain");
 
     private String mText;
 

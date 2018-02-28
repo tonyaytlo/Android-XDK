@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.message.legacy.ThreePartImageConstants;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -216,7 +217,13 @@ public class MessagePartUtils {
         Set<MessagePart> messageParts = message.getMessageParts();
         Set<String> mimeTypes = new HashSet<>(messageParts.size());
         for (MessagePart part : messageParts) {
-            mimeTypes.add(part.getMimeType());
+            // Since images can have varying format, exclude this from the set
+            if (part.getMimeType().startsWith(ThreePartImageConstants.MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+                mimeTypes.add(ThreePartImageConstants.MIME_TYPE_IMAGE_PREFIX);
+            } else {
+                mimeTypes.add(part.getMimeType());
+            }
         }
         return mimeTypes;
     }

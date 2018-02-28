@@ -22,6 +22,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemCellImageBinding;
+import com.layer.xdk.ui.message.legacy.ThreePartImageConstants;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;

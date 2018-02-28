@@ -17,7 +17,7 @@ public abstract class LegacyMessageModel extends AbstractMessageModel {
 
     public LegacyMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        setMimeTypeTree();
+        mMimeTypeTree = createMimeTypeTree();
         initiatePartDownloads(message);
     }
 
@@ -52,7 +52,7 @@ public abstract class LegacyMessageModel extends AbstractMessageModel {
         }
     }
 
-    private void setMimeTypeTree() {
+    protected String createMimeTypeTree() {
         StringBuilder sb = new StringBuilder();
         boolean prependComma = false;
         for (MessagePart part : getMessage().getMessageParts()) {
@@ -63,6 +63,6 @@ public abstract class LegacyMessageModel extends AbstractMessageModel {
             sb.append("[]");
             prependComma = true;
         }
-        mMimeTypeTree = sb.toString();
+        return sb.toString();
     }
 }

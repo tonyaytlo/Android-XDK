@@ -14,7 +14,7 @@ import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.messagetypes.threepartimage.ThreePartImageCellFactory;
-import com.layer.xdk.ui.message.messagetypes.threepartimage.ThreePartImageConstants;
+import com.layer.xdk.ui.message.legacy.ThreePartImageConstants;
 import com.layer.xdk.ui.util.Log;
 
 import java.io.Serializable;

@@ -46,6 +46,7 @@ public class ImageMessageView extends AppCompatImageView {
             ViewGroup.LayoutParams layoutParams = getLayoutParams();
 
             int width = (metadata.getPreviewWidth() > 0 ? metadata.getPreviewWidth() : metadata.getWidth());
+            // TODO AND-1242 Why does this use layoutParams.width?
             width = width > 0 ? layoutParams.width : ViewGroup.LayoutParams.WRAP_CONTENT;
             int height = metadata.getPreviewHeight() > 0 ? metadata.getPreviewHeight() : metadata.getHeight();
             height = height > 0 ? layoutParams.height : ViewGroup.LayoutParams.WRAP_CONTENT;

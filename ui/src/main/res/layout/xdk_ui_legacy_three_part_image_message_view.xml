@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel"/>
+
+        <variable
+            name="messageModel"
+            type="com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel"/>
+    </data>
+
+    <com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        app:loadFrom="@{messageModel.imageRequestParameters}"
+        app:messageModel="@{messageModel}"
+        app:usingImageLoader="@{messageModel.imageCacheWrapper}"/>
+
+</layout>
