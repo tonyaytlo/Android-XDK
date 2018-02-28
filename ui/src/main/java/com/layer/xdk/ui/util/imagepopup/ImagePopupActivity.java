@@ -13,8 +13,8 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.messagetypes.threepartimage.ThreePartImageCellFactory;
-import com.layer.xdk.ui.message.legacy.ThreePartImageConstants;
+import com.layer.xdk.ui.message.legacy.LegacyImageMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyImageConstants;
 import com.layer.xdk.ui.util.Log;
 
 import java.io.Serializable;
@@ -56,7 +56,7 @@ public class ImagePopupActivity extends Activity implements LayerProgressListene
             Parameters parameters = (Parameters) intent.getExtras().getSerializable(EXTRA_PARAMS);
             displayImage(parameters);
         } else {
-            displayThreePartImage(intent);
+            displayLegacyImage(intent);
         }
 
     }
@@ -116,34 +116,34 @@ public class ImagePopupActivity extends Activity implements LayerProgressListene
         mImageView.setOnImageEventListener(this);
     }
 
-    private void displayThreePartImage(Intent intent) {
+    private void displayLegacyImage(Intent intent) {
         mMessagePartId = intent.getParcelableExtra("fullId");
         Uri previewId = intent.getParcelableExtra("previewId");
-        ThreePartImageCellFactory.Info info = intent.getParcelableExtra("info");
+        LegacyImageMessageModel.Info info = intent.getParcelableExtra("info");
 
         mProgressBar.show();
         if (previewId != null && info != null) {
             // ThreePartImage
             switch (info.orientation) {
-                case ThreePartImageConstants.ORIENTATION_0:
+                case LegacyImageConstants.ORIENTATION_0:
                     mImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_0);
                     mImageView.setImage(
                             ImageSource.uri(mMessagePartId).dimensions(info.width, info.height),
                             ImageSource.uri(previewId));
                     break;
-                case ThreePartImageConstants.ORIENTATION_90:
+                case LegacyImageConstants.ORIENTATION_90:
                     mImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_270);
                     mImageView.setImage(
                             ImageSource.uri(mMessagePartId).dimensions(info.height, info.width),
                             ImageSource.uri(previewId));
                     break;
-                case ThreePartImageConstants.ORIENTATION_180:
+                case LegacyImageConstants.ORIENTATION_180:
                     mImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_180);
                     mImageView.setImage(
                             ImageSource.uri(mMessagePartId).dimensions(info.width, info.height),
                             ImageSource.uri(previewId));
                     break;
-                case ThreePartImageConstants.ORIENTATION_270:
+                case LegacyImageConstants.ORIENTATION_270:
                     mImageView.setOrientation(SubsamplingScaleImageView.ORIENTATION_90);
                     mImageView.setImage(
                             ImageSource.uri(mMessagePartId).dimensions(info.height, info.width),

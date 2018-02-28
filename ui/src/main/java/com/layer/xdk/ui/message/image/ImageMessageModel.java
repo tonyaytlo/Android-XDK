@@ -72,7 +72,7 @@ public class ImageMessageModel extends MessageModel {
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         if (MessagePartUtils.isRoleRoot(messagePart)) {
             return true;
         } else if (MessagePartUtils.isRole(messagePart, ROLE_PREVIEW)) {

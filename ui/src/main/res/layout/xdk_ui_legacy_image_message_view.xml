@@ -4,14 +4,14 @@
 
     <data>
 
-        <import type="com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel"/>
+        <import type="com.layer.xdk.ui.message.legacy.LegacyImageMessageModel"/>
 
         <variable
             name="messageModel"
-            type="com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel"/>
+            type="com.layer.xdk.ui.message.legacy.LegacyImageMessageModel"/>
     </data>
 
-    <com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageView
+    <com.layer.xdk.ui.message.legacy.LegacyImageMessageView
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

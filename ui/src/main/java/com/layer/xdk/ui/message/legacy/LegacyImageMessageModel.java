@@ -23,17 +23,20 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
-    public final static Set<String> MIME_TYPES = new HashSet<>(3);
+public class LegacyImageMessageModel extends LegacyMessageModel {
+    public final static Set<String> SINGLE_PART_MIME_TYPES = Collections.singleton(
+            LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX);
+    public final static Set<String> THREE_PART_MIME_TYPES = new HashSet<>(3);
     static {
-        MIME_TYPES.add(ThreePartImageConstants.MIME_TYPE_INFO);
-        MIME_TYPES.add(ThreePartImageConstants.MIME_TYPE_PREVIEW);
-        MIME_TYPES.add(ThreePartImageConstants.MIME_TYPE_IMAGE_PREFIX);
+        THREE_PART_MIME_TYPES.add(LegacyImageConstants.MIME_TYPE_INFO);
+        THREE_PART_MIME_TYPES.add(LegacyImageConstants.MIME_TYPE_PREVIEW);
+        THREE_PART_MIME_TYPES.add(LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX);
     }
-    private static final String IMAGE_CACHING_TAG = LegacyThreePartImageMessageModel.class.getSimpleName();
+    private static final String IMAGE_CACHING_TAG = LegacyImageMessageModel.class.getSimpleName();
     private static final int PLACEHOLDER = R.drawable.xdk_ui_message_item_cell_placeholder;
 
     private static ImageCacheWrapper sImageCacheWrapper;
@@ -41,11 +44,8 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
     private ImageRequestParameters mImageRequestParameters;
     private Info mInfo;
 
-    public LegacyThreePartImageMessageModel(Context context,
-            LayerClient layerClient,
-            Message message) {
+    public LegacyImageMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-
         parseContent();
     }
 
@@ -57,9 +57,9 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
             if (prependComma) {
                 sb.append(",");
             }
-            if (part.getMimeType().startsWith(ThreePartImageConstants.MIME_TYPE_IMAGE_PREFIX)
-                    && !part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
-                sb.append(ThreePartImageConstants.MIME_TYPE_IMAGE_PREFIX);
+            if (part.getMimeType().startsWith(LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_PREVIEW)) {
+                sb.append(LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX);
             } else {
                 sb.append(part.getMimeType());
             }
@@ -70,15 +70,19 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
     }
 
     private void parseContent() {
-        ThreePartMessageParts parts = new ThreePartMessageParts(getMessage());
+        ImageMessageParts parts = new ImageMessageParts(getMessage());
 
         try {
             mInfo = new Info();
-            JSONObject infoObject = new JSONObject(new String(parts.getInfoPart().getData()));
-            mInfo.orientation = infoObject.getInt("orientation");
-            mInfo.width = infoObject.getInt("width");
-            mInfo.height = infoObject.getInt("height");
-            mInfo.previewPartId = parts.getPreviewPart().getId();
+            if (parts.getInfoPart() != null) {
+                JSONObject infoObject = new JSONObject(new String(parts.getInfoPart().getData()));
+                mInfo.orientation = infoObject.getInt("orientation");
+                mInfo.width = infoObject.getInt("width");
+                mInfo.height = infoObject.getInt("height");
+            }
+            if (parts.getPreviewPart() != null) {
+                mInfo.previewPartId = parts.getPreviewPart().getId();
+            }
             mInfo.fullPartId = parts.getFullPart().getId();
 
             createRequestParameters(parts);
@@ -90,17 +94,26 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
         }
     }
 
-    private void createRequestParameters(ThreePartMessageParts parts) {
-        mImageRequestParameters = new ImageRequestParameters
-                .Builder(parts.getPreviewPart().getId())
+    private void createRequestParameters(ImageMessageParts parts) {
+        Uri uri;
+        if (parts.getPreviewPart() != null) {
+            uri = parts.getPreviewPart().getId();
+        } else {
+            uri = parts.getFullPart().getId();
+        }
+        ImageRequestParameters.Builder builder = new ImageRequestParameters.Builder(uri)
                 .placeHolder(PLACEHOLDER)
-                .resize(mInfo.width, mInfo.height)
                 .tag(IMAGE_CACHING_TAG)
-                .exifOrientation(mInfo.orientation)
                 .centerCrop(false)
                 .onlyScaleDown(false)
-                .defaultCircularTransform(true)
-                .build();
+                .defaultCircularTransform(true);
+        if (mInfo.width != null && mInfo.height != null) {
+            builder.resize(mInfo.width, mInfo.height);
+        }
+        if (mInfo.orientation != null) {
+            builder.exifOrientation(mInfo.orientation);
+        }
+        mImageRequestParameters = builder.build();
     }
 
     public Info getInfo() {
@@ -109,7 +122,7 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
 
     @Override
     public int getViewLayoutId() {
-        return R.layout.xdk_ui_legacy_three_part_image_message_view;
+        return R.layout.xdk_ui_legacy_image_message_view;
     }
 
     @Override
@@ -119,7 +132,7 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
 
     @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
-        return false;
+        return true;
     }
 
     @Nullable
@@ -146,15 +159,11 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
     }
 
     public static class Info implements Parcelable {
-        public int orientation;
-        public int width;
-        public int height;
-        public Uri fullPartId;
-        public Uri previewPartId;
-
-        public int sizeOf() {
-            return ((Integer.SIZE + Integer.SIZE + Integer.SIZE) / Byte.SIZE) + fullPartId.toString().getBytes().length + previewPartId.toString().getBytes().length;
-        }
+        public Integer orientation;
+        public Integer width;
+        public Integer height;
+        Uri fullPartId;
+        Uri previewPartId;
 
         @Override
         public int describeContents() {
@@ -184,25 +193,26 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
         };
     }
 
-    private static class ThreePartMessageParts {
+    private static class ImageMessageParts {
         private MessagePart mInfoPart;
         private MessagePart mPreviewPart;
         private MessagePart mFullPart;
 
-        public ThreePartMessageParts(Message message) {
+        ImageMessageParts(Message message) {
             Set<MessagePart> messageParts = message.getMessageParts();
 
             for (MessagePart part : messageParts) {
-                if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO)) {
+                if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_INFO)) {
                     mInfoPart = part;
-                } else if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+                } else if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_PREVIEW)) {
                     mPreviewPart = part;
                 } else if (part.getMimeType().startsWith("image/")) {
                     mFullPart = part;
                 }
             }
 
-            if (mInfoPart == null || mPreviewPart == null || mFullPart == null) {
+            if (messageParts.size() == 3
+                    && (mInfoPart == null || mPreviewPart == null || mFullPart == null)) {
                 if (Log.isLoggable(Log.ERROR)) {
                     Log.e("Incorrect parts for a three part image: " + messageParts);
                 }
@@ -210,18 +220,18 @@ public class LegacyThreePartImageMessageModel extends LegacyMessageModel {
             }
         }
 
-        @NonNull
-        public MessagePart getInfoPart() {
+        @Nullable
+        MessagePart getInfoPart() {
             return mInfoPart;
         }
 
-        @NonNull
-        public MessagePart getPreviewPart() {
+        @Nullable
+        MessagePart getPreviewPart() {
             return mPreviewPart;
         }
 
         @NonNull
-        public MessagePart getFullPart() {
+        MessagePart getFullPart() {
             return mFullPart;
         }
     }

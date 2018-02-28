@@ -22,7 +22,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemCellImageBinding;
-import com.layer.xdk.ui.message.legacy.ThreePartImageConstants;
+import com.layer.xdk.ui.message.legacy.LegacyImageConstants;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;
@@ -89,17 +89,17 @@ public class ThreePartImageCellFactory extends
 
 
         switch (info.orientation) {
-            case ThreePartImageConstants.ORIENTATION_0:
+            case LegacyImageConstants.ORIENTATION_0:
                 width = cellDims[0];
                 height = cellDims[1];
                 rotate = 0;
                 break;
-            case ThreePartImageConstants.ORIENTATION_90:
+            case LegacyImageConstants.ORIENTATION_90:
                 width = cellDims[1];
                 height = cellDims[0];
                 rotate = -90;
                 break;
-            case ThreePartImageConstants.ORIENTATION_180:
+            case LegacyImageConstants.ORIENTATION_180:
                 width = cellDims[0];
                 height = cellDims[1];
                 rotate = 180;
@@ -201,9 +201,9 @@ public class ThreePartImageCellFactory extends
         boolean hasPreviewPart = false;
         boolean hasFullPart = false;
         for (MessagePart part : parts) {
-            if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO)) {
+            if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_INFO)) {
                 hasInfoPart = true;
-            } else if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+            } else if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_PREVIEW)) {
                 hasPreviewPart = true;
             } else if (part.getMimeType().startsWith("image/")) {
                 hasFullPart = true;
@@ -306,9 +306,9 @@ public class ThreePartImageCellFactory extends
             Set<MessagePart> messageParts = message.getMessageParts();
 
             for (MessagePart part : messageParts) {
-                if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_INFO)) {
+                if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_INFO)) {
                     mInfoPart = part;
-                } else if (part.getMimeType().equals(ThreePartImageConstants.MIME_TYPE_PREVIEW)) {
+                } else if (part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_PREVIEW)) {
                     mPreviewPart = part;
                 } else if (part.getMimeType().startsWith("image/")) {
                     mFullPart = part;

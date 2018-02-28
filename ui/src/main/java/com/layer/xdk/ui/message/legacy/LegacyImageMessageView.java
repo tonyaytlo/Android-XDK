@@ -12,25 +12,25 @@ import android.view.ViewGroup;
 import com.layer.xdk.ui.message.MessageViewHelper;
 import com.layer.xdk.ui.util.imagepopup.ImagePopupActivity;
 
-public class LegacyThreePartImageMessageView extends AppCompatImageView {
+public class LegacyImageMessageView extends AppCompatImageView {
 
-    private LegacyThreePartImageMessageModel mModel;
+    private LegacyImageMessageModel mModel;
 
-    public LegacyThreePartImageMessageView(Context context) {
+    public LegacyImageMessageView(Context context) {
         this(context, null, 0);
     }
 
-    public LegacyThreePartImageMessageView(Context context, @Nullable AttributeSet attrs) {
+    public LegacyImageMessageView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LegacyThreePartImageMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public LegacyImageMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         MessageViewHelper messageViewHelper = new MessageViewHelper(context);
         messageViewHelper.setOnClickListener(this, new OnClickListener() {
             @Override
             public void onClick(View view) {
-                LegacyThreePartImageMessageModel.Info info = mModel.getInfo();
+                LegacyImageMessageModel.Info info = mModel.getInfo();
                 Intent intent = new Intent(view.getContext(), ImagePopupActivity.class);
                 intent.putExtra("previewId", info.previewPartId);
                 intent.putExtra("fullId", info.fullPartId);
@@ -41,15 +41,15 @@ public class LegacyThreePartImageMessageView extends AppCompatImageView {
         });
     }
 
-    public void setMessageModel(@Nullable LegacyThreePartImageMessageModel model) {
+    public void setMessageModel(@Nullable LegacyImageMessageModel model) {
         mModel = model;
         if (model != null) {
             setupImageViewDimensions(model);
         }
     }
 
-    private void setupImageViewDimensions(@NonNull LegacyThreePartImageMessageModel model) {
-        LegacyThreePartImageMessageModel.Info info = model.getInfo();
+    private void setupImageViewDimensions(@NonNull LegacyImageMessageModel model) {
+        LegacyImageMessageModel.Info info = model.getInfo();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         int width = info.width > 0 ? layoutParams.width : ViewGroup.LayoutParams.WRAP_CONTENT;
         int height = info.height > 0 ? layoutParams.height : ViewGroup.LayoutParams.WRAP_CONTENT;

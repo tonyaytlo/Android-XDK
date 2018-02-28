@@ -14,8 +14,8 @@ import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyImageMessageModel;
 import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
-import com.layer.xdk.ui.message.legacy.LegacyThreePartImageMessageModel;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
@@ -214,7 +214,8 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
 
         mMessageModelManager.registerLegacyModel(LegacyTextMessageModel.MIME_TYPES, LegacyTextMessageModel.class);
-        mMessageModelManager.registerLegacyModel(LegacyThreePartImageMessageModel.MIME_TYPES, LegacyThreePartImageMessageModel.class);
+        mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.THREE_PART_MIME_TYPES, LegacyImageMessageModel.class);
+        mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.SINGLE_PART_MIME_TYPES, LegacyImageMessageModel.class);
     }
 
     @SuppressWarnings("unused")
