@@ -41,13 +41,9 @@ public class LocationMessageModel extends MessageModel {
         mGson = gsonBuilder.create();
     }
 
-    public Class<LocationMessageView> getRendererType() {
-        return LocationMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_location_message_view;
     }
 
     @Override
