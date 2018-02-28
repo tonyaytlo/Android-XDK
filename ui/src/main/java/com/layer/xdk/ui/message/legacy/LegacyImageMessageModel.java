@@ -12,7 +12,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.messagetypes.threepartimage.ThreePartImageCellFactory;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
@@ -177,18 +176,17 @@ public class LegacyImageMessageModel extends LegacyMessageModel {
             dest.writeInt(height);
         }
 
-        public static final Parcelable.Creator<ThreePartImageCellFactory.Info> CREATOR
-                = new Parcelable.Creator<ThreePartImageCellFactory.Info>() {
-            public ThreePartImageCellFactory.Info createFromParcel(Parcel in) {
-                ThreePartImageCellFactory.Info info = new ThreePartImageCellFactory.Info();
+        public static final Parcelable.Creator<Info> CREATOR = new Parcelable.Creator<Info>() {
+            public Info createFromParcel(Parcel in) {
+                Info info = new Info();
                 info.orientation = in.readInt();
                 info.width = in.readInt();
                 info.height = in.readInt();
                 return info;
             }
 
-            public ThreePartImageCellFactory.Info[] newArray(int size) {
-                return new ThreePartImageCellFactory.Info[size];
+            public Info[] newArray(int size) {
+                return new Info[size];
             }
         };
     }
