@@ -24,11 +24,12 @@ public class LegacyTextMessageModel extends LegacyMessageModel {
 
     @Override
     public int getViewLayoutId() {
-        return R.layout.xdk_ui_text_message_view;
+        return R.layout.xdk_ui_legacy_text_message_view;
     }
 
     @Override
     public int getContainerViewLayoutId() {
+        // TODO AND-1242 This container isn't rounding edges here for some reason
         return R.layout.xdk_ui_empty_message_container;
     }
 
@@ -48,4 +49,8 @@ public class LegacyTextMessageModel extends LegacyMessageModel {
         return mText;
     }
 
+    @Override
+    public int getBackgroundColor() {
+        return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
+    }
 }

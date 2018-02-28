@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -22,6 +23,7 @@ import com.layer.xdk.ui.util.Log;
 
 public class EmptyMessageContainer extends FrameLayout implements MessageContainer {
     protected MessageContainerHelper mMessageContainerHelper;
+    private LayoutInflater mInflater;
 
     public EmptyMessageContainer(@NonNull Context context) {
         this(context, null, 0);
@@ -35,6 +37,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
         super(context, attrs, defStyleAttr);
         mMessageContainerHelper = new MessageContainerHelper();
         mMessageContainerHelper.setCornerRadius(context.getResources().getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
+        mInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -52,7 +55,9 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
 
     @Override
     public View inflateMessageView(@LayoutRes int messageViewLayoutId) {
-        return inflate(getContext(), messageViewLayoutId, this);
+        ViewDataBinding binding = DataBindingUtil.inflate(mInflater, messageViewLayoutId, this,
+                true);
+        return binding.getRoot();
     }
 
     @Override
