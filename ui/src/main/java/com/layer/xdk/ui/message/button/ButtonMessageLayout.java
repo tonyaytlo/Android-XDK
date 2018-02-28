@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
 
-import com.google.gson.JsonObject;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
 import com.layer.xdk.ui.message.MessageViewHelper;
@@ -86,6 +85,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
     public void setMessageModel(ButtonMessageModel model) {
         mBinding = DataBindingUtil.getBinding(this);
+        mMessageViewHelper.setMessageModel(model);
         if (model == null) {
             return;
         }
@@ -160,9 +160,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                JsonObject data = mBinding.getMessageModel().getActionData();
-                String event = mBinding.getMessageModel().getActionEvent();
-                mMessageViewHelper.performAction(event, data);
+                mMessageViewHelper.performAction();
             }
         });
     }

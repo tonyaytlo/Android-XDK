@@ -7,9 +7,13 @@ import android.view.View;
 
 import com.google.gson.JsonObject;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
+import com.layer.xdk.ui.message.model.MessageModel;
 
 public class MessageViewHelper {
     private Context mContext;
+    private String mActionEvent;
+    private JsonObject mActionData;
+
     private View.OnClickListener mCurrentClickListener;
     private View.OnClickListener mContainingClickListener;
     private View.OnLongClickListener mContainingLongClickListener;
@@ -18,9 +22,19 @@ public class MessageViewHelper {
         mContext = context;
     }
 
-    public void performAction(@Nullable String event, JsonObject customData) {
-        if (!TextUtils.isEmpty(event)) {
-            ActionHandlerRegistry.dispatchEvent(mContext, event, customData);
+    public void performAction() {
+        if (!TextUtils.isEmpty(mActionEvent)) {
+            ActionHandlerRegistry.dispatchEvent(mContext, mActionEvent, mActionData);
+        }
+    }
+
+    public void setMessageModel(@Nullable MessageModel model) {
+        if (model == null) {
+            mActionEvent = null;
+            mActionData = null;
+        } else {
+            mActionEvent = model.getActionEvent();
+            mActionData = model.getActionData();
         }
     }
 

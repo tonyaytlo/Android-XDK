@@ -1,7 +1,6 @@
 package com.layer.xdk.ui.message.image;
 
 import android.content.Context;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -48,13 +47,9 @@ public class ImageMessageModel extends MessageModel {
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
-    public Class<ImageMessageView> getRendererType() {
-        return ImageMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_image_message_view;
     }
 
     @Override
@@ -272,12 +267,6 @@ public class ImageMessageModel extends MessageModel {
     @Override
     public String getFooter() {
         return mMetadata != null ? mMetadata.getSubtitle() : null;
-    }
-
-    @Override
-    @ColorRes
-    public int getBackgroundColor() {
-        return R.color.transparent;
     }
 
     @Override
