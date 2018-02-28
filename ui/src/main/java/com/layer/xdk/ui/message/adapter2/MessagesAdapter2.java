@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.DiffCallback;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -456,7 +456,7 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
 
 
-    private static final DiffCallback<AbstractMessageModel> DIFF_CALLBACK = new DiffCallback<AbstractMessageModel>() {
+    private static final DiffUtil.ItemCallback<AbstractMessageModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<AbstractMessageModel>() {
         @Override
         public boolean areItemsTheSame(@NonNull AbstractMessageModel oldItem, @NonNull AbstractMessageModel newItem) {
             return oldItem.getMessage().getId().equals(newItem.getMessage().getId());

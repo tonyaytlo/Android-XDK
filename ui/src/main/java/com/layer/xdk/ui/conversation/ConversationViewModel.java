@@ -55,7 +55,7 @@ public class ConversationViewModel extends BaseObservable {
         messageList.observeForever(new Observer<PagedList<AbstractMessageModel>>() {
             @Override
             public void onChanged(@Nullable PagedList<AbstractMessageModel> messages) {
-                mMessageItemsListViewModel.getAdapter().setList(messages);
+                mMessageItemsListViewModel.getAdapter().submitList(messages);
             }
         });
         notifyChange();
