@@ -17,14 +17,10 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.model.AbstractMessageModel;
-import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-
-import java.util.List;
 
 public class ConversationViewModel extends BaseObservable {
     private Conversation mConversation;
@@ -34,13 +30,14 @@ public class ConversationViewModel extends BaseObservable {
     private BinderRegistry mBinderRegistry;
 
 
-    public ConversationViewModel(Context context, LayerClient layerClient, List<CellFactory> cellFactories,
-                                 ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
-                                 IdentityFormatter identityFormatter) {
+    public ConversationViewModel(Context context,
+            LayerClient layerClient,
+            ImageCacheWrapper imageCacheWrapper,
+            DateFormatter dateFormatter,
+            IdentityFormatter identityFormatter) {
         mBinderRegistry = new BinderRegistry(context, layerClient);
         mMessageItemsListViewModel = new MessageItemsListViewModel(context, layerClient,
                 imageCacheWrapper, dateFormatter, identityFormatter, mBinderRegistry);
-        mMessageItemsListViewModel.setCellFactories(cellFactories);
         mLayerClient = layerClient;
 
     }

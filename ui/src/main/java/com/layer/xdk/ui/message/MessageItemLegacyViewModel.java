@@ -11,11 +11,11 @@ import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.viewmodel.ItemViewModel;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+@Deprecated
 public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
 
     // Config
@@ -59,20 +59,20 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
         mIdentityEventListener = identityEventListener;
         mImageCacheWrapper = imageCacheWrapper;
     }
-
-    public void update(MessageCluster cluster, MessageCell messageCell, int position,
-                       Integer recipientStatusPosition) {
-        Message message = getItem();
-        mParticipants = Collections.singleton(message.getSender());
-        mIsMyCellType = messageCell.mMe;
-
-        // Clustering and dates
-        updateClusteringAndDates(message, cluster);
-
-        // Sender-dependent elements
-        updateSenderDependentElements(message, messageCell, cluster, position, recipientStatusPosition);
-        notifyChange();
-    }
+//
+//    public void update(MessageCluster cluster, MessageCell messageCell, int position,
+//                       Integer recipientStatusPosition) {
+//        Message message = getItem();
+//        mParticipants = Collections.singleton(message.getSender());
+//        mIsMyCellType = messageCell.mMe;
+//
+//        // Clustering and dates
+//        updateClusteringAndDates(message, cluster);
+//
+//        // Sender-dependent elements
+//        updateSenderDependentElements(message, messageCell, cluster, position, recipientStatusPosition);
+//        notifyChange();
+//    }
 
     protected void updateClusteringAndDates(Message message, MessageCluster cluster) {
         // Determine if previous/next items are part of a cluster for padding purposes
@@ -96,64 +96,64 @@ public class MessageItemLegacyViewModel extends ItemViewModel<Message> {
                 mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
     }
 
-    protected void updateSenderDependentElements(Message message, MessageCell messageCell,
-                                                 MessageCluster cluster, int position,
-                                                 Integer recipientStatusPosition) {
-        Identity sender = message.getSender();
-
-        if (messageCell.mMe) {
-            updateWithRecipientStatus(message, position, recipientStatusPosition);
-            mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
-        } else {
-            mMessageCellAlpha = 1.0f;
-
-            if (mEnableReadReceipts) {
-                message.markAsRead();
-            }
-
-            // Sender name, only for first message in cluster
-            if (!isInAOneOnOneConversation() &&
-                    (cluster.mClusterWithPrevious == null
-                            || cluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER)) {
-                if (sender != null) {
-                    mSenderName = getIdentityFormatter().getDisplayName(sender);
-                } else {
-                    mSenderName = getIdentityFormatter().getUnknownNameString();
-                }
-                mShouldShowDisplayName = true;
-
-                // Add the position to the positions map for Identity updates
-                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(sender));
-            } else {
-                mShouldShowDisplayName = false;
-            }
-        }
-
-        // Avatars
-        if (isInAOneOnOneConversation()) {
-            if (mShowAvatars) {
-                mIsAvatarViewVisible = !messageCell.mMe;
-                mShouldDisplayAvatarSpace = true;
-                mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
-            } else {
-                mIsAvatarViewVisible = false;
-                mShouldDisplayAvatarSpace = false;
-                mIsPresenceVisible = false;
-            }
-        } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
-            // Last message in cluster
-            mIsAvatarViewVisible = !messageCell.mMe;
-            // Add the position to the positions map for Identity updates
-            mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
-            mShouldDisplayAvatarSpace = true;
-            mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
-        } else {
-            // Invisible for clustered messages to preserve proper spacing
-            mIsAvatarViewVisible = false;
-            mShouldDisplayAvatarSpace = true;
-            mIsPresenceVisible = false;
-        }
-    }
+//    protected void updateSenderDependentElements(Message message, MessageCell messageCell,
+//                                                 MessageCluster cluster, int position,
+//                                                 Integer recipientStatusPosition) {
+//        Identity sender = message.getSender();
+//
+//        if (messageCell.mMe) {
+//            updateWithRecipientStatus(message, position, recipientStatusPosition);
+//            mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
+//        } else {
+//            mMessageCellAlpha = 1.0f;
+//
+//            if (mEnableReadReceipts) {
+//                message.markAsRead();
+//            }
+//
+//            // Sender name, only for first message in cluster
+//            if (!isInAOneOnOneConversation() &&
+//                    (cluster.mClusterWithPrevious == null
+//                            || cluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER)) {
+//                if (sender != null) {
+//                    mSenderName = getIdentityFormatter().getDisplayName(sender);
+//                } else {
+//                    mSenderName = getIdentityFormatter().getUnknownNameString();
+//                }
+//                mShouldShowDisplayName = true;
+//
+//                // Add the position to the positions map for Identity updates
+//                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(sender));
+//            } else {
+//                mShouldShowDisplayName = false;
+//            }
+//        }
+//
+//        // Avatars
+//        if (isInAOneOnOneConversation()) {
+//            if (mShowAvatars) {
+//                mIsAvatarViewVisible = !messageCell.mMe;
+//                mShouldDisplayAvatarSpace = true;
+//                mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
+//            } else {
+//                mIsAvatarViewVisible = false;
+//                mShouldDisplayAvatarSpace = false;
+//                mIsPresenceVisible = false;
+//            }
+//        } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
+//            // Last message in cluster
+//            mIsAvatarViewVisible = !messageCell.mMe;
+//            // Add the position to the positions map for Identity updates
+//            mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
+//            mShouldDisplayAvatarSpace = true;
+//            mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
+//        } else {
+//            // Invisible for clustered messages to preserve proper spacing
+//            mIsAvatarViewVisible = false;
+//            mShouldDisplayAvatarSpace = true;
+//            mIsPresenceVisible = false;
+//        }
+//    }
 
     protected void updateWithRecipientStatus(Message message, int position, Integer recipientStatusPosition) {
         if (mEnableReadReceipts && recipientStatusPosition != null && position == recipientStatusPosition) {

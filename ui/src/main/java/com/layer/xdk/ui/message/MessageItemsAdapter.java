@@ -57,37 +57,9 @@ public class MessageItemsAdapter extends MessagesAdapter {
     }
 
     @Override
-    protected MessageItemLegacyViewHolder createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell) {
-        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
-                getLayerClient(), getImageCacheWrapper(), getIdentityEventListener());
-
-        viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-        viewModel.setShowPresence(getShouldShowPresence());
-        viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
-        viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
-        viewModel.setItemClickListener(getItemClickListener());
-
-        return new MessageItemLegacyViewHolder(parent, viewModel, messageCell);
-    }
-
-    @Override
-    public void bindLegacyMessageItem(MessageItemViewHolder holder, MessageCluster messageCluster, int position) {
-        MessageItemLegacyViewHolder viewHolder = (MessageItemLegacyViewHolder) holder;
-
-        viewHolder.bind(messageCluster, position, getRecipientStatusPosition(), getRecyclerView().getWidth());
-    }
-
-    @Override
     protected MessageItemFooterViewHolder createFooterViewHolder(ViewGroup parent) {
-        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
-                getLayerClient(), getImageCacheWrapper(), getIdentityEventListener());
 
-        viewModel.setEnableReadReceipts(false);
-        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-        viewModel.setShowPresence(false);
-
-        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
+        return new MessageItemFooterViewHolder(parent, null, getImageCacheWrapper());
     }
 
     @Override

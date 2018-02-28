@@ -14,13 +14,11 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
-import com.layer.sdk.query.ListViewController;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
@@ -57,7 +55,6 @@ import java.util.Set;
  * CellFactory.createCellHolder().  After creating a new CellHolder (or reusing an available one),
  * the CellHolder is rendered in the UI with Message data via CellFactory.bindCellHolder().
  *
- * @see CellFactory
  */
 public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>, BINDING extends ViewDataBinding>
         extends ItemRecyclerViewAdapter<Message, VIEW_MODEL,
@@ -68,7 +65,6 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     private final Handler mUiThreadHandler;
     private final DisplayMetrics mDisplayMetrics;
     private final IdentityRecyclerViewEventListener mIdentityEventListener;
-    private final RecyclerView.OnScrollListener mOnScrollListener;
 
     // Dates and Clustering
     private final Map<Uri, MessageCluster> mClusterCache = new HashMap<>();
@@ -110,38 +106,24 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
         getLayerClient().registerEventListener(mIdentityEventListener);
-
-        mOnScrollListener = new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                mBinderRegistry.notifyScrollStateChange(newState);
-            }
-        };
     }
 
     @Override
     public void setQuery(Query<Message> query, Collection<String> updateAttributes) {
         super.setQuery(query, updateAttributes);
-        getQueryController().setPreProcessCallback(new RecyclerViewController.PreProcessCallback<Message>() {
-            @Override
-            public void onCache(ListViewController listViewController, Message message) {
-                mBinderRegistry.cacheContent(message);
-            }
-        });
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
-        recyclerView.addOnScrollListener(mOnScrollListener);
+//        recyclerView.addOnScrollListener(mOnScrollListener);
         recyclerView.getRecycledViewPool().setMaxRecycledViews(mBinderRegistry.VIEW_TYPE_CARD, 0);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         super.onDetachedFromRecyclerView(recyclerView);
-        recyclerView.removeOnScrollListener(mOnScrollListener);
+//        recyclerView.removeOnScrollListener(mOnScrollListener);
     }
 
     /**
@@ -388,10 +370,6 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
             return createHeaderViewHolder(parent);
         } else if (viewType == mBinderRegistry.VIEW_TYPE_FOOTER) {
             return createFooterViewHolder(parent);
-        } else if (viewType >= mBinderRegistry.VIEW_TYPE_LEGACY_START && viewType <= mBinderRegistry.VIEW_TYPE_LEGACY_END) {
-            MessageCell messageCell = mBinderRegistry.getMessageCellForViewType(viewType);
-            messageCell.mCellFactory.setStyle(getStyle());
-            return createLegacyMessageItemViewHolder(parent, messageCell);
         } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
             return createStatusMessageItemViewHolder(parent);
         } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN){
@@ -417,8 +395,6 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
 
     protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createCardMessageItemViewHolder(ViewGroup parent);
 
-    protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createLegacyMessageItemViewHolder(ViewGroup parent, MessageCell messageCell);
-
     protected abstract MessageItemViewHolder<VIEW_MODEL, BINDING> createStatusMessageItemViewHolder(ViewGroup parent);
 
     @Override
@@ -428,8 +404,6 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
             bindHeader(viewHolder);
         } else if (viewType == mBinderRegistry.VIEW_TYPE_FOOTER) {
             bindFooter(viewHolder);
-        } else if (viewType >= mBinderRegistry.VIEW_TYPE_LEGACY_START && viewType <= mBinderRegistry.VIEW_TYPE_LEGACY_END) {
-            prepareAndBindMessageItem(viewHolder, position);
         } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
             prepareAndBindStatus(viewHolder, position);
         } else {
@@ -452,16 +426,6 @@ public abstract class MessagesAdapter<VIEW_MODEL extends ItemViewModel<Message>,
     }
 
     public abstract void bindCardMessageItem(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, MessageCluster messageCluster, int position);
-
-    protected void prepareAndBindMessageItem(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, int position) {
-        Message message = getItem(position);
-        viewHolder.setItem(message);
-
-        MessageCluster messageCluster = getClustering(message, position);
-        bindLegacyMessageItem(viewHolder, messageCluster, position);
-    }
-
-    public abstract void bindLegacyMessageItem(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, MessageCluster cluster, int position);
 
     protected void prepareAndBindStatus(MessageItemViewHolder<VIEW_MODEL, BINDING> viewHolder, int position) {
         Message message = getItem(position);

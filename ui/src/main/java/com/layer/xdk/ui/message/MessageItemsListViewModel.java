@@ -9,16 +9,12 @@ import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.util.List;
-
 public class MessageItemsListViewModel extends BaseObservable {
 //    protected MessageItemsAdapter mMessageItemsAdapter;
-    protected List<CellFactory> mCellFactories;
     private MessagesAdapter2 mAdapter2;
 
     public MessageItemsListViewModel(Context context, LayerClient layerClient,
@@ -45,16 +41,6 @@ public class MessageItemsListViewModel extends BaseObservable {
     @Bindable
     public MessagesAdapter2 getAdapter() {
         return mAdapter2;
-    }
-
-    @Bindable
-    public List<CellFactory> getCellFactories() {
-        return mCellFactories;
-    }
-
-    public void setCellFactories(List<CellFactory> cellFactories) {
-        mCellFactories = cellFactories;
-        notifyChange();
     }
 
     public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {

@@ -10,14 +10,12 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,17 +31,15 @@ public class ConversationItemFormatter {
     private IdentityFormatter mIdentityFormatter;
     private DateFormat mTimeFormat;
     private DateFormat mDateFormat;
-    private List<CellFactory> mCellFactories;
     private BinderRegistry mBinderRegistry;
 
     public ConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter,
-                                     DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
+                                     DateFormat timeFormat, DateFormat dateFormat) {
         mContext = context;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
         mTimeFormat = timeFormat;
         mDateFormat = dateFormat;
-        mCellFactories = cellFactories;
         mBinderRegistry = new BinderRegistry(context, layerClient);
     }
 
@@ -140,10 +136,6 @@ public class ConversationItemFormatter {
             timeText = mDateFormat.format(date);
         }
         return timeText;
-    }
-
-    public void setCellFactories(List<CellFactory> cellFactories) {
-        mCellFactories = cellFactories;
     }
 }
 

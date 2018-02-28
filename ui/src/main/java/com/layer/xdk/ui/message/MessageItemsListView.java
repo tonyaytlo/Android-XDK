@@ -28,8 +28,6 @@ import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.util.Log;
 
@@ -248,15 +246,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      */
     public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
 //        mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
-    }
-
-    /**
-     * Convenience pass-through to this list's MessagesAdapter's BinderRegistry.
-     *
-     * @see BinderRegistry#setCellFactories(List)
-     */
-    public void setCellFactories(List<CellFactory> cellFactories) {
-//        mAdapter.getBinderRegistry().setCellFactories(cellFactories);
     }
 
     public void setTextTypeface(Typeface myTypeface, Typeface otherTypeface) {
