@@ -32,8 +32,7 @@ public class LegacyTextMessageModel extends LegacyMessageModel {
 
     @Override
     public int getContainerViewLayoutId() {
-        // TODO AND-1242 This container isn't rounding edges here for some reason
-        return R.layout.xdk_ui_empty_message_container;
+        return R.layout.xdk_ui_standard_message_container;
     }
 
     @Override
