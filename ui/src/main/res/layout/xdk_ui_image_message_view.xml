@@ -15,17 +15,10 @@
         android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="fitCenter"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         app:loadFrom="@{messageModel.previewRequestParameters ?? messageModel.sourceRequestParameters}"
-        app:usingImageLoader="@{messageModel.imageCacheWrapper}"
-        app:layout_constraintHeight_default="wrap"
-        app:layout_constraintWidth_default="wrap"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:messageModel="@{messageModel}"/>
+        app:messageModel="@{messageModel}"
+        app:usingImageLoader="@{messageModel.imageCacheWrapper}"/>
 
 </layout>
