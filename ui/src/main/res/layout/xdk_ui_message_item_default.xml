@@ -100,7 +100,6 @@
             android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
             android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
             android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"
-            app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toStartOf="@+id/current_user_avatar"
             app:layout_constraintStart_toEndOf="@id/avatar"
