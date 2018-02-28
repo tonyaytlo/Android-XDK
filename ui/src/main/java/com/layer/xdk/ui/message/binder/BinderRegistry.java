@@ -15,10 +15,12 @@ import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
 import com.layer.xdk.ui.message.legacy.LegacyImageMessageModel;
+import com.layer.xdk.ui.message.legacy.LegacyLocationMessageModel;
 import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.messagetypes.CellFactory;
+import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
@@ -31,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BinderRegistry {
 
@@ -216,11 +219,17 @@ public class BinderRegistry {
         mMessageModelManager.registerLegacyModel(LegacyTextMessageModel.MIME_TYPES, LegacyTextMessageModel.class);
         mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.THREE_PART_MIME_TYPES, LegacyImageMessageModel.class);
         mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.SINGLE_PART_MIME_TYPES, LegacyImageMessageModel.class);
+        mMessageModelManager.registerLegacyModel(LegacyLocationMessageModel.MIME_TYPES, LegacyLocationMessageModel.class);
     }
 
     @SuppressWarnings("unused")
     public <T extends MessageModel> void registerModel(@NonNull String modelIdentifier, @NonNull Class<T> messageModelClass) {
         mMessageModelManager.registerModel(modelIdentifier, messageModelClass);
+    }
+
+    @SuppressWarnings("unused")
+    public <T extends AbstractMessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
+        mMessageModelManager.registerLegacyModel(partMimeTypes, messageModelClass);
     }
 
     @SuppressWarnings("unused")
