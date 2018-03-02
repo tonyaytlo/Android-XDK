@@ -56,6 +56,7 @@ public class StandardMessageContainer extends MessageConstraintContainer {
             setContentBackground(model);
         }
 
+        messageBinding.executePendingBindings();
         getBinding().executePendingBindings();
     }
 

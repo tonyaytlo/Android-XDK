@@ -27,12 +27,12 @@ public class MessageViewHolderModel extends BaseObservable {
     private View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
 
-    public MessageViewHolderModel(Context context, LayerClient layerClient) {
+    public MessageViewHolderModel(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
         mContext = context;
         mLayerClient = layerClient;
 
-        mIdentityFormatter = new IdentityFormatterImpl(context);
-        mDateFormatter = new DateFormatterImpl(context);
+        mIdentityFormatter = identityFormatter;
+        mDateFormatter = dateFormatter;
 
         mOnClickListener = new View.OnClickListener() {
             @Override

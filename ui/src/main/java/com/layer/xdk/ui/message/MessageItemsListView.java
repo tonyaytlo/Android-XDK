@@ -3,9 +3,7 @@ package com.layer.xdk.ui.message;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -31,7 +29,6 @@ import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.util.Log;
 
-import java.util.List;
 import java.util.Set;
 
 public class MessageItemsListView extends SwipeRefreshLayout implements LayerChangeEventListener.BackgroundThread.Weak {
@@ -61,16 +58,8 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mLinearLayoutManager.setReverseLayout(true);
+        mMessagesRecyclerView.setHasFixedSize(true);
         mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        DefaultItemAnimator noChangeAnimator = new DefaultItemAnimator() {
-            @Override
-            public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull List<Object> payloads) {
-                return true;
-            }
-        };
-        noChangeAnimator.setSupportsChangeAnimations(false);
-        mMessagesRecyclerView.setItemAnimator(noChangeAnimator);
 
 //        setOnRefreshListener(new OnRefreshListener() {
 //            @Override

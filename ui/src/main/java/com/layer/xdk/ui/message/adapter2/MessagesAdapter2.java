@@ -27,6 +27,7 @@ import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Date;
@@ -80,10 +81,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         AbstractMessageModel model = getModelForViewType(viewType);
-        if (model == null) {
-            // TODO AND-1242 This should be a placeholder
-            return createPlaceholder(parent);
-        }
 
         // TODO AND-1242 Header/footer creations
 
@@ -117,12 +114,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 //        }
     }
 
-    private RecyclerView.ViewHolder createPlaceholder(ViewGroup parent) {
-        return new RecyclerView.ViewHolder(new View(parent.getContext())) {
-
-        };
-    }
-
     private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, AbstractMessageModel model) {
         MessageDefaultViewHolder cardMessageItemViewHolder = createMessageModelDefaultViewHolder(
                 parent);
@@ -130,10 +121,8 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         MessageContainer rootMessageContainer =
                 (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 
-        // TODO AND-1242 Inflate nested layouts if needed
-
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
-        // TODO AND-1242 Do wee need the model cast here?
+        // TODO AND-1242 Do we need the model cast here?
         if (messageView instanceof ParentMessageView && model instanceof MessageModel) {
             ((ParentMessageView) messageView).inflateChildLayouts((MessageModel) model);
         }
@@ -144,20 +133,22 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         AbstractMessageModel item = getItem(position);
-
-
-        if (item != null) {
-            if (holder instanceof MessageStatusViewHolder) {
-                ((MessageStatusViewHolder) holder).bind(item);
-            } else if (holder instanceof MessageDefaultViewHolder) {
-                MessageCluster messageCluster = getClustering(item.getMessage(), position);
-                ((MessageDefaultViewHolder) holder).bind(item, messageCluster, position, getRecipientStatusPosition(),
-                        mRecyclerView.getWidth());
+        if (item == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Items should be non null");
             }
+            throw new IllegalStateException("Items should be non null");
         }
-        // TODO And-1242 Clear if it is a placeholder
 
 
+        if (holder instanceof MessageStatusViewHolder) {
+            ((MessageStatusViewHolder) holder).bind(item);
+        } else if (holder instanceof MessageDefaultViewHolder) {
+//            MessageCluster messageCluster = getClustering(item.getMessage(), position);
+            MessageCluster messageCluster = new MessageCluster();
+            ((MessageDefaultViewHolder) holder).bind(item, messageCluster, position, getRecipientStatusPosition(),
+                    mRecyclerView.getWidth());
+        }
     }
 
     @Override
@@ -166,8 +157,10 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
         mLastModelForViewTypeLookup = getItem(position);
         if (mLastModelForViewTypeLookup == null) {
-            // TODO AND-1242 Return invalid (placeholder)
-            return -1;
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Items should be non null");
+            }
+            throw new IllegalStateException("Items should be non null");
         }
 
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
@@ -222,7 +215,7 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
     protected MessageDefaultViewHolder createMessageModelDefaultViewHolder(ViewGroup parent) {
         MessageDefaultViewHolderModel viewModel = new MessageDefaultViewHolderModel(parent.getContext(),
-                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
+                mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
 
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
@@ -236,7 +229,9 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
 
     protected MessageStatusViewHolder createStatusViewHolder(ViewGroup parent) {
-        MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(), mLayerClient, mBinderRegistry.getMessageModelManager());
+        MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(),
+                mLayerClient, mBinderRegistry.getMessageModelManager(),
+                mIdentityFormatter, mDateFormatter);
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         return new MessageStatusViewHolder(parent, viewModel);
     }
@@ -448,13 +443,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
         throw new IllegalStateException("Could not find model for view type: " + viewType);
     }
-
-
-
-
-
-
-
 
     private static final DiffUtil.ItemCallback<AbstractMessageModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<AbstractMessageModel>() {
         @Override

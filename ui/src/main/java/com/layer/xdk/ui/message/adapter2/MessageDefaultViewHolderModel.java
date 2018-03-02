@@ -11,7 +11,9 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
+import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
@@ -25,7 +27,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     // Config
     private boolean mEnableReadReceipts;
-    private IdentityRecyclerViewEventListener mIdentityEventListener;
     private boolean mShowAvatars;
     private boolean mShowPresence;
     private ImageCacheWrapper mImageCacheWrapper;
@@ -52,13 +53,12 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private boolean mShouldShowPresenceForCurrentUser;
 
     public MessageDefaultViewHolderModel(Context context, LayerClient layerClient,
-            ImageCacheWrapper imageCacheWrapper,
-            IdentityRecyclerViewEventListener identityEventListener) {
-        super(context, layerClient);
+            ImageCacheWrapper imageCacheWrapper,IdentityFormatter identityFormatter,
+            DateFormatter dateFormatter) {
+        super(context, layerClient, identityFormatter, dateFormatter);
         mEnableReadReceipts = true;
         mShowAvatars = true;
         mShowPresence = true;
-        mIdentityEventListener = identityEventListener;
         mImageCacheWrapper = imageCacheWrapper;
     }
 
@@ -136,9 +136,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
                     mSenderName = getIdentityFormatter().getUnknownNameString();
                 }
                 mShouldShowDisplayName = true;
-
-                // Add the position to the positions map for Identity updates
-                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(sender));
             } else {
                 mShouldShowDisplayName = false;
             }
@@ -158,8 +155,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
             // Last message in cluster
             mIsAvatarViewVisible = !mIsMyMessage;
-            // Add the position to the positions map for Identity updates
-            mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
             mShouldDisplayAvatarSpace = true;
             mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
         } else {
@@ -211,7 +206,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     }
 
     protected boolean isInAOneOnOneConversation() {
-        return getItem().getParticipants().size() == 2;
+        return getItem().getParticipantCount() == 2;
     }
 
     // Setters

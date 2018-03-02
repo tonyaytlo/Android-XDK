@@ -75,6 +75,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
             model.addOnPropertyChangedCallback(new HasContentCallback());
             setContentBackground(model);
         }
+        messageBinding.executePendingBindings();
     }
 
     @Override

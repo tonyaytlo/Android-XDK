@@ -142,7 +142,7 @@
     + @dimen/xdk_ui_avatar_left_padding_message
     + @dimen/xdk_ui_avatar_right_padding_message
     + @dimen/xdk_ui_message_item_cell_padding_far (Use in TextCellFactory bubble padding)-->
-    <dimen name="xdk_ui_message_item_sender_margin_left">64dp</dimen>
+    <dimen name="xdk_ui_message_item_sender_margin_left">20dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Layer UI Item                                                                       # -->

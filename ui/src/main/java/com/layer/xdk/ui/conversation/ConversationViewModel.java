@@ -47,8 +47,8 @@ public class ConversationViewModel extends BaseObservable {
         final LiveData<PagedList<AbstractMessageModel>> messageList = new LivePagedListBuilder<>(
                 new MessagesDataSourceFactory(getLayerClient(), mBinderRegistry, conversation),
                 new PagedList.Config.Builder()
-                        .setEnablePlaceholders(true)
-                        .setPageSize(10)
+                        .setEnablePlaceholders(false)
+                        .setPageSize(30)
                         .build()
         ).build();
 

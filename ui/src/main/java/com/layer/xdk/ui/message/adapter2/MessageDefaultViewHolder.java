@@ -39,9 +39,7 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         getBinding().currentUserAvatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
 
-        getBinding().setMessageModel(viewModel);
-//        getBinding().messageViewer.setOnClickListener(viewModel.getOnClickListener());
-//        getBinding().messageViewer.setOnLongClickListener(viewModel.getOnLongClickListener());
+        getBinding().setViewHolderModel(viewModel);
 
         getBinding().getRoot().setClickable(true);
         getBinding().getRoot().setOnClickListener(viewModel.getOnClickListener());

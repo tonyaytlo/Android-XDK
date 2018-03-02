@@ -7,11 +7,13 @@ import android.databinding.Observable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 @SuppressWarnings("WeakerAccess")
@@ -23,8 +25,11 @@ public class MessageStatusViewHolderModel extends MessageViewHolderModel {
 
     private MessageModel mMessageModel;
 
-    public MessageStatusViewHolderModel(Context context, LayerClient layerClient, MessageModelManager modelRegistry) {
-        super(context, layerClient);
+    public MessageStatusViewHolderModel(Context context, LayerClient layerClient,
+            MessageModelManager modelRegistry,
+            IdentityFormatter identityFormatter,
+            DateFormatter dateFormatter) {
+        super(context, layerClient, identityFormatter, dateFormatter);
         mModelRegistry = modelRegistry;
 
     }

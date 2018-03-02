@@ -21,7 +21,6 @@ import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractMessageModel extends BaseObservable {
@@ -42,6 +41,8 @@ public abstract class AbstractMessageModel extends BaseObservable {
     // It's safe to cache this since no model will live after a de-auth
     private final Uri mAuthenticatedUserId;
 
+    private int mParticipantCount;
+
     public AbstractMessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
         if (mIdentityFormatter == null) {
@@ -56,6 +57,8 @@ public abstract class AbstractMessageModel extends BaseObservable {
         Identity authenticatedUser = layerClient.getAuthenticatedUser();
         mAuthenticatedUserId = authenticatedUser == null ? null : authenticatedUser.getId();
         mMessage = message;
+
+        mParticipantCount = mMessage.getConversation().getParticipants().size();
     }
 
     /**
@@ -167,7 +170,7 @@ public abstract class AbstractMessageModel extends BaseObservable {
     }
 
 
-    public final Set<Identity> getParticipants() {
-        return getMessage().getConversation().getParticipants();
+    public final int getParticipantCount() {
+        return mParticipantCount;
     }
 }
