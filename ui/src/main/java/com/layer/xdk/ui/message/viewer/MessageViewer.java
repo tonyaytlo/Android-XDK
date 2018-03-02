@@ -5,14 +5,12 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.message.container.MessageConstraintContainer;
+import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.view.MessageView;
@@ -25,7 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 public class MessageViewer extends FrameLayout {
     private MessageModelManager mMessageModelManager;
 
-    private MessageConstraintContainer mMessageContainer;
+    private MessageContainer mMessageContainer;
     private MessageView mMessageView;
     private MessageModel mMessageModel;
     private OnClickListener mPassThroughClickListener;
@@ -138,16 +136,16 @@ public class MessageViewer extends FrameLayout {
         return messageView;
     }
 
-    protected MessageConstraintContainer instantiateContainer(@NonNull Class<? extends MessageConstraintContainer> containerTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<? extends MessageConstraintContainer> constructor = containerTypeClass.getConstructor(Context.class);
+    protected MessageContainer instantiateContainer(@NonNull Class<? extends MessageContainer> containerTypeClass) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<? extends MessageContainer> constructor = containerTypeClass.getConstructor(Context.class);
         return constructor.newInstance(getContext());
     }
 
-    protected void addContainer(@NonNull final MessageConstraintContainer container) {
+    protected void addContainer(@NonNull final MessageContainer container) {
         removeAllViews();
-        container.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        addView(container);
+//        container.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
+//        addView(container);
     }
 
     //==============================================================================================

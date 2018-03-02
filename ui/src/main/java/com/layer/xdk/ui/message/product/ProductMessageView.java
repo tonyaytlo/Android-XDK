@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.layer.xdk.ui.databinding.XdkUiProductMessageBinding;
-import com.layer.xdk.ui.message.container.EmptyMessageContainer;
-import com.layer.xdk.ui.message.container.MessageConstraintContainer;
 import com.layer.xdk.ui.message.view.MessageView;
 
 public class ProductMessageView extends MessageView<ProductMessageModel> {

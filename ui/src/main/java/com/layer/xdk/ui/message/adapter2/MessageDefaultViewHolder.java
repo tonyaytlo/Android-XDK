@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 
+import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
@@ -22,6 +23,8 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
 
     private final XdkUiMessageItemDefaultBinding mBinding;
     private final MessageDefaultViewHolderModel mViewModel;
+    // Cache this so we know not to re-set the bias on the constraint layout
+    private Boolean mCurrentlyMyMessage;
 
     public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel,
             MessageModelManager modelRegistry) {
@@ -47,25 +50,7 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, final View inflated) {
-                // TODO AND-1242 - This doesn't quite work since the subviews will overdraw this.
-                // TODO AND-1242 rename resource
-                inflated.setBackgroundResource(R.drawable.xdk_ui_message_viewer_background);
-                int padding = inflated.getContext().getResources().getDimensionPixelSize(
-                        R.dimen.xdk_ui_message_viewer_background_border_stroke_width);
-                inflated.setPadding(padding, padding, padding, padding);
-                getViewModel().addOnPropertyChangedCallback(
-                        new Observable.OnPropertyChangedCallback() {
-                            @Override
-                            public void onPropertyChanged(Observable sender, int propertyId) {
-                                // TODO AND-1242 only check necessary properties
-                                inflated.setAlpha(getViewModel().getMessageCellAlpha());
-                                ConstraintSet set = new ConstraintSet();
-                                ConstraintLayout parent = (ConstraintLayout) inflated.getParent();
-                                set.clone(parent);
-                                set.setHorizontalBias(inflated.getId(), getViewModel().isMyMessage() ? 1.0f : 0.0f);
-                                set.applyTo(parent);
-                            }
-                        });
+                getViewModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver(inflated));
             }
         });
     }
@@ -93,5 +78,31 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
     public View inflateViewContainer(int containerLayoutId) {
         getBinding().messageViewStub.getViewStub().setLayoutResource(containerLayoutId);
         return getBinding().messageViewStub.getViewStub().inflate();
+    }
+
+    private class AlphaAndBiasObserver extends Observable.OnPropertyChangedCallback {
+        private final View mInflated;
+
+        public AlphaAndBiasObserver(View inflated) {
+            mInflated = inflated;
+        }
+
+        @Override
+        public void onPropertyChanged(Observable sender, int propertyId) {
+            if (propertyId == BR.messageCellAlpha || propertyId == BR._all) {
+                mInflated.setAlpha(getViewModel().getMessageCellAlpha());
+            }
+            if (propertyId == BR._all || (propertyId == BR.myMessage
+                    && (mCurrentlyMyMessage == null || getViewModel().isMyMessage() != mCurrentlyMyMessage))) {
+                mCurrentlyMyMessage = getViewModel().isMyMessage();
+                ConstraintSet set = new ConstraintSet();
+                ConstraintLayout parent =
+                        (ConstraintLayout) mInflated.getParent();
+                set.clone(parent);
+                set.setHorizontalBias(mInflated.getId(),
+                        getViewModel().isMyMessage() ? 1.0f : 0.0f);
+                set.applyTo(parent);
+            }
+        }
     }
 }

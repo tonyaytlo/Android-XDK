@@ -9,6 +9,7 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Constraints;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -21,7 +22,7 @@ import com.layer.xdk.ui.databinding.XdkUiStandardMessageContainerBinding;
 import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
-public class StandardMessageContainer extends MessageConstraintContainer {
+public class StandardMessageContainer extends ConstraintLayout implements MessageContainer {
     private XdkUiStandardMessageContainerBinding mBinding;
 
     public StandardMessageContainer(@NonNull Context context) {
@@ -34,7 +35,6 @@ public class StandardMessageContainer extends MessageConstraintContainer {
 
     public StandardMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mMessageContainerHelper.setCornerRadius(context.getResources().getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
     }
 
     @Override
