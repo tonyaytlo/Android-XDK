@@ -1,11 +1,8 @@
 package com.layer.xdk.ui.message.adapter2;
 
-import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -16,25 +13,14 @@ import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
 import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.container.MessageContainer;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
-import com.layer.xdk.ui.message.model.MessageModelManager;
 
-public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
+public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultViewHolderModel,XdkUiMessageItemDefaultBinding > {
 
-    private final XdkUiMessageItemDefaultBinding mBinding;
-    private final MessageDefaultViewHolderModel mViewModel;
     // Cache this so we know not to re-set the bias on the constraint layout
     private Boolean mCurrentlyMyMessage;
 
-    public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel,
-            MessageModelManager modelRegistry) {
-        this(DataBindingUtil.<XdkUiMessageItemDefaultBinding>inflate(LayoutInflater.from(parent.getContext()), R.layout.xdk_ui_message_item_default, parent, false), viewModel, modelRegistry);
-    }
-
-    public MessageDefaultViewHolder(XdkUiMessageItemDefaultBinding binding, final MessageDefaultViewHolderModel viewModel, MessageModelManager modelRegistry) {
-        super(binding.getRoot());
-        mBinding = binding;
-        mViewModel = viewModel;
+    public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel) {
+        super(parent, R.layout.xdk_ui_message_item_default, viewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
@@ -50,29 +36,23 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, final View inflated) {
-                getViewModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver(inflated));
+                getViewHolderModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver(inflated));
             }
         });
+
+        getBinding().executePendingBindings();
     }
 
-    public void bind(AbstractMessageModel messageModel, MessageCluster messageCluster, int position, int recipientStatusPosition, int parentWidth) {
-        getViewModel().setItem(messageModel);
-
+    @Override
+    void onBind() {
         MessageContainer messageContainer =
                 (MessageContainer) getBinding().messageViewStub.getRoot();
         if (messageContainer != null) {
-            messageContainer.setMessageModel(messageModel);
+            messageContainer.setMessageModel(getItem());
         }
 
-        getViewModel().update(messageCluster, position, recipientStatusPosition);
-    }
-
-    private XdkUiMessageItemDefaultBinding getBinding() {
-        return mBinding;
-    }
-
-    private MessageDefaultViewHolderModel getViewModel() {
-        return mViewModel;
+        // TODO AND-1363 Fix clustering
+        getViewHolderModel().update(new MessageCluster(), 0, 0);
     }
 
     public View inflateViewContainer(int containerLayoutId) {
@@ -90,17 +70,17 @@ public class MessageDefaultViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
             if (propertyId == BR.messageCellAlpha || propertyId == BR._all) {
-                mInflated.setAlpha(getViewModel().getMessageCellAlpha());
+                mInflated.setAlpha(getViewHolderModel().getMessageCellAlpha());
             }
-            if (propertyId == BR._all || (propertyId == BR.myMessage
-                    && (mCurrentlyMyMessage == null || getViewModel().isMyMessage() != mCurrentlyMyMessage))) {
-                mCurrentlyMyMessage = getViewModel().isMyMessage();
+            if ((propertyId == BR._all || propertyId == BR.myMessage)
+                    && (mCurrentlyMyMessage == null || getViewHolderModel().isMyMessage() != mCurrentlyMyMessage)) {
+                mCurrentlyMyMessage = getViewHolderModel().isMyMessage();
                 ConstraintSet set = new ConstraintSet();
                 ConstraintLayout parent =
                         (ConstraintLayout) mInflated.getParent();
                 set.clone(parent);
                 set.setHorizontalBias(mInflated.getId(),
-                        getViewModel().isMyMessage() ? 1.0f : 0.0f);
+                        getViewHolderModel().isMyMessage() ? 1.0f : 0.0f);
                 set.applyTo(parent);
             }
         }

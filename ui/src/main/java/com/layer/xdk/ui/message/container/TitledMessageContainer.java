@@ -78,14 +78,12 @@ public class TitledMessageContainer extends ConstraintLayout implements MessageC
     private class HasContentOrMetadataCallback extends Observable.OnPropertyChangedCallback {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId != BR.hasContent && propertyId != BR.hasMetadata) {
-                return;
-            }
             MessageModel messageModel = (MessageModel) sender;
             View messageRoot = getBinding().xdkUiTitledMessageContainerContentView.getRoot();
-            if (propertyId == BR.hasContent) {
+            if (propertyId == BR.hasContent || propertyId == BR._all) {
                 messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
-            } else {
+            }
+            if (propertyId == BR.hasMetadata || propertyId == BR._all){
                 int minWidth;
                 int topMargin = 0;
                 if (messageModel.getHasMetadata()) {

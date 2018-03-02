@@ -73,7 +73,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     private class HasContentCallback extends Observable.OnPropertyChangedCallback {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId == BR.hasContent) {
+            if (propertyId == BR.hasContent || propertyId == BR._all) {
                 MessageModel messageModel = (MessageModel) sender;
                 View messageRoot = getChildAt(0);
                 messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);

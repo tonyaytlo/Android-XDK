@@ -36,8 +36,8 @@ public class ConversationViewModel extends BaseObservable {
             DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
         mBinderRegistry = new BinderRegistry(context, layerClient);
-        mMessageItemsListViewModel = new MessageItemsListViewModel(context, layerClient,
-                imageCacheWrapper, dateFormatter, identityFormatter, mBinderRegistry);
+        mMessageItemsListViewModel = new MessageItemsListViewModel(layerClient,
+                imageCacheWrapper, dateFormatter, identityFormatter);
         mLayerClient = layerClient;
 
     }

@@ -56,7 +56,8 @@ public abstract class MessageModel extends AbstractMessageModel {
         processParts(rootMessagePart);
     }
 
-    private void processParts(@NonNull MessagePart rootMessagePart) {
+    @CallSuper
+    protected void processParts(@NonNull MessagePart rootMessagePart) {
         mRootMessagePart = rootMessagePart;
         setRole(MessagePartUtils.getRole(rootMessagePart));
         if (mRootMessagePart.isContentReady()) {
@@ -104,12 +105,14 @@ public abstract class MessageModel extends AbstractMessageModel {
             sb.append("[");
         }
         boolean prependComma = false;
-        for (MessagePart childPart : mChildMessageParts) {
-            if (prependComma) {
-                sb.append(",");
+        if (mChildMessageParts != null) {
+            for (MessagePart childPart : mChildMessageParts) {
+                if (prependComma) {
+                    sb.append(",");
+                }
+                sb.append(MessagePartUtils.getMimeType(childPart));
+                prependComma = true;
             }
-            sb.append(MessagePartUtils.getMimeType(childPart));
-            prependComma = true;
         }
         if (mRootMessagePart != null) {
             sb.append("]");

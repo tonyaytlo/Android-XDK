@@ -77,7 +77,7 @@ public class ResponseMessageModel extends MessageModel {
     }
 
     @Nullable
-    public String getText() {
+    public CharSequence getText() {
         if (getChildMessageModels() != null && !getChildMessageModels().isEmpty()) {
             return ((StatusMessageModel) getChildMessageModels().get(0)).getText();
         }

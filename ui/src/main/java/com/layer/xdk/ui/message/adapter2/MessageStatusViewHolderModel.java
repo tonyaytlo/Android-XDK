@@ -10,19 +10,19 @@ import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 @SuppressWarnings("WeakerAccess")
 public class MessageStatusViewHolderModel extends MessageViewHolderModel {
     private boolean mEnableReadReceipts;
     private boolean mVisible;
-    private String mText;
+    private CharSequence mText;
 
     public MessageStatusViewHolderModel(Context context, LayerClient layerClient,
             IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);
-
     }
 
     public void update() {
@@ -31,6 +31,11 @@ public class MessageStatusViewHolderModel extends MessageViewHolderModel {
             mText = responseModel.getText();
         } else if (getItem() instanceof StatusMessageModel) {
             mText = ((StatusMessageModel) getItem()).getText();
+        } else {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Expecting either a Response or Status message model");
+            }
+            throw new IllegalStateException("Expecting either a Response or Status message model");
         }
         mVisible = ((MessageModel) getItem()).getHasContent();
 

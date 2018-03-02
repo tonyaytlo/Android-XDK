@@ -94,7 +94,6 @@ public class ConversationItemFormatter {
         if (message == null) return "";
 
         String rootMimeType = MessagePartUtils.getRootMimeType(message);
-        MessageModel modelToProcessParts = null;
         AbstractMessageModel model;
         if (rootMimeType == null) {
             // This is a legacy message
@@ -103,13 +102,11 @@ public class ConversationItemFormatter {
                     message);
             model = mBinderRegistry.getMessageModelManager().getNewLegacyModel(legacyMimeTypes, message);
         } else {
-            modelToProcessParts = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
-            model = modelToProcessParts;
+            MessageModel messageModel = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
+            messageModel.processParts();
+            model = messageModel;
         }
-        if (modelToProcessParts != null) {
-            modelToProcessParts.processParts();
-        }
-        if (model != null && model.getPreviewText() != null) {
+        if (model.getPreviewText() != null) {
             return model.getPreviewText();
         }
         return mContext.getString(R.string.xdk_ui_generic_message_preview_text);

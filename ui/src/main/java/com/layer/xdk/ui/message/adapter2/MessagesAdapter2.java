@@ -2,7 +2,6 @@ package com.layer.xdk.ui.message.adapter2;
 
 
 import android.arch.paging.PagedListAdapter;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,7 +16,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -34,14 +32,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO AND-1242 Abstract a view holder base class
-public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, RecyclerView.ViewHolder> {
+public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, MessageViewHolder> {
 
     private final Map<Uri, MessageCluster> mClusterCache = new HashMap<>();
     private final Handler mUiThreadHandler;
 
 
-    private BinderRegistry mBinderRegistry;
-    private final Context mContext;
     private final LayerClient mLayerClient;
     private final ImageCacheWrapper mImageCacheWrapper;
     private final DateFormatter mDateFormatter;
@@ -59,17 +55,13 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
     // TODO AND-1242 Change to MessageModel?
     private OnItemClickListener<Message> mItemClickListener;
 
-
-
     private AbstractMessageModel mLastModelForViewTypeLookup;
 
 
-    public MessagesAdapter2(Context context, LayerClient layerClient, BinderRegistry binderRegistry,
+    public MessagesAdapter2(LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
         super(DIFF_CALLBACK);
-        mBinderRegistry = binderRegistry;
-        mContext = context;
         mLayerClient = layerClient;
         mImageCacheWrapper = imageCacheWrapper;
         mDateFormatter = dateFormatter;
@@ -77,24 +69,25 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         mUiThreadHandler = new Handler(Looper.getMainLooper());
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         AbstractMessageModel model = getModelForViewType(viewType);
 
         // TODO AND-1242 Header/footer creations
 
         if (model instanceof StatusMessageModel || model instanceof ResponseMessageModel) {
             return createStatusViewHolder(parent);
+        } else {
+            return createDefaultViewHolder(parent, model);
         }
-
-        return createDefaultViewHolder(parent, model);
 
 
 //        if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
 //            return createStatusViewHolder(parent);
 //        }
 //
-//        return createMessageModelDefaultViewHolder(parent);
+//        return createDefaultViewHolder(parent);
 
 //        if (viewType == mBinderRegistry.VIEW_TYPE_HEADER) {
 //            return createHeaderViewHolder(parent);
@@ -107,39 +100,17 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 //        } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
 //            return createStatusViewHolder(parent);
 //        } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN){
-//            return createMessageModelDefaultViewHolder(parent);
+//            return createDefaultViewHolder(parent);
 //        } else {
 //            throw new IllegalStateException("Unknown View Type");
 //        }
     }
 
-    private MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, AbstractMessageModel model) {
-        MessageDefaultViewHolder cardMessageItemViewHolder = createMessageModelDefaultViewHolder(
-                parent);
-
-        MessageContainer rootMessageContainer =
-                (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
-
-        View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
-        if (messageView instanceof ParentMessageView && model instanceof MessageModel) {
-            ((ParentMessageView) messageView).inflateChildLayouts((MessageModel) model);
-        }
-
-        return cardMessageItemViewHolder;
-    }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         AbstractMessageModel item = getItem(position);
-
-        if (holder instanceof MessageStatusViewHolder) {
-            ((MessageStatusViewHolder) holder).bind(item);
-        } else if (holder instanceof MessageDefaultViewHolder) {
-//            MessageCluster messageCluster = getClustering(item.getMessage(), position);
-            MessageCluster messageCluster = new MessageCluster();
-            ((MessageDefaultViewHolder) holder).bind(item, messageCluster, position, getRecipientStatusPosition(),
-                    mRecyclerView.getWidth());
-        }
+        holder.bindItem(item);
     }
 
     @Override
@@ -147,13 +118,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         // TODO AND-1242 Header/footer
 
         mLastModelForViewTypeLookup = getItem(position);
-        if (mLastModelForViewTypeLookup == null) {
-            if (Log.isLoggable(Log.ERROR)) {
-                Log.e("Items should be non null");
-            }
-            throw new IllegalStateException("Items should be non null");
-        }
-
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
     }
 
@@ -216,8 +180,10 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 //        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
 //    }
 
-    protected MessageDefaultViewHolder createMessageModelDefaultViewHolder(ViewGroup parent) {
-        MessageDefaultViewHolderModel viewModel = new MessageDefaultViewHolderModel(parent.getContext(),
+
+    protected MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, AbstractMessageModel model) {
+        MessageDefaultViewHolderModel viewModel = new MessageDefaultViewHolderModel(
+                parent.getContext(),
                 mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
 
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
@@ -227,15 +193,26 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
         viewModel.setItemClickListener(getItemClickListener());
 
-        return new MessageDefaultViewHolder(parent, viewModel, mBinderRegistry.getMessageModelManager());
+        MessageDefaultViewHolder viewHolder = new MessageDefaultViewHolder(parent, viewModel);
+        inflateDefaultViewHolder(viewHolder, model);
+        return viewHolder;
     }
-
 
     protected MessageStatusViewHolder createStatusViewHolder(ViewGroup parent) {
         MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(),
                 mLayerClient, mIdentityFormatter, mDateFormatter);
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         return new MessageStatusViewHolder(parent, viewModel);
+    }
+
+    private void inflateDefaultViewHolder(MessageDefaultViewHolder viewHolder, AbstractMessageModel model) {
+        MessageContainer rootMessageContainer =
+                (MessageContainer) viewHolder.inflateViewContainer(model.getContainerViewLayoutId());
+
+        View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
+        if (messageView instanceof ParentMessageView && model instanceof MessageModel) {
+            ((ParentMessageView) messageView).inflateChildLayouts((MessageModel) model);
+        }
     }
 
     protected Integer getRecipientStatusPosition() {

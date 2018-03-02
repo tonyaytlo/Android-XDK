@@ -1,6 +1,5 @@
 package com.layer.xdk.ui.message;
 
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
@@ -8,7 +7,6 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -17,15 +15,14 @@ public class MessageItemsListViewModel extends BaseObservable {
 //    protected MessageItemsAdapter mMessageItemsAdapter;
     private MessagesAdapter2 mAdapter2;
 
-    public MessageItemsListViewModel(Context context, LayerClient layerClient,
+    public MessageItemsListViewModel(LayerClient layerClient,
                                      ImageCacheWrapper imageCacheWrapper,
                                      DateFormatter dateFormatter,
-                                     IdentityFormatter identityFormatter,
-            BinderRegistry binderRegistry) {
+                                     IdentityFormatter identityFormatter) {
 //        mMessageItemsAdapter = new MessageItemsAdapter(context, layerClient,
 //                imageCacheWrapper, dateFormatter, identityFormatter);
 
-        mAdapter2 = new MessagesAdapter2(context, layerClient, binderRegistry,
+        mAdapter2 = new MessagesAdapter2(layerClient,
                 imageCacheWrapper, dateFormatter, identityFormatter);
 
 

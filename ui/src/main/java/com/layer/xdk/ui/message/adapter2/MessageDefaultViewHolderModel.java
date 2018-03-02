@@ -14,7 +14,6 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
@@ -44,7 +43,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private SpannableString mDateTime;
     private boolean mIsReadReceiptVisible;
     private boolean mShouldDisplayAvatarSpace;
-    private boolean mIsMyMessage;
     private boolean mIsAvatarViewVisible;
     private boolean mIsPresenceVisible;
     private boolean mShouldShowAvatarForCurrentUser;
@@ -65,7 +63,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     public void update(MessageCluster cluster, int position, Integer recipientStatusPosition) {
         Message message = getItem().getMessage();
         mParticipants = Collections.singleton(message.getSender());
-        mIsMyMessage = getItem().getMessage().getSender().getId().equals(getItem().getAuthenticatedUserId());
 
         // Clustering and dates
         updateClusteringAndDates(message, cluster);
@@ -93,7 +90,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             mShouldShowDateTimeForMessage = false;
         }
 
-        mShouldCurrentUserAvatarBeVisible = mIsMyMessage && mShouldShowAvatarForCurrentUser &&
+        mShouldCurrentUserAvatarBeVisible = isMyMessage() && mShouldShowAvatarForCurrentUser &&
                 !cluster.mNextMessageIsFromSameUser;
         mShouldCurrentUserPresenceBeVisible =
                 mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
@@ -116,7 +113,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             Integer recipientStatusPosition) {
         Identity sender = message.getSender();
 
-        if (mIsMyMessage) {
+        if (isMyMessage()) {
             updateWithRecipientStatus(message, position, recipientStatusPosition);
             mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
         } else {
@@ -144,7 +141,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         // Avatars
         if (isInAOneOnOneConversation()) {
             if (mShowAvatars) {
-                mIsAvatarViewVisible = !mIsMyMessage;
+                mIsAvatarViewVisible = !isMyMessage();
                 mShouldDisplayAvatarSpace = true;
                 mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
             } else {
@@ -154,7 +151,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             }
         } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
             // Last message in cluster
-            mIsAvatarViewVisible = !mIsMyMessage;
+            mIsAvatarViewVisible = !isMyMessage();
             mShouldDisplayAvatarSpace = true;
             mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
         } else {
@@ -301,7 +298,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     @Bindable
     public boolean isMyMessage() {
-        return mIsMyMessage;
+        return getItem() != null && getItem().isMessageFromMe();
     }
 
     @Bindable

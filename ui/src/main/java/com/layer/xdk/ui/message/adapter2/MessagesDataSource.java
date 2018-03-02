@@ -156,9 +156,6 @@ public class MessagesDataSource extends PositionalDataSource<AbstractMessageMode
             if (modelToProcessParts != null) {
                 modelToProcessParts.processParts();
             }
-            if (model == null) {
-                // TODO AND-1242 handle no model available for type
-            }
 //            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
 
             models.add(model);

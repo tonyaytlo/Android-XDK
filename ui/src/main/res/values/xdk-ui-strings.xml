@@ -121,4 +121,7 @@
 
     <string name="xdk_ui_receipt_product_detail_options">Options: %s</string>
     <string name="xdk_ui_receipt_product_detail_quantity">Quantity: %d</string>
+
+    <string name="xdk_ui_unhandled_message_text">No model registered to handle MIME Type: %s</string>
+    <string name="xdk_ui_unhandled_message_text_legacy">No legacy model registered to handle MIME Type set: %s</string>
 </resources>
