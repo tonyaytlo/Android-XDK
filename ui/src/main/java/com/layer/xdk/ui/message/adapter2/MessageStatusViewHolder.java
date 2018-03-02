@@ -24,7 +24,7 @@ public class MessageStatusViewHolder extends RecyclerView.ViewHolder {
         mBinding = binding;
         mViewModel = viewModel;
 
-        mBinding.setViewModel(viewModel);
+        mBinding.setViewHolderModel(viewModel);
     }
 
     public void bind(AbstractMessageModel messageModel) {

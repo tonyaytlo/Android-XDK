@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
 
         <variable
-            name="viewModel"
+            name="viewHolderModel"
             type="com.layer.xdk.ui.message.adapter2.MessageStatusViewHolderModel"/>
     </data>
 
@@ -20,13 +20,12 @@
         android:layout_marginRight="@dimen/xdk_ui_padding_normal"
         android:layout_marginStart="@dimen/xdk_ui_padding_normal"
         android:layout_marginTop="@dimen/xdk_ui_message_item_top_bottom_margin"
-        android:autoLink="all"
         android:gravity="center"
         android:linksClickable="true"
-        android:text="@{viewModel.text}"
+        android:text="@{viewHolderModel.text}"
         android:textColor="@color/xdk_ui_text_light_gray"
         android:textSize="@dimen/xdk_ui_text_size_status"
-        android:visibility="@{viewModel.visible ? View.VISIBLE : View.GONE}"
+        android:visibility="@{viewHolderModel.visible ? View.VISIBLE : View.GONE}"
         tools:text="Test Status"/>
 
 </layout>

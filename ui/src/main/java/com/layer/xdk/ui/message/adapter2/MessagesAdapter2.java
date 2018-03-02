@@ -26,7 +26,6 @@ import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -122,7 +121,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
                 (MessageContainer) cardMessageItemViewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
-        // TODO AND-1242 Do we need the model cast here?
         if (messageView instanceof ParentMessageView && model instanceof MessageModel) {
             ((ParentMessageView) messageView).inflateChildLayouts((MessageModel) model);
         }
@@ -133,13 +131,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         AbstractMessageModel item = getItem(position);
-        if (item == null) {
-            if (Log.isLoggable(Log.ERROR)) {
-                Log.e("Items should be non null");
-            }
-            throw new IllegalStateException("Items should be non null");
-        }
-
 
         if (holder instanceof MessageStatusViewHolder) {
             ((MessageStatusViewHolder) holder).bind(item);
@@ -189,6 +180,18 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         return mItemClickListener;
     }
 
+    @NonNull
+    @Override
+    protected AbstractMessageModel getItem(int position) {
+        AbstractMessageModel item = super.getItem(position);
+        if (item == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Items should be non null");
+            }
+            throw new IllegalStateException("Items should be non null");
+        }
+        return item;
+    }
 
 
     /*
@@ -230,17 +233,10 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
     protected MessageStatusViewHolder createStatusViewHolder(ViewGroup parent) {
         MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(),
-                mLayerClient, mBinderRegistry.getMessageModelManager(),
-                mIdentityFormatter, mDateFormatter);
+                mLayerClient, mIdentityFormatter, mDateFormatter);
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         return new MessageStatusViewHolder(parent, viewModel);
     }
-
-    // TODO AND-1242 - Rework this
-    private IdentityRecyclerViewEventListener getIdentityEventListener() {
-        return new IdentityRecyclerViewEventListener(this);
-    }
-
 
     protected Integer getRecipientStatusPosition() {
         return getItemCount() - 1;
@@ -365,7 +361,7 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
                 if ((previousMessageCluster.mClusterWithNext != result.mClusterWithPrevious) ||
                         (previousMessageCluster.mDateBoundaryWithNext
                                 != result.mDateBoundaryWithPrevious)) {
-                    requestUpdate(previousMessage, previousPosition);
+//                    requestUpdate(previousMessage, previousPosition);
                 }
             }
             previousMessageCluster.mClusterWithNext = result.mClusterWithPrevious;
@@ -373,10 +369,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         }
 
         int nextPosition = position + 1;
-        if (nextPosition >= getItemCount() || getItem(nextPosition) == null) {
-            // TODO AND-1242 This is because placeholders are enabled
-            return result;
-        }
         Message nextMessage = (nextPosition < getItemCount()) ? getItem(nextPosition).getMessage() : null;
         if (nextMessage != null) {
             result.mDateBoundaryWithNext = isDateBoundary(message.getReceivedAt(),
@@ -391,7 +383,7 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
                 // does the next need to change its clustering?
                 if ((nextMessageCluster.mClusterWithPrevious != result.mClusterWithNext) ||
                         (nextMessageCluster.mDateBoundaryWithPrevious != result.mDateBoundaryWithNext)) {
-                    requestUpdate(nextMessage, nextPosition);
+//                    requestUpdate(nextMessage, nextPosition);
                 }
             }
             nextMessageCluster.mClusterWithPrevious = result.mClusterWithNext;
@@ -406,15 +398,14 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         return result;
     }
 
-    private void requestUpdate(final Message message, final int lastPosition) {
-        mUiThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                // TODO AND-1242 Restore
+//    private void requestUpdate(final Message message, final int lastPosition) {
+//        mUiThreadHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
 //                notifyItemChanged(getPosition(message, lastPosition));
-            }
-        });
-    }
+//            }
+//        });
+//    }
 
 
 
@@ -433,9 +424,6 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
         // To be extra safe in case RecyclerView implementation details change...
         for (int i = 0; i < getItemCount(); i++) {
             AbstractMessageModel item = getItem(i);
-            if (item == null) {
-                return null;
-            }
             if (item.getMimeTypeTree().hashCode() == viewType) {
                 return item;
             }
@@ -452,7 +440,7 @@ public class MessagesAdapter2 extends PagedListAdapter<AbstractMessageModel, Rec
 
         @Override
         public boolean areContentsTheSame(@NonNull AbstractMessageModel oldItem, @NonNull AbstractMessageModel newItem) {
-            // TODO we should do a deep equals here
+            // TODO AND-1242 we should do a deep equals here
             if (newItem.getMessage().getUpdatedAt() == null) {
                 return oldItem.getMessage().getUpdatedAt() == null;
             }

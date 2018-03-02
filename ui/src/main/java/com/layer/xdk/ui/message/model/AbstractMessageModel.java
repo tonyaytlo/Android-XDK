@@ -40,6 +40,7 @@ public abstract class AbstractMessageModel extends BaseObservable {
 
     // It's safe to cache this since no model will live after a de-auth
     private final Uri mAuthenticatedUserId;
+    private final Uri mSenderId;
 
     private int mParticipantCount;
 
@@ -54,9 +55,11 @@ public abstract class AbstractMessageModel extends BaseObservable {
         mDownloadingPartCounter = new AtomicInteger();
         mLayerClient = layerClient;
 
+        mMessage = message;
         Identity authenticatedUser = layerClient.getAuthenticatedUser();
         mAuthenticatedUserId = authenticatedUser == null ? null : authenticatedUser.getId();
-        mMessage = message;
+        Identity sender = message.getSender();
+        mSenderId = sender == null ? null : sender.getId();
 
         mParticipantCount = mMessage.getConversation().getParticipants().size();
     }
@@ -146,29 +149,33 @@ public abstract class AbstractMessageModel extends BaseObservable {
         mDateFormatter = dateFormatter;
     }
 
+    @NonNull
     public final Message getMessage() {
         return mMessage;
     }
 
     @Bindable
     public final boolean isMessageFromMe() {
-        if (getMessage() != null
-                && getMessage().getSender() != null
-                && mAuthenticatedUserId != null) {
-            return mAuthenticatedUserId.equals(getMessage().getSender().getId());
+        if (mAuthenticatedUserId != null) {
+            return mAuthenticatedUserId.equals(mSenderId);
         }
         if (Log.isLoggable(Log.ERROR)) {
-            Log.e("Failed to check if message is from me. Authenticated user ID: "
-                    + mAuthenticatedUserId + " Message: " + getMessage());
+            Log.e("Failed to check if message is from me. Authenticated user is null Message: "
+                    + getMessage());
         }
-        throw new IllegalStateException("Failed to check if message is from me. "
-                + "Authenticated user ID: " + mAuthenticatedUserId + " Message: " + getMessage());
+        throw new IllegalStateException("Failed to check if message is from me. Authenticated "
+                + "user is null Message: " + getMessage());
     }
 
+    @Nullable
     public final Uri getAuthenticatedUserId() {
         return mAuthenticatedUserId;
     }
 
+    @Nullable
+    public final Uri getSenderId() {
+        return mSenderId;
+    }
 
     public final int getParticipantCount() {
         return mParticipantCount;
