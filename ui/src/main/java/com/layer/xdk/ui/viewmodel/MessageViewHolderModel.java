@@ -8,17 +8,15 @@ import android.view.View;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
 
 public class MessageViewHolderModel extends BaseObservable {
     private Context mContext;
     private LayerClient mLayerClient;
 
-    private AbstractMessageModel mItem;
+    private MessageModel mItem;
     // TODO AND-1242 - Change to MessageModel?
     private OnItemClickListener<Message> mItemClickListener;
     private IdentityFormatter mIdentityFormatter;
@@ -56,11 +54,11 @@ public class MessageViewHolderModel extends BaseObservable {
     }
 
     @Bindable
-    public AbstractMessageModel getItem() {
+    public MessageModel getItem() {
         return mItem;
     }
 
-    public void setItem(AbstractMessageModel item) {
+    public void setItem(MessageModel item) {
         mItem = item;
     }
 

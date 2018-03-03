@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 public abstract class MessageViewHolder<VIEW_MODEL extends MessageViewHolderModel, BINDING extends ViewDataBinding> extends
@@ -34,11 +34,11 @@ public abstract class MessageViewHolder<VIEW_MODEL extends MessageViewHolderMode
     }
 
     @CallSuper
-    public void setItem(AbstractMessageModel item) {
+    public void setItem(MessageModel item) {
         mViewModel.setItem(item);
     }
 
-    public AbstractMessageModel getItem() {
+    public MessageModel getItem() {
         return mViewModel.getItem();
     }
 
@@ -48,7 +48,7 @@ public abstract class MessageViewHolder<VIEW_MODEL extends MessageViewHolderMode
 
     abstract void onBind();
 
-    public void bindItem(AbstractMessageModel item) {
+    public void bindItem(MessageModel item) {
         mViewModel.setItem(item);
         onBind();
         mBinding.executePendingBindings();

@@ -1,24 +1,56 @@
 package com.layer.xdk.ui.message.model;
 
+
 import android.content.Context;
+import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.support.annotation.CallSuper;
+import android.support.annotation.ColorRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
+import com.layer.xdk.ui.util.DateFormatter;
+import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public abstract class MessageModel extends AbstractMessageModel {
+public abstract class MessageModel extends BaseObservable {
+
+    // TODO AND-1242 I don't think we need this anymore
+    private final AtomicInteger mDownloadingPartCounter;
+
+    // TODO AND-1287 Inject these and make them non static. Making static for now to reduce allocs
+    // TODO AND-1242 change prefix to s
+    private static IdentityFormatter mIdentityFormatter;
+    private static DateFormatter mDateFormatter;
+
+    private final Context mContext;
+    private final LayerClient mLayerClient;
+
+    private final Message mMessage;
+
+    // It's safe to cache this since no model will live after a de-auth
+    private final Uri mAuthenticatedUserId;
+    private final Uri mSenderId;
+
+    private int mParticipantCount;
+
     private String mRole;
     // TODO AND-1242 Rename this to just mMessagePart?
     private MessagePart mRootMessagePart;
@@ -36,9 +68,68 @@ public abstract class MessageModel extends AbstractMessageModel {
     private String mMimeTypeTree;
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
-        super(context, layerClient, message);
+        mContext = context.getApplicationContext();
+        if (mIdentityFormatter == null) {
+            mIdentityFormatter = new IdentityFormatterImpl(mContext);
+        }
+        if (mDateFormatter == null) {
+            mDateFormatter = new DateFormatterImpl(mContext);
+        }
+        mDownloadingPartCounter = new AtomicInteger();
+        mLayerClient = layerClient;
+
+        mMessage = message;
+        Identity authenticatedUser = layerClient.getAuthenticatedUser();
+        mAuthenticatedUserId = authenticatedUser == null ? null : authenticatedUser.getId();
+        Identity sender = message.getSender();
+        mSenderId = sender == null ? null : sender.getId();
+
+        mParticipantCount = mMessage.getConversation().getParticipants().size();
+
         mChildMessageModels = new ArrayList<>();
     }
+
+    protected abstract void parse(@NonNull MessagePart messagePart);
+
+    /**
+     * Provides the layout resource ID of the view to inflate into the container.
+     *
+     * @return layout resource ID to inflate into the container. If no layout is associated, 0
+     * should be returned.
+     */
+    @LayoutRes
+    public abstract int getViewLayoutId();
+
+    /**
+     * Provides the layout resource ID of the container for this model that will be inflated into
+     * a ViewHolder. If no layout is associated, 0 should be returned.
+     *
+     * @return layout resource ID to inflate into the ViewHolder. If no layout is associated, 0
+     * should be returned.
+     */
+    @LayoutRes
+    public abstract int getContainerViewLayoutId();
+
+    protected abstract boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart);
+
+    @Bindable
+    public abstract boolean getHasContent();
+
+    @Bindable
+    @Nullable
+    public abstract String getPreviewText();
+
+    @Nullable
+    @Bindable
+    public abstract String getTitle();
+
+    @Nullable
+    @Bindable
+    public abstract String getDescription();
+
+    @Nullable
+    @Bindable
+    public abstract String getFooter();
 
     public final void processParts() {
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(getMessage());
@@ -48,7 +139,7 @@ public abstract class MessageModel extends AbstractMessageModel {
         } else {
             // Always download the message's root part
             if (!rootMessagePart.isContentReady()) {
-                download(rootMessagePart);
+                rootMessagePart.download(null);
             }
 
             processParts(rootMessagePart);
@@ -86,7 +177,7 @@ public abstract class MessageModel extends AbstractMessageModel {
             if (childMessagePart.isContentReady()) {
                 parseChildPart(childMessagePart);
             } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
-                download(childMessagePart);
+                childMessagePart.download(null);
             }
 
             if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
@@ -102,6 +193,14 @@ public abstract class MessageModel extends AbstractMessageModel {
             childModel.processParts(childMessagePart);
             mChildMessageModels.add(childModel);
         }
+    }
+
+    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
+        // Standard operation is no-op
+    }
+
+    protected void parseChildPart(@NonNull MessagePart childMessagePart) {
+        // Standard operation is no-op
     }
 
     private String createMimeTypeTree() {
@@ -140,20 +239,17 @@ public abstract class MessageModel extends AbstractMessageModel {
         return sb.toString();
     }
 
-    @Override
+    /**
+     * Provide a tree of mime types that correspond to all the message parts. Usually
+     * this should not be overridden. If it is then build the tree as follows
+     *  1. The root level parts should be comma separated
+     *  2. If a part has children, those mime types should be comma separated and enclosed in
+     *  square brackets (i.e. []).
+     *
+     * @return A string representing the mime type tree of all message parts
+     */
     public String getMimeTypeTree() {
         return mMimeTypeTree;
-    }
-
-    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
-        // Standard operation is no-op
-    }
-
-
-    protected abstract void parse(@NonNull MessagePart messagePart);
-
-    protected void parseChildPart(@NonNull MessagePart childMessagePart) {
-        // Standard operation is no-op
     }
 
     @NonNull
@@ -189,46 +285,6 @@ public abstract class MessageModel extends AbstractMessageModel {
         return mResponseSummaryPart;
     }
 
-    public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
-        mMessageModelManager = messageModelManager;
-    }
-
-    // TODO AND-1242 - Remove these?
-
-//    @Override
-//    public void onProgressStart(MessagePart messagePart, Operation operation) {
-//        incrementDownloadingPartCounter();
-//    }
-//
-//    @Override
-//    public void onProgressUpdate(MessagePart messagePart, Operation operation, long l) {
-//
-//    }
-//
-//    @Override
-//    public void onProgressComplete(MessagePart messagePart, Operation operation) {
-//        decrementDownloadingPartCounter();
-//        parse(messagePart);
-//        notifyChange();
-//    }
-//
-//    @Override
-//    public void onProgressError(MessagePart messagePart, Operation operation, Throwable throwable) {
-//        decrementDownloadingPartCounter();
-//    }
-
-    @Nullable
-    @Bindable
-    public abstract String getTitle();
-
-    @Nullable
-    @Bindable
-    public abstract String getDescription();
-
-    @Nullable
-    @Bindable
-    public abstract String getFooter();
-
     public void setAction(Action action) {
         mAction = action;
     }
@@ -251,9 +307,6 @@ public abstract class MessageModel extends AbstractMessageModel {
                 || !TextUtils.isEmpty(getDescription())
                 || !TextUtils.isEmpty(getFooter());
     }
-
-    @Bindable
-    public abstract boolean getHasContent();
 
     @Nullable
     public String getRole() {
@@ -282,23 +335,56 @@ public abstract class MessageModel extends AbstractMessageModel {
         return models;
     }
 
-//    private void incrementDownloadingPartCounter() {
-//        mDownloadingPartCounter.getAndIncrement();
-//    }
-//
-//    private void decrementDownloadingPartCounter() {
-//        if (mDownloadingPartCounter.intValue() == 0) return;
-//        mDownloadingPartCounter.getAndDecrement();
-//    }
+    @Bindable
+    @ColorRes
+    public int getBackgroundColor() {
+        return R.color.transparent;
+    }
 
+    @Bindable
+    public final boolean isMessageFromMe() {
+        if (mAuthenticatedUserId != null) {
+            return mAuthenticatedUserId.equals(mSenderId);
+        }
+        if (Log.isLoggable(Log.ERROR)) {
+            Log.e("Failed to check if message is from me. Authenticated user is null Message: "
+                    + getMessage());
+        }
+        throw new IllegalStateException("Failed to check if message is from me. Authenticated "
+                + "user is null Message: " + getMessage());
+    }
 
+    public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
+        mMessageModelManager = messageModelManager;
+    }
 
-//
-//    protected int getNumberOfPartsCurrentlyDownloading() {
-//        return mDownloadingPartCounter.intValue();
-//    }
+    // TODO AND-1242 rename to get application context
+    protected Context getContext() {
+        return mContext;
+    }
 
+    protected LayerClient getLayerClient() {
+        return mLayerClient;
+    }
 
+    @NonNull
+    public final Message getMessage() {
+        return mMessage;
+    }
+
+    @Nullable
+    public final Uri getAuthenticatedUserId() {
+        return mAuthenticatedUserId;
+    }
+
+    @Nullable
+    public final Uri getSenderId() {
+        return mSenderId;
+    }
+
+    public final int getParticipantCount() {
+        return mParticipantCount;
+    }
 
     // TODO AND-1287 Inject this
     @NonNull
@@ -308,5 +394,22 @@ public abstract class MessageModel extends AbstractMessageModel {
         }
         return mMessageSenderRepository;
     }
+
+    protected IdentityFormatter getIdentityFormatter() {
+        return mIdentityFormatter;
+    }
+
+    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mIdentityFormatter = identityFormatter;
+    }
+
+    protected DateFormatter getDateFormatter() {
+        return mDateFormatter;
+    }
+
+    public void setDateFormatter(DateFormatter dateFormatter) {
+        mDateFormatter = dateFormatter;
+    }
+
 
 }

@@ -39,7 +39,7 @@ public class MessageModelManager {
         }
     }
 
-    public <T extends AbstractMessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
+    public <T extends MessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
         try {
             Constructor<?> constructor = messageModelClass.getConstructor(Context.class, LayerClient.class, Message.class);
             mMimeTypeSetToConstructorMap.put(partMimeTypes, constructor);

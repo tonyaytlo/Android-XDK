@@ -18,7 +18,6 @@ import com.layer.sdk.query.Query;
 import com.layer.sdk.query.Queryable;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
 
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MessagesDataSource extends PositionalDataSource<AbstractMessageModel> {
+public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
     static int ID_SOURCE = 0;
     private final int id = ID_SOURCE++;
@@ -70,10 +69,10 @@ public class MessagesDataSource extends PositionalDataSource<AbstractMessageMode
     }
 
     @Override
-    public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<AbstractMessageModel> callback) {
+    public void loadInitial(@NonNull LoadInitialParams params, @NonNull LoadInitialCallback<MessageModel> callback) {
         int count = (int) computeCount();
         if (count == 0) {
-            callback.onResult(Collections.<AbstractMessageModel>emptyList(), 0, 0);
+            callback.onResult(Collections.<MessageModel>emptyList(), 0, 0);
         } else {
             int position = computeInitialLoadPosition(params, count);
             int size = computeInitialLoadSize(params, position, count);
@@ -119,7 +118,7 @@ public class MessagesDataSource extends PositionalDataSource<AbstractMessageMode
 
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
-            @NonNull LoadRangeCallback<AbstractMessageModel> callback) {
+            @NonNull LoadRangeCallback<MessageModel> callback) {
 //        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
 
         List<Message> messages = loadRangeInternal(params.startPosition, params.loadSize);
@@ -137,8 +136,8 @@ public class MessagesDataSource extends PositionalDataSource<AbstractMessageMode
     }
 
     @NonNull
-    private List<AbstractMessageModel> convertMessagesToModels(List<Message> messages) {
-        List<AbstractMessageModel> models = new ArrayList<>();
+    private List<MessageModel> convertMessagesToModels(List<Message> messages) {
+        List<MessageModel> models = new ArrayList<>();
         for (Message message : messages) {
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
             model.processParts();

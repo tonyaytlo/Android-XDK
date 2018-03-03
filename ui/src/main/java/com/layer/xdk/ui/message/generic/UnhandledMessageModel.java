@@ -103,9 +103,4 @@ public class UnhandledMessageModel extends TextMessageModel {
     public String getText() {
         return mText;
     }
-
-    @Override
-    protected void download(@NonNull MessagePart messagePart) {
-        // No-op as there is no reason to download this part
-    }
 }
