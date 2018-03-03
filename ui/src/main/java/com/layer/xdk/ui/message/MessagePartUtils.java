@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-import com.layer.xdk.ui.message.legacy.LegacyImageConstants;
+import com.layer.xdk.ui.message.image.ImageMessageModel;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -213,18 +213,18 @@ public class MessagePartUtils {
     }
 
     @NonNull
-    public static Set<String> getLegacyMessageMimeTypes(@NonNull Message message) {
+    public static String getLegacyMessageMimeTypes(@NonNull Message message) {
         Set<MessagePart> messageParts = message.getMessageParts();
         Set<String> mimeTypes = new HashSet<>(messageParts.size());
         for (MessagePart part : messageParts) {
             // Since images can have varying format, exclude this from the set
-            if (part.getMimeType().startsWith(LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX)
-                    && !part.getMimeType().equals(LegacyImageConstants.MIME_TYPE_PREVIEW)) {
-                mimeTypes.add(LegacyImageConstants.MIME_TYPE_IMAGE_PREFIX);
+            if (part.getMimeType().startsWith(ImageMessageModel.LEGACY_MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(ImageMessageModel.LEGACY_MIME_TYPE_PREVIEW)) {
+                mimeTypes.add(ImageMessageModel.LEGACY_MIME_TYPE_IMAGE_PREFIX);
             } else {
                 mimeTypes.add(part.getMimeType());
             }
         }
-        return mimeTypes;
+        return mimeTypes.toString();
     }
 }

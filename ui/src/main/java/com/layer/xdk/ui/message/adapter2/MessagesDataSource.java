@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
@@ -16,15 +17,14 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.Queryable;
 import com.layer.sdk.query.SortDescriptor;
-import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class MessagesDataSource extends PositionalDataSource<AbstractMessageModel> {
 
@@ -140,22 +140,8 @@ public class MessagesDataSource extends PositionalDataSource<AbstractMessageMode
     private List<AbstractMessageModel> convertMessagesToModels(List<Message> messages) {
         List<AbstractMessageModel> models = new ArrayList<>();
         for (Message message : messages) {
-            String rootMimeType = MessagePartUtils.getRootMimeType(message);
-            MessageModel modelToProcessParts = null;
-            AbstractMessageModel model;
-            if (rootMimeType == null) {
-                // This is a legacy message
-                // Create set of mime types then get the model based on that type
-                Set<String> legacyMimeTypes = MessagePartUtils.getLegacyMessageMimeTypes(
-                        message);
-                model = mBinderRegistry.getMessageModelManager().getNewLegacyModel(legacyMimeTypes, message);
-            } else {
-                modelToProcessParts = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
-                model = modelToProcessParts;
-            }
-            if (modelToProcessParts != null) {
-                modelToProcessParts.processParts();
-            }
+            MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
+            model.processParts();
 //            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
 
             models.add(model);

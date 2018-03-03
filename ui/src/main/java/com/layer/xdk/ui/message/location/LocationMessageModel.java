@@ -14,6 +14,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
@@ -21,10 +22,18 @@ import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandle
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStreamReader;
+import java.util.Collections;
 
 public class LocationMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.location+json";
+    public final static String LEGACY_MIME_TYPE = Collections.singleton("location/coordinate").toString();
+    private static final String LEGACY_KEY_LATITUDE = "lat";
+    private static final String LEGACY_KEY_LONGITUDE = "lon";
+    private static final String LEGACY_KEY_LABEL = "label";
 
     private static final String ACTION_EVENT_OPEN_MAP = "open-map";
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5.0)) / 2.0;
@@ -33,6 +42,7 @@ public class LocationMessageModel extends MessageModel {
     private final Gson mGson;
 
     private LocationMessageMetadata mMetadata;
+    private boolean mLegacy;
 
     public LocationMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
@@ -58,12 +68,35 @@ public class LocationMessageModel extends MessageModel {
     }
 
     @Override
+    protected void processLegacyParts() {
+        mLegacy = true;
+        mMetadata = new LocationMessageMetadata();
+
+        try {
+            JSONObject json = new JSONObject(
+                    new String(getMessage().getMessageParts().iterator().next().getData()));
+
+            mMetadata.setLatitude(json.optDouble(LEGACY_KEY_LATITUDE, 0));
+            mMetadata.setLongitude(json.optDouble(LEGACY_KEY_LONGITUDE, 0));
+            mMetadata.setTitle(json.optString(LEGACY_KEY_LABEL, null));
+        } catch (JSONException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e(e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
     @Override
     public String getTitle() {
+        if (mLegacy) {
+            // Return null here since title is used for the marker name
+            return null;
+        }
         return mMetadata != null ? mMetadata.getTitle() : null;
     }
 

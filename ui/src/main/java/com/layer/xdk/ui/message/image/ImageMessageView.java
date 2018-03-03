@@ -1,7 +1,6 @@
 package com.layer.xdk.ui.message.image;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 
 public class ImageMessageView extends AppCompatImageView {
 
@@ -36,24 +36,22 @@ public class ImageMessageView extends AppCompatImageView {
     public void setMessageModel(@Nullable ImageMessageModel model) {
         mMessageViewHelper.setMessageModel(model);
         if (model != null) {
-            setupImageViewDimensions(model);
+            if (model.getPreviewRequestParameters() != null) {
+                setupImageViewDimensions(model.getPreviewRequestParameters());
+            } else if (model.getSourceRequestParameters() != null) {
+                setupImageViewDimensions(model.getSourceRequestParameters());
+            }
         }
     }
 
-    private void setupImageViewDimensions(@NonNull ImageMessageModel model) {
-        ImageMessageMetadata metadata = model.getMetadata();
-        if (metadata != null) {
-            ViewGroup.LayoutParams layoutParams = getLayoutParams();
-
-            int width = (metadata.getPreviewWidth() > 0 ? metadata.getPreviewWidth() : metadata.getWidth());
-            // TODO AND-1242 Why does this use layoutParams.width?
-            width = width > 0 ? layoutParams.width : ViewGroup.LayoutParams.WRAP_CONTENT;
-            int height = metadata.getPreviewHeight() > 0 ? metadata.getPreviewHeight() : metadata.getHeight();
-            height = height > 0 ? layoutParams.height : ViewGroup.LayoutParams.WRAP_CONTENT;
-
-            layoutParams.width = width;
-            layoutParams.height = height;
-            setLayoutParams(layoutParams);
-        }
+    private void setupImageViewDimensions(ImageRequestParameters requestParams) {
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        int width = (requestParams.getTargetWidth() > 0 ? requestParams.getTargetWidth()
+                : ViewGroup.LayoutParams.WRAP_CONTENT);
+        int height = (requestParams.getTargetHeight() > 0 ? requestParams.getTargetHeight()
+                : ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams.width = width;
+        layoutParams.height = height;
+        setLayoutParams(layoutParams);
     }
 }

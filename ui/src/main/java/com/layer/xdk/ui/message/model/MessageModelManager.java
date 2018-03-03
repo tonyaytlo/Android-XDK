@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.generic.UnhandledMessageModel;
 import com.layer.xdk.ui.util.Log;
 
@@ -58,6 +59,11 @@ public class MessageModelManager {
     }
 
     @NonNull
+    public MessageModel getNewModel(@NonNull Message message) {
+        return getNewModel(getModelIdentifier(message), message);
+    }
+
+    @NonNull
     public MessageModel getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
         try {
             Constructor<? extends MessageModel> constructor =
@@ -88,29 +94,12 @@ public class MessageModelManager {
     }
 
     @NonNull
-    public AbstractMessageModel getNewLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Message message) {
-        try {
-            Constructor<? extends AbstractMessageModel> constructor =
-                    (Constructor<? extends AbstractMessageModel>)
-                            mMimeTypeSetToConstructorMap.get(partMimeTypes);
-            if (constructor == null) {
-                return new UnhandledMessageModel(mApplicationContext, mLayerClient, message);
-            } else {
-                return constructor.newInstance(mApplicationContext, mLayerClient, message);
-            }
-        } catch (IllegalAccessException e) {
-            // Handled below
-        } catch (InstantiationException e) {
-            // Handled below
-        } catch (InvocationTargetException e) {
-            // Handled below
+    private static String getModelIdentifier(@NonNull Message message) {
+        String rootMimeType = MessagePartUtils.getRootMimeType(message);
+        if (rootMimeType == null) {
+            // This is a legacy message
+            return MessagePartUtils.getLegacyMessageMimeTypes(message);
         }
-
-        if (Log.isLoggable(Log.ERROR)) {
-            Log.e("Failed to instantiate a new AbstractMessageModel instance. Ensure an appropriate"
-                    + " constructor exists.");
-        }
-        throw new IllegalStateException("Failed to instantiate a new AbstractMessageModel instance."
-                + " Ensure an appropriate constructor exists.");
+        return rootMimeType;
     }
 }

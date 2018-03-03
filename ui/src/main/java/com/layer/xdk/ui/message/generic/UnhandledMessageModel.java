@@ -23,9 +23,10 @@ public class UnhandledMessageModel extends TextMessageModel {
     public UnhandledMessageModel(Context context, LayerClient layerClient,
             @NonNull Message message) {
         super(context, layerClient, message);
+    }
 
-        // Initialize to the legacy format. If it is non-legacy then this will be replaced
-        // in processParts()
+    @Override
+    protected void processLegacyParts() {
         mText = generateLegacyMimeTypeText();
     }
 
@@ -47,8 +48,7 @@ public class UnhandledMessageModel extends TextMessageModel {
             mimeTypes.add(part.getMimeType());
         }
         String joinedMimeTypes = TextUtils.join(", ", mimeTypes);
-        getContext().getString(R.string.xdk_ui_unhandled_message_text_legacy, joinedMimeTypes);
-        return joinedMimeTypes;
+        return getContext().getString(R.string.xdk_ui_unhandled_message_text_legacy, joinedMimeTypes);
     }
 
     private String generateNormalMimeTypeText(@NonNull MessagePart rootMessagePart) {

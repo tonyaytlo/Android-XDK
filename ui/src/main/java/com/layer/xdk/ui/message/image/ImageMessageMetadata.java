@@ -76,12 +76,12 @@ public class ImageMessageMetadata extends BaseObservable {
 
     @Dimension
     public int getPreviewWidth() {
-        return DisplayUtils.dpToPx(mPreviewWidth > 0 ? mPreviewWidth : mWidth);
+        return DisplayUtils.dpToPx(mPreviewWidth);
     }
 
     @Dimension
     public int getPreviewHeight() {
-        return DisplayUtils.dpToPx(mPreviewHeight > 0 ? mPreviewHeight : mHeight);
+        return DisplayUtils.dpToPx(mPreviewHeight);
     }
 
     public Action getAction() {

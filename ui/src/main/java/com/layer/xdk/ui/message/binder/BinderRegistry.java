@@ -12,12 +12,8 @@ import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
-import com.layer.xdk.ui.message.legacy.LegacyImageMessageModel;
-import com.layer.xdk.ui.message.legacy.LegacyLocationMessageModel;
-import com.layer.xdk.ui.message.legacy.LegacyTextMessageModel;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
@@ -25,8 +21,6 @@ import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
-
-import java.util.Set;
 
 public class BinderRegistry {
 
@@ -101,8 +95,12 @@ public class BinderRegistry {
 
     private void initMessageTypeModelRegistry() {
         mMessageModelManager.registerModel(TextMessageModel.ROOT_MIME_TYPE, TextMessageModel.class);
+        mMessageModelManager.registerModel(TextMessageModel.LEGACY_MIME_TYPE, TextMessageModel.class);
         mMessageModelManager.registerModel(ImageMessageModel.ROOT_MIME_TYPE, ImageMessageModel.class);
+        mMessageModelManager.registerModel(ImageMessageModel.LEGACY_SINGLE_PART_MIME_TYPES, ImageMessageModel.class);
+        mMessageModelManager.registerModel(ImageMessageModel.LEGACY_THREE_PART_MIME_TYPES, ImageMessageModel.class);
         mMessageModelManager.registerModel(LocationMessageModel.ROOT_MIME_TYPE, LocationMessageModel.class);
+        mMessageModelManager.registerModel(LocationMessageModel.LEGACY_MIME_TYPE, LocationMessageModel.class);
         mMessageModelManager.registerModel(LinkMessageModel.ROOT_MIME_TYPE, LinkMessageModel.class);
         mMessageModelManager.registerModel(FileMessageModel.ROOT_MIME_TYPE, FileMessageModel.class);
         mMessageModelManager.registerModel(ButtonMessageModel.ROOT_MIME_TYPE, ButtonMessageModel.class);
@@ -112,21 +110,11 @@ public class BinderRegistry {
         mMessageModelManager.registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
         mMessageModelManager.registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
         mMessageModelManager.registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
-
-        mMessageModelManager.registerLegacyModel(LegacyTextMessageModel.MIME_TYPES, LegacyTextMessageModel.class);
-        mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.THREE_PART_MIME_TYPES, LegacyImageMessageModel.class);
-        mMessageModelManager.registerLegacyModel(LegacyImageMessageModel.SINGLE_PART_MIME_TYPES, LegacyImageMessageModel.class);
-        mMessageModelManager.registerLegacyModel(LegacyLocationMessageModel.MIME_TYPES, LegacyLocationMessageModel.class);
     }
 
     @SuppressWarnings("unused")
     public <T extends MessageModel> void registerModel(@NonNull String modelIdentifier, @NonNull Class<T> messageModelClass) {
         mMessageModelManager.registerModel(modelIdentifier, messageModelClass);
-    }
-
-    @SuppressWarnings("unused")
-    public <T extends AbstractMessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
-        mMessageModelManager.registerLegacyModel(partMimeTypes, messageModelClass);
     }
 
     @SuppressWarnings("unused")

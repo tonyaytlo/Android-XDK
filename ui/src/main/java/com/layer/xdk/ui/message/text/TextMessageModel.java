@@ -16,9 +16,12 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 
+import java.util.Collections;
+
 public class TextMessageModel extends MessageModel {
 
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
+    public final static String LEGACY_MIME_TYPE = Collections.singleton("text/plain").toString();
     private final JsonParser mJsonParser;
 
     private CharSequence mText;
@@ -65,6 +68,21 @@ public class TextMessageModel extends MessageModel {
             mCustomData = null;
         }
 
+        linkifyText();
+    }
+
+    @Override
+    protected void processLegacyParts() {
+        MessagePart part = getMessage().getMessageParts().iterator().next();
+        if (part.isContentReady()) {
+            mText = new String(part.getData());
+            linkifyText();
+        } else if (shouldDownloadContentIfNotReady(part)) {
+            part.download(null);
+        }
+    }
+
+    private void linkifyText() {
         SpannableString spannableString = new SpannableString(mText);
         Linkify.addLinks(spannableString, Linkify.ALL);
         mText = spannableString;
@@ -123,7 +141,7 @@ public class TextMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (getHasContent()) {
-            return mTitle != null ? mTitle : mText.toString();
+            return mTitle != null ? mTitle : String.valueOf(mText);
         } else {
             return getContext().getString(R.string.xdk_ui_text_message_preview_text);
         }

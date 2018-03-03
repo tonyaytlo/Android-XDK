@@ -43,18 +43,26 @@ public abstract class MessageModel extends AbstractMessageModel {
     public final void processParts() {
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(getMessage());
         if (rootMessagePart == null) {
-            if (Log.isLoggable(Log.ERROR)) {
-                Log.e("Message has no message part with role = root");
+            mMimeTypeTree = createLegacyMimeTypeTree();
+            processLegacyParts();
+        } else {
+            // Always download the message's root part
+            if (!rootMessagePart.isContentReady()) {
+                download(rootMessagePart);
             }
-            throw new IllegalArgumentException("Message has no message part with role = root");
-        }
-        // Always download the message's root part
-        if (!rootMessagePart.isContentReady()) {
-            download(rootMessagePart);
-        }
 
-        processParts(rootMessagePart);
+            processParts(rootMessagePart);
+        }
     }
+
+    protected void processLegacyParts() {
+        if (Log.isLoggable(Log.ERROR)) {
+            Log.e("Message has no message part with role = root and no legacy part handling");
+        }
+        throw new IllegalArgumentException("Message has no message part with role = root and no"
+                + " legacy part handling");
+    }
+
 
     @CallSuper
     protected void processParts(@NonNull MessagePart rootMessagePart) {
@@ -68,7 +76,7 @@ public abstract class MessageModel extends AbstractMessageModel {
         processChildParts();
 
         // Set View type
-        setMimeTypeTree();
+        mMimeTypeTree = createMimeTypeTree();
     }
 
     protected void processChildParts() {
@@ -90,15 +98,13 @@ public abstract class MessageModel extends AbstractMessageModel {
             String mimeType = MessagePartUtils.getMimeType(childMessagePart);
             if (mimeType == null) continue;
             MessageModel childModel = mMessageModelManager.getNewModel(mimeType, getMessage());
-            if (childModel != null) {
-                childModel.setParentMessageModel(this);
-                childModel.processParts(childMessagePart);
-                mChildMessageModels.add(childModel);
-            }
+            childModel.setParentMessageModel(this);
+            childModel.processParts(childMessagePart);
+            mChildMessageModels.add(childModel);
         }
     }
 
-    private void setMimeTypeTree() {
+    private String createMimeTypeTree() {
         StringBuilder sb = new StringBuilder();
         if (mRootMessagePart != null) {
             sb.append(MessagePartUtils.getMimeType(mRootMessagePart));
@@ -117,7 +123,21 @@ public abstract class MessageModel extends AbstractMessageModel {
         if (mRootMessagePart != null) {
             sb.append("]");
         }
-        mMimeTypeTree = sb.toString();
+        return sb.toString();
+    }
+
+    protected String createLegacyMimeTypeTree() {
+        StringBuilder sb = new StringBuilder();
+        boolean prependComma = false;
+        for (MessagePart part : getMessage().getMessageParts()) {
+            if (prependComma) {
+                sb.append(",");
+            }
+            sb.append(part.getMimeType());
+            sb.append("[]");
+            prependComma = true;
+        }
+        return sb.toString();
     }
 
     @Override
