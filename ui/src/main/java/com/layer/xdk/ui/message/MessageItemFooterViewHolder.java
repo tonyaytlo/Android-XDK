@@ -47,7 +47,7 @@ public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageIt
 //                    break;
 //                }
 //            }
-//            Resources resources = mFooterView.getContext().getResources();
+//            Resources resources = mFooterView.getAppContext().getResources();
 //            int remainingUsers = numberOfUsers % 2;
 //            String typingIndicatorMessage = resources.getQuantityString(R.plurals.xdk_ui_typing_indicator_message,
 //                    remainingUsers, firstUser, secondUser, remainingUsers);

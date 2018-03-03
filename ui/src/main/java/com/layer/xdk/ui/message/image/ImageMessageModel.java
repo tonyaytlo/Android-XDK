@@ -199,7 +199,7 @@ public class ImageMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.xdk_ui_image_message_preview_text);
+        return title != null ? title : getAppContext().getString(R.string.xdk_ui_image_message_preview_text);
     }
 
     /*
@@ -296,7 +296,7 @@ public class ImageMessageModel extends MessageModel {
 
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())
+            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
                     .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
                     .build());
         }

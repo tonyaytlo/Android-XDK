@@ -48,12 +48,12 @@ public class UnhandledMessageModel extends TextMessageModel {
             mimeTypes.add(part.getMimeType());
         }
         String joinedMimeTypes = TextUtils.join(", ", mimeTypes);
-        return getContext().getString(R.string.xdk_ui_unhandled_message_text_legacy, joinedMimeTypes);
+        return getAppContext().getString(R.string.xdk_ui_unhandled_message_text_legacy, joinedMimeTypes);
     }
 
     private String generateNormalMimeTypeText(@NonNull MessagePart rootMessagePart) {
         String mimeType = MessagePartUtils.getMimeType(rootMessagePart);
-        return getContext().getString(R.string.xdk_ui_unhandled_message_text, mimeType);
+        return getAppContext().getString(R.string.xdk_ui_unhandled_message_text, mimeType);
     }
 
     @Override

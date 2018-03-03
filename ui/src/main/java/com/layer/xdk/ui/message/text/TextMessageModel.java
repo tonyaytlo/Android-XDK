@@ -143,7 +143,7 @@ public class TextMessageModel extends MessageModel {
         if (getHasContent()) {
             return mTitle != null ? mTitle : String.valueOf(mText);
         } else {
-            return getContext().getString(R.string.xdk_ui_text_message_preview_text);
+            return getAppContext().getString(R.string.xdk_ui_text_message_preview_text);
         }
     }
 

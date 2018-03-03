@@ -169,7 +169,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 //    }
 //
 //    protected MessageItemFooterViewHolder createFooterViewHolder(ViewGroup parent) {
-//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getContext(),
+//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getAppContext(),
 //                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
 //
 //        viewModel.setEnableReadReceipts(false);

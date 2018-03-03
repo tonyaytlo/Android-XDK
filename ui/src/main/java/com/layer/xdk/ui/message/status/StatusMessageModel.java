@@ -89,7 +89,7 @@ public class StatusMessageModel extends MessageModel {
         if (mText != null) {
             return mText.toString();
         }
-        return getContext().getString(R.string.xdk_ui_status_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_status_message_preview_text);
     }
 
     @Override

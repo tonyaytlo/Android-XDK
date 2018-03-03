@@ -28,17 +28,12 @@ import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class MessageModel extends BaseObservable {
 
-    // TODO AND-1242 I don't think we need this anymore
-    private final AtomicInteger mDownloadingPartCounter;
-
     // TODO AND-1287 Inject these and make them non static. Making static for now to reduce allocs
-    // TODO AND-1242 change prefix to s
-    private static IdentityFormatter mIdentityFormatter;
-    private static DateFormatter mDateFormatter;
+    private static IdentityFormatter sIdentityFormatter;
+    private static DateFormatter sDateFormatter;
 
     private final Context mContext;
     private final LayerClient mLayerClient;
@@ -68,13 +63,12 @@ public abstract class MessageModel extends BaseObservable {
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
-        if (mIdentityFormatter == null) {
-            mIdentityFormatter = new IdentityFormatterImpl(mContext);
+        if (sIdentityFormatter == null) {
+            sIdentityFormatter = new IdentityFormatterImpl(mContext);
         }
-        if (mDateFormatter == null) {
-            mDateFormatter = new DateFormatterImpl(mContext);
+        if (sDateFormatter == null) {
+            sDateFormatter = new DateFormatterImpl(mContext);
         }
-        mDownloadingPartCounter = new AtomicInteger();
         mLayerClient = layerClient;
 
         mMessage = message;
@@ -357,8 +351,7 @@ public abstract class MessageModel extends BaseObservable {
         mMessageModelManager = messageModelManager;
     }
 
-    // TODO AND-1242 rename to get application context
-    protected Context getContext() {
+    protected Context getAppContext() {
         return mContext;
     }
 
@@ -389,25 +382,25 @@ public abstract class MessageModel extends BaseObservable {
     @NonNull
     protected MessageSenderRepository getMessageSenderRepository() {
         if (mMessageSenderRepository == null) {
-            mMessageSenderRepository = new MessageSenderRepository(getContext(), getLayerClient());
+            mMessageSenderRepository = new MessageSenderRepository(getAppContext(), getLayerClient());
         }
         return mMessageSenderRepository;
     }
 
     protected IdentityFormatter getIdentityFormatter() {
-        return mIdentityFormatter;
+        return sIdentityFormatter;
     }
 
     public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        mIdentityFormatter = identityFormatter;
+        sIdentityFormatter = identityFormatter;
     }
 
     protected DateFormatter getDateFormatter() {
-        return mDateFormatter;
+        return sDateFormatter;
     }
 
     public void setDateFormatter(DateFormatter dateFormatter) {
-        mDateFormatter = dateFormatter;
+        sDateFormatter = dateFormatter;
     }
 
 

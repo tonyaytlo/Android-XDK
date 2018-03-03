@@ -161,7 +161,7 @@ public class FileMessageModel extends MessageModel {
                 return mMetadata.getTitle();
             }
         }
-        return getContext().getString(R.string.xdk_ui_file_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_file_message_preview_text);
     }
 
     @Override
@@ -203,7 +203,7 @@ public class FileMessageModel extends MessageModel {
     }
 
     private String writeDataToFile(InputStream inputStream) throws IOException {
-        String appName = getApplicationName(getContext());
+        String appName = getApplicationName(getAppContext());
         File storageDirectory = new File(getPublicStorageDirectoryForFileDownload(mMetadata.getMimeType()), appName);
         if (!storageDirectory.exists() && !storageDirectory.mkdirs()) {
             throw new IllegalStateException("Unable to write to storage directory");
@@ -228,7 +228,7 @@ public class FileMessageModel extends MessageModel {
             inputStream.close();
         }
 
-        return FileProvider.getUriForFile(getContext(), mFileProviderAuthority, file).toString();
+        return FileProvider.getUriForFile(getAppContext(), mFileProviderAuthority, file).toString();
     }
 
     private File getPublicStorageDirectoryForFileDownload(@Nullable String sourceMimeType) {
@@ -246,7 +246,7 @@ public class FileMessageModel extends MessageModel {
             }
         }
 
-        return getContext().getExternalFilesDir(directory);
+        return getAppContext().getExternalFilesDir(directory);
     }
 
     private String getApplicationName(Context context) {
