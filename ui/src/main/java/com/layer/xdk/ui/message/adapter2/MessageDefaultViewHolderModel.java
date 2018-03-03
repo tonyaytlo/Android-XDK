@@ -37,8 +37,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private boolean mShouldShowDateTimeForMessage;
     private float mMessageCellAlpha;
     private String mSenderName;
-    // TODO AND-1242 I'm not sure we should call this participants... It seems like it's only ever set to the sender
-    private Set<Identity> mParticipants = Collections.emptySet();
+    private Set<Identity> mSender = Collections.emptySet();
     private String mReadReceipt;
     private SpannableString mDateTime;
     private boolean mIsReadReceiptVisible;
@@ -62,7 +61,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     public void update(MessageCluster cluster, int position, Integer recipientStatusPosition) {
         Message message = getItem().getMessage();
-        mParticipants = Collections.singleton(message.getSender());
+        mSender = Collections.singleton(message.getSender());
 
         // Clustering and dates
         updateClusteringAndDates(message, cluster);
@@ -258,7 +257,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     @Bindable
     public Set<Identity> getParticipants() {
-        return mParticipants;
+        return mSender;
     }
 
     @Bindable

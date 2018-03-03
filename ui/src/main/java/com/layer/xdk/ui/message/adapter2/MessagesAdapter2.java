@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO AND-1242 Abstract a view holder base class
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
 
     private final Map<Uri, MessageCluster> mClusterCache = new HashMap<>();
