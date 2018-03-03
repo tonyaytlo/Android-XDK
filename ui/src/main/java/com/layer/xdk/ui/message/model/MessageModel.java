@@ -52,8 +52,7 @@ public abstract class MessageModel extends BaseObservable {
     private int mParticipantCount;
 
     private String mRole;
-    // TODO AND-1242 Rename this to just mMessagePart?
-    private MessagePart mRootMessagePart;
+    private MessagePart mMessagePart;
     private MessageModel mParentMessageModel;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
@@ -157,10 +156,10 @@ public abstract class MessageModel extends BaseObservable {
 
     @CallSuper
     protected void processParts(@NonNull MessagePart rootMessagePart) {
-        mRootMessagePart = rootMessagePart;
+        mMessagePart = rootMessagePart;
         setRole(MessagePartUtils.getRole(rootMessagePart));
-        if (mRootMessagePart.isContentReady()) {
-            parse(mRootMessagePart);
+        if (mMessagePart.isContentReady()) {
+            parse(mMessagePart);
         }
 
         // Deal with child parts
@@ -171,7 +170,7 @@ public abstract class MessageModel extends BaseObservable {
     }
 
     protected void processChildParts() {
-        mChildMessageParts = MessagePartUtils.getChildParts(getMessage(), mRootMessagePart);
+        mChildMessageParts = MessagePartUtils.getChildParts(getMessage(), mMessagePart);
 
         for (MessagePart childMessagePart : mChildMessageParts) {
             if (childMessagePart.isContentReady()) {
@@ -205,8 +204,8 @@ public abstract class MessageModel extends BaseObservable {
 
     private String createMimeTypeTree() {
         StringBuilder sb = new StringBuilder();
-        if (mRootMessagePart != null) {
-            sb.append(MessagePartUtils.getMimeType(mRootMessagePart));
+        if (mMessagePart != null) {
+            sb.append(MessagePartUtils.getMimeType(mMessagePart));
             sb.append("[");
         }
         boolean prependComma = false;
@@ -219,7 +218,7 @@ public abstract class MessageModel extends BaseObservable {
                 prependComma = true;
             }
         }
-        if (mRootMessagePart != null) {
+        if (mMessagePart != null) {
             sb.append("]");
         }
         return sb.toString();
@@ -253,8 +252,8 @@ public abstract class MessageModel extends BaseObservable {
     }
 
     @NonNull
-    protected MessagePart getRootMessagePart() {
-        return mRootMessagePart;
+    protected MessagePart getMessagePart() {
+        return mMessagePart;
     }
 
     @Nullable

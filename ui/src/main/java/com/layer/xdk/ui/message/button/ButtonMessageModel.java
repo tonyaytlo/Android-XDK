@@ -205,7 +205,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @Override
     public boolean getHasContent() {
-        return getRootMessagePart().isContentReady();
+        return getMessagePart().isContentReady();
     }
 
     @Nullable
@@ -260,7 +260,7 @@ public class ButtonMessageModel extends MessageModel {
                     choiceData.getName());
         }
 
-        UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
+        UUID rootPartId = UUID.fromString(getMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);

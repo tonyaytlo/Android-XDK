@@ -184,7 +184,7 @@ public class ChoiceMessageModel extends MessageModel {
                     choice.getText(),
                     mMetadata.getName());
         }
-        UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
+        UUID rootPartId = UUID.fromString(getMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);
