@@ -3,16 +3,15 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
 import com.layer.sdk.changes.LayerChangeEvent;
-import com.layer.sdk.internal.lsdkd.lsdka.i;
 import com.layer.sdk.listeners.LayerChangeEventListener;
 import com.layer.sdk.messaging.Conversation;
-import com.layer.sdk.messaging.LayerObject;
+import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
+import com.layer.sdk.messaging.MessagePart;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.Queryable;
@@ -25,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Creates a {@link android.arch.paging.DataSource} to use with the paging library that loads
+ * Messages from a {@link LayerClient}. This will convert them to {@link MessageModel} objects
+ * before returning, thus doing the heavier computation of the conversion on the background thread.
+ */
 public class MessagesDataSource extends PositionalDataSource<MessageModel> {
-
-    static int ID_SOURCE = 0;
-    private final int id = ID_SOURCE++;
 
     private final GroupingCalculator mGroupingCalculator;
     private final LayerClient mLayerClient;
@@ -38,6 +39,16 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
     private int mMyNewestMessagePosition = Integer.MAX_VALUE;
 
+    /**
+     * Create a DataSource and registers a listener with the {@link LayerClient} to listen for
+     * relevant change notifications to invalidate if necessary.
+     *
+     * @param layerClient client to use for the query
+     * @param conversation conversation to fetch the messages for
+     * @param binderRegistry registry that handles model creation
+     * @param groupingCalculator calculator to use for message grouping
+     */
+    @SuppressWarnings("WeakerAccess")
     public MessagesDataSource(LayerClient layerClient, final Conversation conversation,
             BinderRegistry binderRegistry, GroupingCalculator groupingCalculator) {
         mLayerClient = layerClient;
@@ -45,26 +56,45 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         mBinderRegistry = binderRegistry;
         mGroupingCalculator = groupingCalculator;
 
-        Log.d("ZZZZ Creating datasource: " + id);
-
         listener = new LayerChangeEventListener.BackgroundThread.Weak() {
             @Override
             public void onChangeEvent(LayerChangeEvent layerChangeEvent) {
                 List<LayerChange> changes = layerChangeEvent.getChanges();
                 boolean needsInvalidation = false;
                 for (LayerChange change : changes) {
-                    if (change.getObjectType() == LayerObject.Type.MESSAGE) {
-                        Message message = (Message) change.getObject();
-                        if (message.getConversation().equals(conversation)) {
-                            needsInvalidation = true;
+                    switch (change.getObjectType()) {
+                        case MESSAGE:
+                            Message message = (Message) change.getObject();
+                            if (message.getConversation().equals(conversation)) {
+                                needsInvalidation = true;
+                            }
+                            break;
+                        case IDENTITY:
+                            Identity changed = (Identity) change.getObject();
+                            if (conversation.getParticipants().contains(changed)) {
+                                needsInvalidation = true;
+                            }
+                            break;
+                        case MESSAGE_PART:
+                            MessagePart part = (MessagePart) change.getObject();
+                            if (part.getMessage().getConversation().equals(conversation)) {
+                                needsInvalidation = true;
+                            }
+                            break;
+                    }
+
+                    if (needsInvalidation) {
+                        // Unregister this listener, invalidate the data source and return so no
+                        // more changes are processed
+                        mLayerClient.unregisterEventListener(listener);
+                        if (Log.isLoggable(Log.VERBOSE)) {
+                            Log.d("Invalidating DataSource due to change");
                         }
+                        invalidate();
+                        return;
                     }
                 }
-                if (needsInvalidation) {
-                    mLayerClient.unregisterEventListener(listener);
-                    Log.d("ZZZZ Invalidating datasource: " + id);
-                    invalidate();
-                }
+
             }
         };
 
@@ -79,7 +109,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         } else {
             int position = computeInitialLoadPosition(params, count);
             int size = computeInitialLoadSize(params, position, count);
-            Log.d("ZZZZ ID:" + id + " Load initial position: " + position + " size: " + size + " params: " + paramsToString(params));
 
             LoadRangeResults results = loadRangeInternal(position, size);
             if (results.mRealSize == size) {
@@ -93,8 +122,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
             @NonNull LoadRangeCallback<MessageModel> callback) {
-        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
-
         LoadRangeResults results = loadRangeInternal(params.startPosition, params.loadSize);
         callback.onResult(convertMessagesToModels(results));
     }
@@ -146,12 +173,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         }
         results.mRealSize = resultSize;
 
-//        Log.d("ZZZZ ID:" + id + " Queried for messages at pos: " + position + " with size: " + loadSize + " and retrieved message count: " + messages.size());
-        List<String> databaseIds = new ArrayList<>();
-        for (Queryable message : messages) {
-            databaseIds.add(((i) message).i().toString());
-        }
-        Log.d("ZZZZZ Message Db ids:\n" + TextUtils.join("\n", databaseIds));
         return results;
     }
 
@@ -161,8 +182,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         for (Message message : loadResults.mMessages) {
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
             model.processParts();
-//            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
-
             models.add(model);
         }
 
@@ -190,19 +209,9 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
             if (model.isMessageFromMe() && (offset + i < mMyNewestMessagePosition)) {
                 mMyNewestMessagePosition = offset + i;
                 model.setMyNewestMessage(true);
-
                 break;
             }
         }
-    }
-
-    private String paramsToString(LoadInitialParams params) {
-        return "LoadInitialParams{" +
-                "requestedStartPosition=" + params.requestedStartPosition +
-                ", requestedLoadSize=" + params.requestedLoadSize +
-                ", pageSize=" + params.pageSize +
-                ", placeholdersEnabled=" + params.placeholdersEnabled +
-                '}';
     }
 
     private static class LoadRangeResults {
