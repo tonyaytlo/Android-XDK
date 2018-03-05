@@ -3,8 +3,19 @@ package com.layer.xdk.ui.message.view;
 
 import com.layer.xdk.ui.message.model.MessageModel;
 
-// TODO - AND-1242 Document
+/**
+ * Allows a view to handle inner view inflations when used with a
+ * {@link com.layer.xdk.ui.message.adapter2.MessagesAdapter2} instance. Primarily used for complex
+ * {@link MessageModel} views that can contain {@link MessageModel}s and need to lay those out
+ * inside a certain view.
+ */
 public interface ParentMessageView {
 
+    /**
+     * Inflate views needed to display the {@link MessageModel} passed in the arguments. Do NOT
+     * store the model or update data based on the model in this method.
+     *
+     * @param model model whose child(ren) should be used for view inflation
+     */
     <T extends MessageModel> void inflateChildLayouts(T model);
 }
