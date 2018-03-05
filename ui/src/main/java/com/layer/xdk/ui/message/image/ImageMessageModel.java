@@ -12,6 +12,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.LegacyMimeTypes;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.Action;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -27,8 +28,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public class ImageMessageModel extends MessageModel {
@@ -39,18 +38,6 @@ public class ImageMessageModel extends MessageModel {
     public static final String ACTION_EVENT_OPEN_URL = "open-url";
 
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.image+json";
-    public static final String LEGACY_MIME_TYPE_PREVIEW = "image/jpeg+preview";
-    public static final String LEGACY_MIME_TYPE_INFO = "application/json+imageSize";
-    public static final String LEGACY_MIME_TYPE_IMAGE_PREFIX = "image/";
-    public static final String LEGACY_SINGLE_PART_MIME_TYPES = Collections.singleton(LEGACY_MIME_TYPE_IMAGE_PREFIX).toString();
-    public static final String LEGACY_THREE_PART_MIME_TYPES;
-    static {
-        Set<String> threePartMimeTypes = new HashSet<>(3);
-        threePartMimeTypes.add(LEGACY_MIME_TYPE_INFO);
-        threePartMimeTypes.add(LEGACY_MIME_TYPE_PREVIEW);
-        threePartMimeTypes.add(LEGACY_MIME_TYPE_IMAGE_PREFIX);
-        LEGACY_THREE_PART_MIME_TYPES = threePartMimeTypes.toString();
-    }
 
     private static ImageCacheWrapper sImageCacheWrapper;
 
@@ -112,9 +99,9 @@ public class ImageMessageModel extends MessageModel {
             if (prependComma) {
                 sb.append(",");
             }
-            if (part.getMimeType().startsWith(LEGACY_MIME_TYPE_IMAGE_PREFIX)
-                    && !part.getMimeType().equals(LEGACY_MIME_TYPE_PREVIEW)) {
-                sb.append(LEGACY_MIME_TYPE_IMAGE_PREFIX);
+            if (part.getMimeType().startsWith(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_PREVIEW)) {
+                sb.append(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX);
             } else {
                 sb.append(part.getMimeType());
             }
@@ -344,11 +331,11 @@ public class ImageMessageModel extends MessageModel {
             Set<MessagePart> messageParts = message.getMessageParts();
 
             for (MessagePart part : messageParts) {
-                if (part.getMimeType().equals(LEGACY_MIME_TYPE_INFO)) {
+                if (part.getMimeType().equals(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_INFO)) {
                     mInfoPart = part;
-                } else if (part.getMimeType().equals(LEGACY_MIME_TYPE_PREVIEW)) {
+                } else if (part.getMimeType().equals(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_PREVIEW)) {
                     mPreviewPart = part;
-                } else if (part.getMimeType().startsWith("image/")) {
+                } else if (part.getMimeType().startsWith(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX)) {
                     mFullPart = part;
                 }
             }

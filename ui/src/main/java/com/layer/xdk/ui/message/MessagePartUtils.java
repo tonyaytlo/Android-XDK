@@ -218,9 +218,9 @@ public class MessagePartUtils {
         Set<String> mimeTypes = new HashSet<>(messageParts.size());
         for (MessagePart part : messageParts) {
             // Since images can have varying format, exclude this from the set
-            if (part.getMimeType().startsWith(ImageMessageModel.LEGACY_MIME_TYPE_IMAGE_PREFIX)
-                    && !part.getMimeType().equals(ImageMessageModel.LEGACY_MIME_TYPE_PREVIEW)) {
-                mimeTypes.add(ImageMessageModel.LEGACY_MIME_TYPE_IMAGE_PREFIX);
+            if (part.getMimeType().startsWith(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_PREVIEW)) {
+                mimeTypes.add(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX);
             } else {
                 mimeTypes.add(part.getMimeType());
             }

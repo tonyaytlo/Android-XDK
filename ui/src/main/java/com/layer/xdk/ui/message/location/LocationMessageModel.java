@@ -26,11 +26,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStreamReader;
-import java.util.Collections;
 
 public class LocationMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.location+json";
-    public final static String LEGACY_MIME_TYPE = Collections.singleton("location/coordinate").toString();
     private static final String LEGACY_KEY_LATITUDE = "lat";
     private static final String LEGACY_KEY_LONGITUDE = "lon";
     private static final String LEGACY_KEY_LABEL = "label";

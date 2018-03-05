@@ -16,12 +16,9 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 
-import java.util.Collections;
-
 public class TextMessageModel extends MessageModel {
 
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
-    public final static String LEGACY_MIME_TYPE = Collections.singleton("text/plain").toString();
     private final JsonParser mJsonParser;
 
     private CharSequence mText;

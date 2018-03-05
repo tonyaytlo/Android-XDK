@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.message.LegacyMimeTypes;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.button.ButtonMessageModel;
 import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
@@ -95,12 +96,12 @@ public class BinderRegistry {
 
     private void initMessageTypeModelRegistry() {
         mMessageModelManager.registerModel(TextMessageModel.ROOT_MIME_TYPE, TextMessageModel.class);
-        mMessageModelManager.registerModel(TextMessageModel.LEGACY_MIME_TYPE, TextMessageModel.class);
+        mMessageModelManager.registerModel(LegacyMimeTypes.LEGACY_TEXT_MIME_TYPE, TextMessageModel.class);
         mMessageModelManager.registerModel(ImageMessageModel.ROOT_MIME_TYPE, ImageMessageModel.class);
-        mMessageModelManager.registerModel(ImageMessageModel.LEGACY_SINGLE_PART_MIME_TYPES, ImageMessageModel.class);
-        mMessageModelManager.registerModel(ImageMessageModel.LEGACY_THREE_PART_MIME_TYPES, ImageMessageModel.class);
+        mMessageModelManager.registerModel(LegacyMimeTypes.LEGACY_SINGLE_PART_MIME_TYPES, ImageMessageModel.class);
+        mMessageModelManager.registerModel(LegacyMimeTypes.LEGACY_THREE_PART_MIME_TYPES, ImageMessageModel.class);
         mMessageModelManager.registerModel(LocationMessageModel.ROOT_MIME_TYPE, LocationMessageModel.class);
-        mMessageModelManager.registerModel(LocationMessageModel.LEGACY_MIME_TYPE, LocationMessageModel.class);
+        mMessageModelManager.registerModel(LegacyMimeTypes.LEGACY_LOCATION_MIME_TYPE, LocationMessageModel.class);
         mMessageModelManager.registerModel(LinkMessageModel.ROOT_MIME_TYPE, LinkMessageModel.class);
         mMessageModelManager.registerModel(FileMessageModel.ROOT_MIME_TYPE, FileMessageModel.class);
         mMessageModelManager.registerModel(ButtonMessageModel.ROOT_MIME_TYPE, ButtonMessageModel.class);

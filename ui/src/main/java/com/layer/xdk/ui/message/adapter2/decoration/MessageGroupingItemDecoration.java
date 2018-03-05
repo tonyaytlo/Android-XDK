@@ -29,7 +29,7 @@ public abstract class MessageGroupingItemDecoration extends RecyclerView.ItemDec
         }
     }
 
-    private MessageModel getMessageModel(View view, RecyclerView parent) {
+    protected MessageModel getMessageModel(View view, RecyclerView parent) {
         RecyclerView.ViewHolder childViewHolder = parent.getChildViewHolder(view);
         if (!(childViewHolder instanceof MessageViewHolder)) {
             if (Log.isLoggable(Log.ERROR)) {
