@@ -2,9 +2,6 @@ package com.layer.xdk.ui.message.adapter2;
 
 
 import android.arch.paging.PagedListAdapter;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -15,7 +12,6 @@ import android.view.ViewGroup;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
@@ -26,14 +22,7 @@ import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
-
-    private final Map<Uri, MessageCluster> mClusterCache = new HashMap<>();
-    private final Handler mUiThreadHandler;
 
 
     private final LayerClient mLayerClient;
@@ -64,7 +53,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         mImageCacheWrapper = imageCacheWrapper;
         mDateFormatter = dateFormatter;
         mIdentityFormatter = identityFormatter;
-        mUiThreadHandler = new Handler(Looper.getMainLooper());
     }
 
     @NonNull
@@ -298,94 +286,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     public void setReadReceiptsEnabled(boolean readReceiptsEnabled) {
         mReadReceiptsEnabled = readReceiptsEnabled;
     }
-
-
-
-    //==============================================================================================
-    // Clustering
-    //==============================================================================================
-
-    private static boolean isDateBoundary(Date d1, Date d2) {
-        if (d1 == null || d2 == null) return false;
-        return (d1.getYear() != d2.getYear()) || (d1.getMonth() != d2.getMonth()) || (d1.getDay()
-                != d2.getDay());
-    }
-
-    // TODO: optimize by limiting search to positions in- and around- visible range
-    protected MessageCluster getClustering(Message message, int position) {
-        MessageCluster result = mClusterCache.get(message.getId());
-        if (result == null) {
-            result = new MessageCluster();
-            mClusterCache.put(message.getId(), result);
-        }
-
-        int previousPosition = position - 1;
-        MessageModel
-                previousMessageModel = (previousPosition >= 0) ? getItem(previousPosition) : null;
-        Message previousMessage = previousMessageModel == null ? null : previousMessageModel.getMessage();
-        if (previousMessage != null) {
-            result.mDateBoundaryWithPrevious = isDateBoundary(previousMessage.getReceivedAt(),
-                    message.getReceivedAt());
-            result.mClusterWithPrevious = MessageCluster.Type.fromMessages(previousMessage, message);
-
-            MessageCluster previousMessageCluster = mClusterCache.get(previousMessage.getId());
-            if (previousMessageCluster == null) {
-                previousMessageCluster = new MessageCluster();
-                mClusterCache.put(previousMessage.getId(), previousMessageCluster);
-            } else {
-                // does the previous need to change its clustering?
-                if ((previousMessageCluster.mClusterWithNext != result.mClusterWithPrevious) ||
-                        (previousMessageCluster.mDateBoundaryWithNext
-                                != result.mDateBoundaryWithPrevious)) {
-//                    requestUpdate(previousMessage, previousPosition);
-                }
-            }
-            previousMessageCluster.mClusterWithNext = result.mClusterWithPrevious;
-            previousMessageCluster.mDateBoundaryWithNext = result.mDateBoundaryWithPrevious;
-        }
-
-        int nextPosition = position + 1;
-        Message nextMessage = (nextPosition < getItemCount()) ? getItem(nextPosition).getMessage() : null;
-        if (nextMessage != null) {
-            result.mDateBoundaryWithNext = isDateBoundary(message.getReceivedAt(),
-                    nextMessage.getReceivedAt());
-            result.mClusterWithNext = MessageCluster.Type.fromMessages(message, nextMessage);
-
-            MessageCluster nextMessageCluster = mClusterCache.get(nextMessage.getId());
-            if (nextMessageCluster == null) {
-                nextMessageCluster = new MessageCluster();
-                mClusterCache.put(nextMessage.getId(), nextMessageCluster);
-            } else {
-                // does the next need to change its clustering?
-                if ((nextMessageCluster.mClusterWithPrevious != result.mClusterWithNext) ||
-                        (nextMessageCluster.mDateBoundaryWithPrevious != result.mDateBoundaryWithNext)) {
-//                    requestUpdate(nextMessage, nextPosition);
-                }
-            }
-            nextMessageCluster.mClusterWithPrevious = result.mClusterWithNext;
-            nextMessageCluster.mDateBoundaryWithPrevious = result.mDateBoundaryWithNext;
-        }
-
-        if (mShouldShowAvatarForCurrentUser && nextMessage != null) {
-            result.mNextMessageIsFromSameUser = message.getSender() == nextMessage.getSender()
-                    && !result.mDateBoundaryWithNext;
-        }
-
-        return result;
-    }
-
-//    private void requestUpdate(final Message message, final int lastPosition) {
-//        mUiThreadHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                notifyItemChanged(getPosition(message, lastPosition));
-//            }
-//        });
-//    }
-
-
-
-
 
     /**
      * Copying this from Groupie which copied it from Epoxy.

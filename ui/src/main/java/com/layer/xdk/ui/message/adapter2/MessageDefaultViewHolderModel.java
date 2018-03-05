@@ -13,12 +13,14 @@ import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageCluster;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,8 +33,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private ImageCacheWrapper mImageCacheWrapper;
 
     // View related variables
-    private boolean mPreviousPartOfCluster;
-    private boolean mNextPartOfCluster;
     private boolean mShouldShowDisplayName;
     private boolean mShouldShowDateTimeForMessage;
     private float mMessageCellAlpha;
@@ -63,58 +63,48 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         Message message = getItem().getMessage();
         mSender = Collections.singleton(message.getSender());
 
-        // Clustering and dates
-        updateClusteringAndDates(message, cluster);
+        updateAvatar();
+        updateReceivedAtDateAndTime();
 
         // Sender-dependent elements
-        updateSenderDependentElements(message, cluster, position, recipientStatusPosition);
+        updateSenderDependentElements(getItem());
         notifyChange();
     }
 
-    protected void updateClusteringAndDates(Message message, MessageCluster cluster) {
-        // Determine if previous/next items are part of a cluster for padding purposes
-        mPreviousPartOfCluster = cluster.mClusterWithPrevious != null
-                && (cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_HOUR
-                || cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_MINUTE);
-        mNextPartOfCluster = cluster.mClusterWithNext != null
-                && (cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_HOUR
-                || cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_MINUTE);
-
-        // Update and show/hide date
-        if (cluster.mClusterWithPrevious == null
-                || cluster.mDateBoundaryWithPrevious
-                || cluster.mClusterWithPrevious == MessageCluster.Type.MORE_THAN_HOUR) {
-            updateReceivedAtDateAndTime(message);
-        } else {
-            mShouldShowDateTimeForMessage = false;
-        }
+    protected void updateAvatar() {
+        EnumSet<MessageGrouping> grouping = getItem().getGrouping();
 
         mShouldCurrentUserAvatarBeVisible = isMyMessage() && mShouldShowAvatarForCurrentUser &&
-                !cluster.mNextMessageIsFromSameUser;
+                grouping.contains(MessageGrouping.SUB_GROUP_END);
         mShouldCurrentUserPresenceBeVisible =
                 mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
     }
 
-    protected void updateReceivedAtDateAndTime(Message message) {
-        Date receivedAt = message.getReceivedAt();
-        if (receivedAt == null) receivedAt = new Date();
+    protected void updateReceivedAtDateAndTime() {
+        if (getItem().getGrouping().contains(MessageGrouping.GROUP_START)
+                && !getItem().getGrouping().contains(MessageGrouping.OLDEST_MESSAGE)) {
+            Date receivedAt = getItem().getMessage().getReceivedAt();
+            if (receivedAt == null) receivedAt = new Date();
 
-        String day = getDateFormatter().formatTimeDay(receivedAt);
-        String time = getDateFormatter().formatTime(receivedAt);
-        mDateTime = new SpannableString(String.format("%s %s", day, time));
-        mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            String day = getDateFormatter().formatTimeDay(receivedAt);
+            String time = getDateFormatter().formatTime(receivedAt);
+            mDateTime = new SpannableString(String.format("%s %s", day, time));
+            mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
+                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        mShouldShowDateTimeForMessage = true;
+            mShouldShowDateTimeForMessage = true;
+        } else {
+            mShouldShowDateTimeForMessage = false;
+        }
     }
 
-    protected void updateSenderDependentElements(Message message, MessageCluster cluster, int position,
-            Integer recipientStatusPosition) {
-        Identity sender = message.getSender();
+    protected void updateSenderDependentElements(MessageModel model) {
 
+        Message message = model.getMessage();
         if (isMyMessage()) {
-            updateWithRecipientStatus(message, position, recipientStatusPosition);
+//            updateWithRecipientStatus(message, position, recipientStatusPosition);
             mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
+            mShouldShowDisplayName = false;
         } else {
             mMessageCellAlpha = 1.0f;
 
@@ -123,9 +113,8 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             }
 
             // Sender name, only for first message in cluster
-            if (!isInAOneOnOneConversation() &&
-                    (cluster.mClusterWithPrevious == null
-                            || cluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER)) {
+            if (!isInAOneOnOneConversation() && model.getGrouping().contains(MessageGrouping.SUB_GROUP_START)) {
+                Identity sender = model.getMessage().getSender();
                 if (sender != null) {
                     mSenderName = getIdentityFormatter().getDisplayName(sender);
                 } else {
@@ -148,7 +137,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
                 mShouldDisplayAvatarSpace = false;
                 mIsPresenceVisible = false;
             }
-        } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
+        } else if (model.getGrouping().contains(MessageGrouping.SUB_GROUP_END)) {
             // Last message in cluster
             mIsAvatarViewVisible = !isMyMessage();
             mShouldDisplayAvatarSpace = true;
@@ -234,16 +223,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     }
 
     // Bindable properties
-
-    @Bindable
-    public boolean isPreviousPartOfCluster() {
-        return mPreviousPartOfCluster;
-    }
-
-    @Bindable
-    public boolean isNextPartOfCluster() {
-        return mNextPartOfCluster;
-    }
 
     @Bindable
     public boolean getAvatarVisibility() {

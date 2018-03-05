@@ -13,16 +13,18 @@ public class MessagesDataSourceFactory implements DataSource.Factory<Integer, Me
     private final LayerClient mLayerClient;
     private final Conversation mConversation;
     private final BinderRegistry mBinderRegistry;
+    private final GroupingCalculator mGroupingCalculator;
 
     public MessagesDataSourceFactory(LayerClient layerClient, BinderRegistry binderRegistry,
             Conversation conversation) {
         mLayerClient = layerClient;
         mConversation = conversation;
         mBinderRegistry = binderRegistry;
+        mGroupingCalculator = new GroupingCalculator();
     }
 
     @Override
     public DataSource<Integer, MessageModel> create() {
-        return new MessagesDataSource(mLayerClient, mConversation, mBinderRegistry);
+        return new MessagesDataSource(mLayerClient, mConversation, mBinderRegistry, mGroupingCalculator);
     }
 }

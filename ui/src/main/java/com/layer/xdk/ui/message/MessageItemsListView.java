@@ -26,6 +26,9 @@ import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
+import com.layer.xdk.ui.message.adapter2.decoration.GroupStartItemDecoration;
+import com.layer.xdk.ui.message.adapter2.decoration.SubGroupInnerItemDecoration;
+import com.layer.xdk.ui.message.adapter2.decoration.SubGroupStartItemDecoration;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.util.Log;
 
@@ -60,6 +63,10 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mLinearLayoutManager.setReverseLayout(true);
         mMessagesRecyclerView.setHasFixedSize(true);
         mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+        mMessagesRecyclerView.addItemDecoration(new GroupStartItemDecoration(context));
+        mMessagesRecyclerView.addItemDecoration(new SubGroupStartItemDecoration(context));
+        mMessagesRecyclerView.addItemDecoration(new SubGroupInnerItemDecoration(context));
 
 //        setOnRefreshListener(new OnRefreshListener() {
 //            @Override

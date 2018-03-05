@@ -21,12 +21,14 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.MessagePartUtils;
+import com.layer.xdk.ui.message.adapter2.MessageGrouping;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public abstract class MessageModel extends BaseObservable {
@@ -60,6 +62,8 @@ public abstract class MessageModel extends BaseObservable {
 
     private Action mAction;
     private String mMimeTypeTree;
+
+    private EnumSet<MessageGrouping> mGrouping;
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
@@ -403,5 +407,12 @@ public abstract class MessageModel extends BaseObservable {
         sDateFormatter = dateFormatter;
     }
 
+    // TODO Do we want to expose the whole set?
+    public EnumSet<MessageGrouping> getGrouping() {
+        return mGrouping;
+    }
 
+    public void setGrouping(EnumSet<MessageGrouping> grouping) {
+        mGrouping = grouping;
+    }
 }

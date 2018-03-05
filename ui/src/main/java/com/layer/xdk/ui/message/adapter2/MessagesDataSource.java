@@ -30,19 +30,20 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     static int ID_SOURCE = 0;
     private final int id = ID_SOURCE++;
 
-    private LayerClient mLayerClient;
-    private Conversation mConversation;
-    private LayerChangeEventListener.BackgroundThread.Weak listener;
-    private BinderRegistry mBinderRegistry;
-
+    private final GroupingCalculator mGroupingCalculator;
+    private final LayerClient mLayerClient;
+    private final Conversation mConversation;
+    private final LayerChangeEventListener.BackgroundThread.Weak listener;
+    private final BinderRegistry mBinderRegistry;
 
     public MessagesDataSource(LayerClient layerClient, final Conversation conversation,
-            BinderRegistry binderRegistry) {
+            BinderRegistry binderRegistry, GroupingCalculator groupingCalculator) {
         mLayerClient = layerClient;
         mConversation = conversation;
         mBinderRegistry = binderRegistry;
+        mGroupingCalculator = groupingCalculator;
 
-//        Log.d("ZZZZ Creating datasource: " + id);
+        Log.d("ZZZZ Creating datasource: " + id);
 
         listener = new LayerChangeEventListener.BackgroundThread.Weak() {
             @Override
@@ -59,7 +60,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
                 }
                 if (needsInvalidation) {
                     mLayerClient.unregisterEventListener(listener);
-//                    Log.d("ZZZZ Invalidating datasource: " + id);
+                    Log.d("ZZZZ Invalidating datasource: " + id);
                     invalidate();
                 }
             }
@@ -76,53 +77,24 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         } else {
             int position = computeInitialLoadPosition(params, count);
             int size = computeInitialLoadSize(params, position, count);
-//            Log.d("ZZZZ ID:" + id + " Load initial position: " + position + " size: " + size + " params: " + paramsToString(params));
+            Log.d("ZZZZ ID:" + id + " Load initial position: " + position + " size: " + size + " params: " + paramsToString(params));
 
-            List<Message> messages = loadRangeInternal(position, size);
-            if (messages != null && messages.size() == size) {
-                callback.onResult(convertMessagesToModels(messages), position, count);
+            LoadRangeResults results = loadRangeInternal(position, size);
+            if (results.mRealSize == size) {
+                callback.onResult(convertMessagesToModels(results), position, count);
             } else {
                 invalidate();
             }
         }
     }
 
-    private String paramsToString(LoadInitialParams params) {
-        return "LoadInitialParams{" +
-                "requestedStartPosition=" + params.requestedStartPosition +
-                ", requestedLoadSize=" + params.requestedLoadSize +
-                ", pageSize=" + params.pageSize +
-                ", placeholdersEnabled=" + params.placeholdersEnabled +
-                '}';
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Message> loadRangeInternal(int position, int loadSize) {
-        List<? extends Queryable> messages = mLayerClient.executeQueryForObjects(Query.builder(
-                Message.class)
-                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO,
-                        mConversation))
-                .sortDescriptor(new SortDescriptor(Message.Property.POSITION,
-                        SortDescriptor.Order.DESCENDING))
-                .offset(position)
-                .limit(loadSize)
-                .build());
-//        Log.d("ZZZZ ID:" + id + " Queried for messages at pos: " + position + " with size: " + loadSize + " and retrieved message count: " + messages.size());
-        List<String> databaseIds = new ArrayList<>();
-        for (Queryable message : messages) {
-            databaseIds.add(((i) message).i().toString());
-        }
-//        Log.d("ZZZZZ Message Db ids:\n" + TextUtils.join("\n", databaseIds));
-        return (List<Message>) messages;
-    }
-
     @Override
     public void loadRange(@NonNull LoadRangeParams params,
             @NonNull LoadRangeCallback<MessageModel> callback) {
-//        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
+        Log.d("ZZZZ ID:" + id + " Load range start position: " + params.startPosition + " load size: " + params.loadSize);
 
-        List<Message> messages = loadRangeInternal(params.startPosition, params.loadSize);
-        callback.onResult(convertMessagesToModels(messages));
+        LoadRangeResults results = loadRangeInternal(params.startPosition, params.loadSize);
+        callback.onResult(convertMessagesToModels(results));
     }
 
     private long computeCount() {
@@ -136,15 +108,85 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     }
 
     @NonNull
-    private List<MessageModel> convertMessagesToModels(List<Message> messages) {
+    @SuppressWarnings("unchecked")
+    private LoadRangeResults loadRangeInternal(int position, int requestedLoadSize) {
+        LoadRangeResults results = new LoadRangeResults();
+        // Load an additional after for cluster calculation
+        int loadSizeForGrouping = requestedLoadSize + 1;
+        // Load an additional before for cluster calculation
+
+        if (position != 0) {
+            results.mExtraAtBeginning = true;
+            position--;
+            loadSizeForGrouping++;
+        }
+        List<? extends Queryable> messages = mLayerClient.executeQueryForObjects(Query.builder(
+                Message.class)
+                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO,
+                        mConversation))
+                .sortDescriptor(new SortDescriptor(Message.Property.POSITION,
+                        SortDescriptor.Order.DESCENDING))
+                .offset(position)
+                .limit(loadSizeForGrouping) // Additional for clustering calculation
+                .build());
+
+        results.mMessages = (List<Message>) messages;
+
+        // Determine if there is an extra at the end or not
+        int resultSize = messages.size();
+        if (results.mExtraAtBeginning) {
+            resultSize--;
+        }
+        if (resultSize == requestedLoadSize + 1) {
+            resultSize--;
+            results.mExtraAtEnd = true;
+        }
+        results.mRealSize = resultSize;
+
+//        Log.d("ZZZZ ID:" + id + " Queried for messages at pos: " + position + " with size: " + loadSize + " and retrieved message count: " + messages.size());
+        List<String> databaseIds = new ArrayList<>();
+        for (Queryable message : messages) {
+            databaseIds.add(((i) message).i().toString());
+        }
+        Log.d("ZZZZZ Message Db ids:\n" + TextUtils.join("\n", databaseIds));
+        return results;
+    }
+
+    @NonNull
+    private List<MessageModel> convertMessagesToModels(LoadRangeResults loadResults) {
         List<MessageModel> models = new ArrayList<>();
-        for (Message message : messages) {
+        for (Message message : loadResults.mMessages) {
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
             model.processParts();
 //            Log.d("ZZZZ Created MimeTypeTree: " + model.getMimeTypeTree());
 
             models.add(model);
         }
+        mGroupingCalculator.calculateGrouping(models);
+        // Trim extras that were loaded for the grouping calc
+        if (loadResults.mExtraAtBeginning) {
+            models.remove(0);
+        }
+        if (loadResults.mExtraAtEnd) {
+            models.remove(models.size() - 1);
+        }
+
         return models;
+    }
+
+    private String paramsToString(LoadInitialParams params) {
+        return "LoadInitialParams{" +
+                "requestedStartPosition=" + params.requestedStartPosition +
+                ", requestedLoadSize=" + params.requestedLoadSize +
+                ", pageSize=" + params.pageSize +
+                ", placeholdersEnabled=" + params.placeholdersEnabled +
+                '}';
+    }
+
+    private static class LoadRangeResults {
+        List<Message> mMessages;
+        int mRealSize;
+        boolean mExtraAtBeginning;
+        boolean mExtraAtEnd;
     }
 }
