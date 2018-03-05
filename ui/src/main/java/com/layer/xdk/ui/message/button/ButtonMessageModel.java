@@ -205,7 +205,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @Override
     public boolean getHasContent() {
-        return getMessagePart().isContentReady();
+        return getRootMessagePart().isContentReady();
     }
 
     @Nullable
@@ -226,16 +226,7 @@ public class ButtonMessageModel extends MessageModel {
                                 boolean selected, Set<String> selectedChoices) {
         sendResponse(choiceData, choice, selected, selectedChoices);
 
-        // Get root model
-        MessageModel root = this;
-        while (true) {
-            MessageModel parent = root.getParentMessageModel();
-            if (parent == null) {
-                break;
-            }
-            root = parent;
-        }
-        ActionHandlerRegistry.dispatchChoiceSelection(getAppContext(), choice, this, root);
+        ActionHandlerRegistry.dispatchChoiceSelection(getAppContext(), choice, this, getRootModelForTree());
 
     }
 
@@ -260,7 +251,7 @@ public class ButtonMessageModel extends MessageModel {
                     choiceData.getName());
         }
 
-        UUID rootPartId = UUID.fromString(getMessagePart().getId().getLastPathSegment());
+        UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);

@@ -181,7 +181,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         List<MessageModel> models = new ArrayList<>();
         for (Message message : loadResults.mMessages) {
             MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
-            model.processParts();
+            model.processPartsFromTreeRoot();
             models.add(model);
         }
 

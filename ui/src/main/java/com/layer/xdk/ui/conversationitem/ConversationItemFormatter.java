@@ -92,7 +92,7 @@ public class ConversationItemFormatter {
         if (message == null) return "";
 
         MessageModel messageModel = mBinderRegistry.getMessageModelManager().getNewModel(message);
-        messageModel.processParts();
+        messageModel.processPartsFromTreeRoot();
         if (messageModel.getPreviewText() != null) {
             return messageModel.getPreviewText();
         }

@@ -55,7 +55,7 @@ public abstract class MessageModel extends BaseObservable {
     private boolean mMyNewestMessage;
 
     private String mRole;
-    private MessagePart mMessagePart;
+    private MessagePart mRootMessagePart;
     private MessageModel mParentMessageModel;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
@@ -139,7 +139,7 @@ public abstract class MessageModel extends BaseObservable {
     @Bindable
     public abstract String getFooter();
 
-    public final void processParts() {
+    public final void processPartsFromTreeRoot() {
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(getMessage());
         if (rootMessagePart == null) {
             mMimeTypeTree = createLegacyMimeTypeTree();
@@ -167,10 +167,10 @@ public abstract class MessageModel extends BaseObservable {
 
     @CallSuper
     protected void processParts(@NonNull MessagePart rootMessagePart) {
-        mMessagePart = rootMessagePart;
+        mRootMessagePart = rootMessagePart;
         setRole(MessagePartUtils.getRole(rootMessagePart));
-        if (mMessagePart.isContentReady()) {
-            parse(mMessagePart);
+        if (mRootMessagePart.isContentReady()) {
+            parse(mRootMessagePart);
         }
 
         // Deal with child parts
@@ -181,7 +181,7 @@ public abstract class MessageModel extends BaseObservable {
     }
 
     protected void processChildParts() {
-        mChildMessageParts = MessagePartUtils.getChildParts(getMessage(), mMessagePart);
+        mChildMessageParts = MessagePartUtils.getChildParts(getMessage(), mRootMessagePart);
 
         for (MessagePart childMessagePart : mChildMessageParts) {
             if (childMessagePart.isContentReady()) {
@@ -215,8 +215,8 @@ public abstract class MessageModel extends BaseObservable {
 
     private String createMimeTypeTree() {
         StringBuilder sb = new StringBuilder();
-        if (mMessagePart != null) {
-            sb.append(MessagePartUtils.getMimeType(mMessagePart));
+        if (mRootMessagePart != null) {
+            sb.append(MessagePartUtils.getMimeType(mRootMessagePart));
             sb.append("[");
         }
         boolean prependComma = false;
@@ -229,7 +229,7 @@ public abstract class MessageModel extends BaseObservable {
                 prependComma = true;
             }
         }
-        if (mMessagePart != null) {
+        if (mRootMessagePart != null) {
             sb.append("]");
         }
         return sb.toString();
@@ -282,17 +282,49 @@ public abstract class MessageModel extends BaseObservable {
         }
     }
 
+    /**
+     * Get the {@link MessagePart} corresponding to the root node of this subtree. This may or
+     * may not be the root of the entire model tree.
+     *
+     * @return message part corresponding to the root node of this model's subtree
+     */
     @NonNull
-    protected MessagePart getMessagePart() {
-        return mMessagePart;
+    protected MessagePart getRootMessagePart() {
+        return mRootMessagePart;
     }
 
+    /**
+     * Get the model that is a parent node to this model in the tree. If null, this model is the
+     * root of the entire model tree.
+     *
+     * @return this models parent node or null if this model is the root of the tree
+     */
+    @SuppressWarnings("WeakerAccess")
     @Nullable
     public MessageModel getParentMessageModel() {
         return mParentMessageModel;
     }
 
-    public void setParentMessageModel(@NonNull MessageModel parent) {
+    /**
+     * Walk up the tree to find the root {@link MessageModel}.
+     *
+     * @return The root model for the tree or this model if it is the root of the tree
+     */
+    @SuppressWarnings("WeakerAccess")
+    @Nullable
+    public MessageModel getRootModelForTree() {
+        MessageModel treeRoot = this;
+        while (true) {
+            MessageModel parent = treeRoot.getParentMessageModel();
+            if (parent == null) {
+                break;
+            }
+            treeRoot = parent;
+        }
+        return treeRoot;
+    }
+
+    private void setParentMessageModel(@NonNull MessageModel parent) {
         mParentMessageModel = parent;
     }
 
