@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -50,15 +51,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
         mMessageViewHelper = new MessageViewHelper(context);
 
-        mActionButtonColorStateList = new ColorStateList(new int[][]{
-                new int[]{android.R.attr.state_enabled},
-                new int[]{-android.R.attr.state_enabled},
-                new int[]{android.R.attr.state_pressed}},
-                new int[]{
-                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_enabled),
-                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_disabled),
-                        getResources().getColor(R.color.xdk_ui_button_message_action_button_text_pressed)
-                });
+        // TODO Use the choice selector until AND-1271 is fixed
+        mActionButtonColorStateList = ContextCompat.getColorStateList(context, R.color.xdk_ui_choice_button_selector);
     }
 
     @Override
