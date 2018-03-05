@@ -11,7 +11,6 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
-import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.container.MessageContainer;
 
 public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultViewHolderModel,XdkUiMessageItemDefaultBinding > {
@@ -51,8 +50,7 @@ public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultVi
             messageContainer.setMessageModel(getItem());
         }
 
-        // TODO AND-1363 Fix clustering
-        getViewHolderModel().update(new MessageCluster(), 0, 0);
+        getViewHolderModel().update();
     }
 
     public View inflateViewContainer(int containerLayoutId) {

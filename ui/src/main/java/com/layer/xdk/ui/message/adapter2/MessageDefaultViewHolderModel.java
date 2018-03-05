@@ -12,7 +12,6 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.MessageCluster;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -59,12 +58,13 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         mImageCacheWrapper = imageCacheWrapper;
     }
 
-    public void update(MessageCluster cluster, int position, Integer recipientStatusPosition) {
+    public void update() {
         Message message = getItem().getMessage();
         mSender = Collections.singleton(message.getSender());
 
         updateAvatar();
         updateReceivedAtDateAndTime();
+        updateRecipientStatus();
 
         // Sender-dependent elements
         updateSenderDependentElements(getItem());
@@ -102,7 +102,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
         Message message = model.getMessage();
         if (isMyMessage()) {
-//            updateWithRecipientStatus(message, position, recipientStatusPosition);
             mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
             mShouldShowDisplayName = false;
         } else {
@@ -150,11 +149,11 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         }
     }
 
-    protected void updateWithRecipientStatus(Message message, int position, Integer recipientStatusPosition) {
-        if (mEnableReadReceipts && recipientStatusPosition != null && position == recipientStatusPosition) {
+    protected void updateRecipientStatus() {
+        if (getItem().isMyNewestMessage()) {
             int readCount = 0;
             boolean delivered = false;
-            Map<Identity, Message.RecipientStatus> statuses = message.getRecipientStatus();
+            Map<Identity, Message.RecipientStatus> statuses = getItem().getMessage().getRecipientStatus();
             for (Map.Entry<Identity, Message.RecipientStatus> entry : statuses.entrySet()) {
                 // Only show receipts for other members
                 if (entry.getKey().equals(getLayerClient().getAuthenticatedUser())) continue;
@@ -187,6 +186,8 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             } else {
                 mIsReadReceiptVisible = false;
             }
+        } else {
+            mIsReadReceiptVisible = false;
         }
     }
 

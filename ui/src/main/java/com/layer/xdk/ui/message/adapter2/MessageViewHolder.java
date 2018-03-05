@@ -28,7 +28,6 @@ public abstract class MessageViewHolder<VIEW_MODEL extends MessageViewHolderMode
         this(DataBindingUtil.<BINDING>inflate(LayoutInflater.from(parent.getContext()), layoutId, parent, false), viewModel);
     }
 
-
     public BINDING getBinding() {
         return mBinding;
     }

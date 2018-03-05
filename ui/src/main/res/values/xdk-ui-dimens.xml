@@ -69,7 +69,7 @@
     <dimen name="xdk_ui_message_item_cell_margin_far">@dimen/xdk_ui_padding_normal</dimen>
 
     <dimen name="xdk_ui_message_item_time_group_padding_bottom">14dp</dimen>
-    <dimen name="xdk_ui_message_item_receipt_margin">12dp</dimen>
+    <dimen name="xdk_ui_message_item_receipt_margin">20dp</dimen>
     <dimen name="xdk_ui_message_item_sender_margin_bottom">1dp</dimen>
     <dimen name="xdk_ui_message_item_group_day_and_time_margin">1dp</dimen>
     <dimen name="xdk_ui_message_cluster_space">2dp</dimen>

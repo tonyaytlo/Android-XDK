@@ -316,11 +316,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 
         @Override
         public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
-            // TODO AND-1242 we should do a deep equals here
-            if (newItem.getMessage().getUpdatedAt() == null) {
-                return oldItem.getMessage().getUpdatedAt() == null;
-            }
-            return newItem.getMessage().getUpdatedAt().equals(oldItem.getMessage().getUpdatedAt());
+            return oldItem.deepEquals(newItem) && oldItem.messageDeepEquals(newItem.getMessage());
         }
     };
 

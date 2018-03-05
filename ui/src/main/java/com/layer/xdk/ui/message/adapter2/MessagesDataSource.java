@@ -36,6 +36,8 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
     private final LayerChangeEventListener.BackgroundThread.Weak listener;
     private final BinderRegistry mBinderRegistry;
 
+    private int mMyNewestMessagePosition = Integer.MAX_VALUE;
+
     public MessagesDataSource(LayerClient layerClient, final Conversation conversation,
             BinderRegistry binderRegistry, GroupingCalculator groupingCalculator) {
         mLayerClient = layerClient;
@@ -131,6 +133,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
                 .build());
 
         results.mMessages = (List<Message>) messages;
+        results.mOffset = position;
 
         // Determine if there is an extra at the end or not
         int resultSize = messages.size();
@@ -162,6 +165,9 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
             models.add(model);
         }
+
+        updateMyNewestMessagePosition(models, loadResults.mOffset);
+
         mGroupingCalculator.calculateGrouping(models);
         // Trim extras that were loaded for the grouping calc
         if (loadResults.mExtraAtBeginning) {
@@ -172,6 +178,22 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         }
 
         return models;
+    }
+
+    private void updateMyNewestMessagePosition(List<MessageModel> models, int offset) {
+        if (mMyNewestMessagePosition < offset) {
+            // No use in calculating as we already have a newer message
+            return;
+        }
+        for (int i = 0; i < models.size(); i++) {
+            MessageModel model = models.get(i);
+            if (model.isMessageFromMe() && (offset + i < mMyNewestMessagePosition)) {
+                mMyNewestMessagePosition = offset + i;
+                model.setMyNewestMessage(true);
+
+                break;
+            }
+        }
     }
 
     private String paramsToString(LoadInitialParams params) {
@@ -188,5 +210,6 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         int mRealSize;
         boolean mExtraAtBeginning;
         boolean mExtraAtEnd;
+        int mOffset;
     }
 }

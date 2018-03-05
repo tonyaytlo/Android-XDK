@@ -29,7 +29,9 @@ import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public abstract class MessageModel extends BaseObservable {
 
@@ -47,6 +49,7 @@ public abstract class MessageModel extends BaseObservable {
     private final Uri mSenderId;
 
     private int mParticipantCount;
+    private boolean mMyNewestMessage;
 
     private String mRole;
     private MessagePart mMessagePart;
@@ -245,6 +248,7 @@ public abstract class MessageModel extends BaseObservable {
      *
      * @return A string representing the mime type tree of all message parts
      */
+    @NonNull
     public String getMimeTypeTree() {
         return mMimeTypeTree;
     }
@@ -414,5 +418,167 @@ public abstract class MessageModel extends BaseObservable {
 
     public void setGrouping(EnumSet<MessageGrouping> grouping) {
         mGrouping = grouping;
+    }
+
+    public boolean isMyNewestMessage() {
+        return mMyNewestMessage;
+    }
+
+    public void setMyNewestMessage(boolean myNewestMessage) {
+        mMyNewestMessage = myNewestMessage;
+    }
+
+    /**
+     * Perform an equals check on most properties. Child model equality is checked but parent
+     * models are skipped as this will produce infinite recursion.
+     *
+     * This is primarily used for calculations with {@link android.support.v7.util.DiffUtil}.
+     *
+     * @param other model to compare to
+     * @return true if all properties are equal
+     */
+    @SuppressWarnings("SimplifiableIfStatement")
+    public boolean deepEquals(@NonNull MessageModel other) {
+        if (!getGrouping().containsAll(other.getGrouping())) {
+            return false;
+        }
+        if (isMyNewestMessage() != other.isMyNewestMessage()) {
+            return false;
+        }
+        if (getAuthenticatedUserId() == null ? other.getAuthenticatedUserId() != null
+                : !getAuthenticatedUserId().equals(other.getAuthenticatedUserId())) {
+            return false;
+        }
+        if (getSenderId() == null ? other.getSenderId() != null
+                : !getSenderId().equals(other.getSenderId())) {
+            return false;
+        }
+        if (getParticipantCount() != other.getParticipantCount()) {
+            return false;
+        }
+        if (getRole() == null ? other.getRole() != null : !getRole().equals(other.getRole())) {
+            return false;
+        }
+        if (!getActionData().equals(other.getActionData())) {
+            return false;
+        }
+        if (!getMimeTypeTree().equals(other.getMimeTypeTree())) {
+            return false;
+        }
+        if (getContainerViewLayoutId() != other.getContainerViewLayoutId()) {
+            return false;
+        }
+        if (getViewLayoutId() != other.getViewLayoutId()) {
+            return false;
+        }
+        if (getHasContent() != other.getHasContent()) {
+            return false;
+        }
+        if (getPreviewText() == null ? other.getPreviewText() != null
+                : !getPreviewText().equals(other.getPreviewText())) {
+            return false;
+        }
+        if (getTitle() == null ? other.getTitle() != null
+                : !getTitle().equals(other.getTitle())) {
+            return false;
+        }
+        if (getDescription() == null ? other.getDescription() != null
+                : !getDescription().equals(other.getDescription())) {
+            return false;
+        }
+        if (getFooter() == null ? other.getFooter() != null
+                : !getFooter().equals(other.getFooter())) {
+            return false;
+        }
+        if (getHasMetadata() != other.getHasMetadata()) {
+            return false;
+        }
+        if (getBackgroundColor() != other.getBackgroundColor()) {
+            return false;
+        }
+        if (isMessageFromMe() != other.isMessageFromMe()) {
+            return false;
+        }
+        if (getChildMessageModels() == null) {
+            if (other.getChildMessageModels() != null) {
+                return false;
+            }
+        } else {
+            if (other.getChildMessageModels() == null) {
+                return false;
+            }
+            if (getChildMessageModels().size() != other.getChildMessageModels().size()) {
+                return false;
+            }
+            Iterator<MessageModel> iterator = getChildMessageModels().iterator();
+            Iterator<MessageModel> otherIterator = other.getChildMessageModels().iterator();
+            while (iterator.hasNext()) {
+                if (!iterator.next().deepEquals(otherIterator.next())) {
+                    return false;
+                }
+            }
+        }
+
+        // Don't bother checking parent model as that will infinitely recurse
+        return true;
+    }
+
+    /**
+     * Perform an equals check on {@link Message} properties. This will also check the message
+     * parts for property equality.
+     *
+     * This is primarily used for calculations with {@link android.support.v7.util.DiffUtil}.
+     *
+     * @param other message to compare to
+     * @return true if all properties are equal
+     */
+    @SuppressWarnings("RedundantIfStatement")
+    public boolean messageDeepEquals(@NonNull Message other) {
+        Message message = getMessage();
+        if (message.getUpdatedAt() == null ? other.getUpdatedAt() != null
+                : !message.getUpdatedAt().equals(other.getUpdatedAt())) {
+            return false;
+        }
+        if (message.getReceivedAt() == null ? other.getReceivedAt() != null
+                : !message.getReceivedAt().equals(other.getReceivedAt())) {
+            return false;
+        }
+        if (message.getSentAt() == null ? other.getSentAt() != null
+                : !message.getSentAt().equals(other.getSentAt())) {
+            return false;
+        }
+        if (!message.getRecipientStatus().equals(other.getRecipientStatus())) {
+            return false;
+        }
+        Set<MessagePart> parts = message.getMessageParts();
+        Set<MessagePart> otherParts = other.getMessageParts();
+        if (parts.size() != otherParts.size()) {
+            return false;
+        }
+        Iterator<MessagePart> iterator = parts.iterator();
+        Iterator<MessagePart> otherIterator = otherParts.iterator();
+        while (iterator.hasNext()) {
+            if (!messagePartDeepEquals(iterator.next(), otherIterator.next())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @SuppressWarnings("RedundantIfStatement")
+    private boolean messagePartDeepEquals(@NonNull MessagePart part, @NonNull MessagePart other) {
+        if (part.getUpdatedAt() == null ? other.getUpdatedAt() != null
+                : !part.getUpdatedAt().equals(other.getUpdatedAt())) {
+            return false;
+        }
+        if (part.isContentReady() != other.isContentReady()) {
+            return false;
+        }
+        if (part.getTransferStatus() != other.getTransferStatus()) {
+            return false;
+        }
+
+        return true;
     }
 }
