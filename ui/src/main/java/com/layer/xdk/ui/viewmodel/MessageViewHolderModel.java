@@ -6,10 +6,9 @@ import android.databinding.Bindable;
 import android.view.View;
 
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 
 public class MessageViewHolderModel extends BaseObservable {
@@ -17,12 +16,10 @@ public class MessageViewHolderModel extends BaseObservable {
     private LayerClient mLayerClient;
 
     private MessageModel mItem;
-    // TODO AND-1242 - Change to MessageModel?
-    private OnItemClickListener<Message> mItemClickListener;
+    private OnItemLongClickListener<MessageModel> mItemLongClickListener;
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
 
-    private View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
 
     public MessageViewHolderModel(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
@@ -32,23 +29,12 @@ public class MessageViewHolderModel extends BaseObservable {
         mIdentityFormatter = identityFormatter;
         mDateFormatter = dateFormatter;
 
-        mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mItemClickListener != null) {
-                    mItemClickListener.onItemClick(mItem.getMessage());
-                }
-            }
-        };
 
         mOnLongClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (mItemClickListener!=null) {
-                    return mItemClickListener.onItemLongClick(mItem.getMessage());
-                } else {
-                    return false;
-                }
+                return mItemLongClickListener != null
+                        && mItemLongClickListener.onItemLongClick(mItem);
             }
         };
     }
@@ -62,20 +48,8 @@ public class MessageViewHolderModel extends BaseObservable {
         mItem = item;
     }
 
-    public void setEmpty() {
-        mItem = null;
-    }
-
-    public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
-        mItemClickListener = itemClickListener;
-    }
-
-    public OnItemClickListener<Message> getItemClickListener() {
-        return mItemClickListener;
-    }
-
-    public View.OnClickListener getOnClickListener() {
-        return mOnClickListener;
+    public void setItemLongClickListener(OnItemLongClickListener<MessageModel> listener) {
+        mItemLongClickListener = listener;
     }
 
     public View.OnLongClickListener getOnLongClickListener() {

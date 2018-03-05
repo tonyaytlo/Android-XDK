@@ -62,7 +62,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
     }
 
     @Override
-    public <T extends MessageModel> void inflateChildLayouts(T model) {
+    public <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
+            @NonNull OnLongClickListener longClickListener) {
         if (!(model instanceof ButtonMessageModel)) {
             // Nothing to do with a non button model
             return;
@@ -78,8 +79,9 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         viewStub.setLayoutResource(contentModel.getContainerViewLayoutId());
         MessageContainer container = (MessageContainer) viewStub.inflate();
         View contentView = container.inflateMessageView(contentModel.getViewLayoutId());
+        contentView.setOnLongClickListener(longClickListener);
         if (contentView instanceof ParentMessageView) {
-            ((ParentMessageView) contentView).inflateChildLayouts(contentModel);
+            ((ParentMessageView) contentView).inflateChildLayouts(contentModel, longClickListener);
         }
     }
 

@@ -16,6 +16,7 @@ import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
@@ -67,6 +68,7 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
         viewModel.setDateFormatter(mDateFormatter);
 
         viewModel.setItemClickListener(getItemClickListener());
+        viewModel.setItemLongClickListener(getItemLongClickListener());
         viewModel.setConversationItemFormatter(mConversationItemFormatter);
         viewModel.setAuthenticatedUser(getLayerClient().getAuthenticatedUser());
 
@@ -117,8 +119,13 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     //==============================================================================================
 
     @Override
-    public void setItemClickListener(OnItemClickListener<Conversation> itemClickListener) {
-        super.setItemClickListener(itemClickListener);
+    public void setItemClickListener(OnItemClickListener<Conversation> listener) {
+        super.setItemClickListener(listener);
+    }
+
+    @Override
+    public void setItemLongClickListener(OnItemLongClickListener<Conversation> listener) {
+        super.setItemLongClickListener(listener);
     }
 
     //==============================================================================================

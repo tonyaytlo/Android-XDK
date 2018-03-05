@@ -10,6 +10,7 @@ import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
 
@@ -20,6 +21,7 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
 
     private ITEM mItem;
     private OnItemClickListener<ITEM> mItemClickListener;
+    private OnItemLongClickListener<ITEM> mItemLongClickListener;
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
 
@@ -45,8 +47,8 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
         mOnLongClickListener = new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                if (mItemClickListener!=null) {
-                    return mItemClickListener.onItemLongClick(mItem);
+                if (mItemLongClickListener != null) {
+                    return mItemLongClickListener.onItemLongClick(mItem);
                 } else {
                     return false;
                 }
@@ -67,12 +69,20 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
         mItem = null;
     }
 
+    public OnItemClickListener<ITEM> getItemClickListener() {
+        return mItemClickListener;
+    }
+
     public void setItemClickListener(OnItemClickListener<ITEM> itemClickListener) {
         mItemClickListener = itemClickListener;
     }
 
-    public OnItemClickListener<ITEM> getItemClickListener() {
-        return mItemClickListener;
+    public OnItemLongClickListener<ITEM> getItemLongClickListener() {
+        return mItemLongClickListener;
+    }
+
+    public void setItemLongClickListener(OnItemLongClickListener<ITEM> itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
     }
 
     public View.OnClickListener getOnClickListener() {

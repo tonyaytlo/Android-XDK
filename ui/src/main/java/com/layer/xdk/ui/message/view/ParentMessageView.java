@@ -1,6 +1,9 @@
 package com.layer.xdk.ui.message.view;
 
 
+import android.support.annotation.NonNull;
+import android.view.View;
+
 import com.layer.xdk.ui.message.model.MessageModel;
 
 /**
@@ -16,6 +19,9 @@ public interface ParentMessageView {
      * store the model or update data based on the model in this method.
      *
      * @param model model whose child(ren) should be used for view inflation
+     * @param longClickListener listener to optionally set on child layouts that should trigger an
+     *                          item long click in the adapter
      */
-    <T extends MessageModel> void inflateChildLayouts(T model);
+    <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
+            @NonNull View.OnLongClickListener longClickListener);
 }

@@ -12,6 +12,7 @@ import com.layer.sdk.query.Query;
 import com.layer.sdk.query.Queryable;
 import com.layer.sdk.query.RecyclerViewController;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.style.ItemStyle;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.viewmodel.ItemViewModel;
@@ -39,6 +40,7 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
 
     private STYLE mStyle;
     private OnItemClickListener<ITEM> mItemClickListener;
+    private OnItemLongClickListener<ITEM> mItemLongClickListener;
 
     private OnRebindCallback<BINDING> mOnRebindCallback;
 
@@ -173,12 +175,20 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
         return viewHolder.getItem();
     }
 
-    public void setItemClickListener(OnItemClickListener<ITEM> itemClickListener) {
-        mItemClickListener = itemClickListener;
+    public void setItemClickListener(OnItemClickListener<ITEM> listener) {
+        mItemClickListener = listener;
+    }
+
+    public void setItemLongClickListener(OnItemLongClickListener<ITEM> listener) {
+        mItemLongClickListener = listener;
     }
 
     public OnItemClickListener<ITEM> getItemClickListener() {
         return mItemClickListener;
+    }
+
+    public OnItemLongClickListener<ITEM> getItemLongClickListener() {
+        return mItemLongClickListener;
     }
 
     //==============================================================================================

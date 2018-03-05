@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
-import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
@@ -22,7 +21,7 @@ import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
 import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -67,8 +66,8 @@ public class MessageItemsListViewModel extends BaseObservable {
         return mAdapter;
     }
 
-    public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
-//        mMessageItemsAdapter.setItemClickListener(itemClickListener);
+    public void setItemLongClickListener(OnItemLongClickListener<MessageModel> listener) {
+        mAdapter.setItemLongClickListener(listener);
     }
 
     /**

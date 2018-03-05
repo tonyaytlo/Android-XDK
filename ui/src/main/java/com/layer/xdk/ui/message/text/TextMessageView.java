@@ -23,7 +23,7 @@ public class TextMessageView extends AppCompatTextView {
     public TextMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mMessageViewHelper = new MessageViewHelper(context);
-        mMessageViewHelper.setOnClickListener(this, new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 mMessageViewHelper.performAction();
