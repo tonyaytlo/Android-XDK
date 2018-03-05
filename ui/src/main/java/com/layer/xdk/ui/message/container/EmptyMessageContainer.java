@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.databinding.ViewDataBinding;
+import android.graphics.Canvas;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.layer.xdk.ui.util.Log;
 
 public class EmptyMessageContainer extends FrameLayout implements MessageContainer {
     private LayoutInflater mInflater;
+    private MessageContainerHelper mMessageContainerHelper;
 
     public EmptyMessageContainer(@NonNull Context context) {
         this(context, null, 0);
@@ -33,6 +35,22 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     public EmptyMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
+        mMessageContainerHelper = new MessageContainerHelper();
+        mMessageContainerHelper.setCornerRadius(context.getResources()
+                .getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
+    }
+
+    @Override
+    public void dispatchDraw(Canvas canvas) {
+        int saveCount = mMessageContainerHelper.beforeDispatchDraw(canvas);
+        super.dispatchDraw(canvas);
+        mMessageContainerHelper.afterDispatchDraw(canvas, saveCount);
+    }
+
+    @Override
+    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight);
+        mMessageContainerHelper.calculateCornerClippingPath(width, height);
     }
 
     @Override

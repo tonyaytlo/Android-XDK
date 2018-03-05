@@ -35,7 +35,14 @@ public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultVi
         getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
             public void onInflate(ViewStub stub, final View inflated) {
-                getViewHolderModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver(inflated));
+                // TODO AND-1242 - This doesn't quite work since the subviews will overdraw this.
+                // TODO AND-1242 rename resource
+                inflated.setBackgroundResource(R.drawable.xdk_ui_message_viewer_background);
+                int padding = inflated.getContext().getResources().getDimensionPixelSize(
+                        R.dimen.xdk_ui_message_viewer_background_border_stroke_width);
+                inflated.setPadding(padding, padding, padding, padding);
+                getViewHolderModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver
+                        (inflated));
             }
         });
 

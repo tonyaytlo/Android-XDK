@@ -35,7 +35,6 @@
         android:layout_marginLeft="@dimen/xdk_ui_message_item_avatar_padding_left"
         android:layout_marginRight="@dimen/xdk_ui_message_item_avatar_padding_left"
         android:layout_marginStart="@dimen/xdk_ui_message_item_avatar_padding_left"
-        android:background="@drawable/xdk_ui_item_foreground_selector"
         android:duplicateParentState="true">
 
         <TextView
