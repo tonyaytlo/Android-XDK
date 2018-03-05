@@ -28,9 +28,12 @@ import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class MessageModel extends BaseObservable {
@@ -68,6 +71,12 @@ public abstract class MessageModel extends BaseObservable {
 
     private EnumSet<MessageGrouping> mGrouping;
 
+    // Save these purely for deep equals comparisons
+    private Map<Identity, Message.RecipientStatus> mRecipientStatuses;
+    private Date mMessageUpdatedAt;
+    private Set<MessagePart.TransferStatus> mMessagePartTransferStatus;
+    private Set<Date> mMessagePartUpdatedAt;
+
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
         if (sIdentityFormatter == null) {
@@ -85,7 +94,6 @@ public abstract class MessageModel extends BaseObservable {
         mSenderId = sender == null ? null : sender.getId();
 
         mParticipantCount = mMessage.getConversation().getParticipants().size();
-
         mChildMessageModels = new ArrayList<>();
     }
 
@@ -136,6 +144,7 @@ public abstract class MessageModel extends BaseObservable {
         if (rootMessagePart == null) {
             mMimeTypeTree = createLegacyMimeTypeTree();
             processLegacyParts();
+            cacheMessageDataForDeepEquals();
         } else {
             // Always download the message's root part
             if (!rootMessagePart.isContentReady()) {
@@ -143,6 +152,7 @@ public abstract class MessageModel extends BaseObservable {
             }
 
             processParts(rootMessagePart);
+            cacheMessageDataForDeepEquals();
         }
     }
 
@@ -251,6 +261,25 @@ public abstract class MessageModel extends BaseObservable {
     @NonNull
     public String getMimeTypeTree() {
         return mMimeTypeTree;
+    }
+
+    /**
+     * Store data from the message and message parts that will need to be compared when determining
+     * what data has changed. We need to cache this data because there is only one message object
+     * provided by the SDK so we can't check old vs new at that time.
+     */
+    private void cacheMessageDataForDeepEquals() {
+        mRecipientStatuses = getMessage().getRecipientStatus();
+        mMessageUpdatedAt = getMessage().getUpdatedAt();
+        Set<MessagePart> messageParts = getMessage().getMessageParts();
+        mMessagePartTransferStatus = new HashSet<>(messageParts.size());
+        mMessagePartUpdatedAt = new HashSet<>(messageParts.size());
+        for (MessagePart messagePart : messageParts) {
+            mMessagePartTransferStatus.add(messagePart.getTransferStatus());
+            if (messagePart.getUpdatedAt() != null) {
+                mMessagePartUpdatedAt.add(messagePart.getUpdatedAt());
+            }
+        }
     }
 
     @NonNull
@@ -411,11 +440,25 @@ public abstract class MessageModel extends BaseObservable {
         sDateFormatter = dateFormatter;
     }
 
+    /**
+     * Get the {@link MessageGrouping} for this model when shown in an adapter. This will only be
+     * valid for root models and should be null for inner models. No grouping will be set if this
+     * is not passed through a {@link com.layer.xdk.ui.message.adapter2.GroupingCalculator}.
+     *
+     * @return set of grouping values for the root model or null if it is an inner model or none
+     * has been set.
+     */
     @Nullable
     public EnumSet<MessageGrouping> getGrouping() {
         return mGrouping;
     }
 
+    /**
+     * Set the {@link MessageGrouping} value for this model. This is usually used to handle
+     * decoration and view state in a {@link com.layer.xdk.ui.message.adapter2.MessagesAdapter2}.
+     *
+     * @param grouping set of groupings
+     */
     public void setGrouping(EnumSet<MessageGrouping> grouping) {
         mGrouping = grouping;
     }
@@ -520,66 +563,26 @@ public abstract class MessageModel extends BaseObservable {
             }
         }
 
+        if (mMessageUpdatedAt == null ? other.mMessageUpdatedAt != null
+                : !mMessageUpdatedAt.equals(other.mMessageUpdatedAt)) {
+            return false;
+        }
+        if (mMessagePartUpdatedAt == null ? other.mMessagePartUpdatedAt != null
+                : !mMessagePartUpdatedAt.equals(other.mMessagePartUpdatedAt)) {
+            return false;
+        }
+
+        if (mRecipientStatuses == null ? other.mRecipientStatuses != null
+                : !mRecipientStatuses.equals(other.mRecipientStatuses)) {
+            return false;
+        }
+
+        if (mMessagePartTransferStatus == null ? other.mMessagePartTransferStatus != null
+                : !mMessagePartTransferStatus.equals(other.mMessagePartTransferStatus)) {
+            return false;
+        }
+
         // Don't bother checking parent model as that will infinitely recurse
-        return true;
-    }
-
-    /**
-     * Perform an equals check on {@link Message} properties. This will also check the message
-     * parts for property equality.
-     *
-     * This is primarily used for calculations with {@link android.support.v7.util.DiffUtil}.
-     *
-     * @param other message to compare to
-     * @return true if all properties are equal
-     */
-    @SuppressWarnings("RedundantIfStatement")
-    public boolean messageDeepEquals(@NonNull Message other) {
-        Message message = getMessage();
-        if (message.getUpdatedAt() == null ? other.getUpdatedAt() != null
-                : !message.getUpdatedAt().equals(other.getUpdatedAt())) {
-            return false;
-        }
-        if (message.getReceivedAt() == null ? other.getReceivedAt() != null
-                : !message.getReceivedAt().equals(other.getReceivedAt())) {
-            return false;
-        }
-        if (message.getSentAt() == null ? other.getSentAt() != null
-                : !message.getSentAt().equals(other.getSentAt())) {
-            return false;
-        }
-        if (!message.getRecipientStatus().equals(other.getRecipientStatus())) {
-            return false;
-        }
-        Set<MessagePart> parts = message.getMessageParts();
-        Set<MessagePart> otherParts = other.getMessageParts();
-        if (parts.size() != otherParts.size()) {
-            return false;
-        }
-        Iterator<MessagePart> iterator = parts.iterator();
-        Iterator<MessagePart> otherIterator = otherParts.iterator();
-        while (iterator.hasNext()) {
-            if (!messagePartDeepEquals(iterator.next(), otherIterator.next())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @SuppressWarnings("RedundantIfStatement")
-    private boolean messagePartDeepEquals(@NonNull MessagePart part, @NonNull MessagePart other) {
-        if (part.getUpdatedAt() == null ? other.getUpdatedAt() != null
-                : !part.getUpdatedAt().equals(other.getUpdatedAt())) {
-            return false;
-        }
-        if (part.isContentReady() != other.isContentReady()) {
-            return false;
-        }
-        if (part.getTransferStatus() != other.getTransferStatus()) {
-            return false;
-        }
-
         return true;
     }
 }

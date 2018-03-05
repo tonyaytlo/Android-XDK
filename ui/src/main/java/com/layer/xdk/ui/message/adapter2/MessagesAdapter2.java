@@ -307,7 +307,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 
         @Override
         public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
-            return oldItem.deepEquals(newItem) && oldItem.messageDeepEquals(newItem.getMessage());
+            return oldItem.deepEquals(newItem);
         }
     };
 
