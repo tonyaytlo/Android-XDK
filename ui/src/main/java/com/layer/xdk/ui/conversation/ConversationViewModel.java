@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
-import com.layer.sdk.query.Query;
+import com.layer.sdk.query.Predicate;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
@@ -23,11 +23,16 @@ import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 public class ConversationViewModel extends BaseObservable {
+    private static final int DEFAULT_PAGE_SIZE = 30;
+    private static final int DEFAULT_PREFETCH_DISTANCE = 60;
+
     private Conversation mConversation;
     private MessageItemsListViewModel mMessageItemsListViewModel;
     private LayerClient mLayerClient;
-    private Query<Message> mQuery;
+    private Predicate mQueryPredicate;
     private BinderRegistry mBinderRegistry;
+    private LiveData<PagedList<MessageModel>> mMessageModelList;
+    private Observer<PagedList<MessageModel>> mMessageModelListObserver;
 
 
     public ConversationViewModel(Context context,
@@ -44,30 +49,20 @@ public class ConversationViewModel extends BaseObservable {
 
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
-        final LiveData<PagedList<MessageModel>> messageList = new LivePagedListBuilder<>(
-                new MessagesDataSourceFactory(getLayerClient(), mBinderRegistry, conversation),
-                new PagedList.Config.Builder()
-                        .setEnablePlaceholders(false)
-                        .setPageSize(30)
-                        .build()
-        ).build();
-
-        messageList.observeForever(new Observer<PagedList<MessageModel>>() {
-            @Override
-            public void onChanged(@Nullable PagedList<MessageModel> messages) {
-                mMessageItemsListViewModel.getAdapter().submitList(messages);
-            }
-        });
+        createAndObserveMessageModelList();
         notifyChange();
     }
 
-    public void setQuery(Query<Message> query) {
-        mQuery = query;
+    /**
+     * Set a custom predicate to use during the query for messages instead of the default.
+     *
+     * @param queryPredicate predicate to use for message query
+     */
+    @SuppressWarnings("unused")
+    public void setQueryPredicate(@Nullable Predicate queryPredicate) {
+        mQueryPredicate = queryPredicate;
+        createAndObserveMessageModelList();
         notifyChange();
-    }
-
-    public Query<Message> getQuery() {
-        return mQuery;
     }
 
     @Bindable
@@ -84,7 +79,36 @@ public class ConversationViewModel extends BaseObservable {
         return mMessageItemsListViewModel;
     }
 
-    public void setOnItemClickListner(OnItemClickListener<Message> itemClickListner) {
-        mMessageItemsListViewModel.setItemClickListener(itemClickListner);
+    public void setOnItemClickListener(OnItemClickListener<Message> itemClickListener) {
+        mMessageItemsListViewModel.setItemClickListener(itemClickListener);
+    }
+
+    /**
+     * Creates the {@link PagedList} and observes for changes so the adapter can be updated. If a
+     * {@link PagedList} already exists then the observer will be removed before creating a new one.
+     */
+    private void createAndObserveMessageModelList() {
+        // Remove observer if this is an update
+        if (mMessageModelList != null) {
+            mMessageModelList.removeObserver(mMessageModelListObserver);
+        }
+
+        mMessageModelList = new LivePagedListBuilder<>(
+                new MessagesDataSourceFactory(getLayerClient(), mBinderRegistry, mConversation,
+                        mQueryPredicate),
+                new PagedList.Config.Builder()
+                        .setEnablePlaceholders(false)
+                        .setPageSize(DEFAULT_PAGE_SIZE)
+                        .setPrefetchDistance(DEFAULT_PREFETCH_DISTANCE)
+                        .build()
+        ).build();
+
+        mMessageModelListObserver = new Observer<PagedList<MessageModel>>() {
+            @Override
+            public void onChanged(@Nullable PagedList<MessageModel> messages) {
+                mMessageItemsListViewModel.getAdapter().submitList(messages);
+            }
+        };
+        mMessageModelList.observeForever(mMessageModelListObserver);
     }
 }

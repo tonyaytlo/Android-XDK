@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.adapter2;
 
 import android.arch.paging.PositionalDataSource;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
@@ -33,7 +34,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
     private final GroupingCalculator mGroupingCalculator;
     private final LayerClient mLayerClient;
-    private final Conversation mConversation;
+    private final Predicate mPredicate;
     private final LayerChangeEventListener.BackgroundThread.Weak listener;
     private final BinderRegistry mBinderRegistry;
 
@@ -45,14 +46,22 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
      *
      * @param layerClient client to use for the query
      * @param conversation conversation to fetch the messages for
+     * @param predicate custom predicate to use for the query
      * @param binderRegistry registry that handles model creation
      * @param groupingCalculator calculator to use for message grouping
      */
     @SuppressWarnings("WeakerAccess")
-    public MessagesDataSource(LayerClient layerClient, final Conversation conversation,
-            BinderRegistry binderRegistry, GroupingCalculator groupingCalculator) {
+    protected MessagesDataSource(@NonNull LayerClient layerClient,
+            @NonNull final Conversation conversation,
+            @Nullable Predicate predicate,
+            @NonNull BinderRegistry binderRegistry,
+            @NonNull GroupingCalculator groupingCalculator) {
         mLayerClient = layerClient;
-        mConversation = conversation;
+        if (predicate == null) {
+            mPredicate = new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, conversation);
+        } else {
+            mPredicate = predicate;
+        }
         mBinderRegistry = binderRegistry;
         mGroupingCalculator = groupingCalculator;
 
@@ -128,7 +137,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
 
     private long computeCount() {
         Long count = mLayerClient.executeQueryForCount(Query.builder(Message.class)
-                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO, mConversation))
+                .predicate(mPredicate)
                 .build());
         if (count == null) {
             return 0L;
@@ -151,8 +160,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
         }
         List<? extends Queryable> messages = mLayerClient.executeQueryForObjects(Query.builder(
                 Message.class)
-                .predicate(new Predicate(Message.Property.CONVERSATION, Predicate.Operator.EQUAL_TO,
-                        mConversation))
+                .predicate(mPredicate)
                 .sortDescriptor(new SortDescriptor(Message.Property.POSITION,
                         SortDescriptor.Order.DESCENDING))
                 .offset(position)
