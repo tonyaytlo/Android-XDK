@@ -201,11 +201,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         }
     }
 
-    protected Integer getRecipientStatusPosition() {
-        return getItemCount() - 1;
-    }
-
-
     /*
      * Settings
      */
@@ -272,10 +267,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         return mReadReceiptsEnabled;
     }
 
-    //==============================================================================================
-    // Listeners
-    //==============================================================================================
-
     /**
      * Set whether or not the conversation supports read receipts. This determines if the read
      * receipts should be shown in the view holders.
@@ -319,5 +310,25 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
             return oldItem.deepEquals(newItem) && oldItem.messageDeepEquals(newItem.getMessage());
         }
     };
+
+    /**
+     * Listens for inserts to the beginning of an MessagesAdapter2. This will be called when items
+     * are prepended to the beginning of this adapter (i.e. new messages are received).  This is
+     * useful for implementing a scroll-to-bottom feature.
+     */
+    public abstract static class NewMessageReceivedObserver extends RecyclerView.AdapterDataObserver {
+
+        @Override
+        public void onItemRangeInserted(int positionStart, int itemCount) {
+            if (positionStart == 0) {
+                onNewMessageReceived();
+            }
+        }
+
+        /**
+         * Alerts the observer when a newer message was prepended
+         */
+        public abstract void onNewMessageReceived();
+    }
 
 }

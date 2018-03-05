@@ -35,6 +35,7 @@ public class GroupingCalculator {
         }
     }
 
+    @NonNull
     private EnumSet<MessageGrouping> calculateForCurrent(@Nullable MessageModel older,
             @NonNull MessageModel current, @Nullable MessageModel newer) {
         EnumSet<MessageGrouping> groupings = EnumSet.noneOf(MessageGrouping.class);
@@ -93,7 +94,8 @@ public class GroupingCalculator {
             if ((current.getSenderId() != null && !current.getSenderId().equals(newer.getSenderId()))
                     || (current.getSenderId() == null && newer.getSenderId() != null)) {
                 groupings.add(MessageGrouping.SUB_GROUP_END);
-            } else if (!groupings.contains(MessageGrouping.SUB_GROUP_END)) {
+            } else if (!groupings.contains(MessageGrouping.SUB_GROUP_END)
+                    && !groupings.contains(MessageGrouping.SUB_GROUP_START)) {
                 // Same sender. It will only be the middle if it's not already the end
                 groupings.add(MessageGrouping.SUB_GROUP_MIDDLE);
             }

@@ -68,16 +68,14 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mMessagesRecyclerView.addItemDecoration(new SubGroupStartItemDecoration(context));
         mMessagesRecyclerView.addItemDecoration(new SubGroupInnerItemDecoration(context));
 
-//        setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
-//                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
-//                }
-//            }
-//        });
-
-
+        setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
+                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
+                }
+            }
+        });
     }
 
     private void removeEmptyHeaderView() {
@@ -94,7 +92,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     }
 
     public void onDestroy() {
-//        mMessagesRecyclerView.onDestroy();
         mLayerClient.unregisterEventListener(this);
     }
 
@@ -147,22 +144,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
             }
         });
 
-//        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//                autoScroll();
-//
-//            }
-//        });
-
-        // Create an adapter that auto-scrolls if we're already at the bottom
-//        adapter.setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
-//            @Override
-//            public void onMessageAppend(MessagesAdapter adapter, Message message) {
-//                autoScroll();
-//            }
-//        });
+        mAdapter.registerAdapterDataObserver(new MessagesAdapter2.NewMessageReceivedObserver() {
+            @Override
+            public void onNewMessageReceived() {
+                autoScroll();
+            }
+        });
     }
 
     //============================================================================================
@@ -253,11 +240,11 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * Scrolls if the user is at the end
      */
     private void autoScroll() {
-        int end = mAdapter.getItemCount() - 1;
-        if (end <= 0) return;
-        int visible = findLastVisibleItemPosition();
-        // -3 because -1 seems too finicky
-        if (visible >= (end - 3)) mMessagesRecyclerView.scrollToPosition(end);
+        // Find first since this layout is reversed
+        int lastVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        if (lastVisiblePosition < 3) {
+            mMessagesRecyclerView.scrollToPosition(0);
+        }
     }
 
     /**
@@ -268,15 +255,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
 //        mAdapter.setFooterView(footerView, users);
         autoScroll();
-    }
-
-    /**
-     * Convenience pass-through to this list's LinearLayoutManager.
-     *
-     * @see LinearLayoutManager#findLastVisibleItemPosition()
-     */
-    private int findLastVisibleItemPosition() {
-        return mLinearLayoutManager.findLastVisibleItemPosition();
     }
 
     /**

@@ -411,7 +411,7 @@ public abstract class MessageModel extends BaseObservable {
         sDateFormatter = dateFormatter;
     }
 
-    // TODO Do we want to expose the whole set?
+    @Nullable
     public EnumSet<MessageGrouping> getGrouping() {
         return mGrouping;
     }
@@ -439,7 +439,8 @@ public abstract class MessageModel extends BaseObservable {
      */
     @SuppressWarnings("SimplifiableIfStatement")
     public boolean deepEquals(@NonNull MessageModel other) {
-        if (!getGrouping().containsAll(other.getGrouping())) {
+        if (getGrouping() == null ? other.getGrouping() != null
+                : !getGrouping().containsAll(other.getGrouping())) {
             return false;
         }
         if (isMyNewestMessage() != other.isMyNewestMessage()) {
