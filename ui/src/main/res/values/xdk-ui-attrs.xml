@@ -6,7 +6,6 @@
     <!-- ###################### -->
     <attr name="FourPartItemsListView" format="reference" />
     <attr name="ComposeBar" format="reference" />
-    <attr name="MessageItemListView" format="reference" />
     <attr name="AddressBar" format="reference" />
     <attr name="TypingIndicator" format="reference" />
     <attr name="AvatarView" format="reference" />
@@ -140,26 +139,6 @@
     <!-- ####################### -->
     <!-- UI Attribute Formats -->
     <!-- ####################### -->
-
-    <!-- UI Messages Recycler View -->
-    <attr name="myBubbleColor" format="color|reference" />
-    <attr name="myTextColor" format="color|reference" />
-    <attr name="myTextSize" format="dimension|reference" />
-    <attr name="myTextTypeface" format="string|reference" />
-    <attr name="myTextStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
-    <attr name="theirBubbleColor" format="color|reference" />
-    <attr name="theirTextColor" format="color|reference" />
-    <attr name="theirTextSize" format="dimension|reference" />
-    <attr name="theirTextTypeface" format="string|reference" />
-    <attr name="theirTextStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
 
     <!-- UI Message Composer -->
     <attr name="inputUnderlineColor" format="color|reference" />

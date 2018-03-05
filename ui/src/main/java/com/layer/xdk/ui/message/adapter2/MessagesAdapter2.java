@@ -29,7 +29,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     private final DateFormatter mDateFormatter;
     private final IdentityFormatter mIdentityFormatter;
 
-    private boolean mIsOneOnOneConversation;
     private boolean mShouldShowAvatarInOneOnOneConversations;
     private boolean mShouldShowAvatarPresence = true;
     private boolean mShouldShowAvatarForCurrentUser;

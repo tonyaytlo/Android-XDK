@@ -73,6 +73,12 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     protected void updateAvatar() {
         EnumSet<MessageGrouping> grouping = getItem().getGrouping();
+        if (grouping == null) {
+            // This should never get hit since we're usually dealing with root models here
+            mShouldCurrentUserAvatarBeVisible = false;
+            mShouldCurrentUserPresenceBeVisible = false;
+            return;
+        }
 
         mShouldCurrentUserAvatarBeVisible = isMyMessage() && mShouldShowAvatarForCurrentUser &&
                 grouping.contains(MessageGrouping.SUB_GROUP_END);
@@ -81,8 +87,15 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     }
 
     protected void updateReceivedAtDateAndTime() {
-        if (getItem().getGrouping().contains(MessageGrouping.GROUP_START)
-                && !getItem().getGrouping().contains(MessageGrouping.OLDEST_MESSAGE)) {
+        EnumSet<MessageGrouping> grouping = getItem().getGrouping();
+        if (grouping == null) {
+            // This should never get hit since we're usually dealing with root models here
+            mShouldShowDateTimeForMessage = false;
+            return;
+        }
+
+        if (grouping.contains(MessageGrouping.GROUP_START)
+                && !grouping.contains(MessageGrouping.OLDEST_MESSAGE)) {
             Date receivedAt = getItem().getMessage().getReceivedAt();
             if (receivedAt == null) receivedAt = new Date();
 
@@ -101,6 +114,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     protected void updateSenderDependentElements(MessageModel model) {
 
         Message message = model.getMessage();
+        EnumSet<MessageGrouping> grouping = model.getGrouping();
         if (isMyMessage()) {
             mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
             mShouldShowDisplayName = false;
@@ -112,7 +126,8 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             }
 
             // Sender name, only for first message in cluster
-            if (!isInAOneOnOneConversation() && model.getGrouping().contains(MessageGrouping.SUB_GROUP_START)) {
+            if (!isInAOneOnOneConversation() && grouping != null &&
+                    grouping.contains(MessageGrouping.SUB_GROUP_START)) {
                 Identity sender = model.getMessage().getSender();
                 if (sender != null) {
                     mSenderName = getIdentityFormatter().getDisplayName(sender);
@@ -136,7 +151,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
                 mShouldDisplayAvatarSpace = false;
                 mIsPresenceVisible = false;
             }
-        } else if (model.getGrouping().contains(MessageGrouping.SUB_GROUP_END)) {
+        } else if (grouping != null && grouping.contains(MessageGrouping.SUB_GROUP_END)) {
             // Last message in cluster
             mIsAvatarViewVisible = !isMyMessage();
             mShouldDisplayAvatarSpace = true;

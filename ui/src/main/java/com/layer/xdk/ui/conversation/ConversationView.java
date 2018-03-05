@@ -10,8 +10,6 @@ import android.view.View;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
-import com.layer.sdk.messaging.Message;
-import com.layer.sdk.query.Query;
 import com.layer.xdk.ui.TypingIndicatorLayout;
 import com.layer.xdk.ui.composebar.ComposeBar;
 import com.layer.xdk.ui.databinding.XdkUiConversationViewBinding;
@@ -55,20 +53,13 @@ public class ConversationView extends ConstraintLayout {
         });
     }
 
-    @BindingAdapter(value = {"app:conversation", "app:layerClient", "app:messageItemsListViewModel", "app:query"}, requireAll = false)
+    @BindingAdapter(value = {"app:conversation", "app:layerClient", "app:messageItemsListViewModel"})
     public static void setConversation(ConversationView view, Conversation conversation,
-                                       LayerClient layerClient, MessageItemsListViewModel viewModel,
-                                       Query<Message> query) {
+                                       LayerClient layerClient, MessageItemsListViewModel viewModel) {
         view.mLayerClient = layerClient;
 
         view.mBinding.setViewModel(viewModel);
         view.mBinding.executePendingBindings();
-
-        if (query != null) {
-            view.mMessageItemListView.setConversation(layerClient, conversation, query);
-        } else {
-            view.mMessageItemListView.setConversation(layerClient, conversation);
-        }
 
         view.mComposeBar.setConversation(layerClient, conversation);
         view.mTypingIndicator.setConversation(layerClient, conversation);
@@ -88,10 +79,6 @@ public class ConversationView extends ConstraintLayout {
 
     public void setTypingIndicator(TypingIndicatorLayout typingIndicator) {
         mTypingIndicator = typingIndicator;
-    }
-
-    public void onDestroy() {
-        mMessageItemListView.onDestroy();
     }
 
     public void setHeaderView(View headerView) {

@@ -41,19 +41,6 @@
         <item name="avatarBorderColor">@color/xdk_ui_avatar_border</item>
     </style>
 
-    <style name="MessageItemListView">
-        <item name="myBubbleColor">@color/xdk_ui_color_primary_blue</item>
-        <item name="myTextColor">@color/xdk_ui_text_white</item>
-        <item name="myTextSize">@dimen/xdk_ui_text_size_message_item</item>
-        <item name="myTextTypeface">normal</item>
-        <item name="myTextStyle">normal</item>
-        <item name="theirBubbleColor">@color/xdk_ui_color_primary_gray</item>
-        <item name="theirTextColor">@color/xdk_ui_text_black</item>
-        <item name="theirTextSize">@dimen/xdk_ui_text_size_message_item</item>
-        <item name="theirTextTypeface">normal</item>
-        <item name="theirTextStyle">normal</item>
-    </style>
-
     <style name="AddressBar">
         <item name="inputTextColor">@color/xdk_ui_text_black</item>
         <item name="inputTextTypeface">normal</item>
