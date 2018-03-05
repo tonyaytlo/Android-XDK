@@ -2,7 +2,6 @@ package com.layer.xdk.ui.message.adapter2;
 
 
 import android.arch.paging.PagedListAdapter;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -29,8 +28,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     private final ImageCacheWrapper mImageCacheWrapper;
     private final DateFormatter mDateFormatter;
     private final IdentityFormatter mIdentityFormatter;
-    private RecyclerView mRecyclerView;
-
 
     private boolean mIsOneOnOneConversation;
     private boolean mShouldShowAvatarInOneOnOneConversations;
@@ -106,21 +103,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         mLastModelForViewTypeLookup = getItem(position);
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
     }
-
-
-    @CallSuper
-    @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = recyclerView;
-    }
-
-    @CallSuper
-    @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        mRecyclerView = null;
-    }
-
-
 
     public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
         mItemClickListener = itemClickListener;
