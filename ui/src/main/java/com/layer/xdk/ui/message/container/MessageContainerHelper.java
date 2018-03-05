@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
 
-// TODO AND-1242 Should this be at the container level or the item view holder level?
 public class MessageContainerHelper {
     private Path mCornerClippingPath = new Path();
     private float mCornerRadius = 0.0f;

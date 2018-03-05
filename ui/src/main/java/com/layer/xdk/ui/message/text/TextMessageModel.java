@@ -4,7 +4,9 @@ import android.content.Context;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -19,7 +21,7 @@ public class TextMessageModel extends MessageModel {
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
     private final JsonParser mJsonParser;
 
-    private String mText;
+    private CharSequence mText;
     private String mTitle;
     private String mSubtitle;
     private String mAuthor;
@@ -62,10 +64,29 @@ public class TextMessageModel extends MessageModel {
             mActionEvent = null;
             mCustomData = null;
         }
+
+        linkifyText();
+    }
+
+    @Override
+    protected void processLegacyParts() {
+        MessagePart part = getMessage().getMessageParts().iterator().next();
+        if (part.isContentReady()) {
+            mText = new String(part.getData());
+            linkifyText();
+        } else if (shouldDownloadContentIfNotReady(part)) {
+            part.download(null);
+        }
+    }
+
+    private void linkifyText() {
+        SpannableString spannableString = new SpannableString(mText);
+        Linkify.addLinks(spannableString, Linkify.ALL);
+        mText = spannableString;
     }
 
     @Bindable
-    public String getText() {
+    public CharSequence getText() {
         return mText;
     }
 
@@ -117,9 +138,9 @@ public class TextMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (getHasContent()) {
-            return mTitle != null ? mTitle : mText;
+            return mTitle != null ? mTitle : String.valueOf(mText);
         } else {
-            return getContext().getString(R.string.xdk_ui_text_message_preview_text);
+            return getAppContext().getString(R.string.xdk_ui_text_message_preview_text);
         }
     }
 

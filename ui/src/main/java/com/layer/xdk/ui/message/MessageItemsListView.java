@@ -3,9 +3,7 @@ package com.layer.xdk.ui.message;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -28,10 +26,12 @@ import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
+import com.layer.xdk.ui.message.adapter2.decoration.GroupStartItemDecoration;
+import com.layer.xdk.ui.message.adapter2.decoration.SubGroupInnerItemDecoration;
+import com.layer.xdk.ui.message.adapter2.decoration.SubGroupStartItemDecoration;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.util.Log;
 
-import java.util.List;
 import java.util.Set;
 
 public class MessageItemsListView extends SwipeRefreshLayout implements LayerChangeEventListener.BackgroundThread.Weak {
@@ -61,27 +61,21 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mLinearLayoutManager.setReverseLayout(true);
+        mMessagesRecyclerView.setHasFixedSize(true);
         mMessagesRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        DefaultItemAnimator noChangeAnimator = new DefaultItemAnimator() {
+        mMessagesRecyclerView.addItemDecoration(new GroupStartItemDecoration(context));
+        mMessagesRecyclerView.addItemDecoration(new SubGroupStartItemDecoration(context));
+        mMessagesRecyclerView.addItemDecoration(new SubGroupInnerItemDecoration(context));
+
+        setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public boolean canReuseUpdatedViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, @NonNull List<Object> payloads) {
-                return true;
+            public void onRefresh() {
+                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
+                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
+                }
             }
-        };
-        noChangeAnimator.setSupportsChangeAnimations(false);
-        mMessagesRecyclerView.setItemAnimator(noChangeAnimator);
-
-//        setOnRefreshListener(new OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                if (mConversation.getHistoricSyncStatus() == Conversation.HistoricSyncStatus.MORE_AVAILABLE) {
-//                    mConversation.syncMoreHistoricMessages(mNumberOfItemsPerSync);
-//                }
-//            }
-//        });
-
-
+        });
     }
 
     private void removeEmptyHeaderView() {
@@ -98,7 +92,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     }
 
     public void onDestroy() {
-//        mMessagesRecyclerView.onDestroy();
         mLayerClient.unregisterEventListener(this);
     }
 
@@ -151,22 +144,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
             }
         });
 
-//        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-//            @Override
-//            public void onItemRangeInserted(int positionStart, int itemCount) {
-//                super.onItemRangeInserted(positionStart, itemCount);
-//                autoScroll();
-//
-//            }
-//        });
-
-        // Create an adapter that auto-scrolls if we're already at the bottom
-//        adapter.setOnMessageAppendListener(new MessagesAdapter.OnMessageAppendListener() {
-//            @Override
-//            public void onMessageAppend(MessagesAdapter adapter, Message message) {
-//                autoScroll();
-//            }
-//        });
+        mAdapter.registerAdapterDataObserver(new MessagesAdapter2.NewMessageReceivedObserver() {
+            @Override
+            public void onNewMessageReceived() {
+                autoScroll();
+            }
+        });
     }
 
     //============================================================================================
@@ -257,11 +240,11 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      * Scrolls if the user is at the end
      */
     private void autoScroll() {
-        int end = mAdapter.getItemCount() - 1;
-        if (end <= 0) return;
-        int visible = findLastVisibleItemPosition();
-        // -3 because -1 seems too finicky
-        if (visible >= (end - 3)) mMessagesRecyclerView.scrollToPosition(end);
+        // Find first since this layout is reversed
+        int lastVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        if (lastVisiblePosition < 3) {
+            mMessagesRecyclerView.scrollToPosition(0);
+        }
     }
 
     /**
@@ -272,15 +255,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
 //        mAdapter.setFooterView(footerView, users);
         autoScroll();
-    }
-
-    /**
-     * Convenience pass-through to this list's LinearLayoutManager.
-     *
-     * @see LinearLayoutManager#findLastVisibleItemPosition()
-     */
-    private int findLastVisibleItemPosition() {
-        return mLinearLayoutManager.findLastVisibleItemPosition();
     }
 
     /**

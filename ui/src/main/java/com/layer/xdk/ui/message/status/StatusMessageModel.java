@@ -4,6 +4,8 @@ package com.layer.xdk.ui.message.status;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,6 +25,7 @@ public class StatusMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.status+json";
 
     private StatusMessageMetadata mMetadata;
+    private SpannableString mText;
     private final Gson mGson;
 
     public StatusMessageModel(Context context, LayerClient layerClient, Message message) {
@@ -46,6 +49,10 @@ public class StatusMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
         mMetadata = mGson.fromJson(reader, StatusMessageMetadata.class);
+        if (mMetadata != null && mMetadata.getText() != null) {
+            mText = new SpannableString(mMetadata.getText());
+            Linkify.addLinks(mText, Linkify.ALL);
+        }
     }
 
     @Override
@@ -79,10 +86,10 @@ public class StatusMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        if (mMetadata != null && mMetadata.getText() != null) {
-            return mMetadata.getText();
+        if (mText != null) {
+            return mText.toString();
         }
-        return getContext().getString(R.string.xdk_ui_status_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_status_message_preview_text);
     }
 
     @Override
@@ -113,10 +120,7 @@ public class StatusMessageModel extends MessageModel {
     }
 
     @Nullable
-    public String getText() {
-        if (mMetadata != null && mMetadata.getText() != null) {
-            return mMetadata.getText().trim();
-        }
-        return null;
+    public CharSequence getText() {
+        return mText;
     }
 }

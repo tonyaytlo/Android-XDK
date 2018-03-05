@@ -17,7 +17,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -36,25 +36,25 @@ public class ConversationViewModel extends BaseObservable {
             DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
         mBinderRegistry = new BinderRegistry(context, layerClient);
-        mMessageItemsListViewModel = new MessageItemsListViewModel(context, layerClient,
-                imageCacheWrapper, dateFormatter, identityFormatter, mBinderRegistry);
+        mMessageItemsListViewModel = new MessageItemsListViewModel(layerClient,
+                imageCacheWrapper, dateFormatter, identityFormatter);
         mLayerClient = layerClient;
 
     }
 
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
-        final LiveData<PagedList<AbstractMessageModel>> messageList = new LivePagedListBuilder<>(
+        final LiveData<PagedList<MessageModel>> messageList = new LivePagedListBuilder<>(
                 new MessagesDataSourceFactory(getLayerClient(), mBinderRegistry, conversation),
                 new PagedList.Config.Builder()
-                        .setEnablePlaceholders(true)
-                        .setPageSize(10)
+                        .setEnablePlaceholders(false)
+                        .setPageSize(30)
                         .build()
         ).build();
 
-        messageList.observeForever(new Observer<PagedList<AbstractMessageModel>>() {
+        messageList.observeForever(new Observer<PagedList<MessageModel>>() {
             @Override
-            public void onChanged(@Nullable PagedList<AbstractMessageModel> messages) {
+            public void onChanged(@Nullable PagedList<MessageModel> messages) {
                 mMessageItemsListViewModel.getAdapter().submitList(messages);
             }
         });

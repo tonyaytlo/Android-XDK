@@ -8,9 +8,7 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.text.DateFormat;
@@ -93,24 +91,10 @@ public class ConversationItemFormatter {
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        String rootMimeType = MessagePartUtils.getRootMimeType(message);
-        MessageModel modelToProcessParts = null;
-        AbstractMessageModel model;
-        if (rootMimeType == null) {
-            // This is a legacy message
-            // Create set of mime types then get the model based on that type
-            Set<String> legacyMimeTypes = MessagePartUtils.getLegacyMessageMimeTypes(
-                    message);
-            model = mBinderRegistry.getMessageModelManager().getNewLegacyModel(legacyMimeTypes, message);
-        } else {
-            modelToProcessParts = mBinderRegistry.getMessageModelManager().getNewModel(rootMimeType, message);
-            model = modelToProcessParts;
-        }
-        if (modelToProcessParts != null) {
-            modelToProcessParts.processParts();
-        }
-        if (model != null && model.getPreviewText() != null) {
-            return model.getPreviewText();
+        MessageModel messageModel = mBinderRegistry.getMessageModelManager().getNewModel(message);
+        messageModel.processPartsFromTreeRoot();
+        if (messageModel.getPreviewText() != null) {
+            return messageModel.getPreviewText();
         }
         return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
     }

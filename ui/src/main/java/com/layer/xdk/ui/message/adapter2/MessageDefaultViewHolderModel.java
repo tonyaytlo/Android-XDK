@@ -11,13 +11,15 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.MessageCluster;
-import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
+import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,25 +27,20 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     // Config
     private boolean mEnableReadReceipts;
-    private IdentityRecyclerViewEventListener mIdentityEventListener;
     private boolean mShowAvatars;
     private boolean mShowPresence;
     private ImageCacheWrapper mImageCacheWrapper;
 
     // View related variables
-    private boolean mPreviousPartOfCluster;
-    private boolean mNextPartOfCluster;
     private boolean mShouldShowDisplayName;
     private boolean mShouldShowDateTimeForMessage;
     private float mMessageCellAlpha;
     private String mSenderName;
-    // TODO AND-1242 I'm not sure we should call this participants... It seems like it's only ever set to the sender
-    private Set<Identity> mParticipants = Collections.emptySet();
+    private Set<Identity> mSender = Collections.emptySet();
     private String mReadReceipt;
     private SpannableString mDateTime;
     private boolean mIsReadReceiptVisible;
     private boolean mShouldDisplayAvatarSpace;
-    private boolean mIsMyMessage;
     private boolean mIsAvatarViewVisible;
     private boolean mIsPresenceVisible;
     private boolean mShouldShowAvatarForCurrentUser;
@@ -52,73 +49,61 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private boolean mShouldShowPresenceForCurrentUser;
 
     public MessageDefaultViewHolderModel(Context context, LayerClient layerClient,
-            ImageCacheWrapper imageCacheWrapper,
-            IdentityRecyclerViewEventListener identityEventListener) {
-        super(context, layerClient);
+            ImageCacheWrapper imageCacheWrapper,IdentityFormatter identityFormatter,
+            DateFormatter dateFormatter) {
+        super(context, layerClient, identityFormatter, dateFormatter);
         mEnableReadReceipts = true;
         mShowAvatars = true;
         mShowPresence = true;
-        mIdentityEventListener = identityEventListener;
         mImageCacheWrapper = imageCacheWrapper;
     }
 
-    public void update(MessageCluster cluster, int position, Integer recipientStatusPosition) {
+    public void update() {
         Message message = getItem().getMessage();
-        mParticipants = Collections.singleton(message.getSender());
-        mIsMyMessage = getItem().getMessage().getSender().getId().equals(getItem().getAuthenticatedUserId());
+        mSender = Collections.singleton(message.getSender());
 
-        // Clustering and dates
-        updateClusteringAndDates(message, cluster);
+        updateAvatar();
+        updateReceivedAtDateAndTime();
+        updateRecipientStatus();
 
         // Sender-dependent elements
-        updateSenderDependentElements(message, cluster, position, recipientStatusPosition);
+        updateSenderDependentElements(getItem());
         notifyChange();
     }
 
-    protected void updateClusteringAndDates(Message message, MessageCluster cluster) {
-        // Determine if previous/next items are part of a cluster for padding purposes
-        mPreviousPartOfCluster = cluster.mClusterWithPrevious != null
-                && (cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_HOUR
-                || cluster.mClusterWithPrevious == MessageCluster.Type.LESS_THAN_MINUTE);
-        mNextPartOfCluster = cluster.mClusterWithNext != null
-                && (cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_HOUR
-                || cluster.mClusterWithNext == MessageCluster.Type.LESS_THAN_MINUTE);
+    protected void updateAvatar() {
+        EnumSet<MessageGrouping> grouping = getItem().getGrouping();
 
-        // Update and show/hide date
-        if (cluster.mClusterWithPrevious == null
-                || cluster.mDateBoundaryWithPrevious
-                || cluster.mClusterWithPrevious == MessageCluster.Type.MORE_THAN_HOUR) {
-            updateReceivedAtDateAndTime(message);
-        } else {
-            mShouldShowDateTimeForMessage = false;
-        }
-
-        mShouldCurrentUserAvatarBeVisible = mIsMyMessage && mShouldShowAvatarForCurrentUser &&
-                !cluster.mNextMessageIsFromSameUser;
+        mShouldCurrentUserAvatarBeVisible = isMyMessage() && mShouldShowAvatarForCurrentUser &&
+                grouping.contains(MessageGrouping.SUB_GROUP_END);
         mShouldCurrentUserPresenceBeVisible =
                 mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
     }
 
-    protected void updateReceivedAtDateAndTime(Message message) {
-        Date receivedAt = message.getReceivedAt();
-        if (receivedAt == null) receivedAt = new Date();
+    protected void updateReceivedAtDateAndTime() {
+        if (getItem().getGrouping().contains(MessageGrouping.GROUP_START)
+                && !getItem().getGrouping().contains(MessageGrouping.OLDEST_MESSAGE)) {
+            Date receivedAt = getItem().getMessage().getReceivedAt();
+            if (receivedAt == null) receivedAt = new Date();
 
-        String day = getDateFormatter().formatTimeDay(receivedAt);
-        String time = getDateFormatter().formatTime(receivedAt);
-        mDateTime = new SpannableString(String.format("%s %s", day, time));
-        mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            String day = getDateFormatter().formatTimeDay(receivedAt);
+            String time = getDateFormatter().formatTime(receivedAt);
+            mDateTime = new SpannableString(String.format("%s %s", day, time));
+            mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
+                    Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        mShouldShowDateTimeForMessage = true;
+            mShouldShowDateTimeForMessage = true;
+        } else {
+            mShouldShowDateTimeForMessage = false;
+        }
     }
 
-    protected void updateSenderDependentElements(Message message, MessageCluster cluster, int position,
-            Integer recipientStatusPosition) {
-        Identity sender = message.getSender();
+    protected void updateSenderDependentElements(MessageModel model) {
 
-        if (mIsMyMessage) {
-            updateWithRecipientStatus(message, position, recipientStatusPosition);
+        Message message = model.getMessage();
+        if (isMyMessage()) {
             mMessageCellAlpha = message.isSent() ? 1.0f : 0.5f;
+            mShouldShowDisplayName = false;
         } else {
             mMessageCellAlpha = 1.0f;
 
@@ -127,18 +112,14 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             }
 
             // Sender name, only for first message in cluster
-            if (!isInAOneOnOneConversation() &&
-                    (cluster.mClusterWithPrevious == null
-                            || cluster.mClusterWithPrevious == MessageCluster.Type.NEW_SENDER)) {
+            if (!isInAOneOnOneConversation() && model.getGrouping().contains(MessageGrouping.SUB_GROUP_START)) {
+                Identity sender = model.getMessage().getSender();
                 if (sender != null) {
                     mSenderName = getIdentityFormatter().getDisplayName(sender);
                 } else {
                     mSenderName = getIdentityFormatter().getUnknownNameString();
                 }
                 mShouldShowDisplayName = true;
-
-                // Add the position to the positions map for Identity updates
-                mIdentityEventListener.addIdentityPosition(position, Collections.singleton(sender));
             } else {
                 mShouldShowDisplayName = false;
             }
@@ -147,7 +128,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         // Avatars
         if (isInAOneOnOneConversation()) {
             if (mShowAvatars) {
-                mIsAvatarViewVisible = !mIsMyMessage;
+                mIsAvatarViewVisible = !isMyMessage();
                 mShouldDisplayAvatarSpace = true;
                 mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
             } else {
@@ -155,11 +136,9 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
                 mShouldDisplayAvatarSpace = false;
                 mIsPresenceVisible = false;
             }
-        } else if (cluster.mClusterWithNext == null || cluster.mClusterWithNext != MessageCluster.Type.LESS_THAN_MINUTE) {
+        } else if (model.getGrouping().contains(MessageGrouping.SUB_GROUP_END)) {
             // Last message in cluster
-            mIsAvatarViewVisible = !mIsMyMessage;
-            // Add the position to the positions map for Identity updates
-            mIdentityEventListener.addIdentityPosition(position, Collections.singleton(message.getSender()));
+            mIsAvatarViewVisible = !isMyMessage();
             mShouldDisplayAvatarSpace = true;
             mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
         } else {
@@ -170,11 +149,11 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
         }
     }
 
-    protected void updateWithRecipientStatus(Message message, int position, Integer recipientStatusPosition) {
-        if (mEnableReadReceipts && recipientStatusPosition != null && position == recipientStatusPosition) {
+    protected void updateRecipientStatus() {
+        if (getItem().isMyNewestMessage()) {
             int readCount = 0;
             boolean delivered = false;
-            Map<Identity, Message.RecipientStatus> statuses = message.getRecipientStatus();
+            Map<Identity, Message.RecipientStatus> statuses = getItem().getMessage().getRecipientStatus();
             for (Map.Entry<Identity, Message.RecipientStatus> entry : statuses.entrySet()) {
                 // Only show receipts for other members
                 if (entry.getKey().equals(getLayerClient().getAuthenticatedUser())) continue;
@@ -207,11 +186,13 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
             } else {
                 mIsReadReceiptVisible = false;
             }
+        } else {
+            mIsReadReceiptVisible = false;
         }
     }
 
     protected boolean isInAOneOnOneConversation() {
-        return getItem().getParticipants().size() == 2;
+        return getItem().getParticipantCount() == 2;
     }
 
     // Setters
@@ -245,16 +226,6 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     // Bindable properties
 
     @Bindable
-    public boolean isPreviousPartOfCluster() {
-        return mPreviousPartOfCluster;
-    }
-
-    @Bindable
-    public boolean isNextPartOfCluster() {
-        return mNextPartOfCluster;
-    }
-
-    @Bindable
     public boolean getAvatarVisibility() {
         return mIsAvatarViewVisible;
     }
@@ -266,7 +237,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     @Bindable
     public Set<Identity> getParticipants() {
-        return mParticipants;
+        return mSender;
     }
 
     @Bindable
@@ -306,7 +277,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
 
     @Bindable
     public boolean isMyMessage() {
-        return mIsMyMessage;
+        return getItem() != null && getItem().isMessageFromMe();
     }
 
     @Bindable

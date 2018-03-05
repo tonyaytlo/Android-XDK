@@ -163,7 +163,7 @@ public class ButtonMessageModel extends MessageModel {
             if (title != null) {
                 return title;
             } else {
-                return getContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+                return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
             }
         }
 
@@ -226,16 +226,7 @@ public class ButtonMessageModel extends MessageModel {
                                 boolean selected, Set<String> selectedChoices) {
         sendResponse(choiceData, choice, selected, selectedChoices);
 
-        // Get root model
-        MessageModel root = this;
-        while (true) {
-            MessageModel parent = root.getParentMessageModel();
-            if (parent == null) {
-                break;
-            }
-            root = parent;
-        }
-        ActionHandlerRegistry.dispatchChoiceSelection(getContext(), choice, this, root);
+        ActionHandlerRegistry.dispatchChoiceSelection(getAppContext(), choice, this, getRootModelForTree());
 
     }
 
@@ -246,13 +237,13 @@ public class ButtonMessageModel extends MessageModel {
                 getLayerClient().getAuthenticatedUser());
         String statusText;
         if (TextUtils.isEmpty(choiceData.getName())) {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
                     choice.getText());
         } else {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,

@@ -6,6 +6,7 @@ import com.layer.xdk.ui.message.status.StatusMessageModel;
 
 import java.util.Date;
 
+@Deprecated
 public class MessageCluster {
     public boolean mDateBoundaryWithPrevious;
     public Type mClusterWithPrevious;

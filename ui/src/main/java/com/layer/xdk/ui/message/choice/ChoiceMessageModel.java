@@ -80,7 +80,7 @@ public class ChoiceMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
-        String title = getContext().getString(R.string.xdk_ui_choice_message_model_default_title);
+        String title = getAppContext().getString(R.string.xdk_ui_choice_message_model_default_title);
         if (mMetadata != null && mMetadata.getTitle() != null) {
             title = mMetadata.getTitle();
         }
@@ -171,13 +171,13 @@ public class ChoiceMessageModel extends MessageModel {
         String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
         String statusText;
         if (TextUtils.isEmpty(mMetadata.getName())) {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
                     choice.getText());
         } else {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,

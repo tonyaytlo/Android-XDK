@@ -17,7 +17,6 @@
         android:id="@+id/text_message_view_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autoLink="all"
         android:gravity="center_vertical"
         android:linksClickable="true"
         android:maxWidth="@dimen/xdk_ui_text_message_view_max_width"

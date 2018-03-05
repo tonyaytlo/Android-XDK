@@ -130,7 +130,7 @@ public class LinkMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.xdk_ui_link_message_preview_text);
+        return title != null ? title : getAppContext().getString(R.string.xdk_ui_link_message_preview_text);
     }
 
     public LinkMessageMetadata getMetadata() {
@@ -139,7 +139,7 @@ public class LinkMessageModel extends MessageModel {
 
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())
+            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
                     .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
                     .build());
         }

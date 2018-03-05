@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.layer.xdk.ui.message.model.AbstractMessageModel"/>
+        <import type="com.layer.xdk.ui.message.model.MessageModel"/>
 
         <import type="android.text.TextUtils"/>
 
@@ -13,7 +13,7 @@
 
         <variable
             name="messageModel"
-            type="com.layer.xdk.ui.message.model.AbstractMessageModel"/>
+            type="com.layer.xdk.ui.message.model.MessageModel"/>
     </data>
 
     <com.layer.xdk.ui.message.container.StandardMessageContainer
@@ -47,8 +47,8 @@
             android:visibility="@{TextUtils.isEmpty(messageModel.title) ? View.GONE : View.VISIBLE}"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/xdk_ui_standard_message_container_content_view"
-            app:layout_constraintRight_toRightOf="@+id/xdk_ui_standard_message_container_content_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/xdk_ui_standard_message_container_content_view"
             app:layout_goneMarginTop="0dp"
             tools:text="Title"

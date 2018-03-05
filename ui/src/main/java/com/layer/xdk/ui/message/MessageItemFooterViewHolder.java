@@ -28,13 +28,13 @@ public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageIt
     public void bind(Set<Identity> users, View mFooterView, boolean shouldAvatarBeVisible) {
         // TODO AND-1353 Fix this
 //        getBinding().root.addView(mFooterView);
-//        getViewModel().setParticipants(users);
-//        getViewModel().setAvatarViewVisibilityType(shouldAvatarBeVisible);
+//        getViewHolderModel().setParticipants(users);
+//        getViewHolderModel().setAvatarViewVisibilityType(shouldAvatarBeVisible);
 //        int numberOfUsers = users.size();
 //
 //        if (numberOfUsers > 2) {
-//            getViewModel().setTypingIndicatorMessageVisibility(true);
-//            getViewModel().setMessageFooterAnimationVisibility(false);
+//            getViewHolderModel().setTypingIndicatorMessageVisibility(true);
+//            getViewHolderModel().setMessageFooterAnimationVisibility(false);
 //            String firstUser = "", secondUser = "";
 //            int counter = 0;
 //
@@ -47,17 +47,17 @@ public class MessageItemFooterViewHolder extends MessageItemViewHolder<MessageIt
 //                    break;
 //                }
 //            }
-//            Resources resources = mFooterView.getContext().getResources();
+//            Resources resources = mFooterView.getAppContext().getResources();
 //            int remainingUsers = numberOfUsers % 2;
 //            String typingIndicatorMessage = resources.getQuantityString(R.plurals.xdk_ui_typing_indicator_message,
 //                    remainingUsers, firstUser, secondUser, remainingUsers);
-//            getViewModel().setTypingIndicatorMessage(typingIndicatorMessage);
+//            getViewHolderModel().setTypingIndicatorMessage(typingIndicatorMessage);
 //        } else {
-//            getViewModel().setTypingIndicatorMessageVisibility(false);
-//            getViewModel().setMessageFooterAnimationVisibility(true);
+//            getViewHolderModel().setTypingIndicatorMessageVisibility(false);
+//            getViewHolderModel().setMessageFooterAnimationVisibility(true);
 //        }
 //
-//        getViewModel().notifyChange();
-//        getBinding().setViewModel(getViewModel());
+//        getViewHolderModel().notifyChange();
+//        getBinding().setViewModel(getViewHolderModel());
     }
 }

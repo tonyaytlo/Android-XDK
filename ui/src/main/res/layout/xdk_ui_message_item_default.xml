@@ -15,45 +15,43 @@
 -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View"/>
 
         <variable
-            name="messageModel"
+            name="viewHolderModel"
             type="com.layer.xdk.ui.message.adapter2.MessageDefaultViewHolderModel"/>
     </data>
 
-    <!-- TODO AND-1242 Fix margin constants -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@{messageModel.nextPartOfCluster ? @dimen/xdk_ui_message_cluster_space : @dimen/xdk_ui_message_item_top_bottom_margin}"
         android:layout_marginEnd="@dimen/xdk_ui_message_item_avatar_padding_left"
         android:layout_marginLeft="@dimen/xdk_ui_message_item_avatar_padding_left"
         android:layout_marginRight="@dimen/xdk_ui_message_item_avatar_padding_left"
         android:layout_marginStart="@dimen/xdk_ui_message_item_avatar_padding_left"
-        android:layout_marginTop="@{messageModel.previousPartOfCluster ? 0.0f : @dimen/xdk_ui_message_item_top_bottom_margin}"
-        android:background="@drawable/xdk_ui_item_foreground_selector"
         android:duplicateParentState="true">
 
         <TextView
             android:id="@+id/date_time"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/xdk_ui_message_item_time_group_padding_bottom"
-            android:layout_marginEnd="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-            android:layout_marginRight="@dimen/xdk_ui_message_item_group_day_and_time_margin"
-            android:layout_marginTop="@dimen/xdk_ui_message_item_time_group_padding_top"
             android:gravity="center"
-            android:text="@{messageModel.dateTime}"
-            android:textColor="@color/xdk_ui_text_gray"
-            android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:visibility="@{messageModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:paddingBottom="@dimen/xdk_ui_message_item_time_group_padding_bottom"
+            android:text="@{viewHolderModel.dateTime}"
+            android:textColor="@color/xdk_ui_text_light_gray"
+            android:textSize="@dimen/xdk_ui_text_size_status"
+            android:visibility="@{viewHolderModel.shouldShowDateTimeForMessage ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Today 12:00 PM" tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/senderName"
@@ -62,49 +60,57 @@
             android:layout_marginBottom="@dimen/xdk_ui_message_item_sender_margin_bottom"
             android:layout_marginLeft="@dimen/xdk_ui_message_item_sender_margin_left"
             android:layout_marginStart="@dimen/xdk_ui_message_item_sender_margin_left"
-            android:text="@{messageModel.senderName}"
-            android:textColor="@color/xdk_ui_text_gray"
-            android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:visibility="@{messageModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"
-            app:layout_constraintStart_toStartOf="@id/date_time"
-            app:layout_constraintTop_toBottomOf="@id/date_time"/>
+            android:text="@{viewHolderModel.senderName}"
+            android:textColor="@color/xdk_ui_text_light_gray"
+            android:textSize="@dimen/xdk_ui_text_size_status"
+            android:visibility="@{viewHolderModel.shouldShowDisplayName ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/date_time"
+            tools:text="John Doe"
+            tools:visibility="visible"/>
 
         <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/avatar"
             android:layout_width="@dimen/xdk_ui_avatar_width"
             android:layout_height="@dimen/xdk_ui_avatar_height"
             android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
-            android:visibility="@{messageModel.shouldDisplayAvatarSpace ? (messageModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            android:visibility="@{viewHolderModel.shouldDisplayAvatarSpace ? (viewHolderModel.avatarVisibility ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            app:layout_constraintBottom_toTopOf="@+id/receipt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/senderName"
             app:layout_constraintVertical_bias="1.0"
-            app:participants="@{messageModel.participants}"/>
+            app:participants="@{viewHolderModel.participants}"
+            tools:background="@color/xdk_ui_color_primary_blue"
+            tools:visibility="visible"/>
 
         <com.layer.xdk.ui.presence.PresenceView
             android:id="@+id/presence"
             android:layout_width="@dimen/xdk_ui_avatar_presence_height"
             android:layout_height="@dimen/xdk_ui_avatar_presence_height"
-            android:visibility="@{messageModel.shouldDisplayAvatarSpace ? (messageModel.presenceVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            android:visibility="@{viewHolderModel.shouldDisplayAvatarSpace ? (viewHolderModel.presenceVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="@id/avatar"
-            app:participants="@{messageModel.participants}"/>
+            app:participants="@{viewHolderModel.participants}"
+            tools:background="@color/xdk_ui_text_black"
+            tools:visibility="visible"/>
 
         <ViewStub
             android:id="@+id/message_view_stub"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/xdk_ui_padding_normal"
-            android:layout_marginLeft="@dimen/xdk_ui_padding_normal"
-            android:layout_marginRight="@dimen/xdk_ui_padding_normal"
-            android:layout_marginStart="@dimen/xdk_ui_padding_normal"
+            android:layout_marginEnd="@dimen/xdk_ui_margin_small"
+            android:layout_marginLeft="@dimen/xdk_ui_margin_small"
+            android:layout_marginRight="@dimen/xdk_ui_margin_small"
+            android:layout_marginStart="@dimen/xdk_ui_margin_small"
+            android:inflatedId="@id/message_view_stub"
             android:minHeight="@dimen/xdk_ui_message_item_cell_min_height"
             android:minWidth="@dimen/xdk_ui_message_item_cell_min_width"
             android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"
             app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toTopOf="@+id/receipt"
             app:layout_constraintEnd_toStartOf="@+id/current_user_avatar"
-            app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/senderName"
-            app:layout_constraintVertical_bias="0.5"/>
+            app:layout_constraintStart_toEndOf="@+id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/senderName"/>
 
         <com.layer.xdk.ui.avatar.AvatarView
             android:id="@+id/current_user_avatar"
@@ -113,19 +119,24 @@
             android:layout_marginBottom="@dimen/xdk_ui_message_item_padding"
             android:layout_marginLeft="@dimen/xdk_ui_avatar_left_padding_message"
             android:layout_marginStart="@dimen/xdk_ui_avatar_left_padding_message"
-            android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? (messageModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            android:visibility="@{viewHolderModel.shouldShowAvatarForCurrentUser ? (viewHolderModel.shouldCurrentUserAvatarBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/avatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/senderName"
-            app:participants="@{messageModel.participants}"/>
+            app:layout_constraintTop_toTopOf="@id/avatar"
+            app:participants="@{viewHolderModel.participants}"
+            tools:background="@color/xdk_ui_color_primary_blue"
+            tools:visibility="visible"/>
 
         <com.layer.xdk.ui.presence.PresenceView
             android:id="@+id/current_user_presence"
             android:layout_width="@dimen/xdk_ui_avatar_presence_height"
             android:layout_height="@dimen/xdk_ui_avatar_presence_height"
-            android:visibility="@{messageModel.shouldShowAvatarForCurrentUser ? (messageModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
+            android:visibility="@{viewHolderModel.shouldShowAvatarForCurrentUser ? (viewHolderModel.shouldCurrentUserPresenceBeVisible ? View.VISIBLE : View.INVISIBLE) : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/current_user_avatar"
             app:layout_constraintEnd_toEndOf="@id/current_user_avatar"
-            app:participants="@{messageModel.participants}"/>
+            app:participants="@{viewHolderModel.participants}"
+            tools:background="@color/xdk_ui_text_black"
+            tools:visibility="visible"/>
 
         <TextView
             android:id="@+id/receipt"
@@ -133,12 +144,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/xdk_ui_message_item_receipt_margin"
             android:layout_marginRight="@dimen/xdk_ui_message_item_receipt_margin"
-            android:text="@{messageModel.readReceipt}"
-            android:textColor="@color/xdk_ui_text_gray"
-            android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:visibility="@{messageModel.readReceiptVisible ? View.VISIBLE : View.GONE}"
+            android:text="@{viewHolderModel.readReceipt}"
+            android:textColor="@color/xdk_ui_text_light_gray"
+            android:textSize="@dimen/xdk_ui_text_size_status"
+            android:visibility="@{viewHolderModel.readReceiptVisible ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/avatar"/>
+            tools:text="Read by 1 participant"
+            tools:visibility="visible"/>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

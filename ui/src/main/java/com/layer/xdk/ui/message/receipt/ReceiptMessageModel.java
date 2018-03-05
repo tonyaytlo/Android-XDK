@@ -90,7 +90,7 @@ public class ReceiptMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        return getContext().getString(R.string.xdk_ui_receipt_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_receipt_message_preview_text);
     }
 
     @NonNull

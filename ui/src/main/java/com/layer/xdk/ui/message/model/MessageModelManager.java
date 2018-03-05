@@ -2,10 +2,12 @@ package com.layer.xdk.ui.message.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.ui.message.MessagePartUtils;
+import com.layer.xdk.ui.message.generic.UnhandledMessageModel;
+import com.layer.xdk.ui.util.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -37,7 +39,7 @@ public class MessageModelManager {
         }
     }
 
-    public <T extends AbstractMessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
+    public <T extends MessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
         try {
             Constructor<?> constructor = messageModelClass.getConstructor(Context.class, LayerClient.class, Message.class);
             mMimeTypeSetToConstructorMap.put(partMimeTypes, constructor);
@@ -56,38 +58,48 @@ public class MessageModelManager {
         }
     }
 
-    @Nullable
-    public <T extends MessageModel> T getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
+    @NonNull
+    public MessageModel getNewModel(@NonNull Message message) {
+        return getNewModel(getModelIdentifier(message), message);
+    }
+
+    @NonNull
+    public MessageModel getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
         try {
-            Constructor<T> constructor;
-            if (mIdentifierToConstructorMap.containsKey(modelIdentifier)) {
-                constructor = (Constructor<T>) mIdentifierToConstructorMap.get(modelIdentifier);
-                T model = constructor.newInstance(mApplicationContext, mLayerClient, message);
+            Constructor<? extends MessageModel> constructor =
+                    (Constructor<? extends MessageModel>)
+                            mIdentifierToConstructorMap.get(modelIdentifier);
+            if (constructor == null) {
+                return new UnhandledMessageModel(mApplicationContext, mLayerClient, message);
+            } else {
+                MessageModel model = constructor.newInstance(mApplicationContext, mLayerClient,
+                        message);
                 model.setMessageModelManager(this);
                 return model;
             }
         } catch (IllegalAccessException e) {
+            // Handled below
         } catch (InstantiationException e) {
+            // Handled below
         } catch (InvocationTargetException e) {
+            // Handled below
         }
 
-        return null;
+        if (Log.isLoggable(Log.ERROR)) {
+            Log.e("Failed to instantiate a new MessageModel instance. Ensure an appropriate"
+                    + " constructor exists.");
+        }
+        throw new IllegalStateException("Failed to instantiate a new MessageModel instance."
+                + " Ensure an appropriate constructor exists.");
     }
 
-    @Nullable
-    // TODO AND-1242 Extend a legacy model? Depends if we end up with a shared one or not
-    public <T extends AbstractMessageModel> T getNewLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Message message) {
-        try {
-            Constructor<T> constructor;
-            if (mMimeTypeSetToConstructorMap.containsKey(partMimeTypes)) {
-                constructor = (Constructor<T>) mMimeTypeSetToConstructorMap.get(partMimeTypes);
-                return constructor.newInstance(mApplicationContext, mLayerClient, message);
-            }
-        } catch (IllegalAccessException e) {
-        } catch (InstantiationException e) {
-        } catch (InvocationTargetException e) {
+    @NonNull
+    private static String getModelIdentifier(@NonNull Message message) {
+        String rootMimeType = MessagePartUtils.getRootMimeType(message);
+        if (rootMimeType == null) {
+            // This is a legacy message
+            return MessagePartUtils.getLegacyMessageMimeTypes(message);
         }
-
-        return null;
+        return rootMimeType;
     }
 }

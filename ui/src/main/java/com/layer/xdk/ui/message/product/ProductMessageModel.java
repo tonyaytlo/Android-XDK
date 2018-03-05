@@ -154,7 +154,7 @@ public class ProductMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String name = getName();
-        return name != null ? name : getContext().getString(R.string.xdk_ui_product_message_preview_text);
+        return name != null ? name : getAppContext().getString(R.string.xdk_ui_product_message_preview_text);
     }
 
     @Bindable
@@ -162,7 +162,7 @@ public class ProductMessageModel extends MessageModel {
     public String getPrice() {
         if (mMetadata != null && mMetadata.getPrice() != null) {
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
-            currencyFormat.setCurrency(Currency.getInstance(mMetadata.getCurrency(getContext())));
+            currencyFormat.setCurrency(Currency.getInstance(mMetadata.getCurrency(getAppContext())));
             return currencyFormat.format(mMetadata.getPrice());
         }
 
@@ -172,7 +172,7 @@ public class ProductMessageModel extends MessageModel {
     @Bindable
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())
+            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
                     .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
                     .build());
         }
@@ -194,8 +194,8 @@ public class ProductMessageModel extends MessageModel {
             }
 
             builder.centerCrop(true)
-                    .resize(getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_width),
-                            getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_height))
+                    .resize(getAppContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_width),
+                            getAppContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_height))
                     .tag(getClass().getSimpleName());
 
             return builder.build();

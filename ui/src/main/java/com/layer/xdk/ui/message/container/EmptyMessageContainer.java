@@ -17,13 +17,12 @@ import android.widget.FrameLayout;
 
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.model.AbstractMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
 
 public class EmptyMessageContainer extends FrameLayout implements MessageContainer {
-    protected MessageContainerHelper mMessageContainerHelper;
     private LayoutInflater mInflater;
+    private MessageContainerHelper mMessageContainerHelper;
 
     public EmptyMessageContainer(@NonNull Context context) {
         this(context, null, 0);
@@ -35,9 +34,10 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
 
     public EmptyMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mMessageContainerHelper = new MessageContainerHelper();
-        mMessageContainerHelper.setCornerRadius(context.getResources().getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
         mInflater = LayoutInflater.from(context);
+        mMessageContainerHelper = new MessageContainerHelper();
+        mMessageContainerHelper.setCornerRadius(context.getResources()
+                .getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     }
 
     @Override
-    public <T extends AbstractMessageModel> void setMessageModel(T model) {
+    public <T extends MessageModel> void setMessageModel(T model) {
         if (getChildCount() == 0) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.w("No message view set on this container");
@@ -75,10 +75,11 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
             model.addOnPropertyChangedCallback(new HasContentCallback());
             setContentBackground(model);
         }
+        messageBinding.executePendingBindings();
     }
 
     @Override
-    public <T extends AbstractMessageModel> void setContentBackground(@NonNull T model) {
+    public <T extends MessageModel> void setContentBackground(@NonNull T model) {
         GradientDrawable background = (GradientDrawable) ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_standard_message_container_content_background);
         if (background != null) {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));
@@ -89,7 +90,7 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
     private class HasContentCallback extends Observable.OnPropertyChangedCallback {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId == BR.hasContent) {
+            if (propertyId == BR.hasContent || propertyId == BR._all) {
                 MessageModel messageModel = (MessageModel) sender;
                 View messageRoot = getChildAt(0);
                 messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);

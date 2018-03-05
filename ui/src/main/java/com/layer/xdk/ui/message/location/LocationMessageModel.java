@@ -14,6 +14,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
@@ -21,10 +22,16 @@ import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandle
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStreamReader;
 
 public class LocationMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.location+json";
+    private static final String LEGACY_KEY_LATITUDE = "lat";
+    private static final String LEGACY_KEY_LONGITUDE = "lon";
+    private static final String LEGACY_KEY_LABEL = "label";
 
     private static final String ACTION_EVENT_OPEN_MAP = "open-map";
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5.0)) / 2.0;
@@ -33,6 +40,7 @@ public class LocationMessageModel extends MessageModel {
     private final Gson mGson;
 
     private LocationMessageMetadata mMetadata;
+    private boolean mLegacy;
 
     public LocationMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
@@ -58,12 +66,35 @@ public class LocationMessageModel extends MessageModel {
     }
 
     @Override
+    protected void processLegacyParts() {
+        mLegacy = true;
+        mMetadata = new LocationMessageMetadata();
+
+        try {
+            JSONObject json = new JSONObject(
+                    new String(getMessage().getMessageParts().iterator().next().getData()));
+
+            mMetadata.setLatitude(json.optDouble(LEGACY_KEY_LATITUDE, 0));
+            mMetadata.setLongitude(json.optDouble(LEGACY_KEY_LONGITUDE, 0));
+            mMetadata.setTitle(json.optString(LEGACY_KEY_LABEL, null));
+        } catch (JSONException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e(e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
     @Override
     public String getTitle() {
+        if (mLegacy) {
+            // Return null here since title is used for the marker name
+            return null;
+        }
         return mMetadata != null ? mMetadata.getTitle() : null;
     }
 
@@ -143,7 +174,7 @@ public class LocationMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = getTitle();
-        return title != null ? title : getContext().getString(R.string.xdk_ui_location_message_preview_text);
+        return title != null ? title : getAppContext().getString(R.string.xdk_ui_location_message_preview_text);
     }
 
     @Nullable
@@ -153,7 +184,7 @@ public class LocationMessageModel extends MessageModel {
 
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())
+            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
                     .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
                     .build());
         }
@@ -184,7 +215,7 @@ public class LocationMessageModel extends MessageModel {
 
             // Set dimensions
             // Google Static Map API has max dimension 640
-            int mapWidth = (int) getContext().getResources().getDimension(R.dimen.xdk_ui_location_message_map_width);
+            int mapWidth = (int) getAppContext().getResources().getDimension(R.dimen.xdk_ui_location_message_map_width);
             int mapHeight = (int) Math.round((double) mapWidth / GOLDEN_RATIO);
 
             url.append("&size=").append(mapWidth).append("x").append(mapHeight);
