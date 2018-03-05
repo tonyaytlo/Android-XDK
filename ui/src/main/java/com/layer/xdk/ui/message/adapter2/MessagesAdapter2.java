@@ -22,7 +22,6 @@ import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
 
-
     private final LayerClient mLayerClient;
     private final ImageCacheWrapper mImageCacheWrapper;
     private final DateFormatter mDateFormatter;
@@ -84,7 +83,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 //            throw new IllegalStateException("Unknown View Type");
 //        }
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
