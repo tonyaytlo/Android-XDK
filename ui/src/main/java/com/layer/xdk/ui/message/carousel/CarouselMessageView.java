@@ -1,24 +1,30 @@
 package com.layer.xdk.ui.message.carousel;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
-import com.layer.xdk.ui.message.viewer.MessageViewer;
+import com.layer.xdk.ui.message.view.ParentMessageView;
 
 import java.util.List;
 
-public class CarouselMessageView extends MessageView<CarouselMessageModel> {
+public class CarouselMessageView extends FrameLayout implements ParentMessageView {
     private HorizontalScrollView mScrollView;
     private LinearLayout mLinearLayout;
+    private LayoutInflater mInflater;
 
-    private CarouselMessageModel mModel;
     private int mItemVerticalMargins;
     private int mItemHorizontalMargins;
 
@@ -32,6 +38,7 @@ public class CarouselMessageView extends MessageView<CarouselMessageModel> {
 
     public CarouselMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mInflater = LayoutInflater.from(context);
         mItemVerticalMargins = Math.round(context.getResources().getDimension(R.dimen.xdk_ui_carousel_message_item_vertical_margins));
         mItemHorizontalMargins = Math.round(context.getResources().getDimension(R.dimen.xdk_ui_carousel_message_item_horizontal_margins));
 
@@ -47,27 +54,54 @@ public class CarouselMessageView extends MessageView<CarouselMessageModel> {
     }
 
     @Override
-    public void setMessageModel(CarouselMessageModel carouselMessageModel) {
-        mModel = carouselMessageModel;
+    public <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
+            @NonNull OnLongClickListener longClickListener) {
+        if (!(model instanceof CarouselMessageModel)) {
+            // Nothing to do with a non carousel model
+            return;
+        }
+        CarouselMessageModel carouselModel = (CarouselMessageModel) model;
+
         mLinearLayout.removeAllViews();
-        List<MessageModel> models = carouselMessageModel.getCarouselItemModels();
+        List<MessageModel> models = carouselModel.getCarouselItemModels();
 
         for (int i = 0; i < models.size(); i++) {
-            MessageModel model = models.get(i);
+            MessageModel itemModel = models.get(i);
 
-            MessageViewer messageViewer = new MessageViewer(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i == 0) {
-                params.setMargins(0, mItemVerticalMargins, mItemHorizontalMargins, mItemVerticalMargins);
-            } else if (i == models.size()-1) {
-                params.setMargins(mItemHorizontalMargins, mItemVerticalMargins, 0, mItemVerticalMargins);
+                params.setMargins(0, mItemVerticalMargins, mItemHorizontalMargins,
+                        mItemVerticalMargins);
+            } else if (i == models.size() - 1) {
+                params.setMargins(mItemHorizontalMargins, mItemVerticalMargins, 0,
+                        mItemVerticalMargins);
             } else {
-                params.setMargins(mItemHorizontalMargins, mItemVerticalMargins, mItemHorizontalMargins, mItemVerticalMargins);
+                params.setMargins(mItemHorizontalMargins, mItemVerticalMargins,
+                        mItemHorizontalMargins, mItemVerticalMargins);
             }
 
-            messageViewer.setLayoutParams(params);
-            messageViewer.bindModelToView(model);
-            mLinearLayout.addView(messageViewer);
+            ViewDataBinding containerBinding = DataBindingUtil.inflate(mInflater,
+                    itemModel.getContainerViewLayoutId(), mLinearLayout, false);
+
+            MessageContainer container = (MessageContainer) containerBinding.getRoot();
+            container.setLayoutParams(params);
+            mLinearLayout.addView(container);
+
+            View contentView = container.inflateMessageView(itemModel.getViewLayoutId());
+            contentView.setOnLongClickListener(longClickListener);
+            if (contentView instanceof ParentMessageView) {
+                ((ParentMessageView) contentView).inflateChildLayouts(itemModel, longClickListener);
+            }
+        }
+    }
+
+    public void setMessageModel(CarouselMessageModel model) {
+        if (model != null) {
+            for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
+                MessageContainer container = (MessageContainer) mLinearLayout.getChildAt(i);
+                container.setMessageModel(model.getCarouselItemModels().get(i));
+            }
         }
 
     }

@@ -22,7 +22,7 @@
         <TextView
             android:id="@+id/xdk_ui_titled_message_container_title"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/xdk_ui_drawable_bottom_border"
             android:ellipsize="end"
             android:maxLines="3"
@@ -36,23 +36,23 @@
             android:textColor="@color/xdk_ui_titled_message_container_content_view_title"
             android:textSize="@dimen/xdk_ui_titled_message_container_title_text_size"
             android:visibility="@{TextUtils.isEmpty(messageModel.title) ? View.GONE : View.VISIBLE}"
-            app:layout_constraintHeight_default="wrap"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="@+id/xdk_ui_titled_message_container_content_view"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="@+id/xdk_ui_titled_message_container_content_view"
-            app:layout_constraintRight_toRightOf="@+id/xdk_ui_titled_message_container_content_view"
+            app:layout_constraintStart_toStartOf="@+id/xdk_ui_titled_message_container_content_view"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="spread"
             app:layout_goneMarginTop="0dp"/>
 
         <ViewStub
             android:id="@+id/xdk_ui_titled_message_container_content_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_titled_message_container_title"
-            app:layout_constraintWidth_default="wrap"/>
+            android:inflatedId="@id/xdk_ui_titled_message_container_content_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_titled_message_container_title"/>
 
     </com.layer.xdk.ui.message.container.TitledMessageContainer>
 </layout>

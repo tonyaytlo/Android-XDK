@@ -1,37 +1,36 @@
-package com.layer.xdk.ui.message.file;
+package com.layer.xdk.ui.message.product;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.layer.xdk.ui.message.MessageViewHelper;
 
-public class FileMessageView extends AppCompatImageView {
+public class ProductMessageLayout extends ConstraintLayout {
     private MessageViewHelper mMessageViewHelper;
 
-    public FileMessageView(Context context) {
+    public ProductMessageLayout(Context context) {
         this(context, null, 0);
     }
 
-    public FileMessageView(Context context, @Nullable AttributeSet attrs) {
+    public ProductMessageLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FileMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ProductMessageLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mMessageViewHelper = new MessageViewHelper(context);
-
         setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 mMessageViewHelper.performAction();
             }
         });
     }
 
-    public void setMessageModel(FileMessageModel model) {
+    public void setMessageModel(final ProductMessageModel model) {
         mMessageViewHelper.setMessageModel(model);
     }
 }

@@ -21,6 +21,7 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.File;
@@ -65,13 +66,9 @@ public class FileMessageModel extends MessageModel {
         mFileProviderAuthority = context.getPackageName() + ".file_provider";
     }
 
-    public Class<FileMessageView> getRendererType() {
-        return FileMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_file_message_view;
     }
 
     @Override
@@ -82,13 +79,21 @@ public class FileMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
         setupFileIconDrawable(mMetadata.getMimeType());
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing file message", e);
+            }
+        }
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
