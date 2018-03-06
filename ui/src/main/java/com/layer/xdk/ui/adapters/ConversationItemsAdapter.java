@@ -15,8 +15,6 @@ import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
-import com.layer.xdk.ui.recyclerview.OnItemClickListener;
-import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
@@ -113,20 +111,7 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     public void setDateFormatter(DateFormatter dateFormatter) {
         mDateFormatter = dateFormatter;
     }
-
-    //==============================================================================================
-    // UI Interactions
-    //==============================================================================================
-
-    @Override
-    public void setItemClickListener(OnItemClickListener<Conversation> listener) {
-        super.setItemClickListener(listener);
-    }
-
-    @Override
-    public void setItemLongClickListener(OnItemLongClickListener<Conversation> listener) {
-        super.setItemLongClickListener(listener);
-    }
+    
 
     //==============================================================================================
     // Initial message history
