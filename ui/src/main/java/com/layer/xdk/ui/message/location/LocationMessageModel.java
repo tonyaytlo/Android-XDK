@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class LocationMessageModel extends MessageModel {
@@ -61,8 +62,16 @@ public class LocationMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, LocationMessageMetadata.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing location message", e);
+            }
+        }
     }
 
     @Override

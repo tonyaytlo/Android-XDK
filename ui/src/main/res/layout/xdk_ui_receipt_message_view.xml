@@ -10,36 +10,37 @@
         <import type="com.layer.xdk.ui.message.location.LocationMessageMetadata"/>
 
         <variable
-            name="viewModel"
+            name="messageModel"
             type="ReceiptMessageModel"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <com.layer.xdk.ui.message.receipt.ReceiptMessageLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="@dimen/xdk_ui_receipt_message_view_max_width"
-        android:minWidth="@dimen/xdk_ui_receipt_message_view_min_width">
+        android:minWidth="@dimen/xdk_ui_receipt_message_view_min_width"
+        app:messageModel="@{messageModel}">
 
         <LinearLayout
             android:id="@+id/products_layout"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/xdk_ui_margin_large"
             android:layout_marginLeft="@dimen/xdk_ui_margin_large"
             android:layout_marginRight="@dimen/xdk_ui_margin_large"
             android:layout_marginStart="@dimen/xdk_ui_margin_large"
             android:orientation="vertical"
+            app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="wrap"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="spread"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:id="@+id/details_layout"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/xdk_ui_drawable_bottom_border"
             android:orientation="vertical"
             android:paddingEnd="@dimen/xdk_ui_margin_large"
@@ -47,11 +48,10 @@
             android:paddingRight="@dimen/xdk_ui_margin_large"
             android:paddingStart="@dimen/xdk_ui_margin_large"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
+            app:layout_constrainedHeight="true"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/products_layout"
-            app:layout_constraintWidth_default="spread">
+            app:layout_constraintTop_toBottomOf="@id/products_layout">
 
             <TextView
                 android:id="@+id/payment_method_title"
@@ -63,7 +63,7 @@
                 android:text="@string/xdk_ui_receipt_message_payment_method_title"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_title_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_title_size"
-                app:visibleOrGone="@{viewModel.metadata.paymentMethod!=null}"/>
+                app:visibleOrGone="@{messageModel.metadata.paymentMethod!=null}"/>
 
             <TextView
                 android:id="@+id/payment_method_value"
@@ -73,10 +73,10 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{viewModel.metadata.paymentMethod}"
+                android:text="@{messageModel.metadata.paymentMethod}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
-                app:visibleOrGone="@{viewModel.metadata.paymentMethod!=null}"/>
+                app:visibleOrGone="@{messageModel.metadata.paymentMethod!=null}"/>
 
             <TextView
                 android:id="@+id/shipping_address_title"
@@ -88,7 +88,7 @@
                 android:text="@string/xdk_ui_receipt_message_shipping_address_title"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_title_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_title_size"
-                app:visibleOrGone="@{viewModel.shippingAddressLocationModel!=null}"/>
+                app:visibleOrGone="@{messageModel.shippingAddressLocationModel!=null}"/>
 
             <TextView
                 android:id="@+id/shipping_address_value"
@@ -98,10 +98,10 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{viewModel.shippingAddressLocationModel.metadata.formattedAddress}"
+                android:text="@{messageModel.shippingAddressLocationModel.metadata.formattedAddress}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
-                app:visibleOrGone="@{viewModel.shippingAddressLocationModel!=null &amp;&amp; viewModel.shippingAddressLocationModel.metadata!=null}"/>
+                app:visibleOrGone="@{messageModel.shippingAddressLocationModel!=null &amp;&amp; messageModel.shippingAddressLocationModel.metadata!=null}"/>
 
             <TextView
                 android:id="@+id/billing_address_title"
@@ -113,7 +113,7 @@
                 android:text="@string/xdk_ui_receipt_message_billing_address_title"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_title_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_title_size"
-                app:visibleOrGone="@{viewModel.billingAddressLocationModel!=null &amp;&amp; viewModel.billingAddressLocationModel.metadata!=null}"/>
+                app:visibleOrGone="@{messageModel.billingAddressLocationModel!=null &amp;&amp; messageModel.billingAddressLocationModel.metadata!=null}"/>
 
             <TextView
                 android:id="@+id/billing_address_value"
@@ -123,22 +123,21 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{viewModel.billingAddressLocationModel.metadata.formattedAddress}"
+                android:text="@{messageModel.billingAddressLocationModel.metadata.formattedAddress}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
-                app:visibleOrGone="@{viewModel.billingAddressLocationModel!=null &amp;&amp; viewModel.billingAddressLocationModel.metadata!=null}"/>
+                app:visibleOrGone="@{messageModel.billingAddressLocationModel!=null &amp;&amp; messageModel.billingAddressLocationModel.metadata!=null}"/>
 
         </LinearLayout>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:padding="@dimen/xdk_ui_margin_large"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_default="wrap"
+            app:layout_constrainedHeight="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_layout"
-            app:layout_constraintWidth_default="spread">
+            app:layout_constraintTop_toBottomOf="@+id/details_layout">
 
             <TextView
                 android:id="@+id/total_title"
@@ -164,8 +163,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_default="percent"
                 app:layout_constraintWidth_percent="50"
-                app:receiptCostToDisplay="@{viewModel.metadata}"/>
+                app:receiptCostToDisplay="@{messageModel.metadata}"/>
         </android.support.constraint.ConstraintLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </com.layer.xdk.ui.message.receipt.ReceiptMessageLayout>
 </layout>

@@ -16,9 +16,10 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,13 +40,9 @@ public class ReceiptMessageModel extends MessageModel {
         mGson = gsonBuilder.create();
     }
 
-    public Class<? extends MessageView> getRendererType() {
-        return ReceiptMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_receipt_message_view;
     }
 
     @Override
@@ -55,8 +52,16 @@ public class ReceiptMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing receipt message", e);
+            }
+        }
     }
 
     @Override

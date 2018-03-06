@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/xdk_ui_titled_message_container_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/xdk_ui_drawable_bottom_border"
             android:ellipsize="end"
@@ -37,7 +37,6 @@
             android:textSize="@dimen/xdk_ui_titled_message_container_title_text_size"
             android:visibility="@{TextUtils.isEmpty(messageModel.title) ? View.GONE : View.VISIBLE}"
             app:layout_constrainedHeight="true"
-            app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="@+id/xdk_ui_titled_message_container_content_view"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/xdk_ui_titled_message_container_content_view"
@@ -46,6 +45,7 @@
 
         <ViewStub
             android:id="@+id/xdk_ui_titled_message_container_content_view"
+            android:inflatedId="@id/xdk_ui_titled_message_container_content_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constrainedWidth="true"
