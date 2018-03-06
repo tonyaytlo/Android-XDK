@@ -13,6 +13,7 @@ import com.layer.xdk.ui.adapters.ConversationItemsAdapter;
 import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -60,8 +61,12 @@ public class ConversationItemsListViewModel extends BaseObservable {
         return mConversationItemsAdapter;
     }
 
-    public void setItemClickListener(OnItemClickListener<Conversation> itemClickListener) {
-        mConversationItemsAdapter.setItemClickListener(itemClickListener);
+    public void setItemClickListener(OnItemClickListener<Conversation> listener) {
+        mConversationItemsAdapter.setItemClickListener(listener);
+    }
+
+    public void setItemLongClickListener(OnItemLongClickListener<Conversation> listener) {
+        mConversationItemsAdapter.setItemLongClickListener(listener);
     }
 
     public void setIdentityFormatter(IdentityFormatter identityFormatter) {

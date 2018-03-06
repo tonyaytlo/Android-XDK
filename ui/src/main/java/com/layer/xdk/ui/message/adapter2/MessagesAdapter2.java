@@ -9,20 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.view.ParentMessageView;
-import com.layer.xdk.ui.recyclerview.OnItemClickListener;
+import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
-
 
     private final LayerClient mLayerClient;
     private final ImageCacheWrapper mImageCacheWrapper;
@@ -35,10 +33,8 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     private boolean mShouldShowPresenceForCurrentUser;
     private boolean mReadReceiptsEnabled = true;
 
-    // TODO AND-1242 Change to MessageModel?
-    private OnItemClickListener<Message> mItemClickListener;
-
     private MessageModel mLastModelForViewTypeLookup;
+    private OnItemLongClickListener<MessageModel> mItemLongClickListener;
 
 
     public MessagesAdapter2(LayerClient layerClient,
@@ -88,7 +84,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 //        }
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         MessageModel item = getItem(position);
@@ -101,14 +96,6 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 
         mLastModelForViewTypeLookup = getItem(position);
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
-    }
-
-    public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
-        mItemClickListener = itemClickListener;
-    }
-
-    public OnItemClickListener<Message> getItemClickListener() {
-        return mItemClickListener;
     }
 
     @NonNull
@@ -158,7 +145,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         viewModel.setShowPresence(getShouldShowPresence());
         viewModel.setShouldShowAvatarForCurrentUser(getShouldShowAvatarForCurrentUser());
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
-        viewModel.setItemClickListener(getItemClickListener());
+        viewModel.setItemLongClickListener(getItemLongClickListener());
 
         MessageDefaultViewHolder viewHolder = new MessageDefaultViewHolder(parent, viewModel);
         inflateDefaultViewHolder(viewHolder, model);
@@ -177,8 +164,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
                 (MessageContainer) viewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
+        messageView.setOnLongClickListener(viewHolder.getLongClickListener());
         if (messageView instanceof ParentMessageView) {
-            ((ParentMessageView) messageView).inflateChildLayouts(model);
+            ((ParentMessageView) messageView).inflateChildLayouts(model, viewHolder.getLongClickListener());
         }
     }
 
@@ -257,6 +245,19 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
      */
     public void setReadReceiptsEnabled(boolean readReceiptsEnabled) {
         mReadReceiptsEnabled = readReceiptsEnabled;
+    }
+
+    /**
+     * Set the long click listener that will be added to the view holder and message views.
+     *
+     * @param itemLongClickListener listener to set on view holder and message views
+     */
+    public void setItemLongClickListener(OnItemLongClickListener<MessageModel> itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
+    }
+
+    public OnItemLongClickListener<MessageModel> getItemLongClickListener() {
+        return mItemLongClickListener;
     }
 
     /**

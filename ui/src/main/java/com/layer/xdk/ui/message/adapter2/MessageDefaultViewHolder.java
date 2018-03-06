@@ -18,7 +18,7 @@ public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultVi
     // Cache this so we know not to re-set the bias on the constraint layout
     private Boolean mCurrentlyMyMessage;
 
-    public MessageDefaultViewHolder(ViewGroup parent, MessageDefaultViewHolderModel viewModel) {
+    public MessageDefaultViewHolder(ViewGroup parent, final MessageDefaultViewHolderModel viewModel) {
         super(parent, R.layout.xdk_ui_message_item_default, viewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
@@ -30,7 +30,6 @@ public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultVi
         getBinding().setViewHolderModel(viewModel);
 
         getBinding().getRoot().setClickable(true);
-        getBinding().getRoot().setOnClickListener(viewModel.getOnClickListener());
         getBinding().getRoot().setOnLongClickListener(viewModel.getOnLongClickListener());
         getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             @Override
@@ -63,6 +62,10 @@ public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultVi
     public View inflateViewContainer(int containerLayoutId) {
         getBinding().messageViewStub.getViewStub().setLayoutResource(containerLayoutId);
         return getBinding().messageViewStub.getViewStub().inflate();
+    }
+
+    public View.OnLongClickListener getLongClickListener() {
+        return getViewHolderModel().getOnLongClickListener();
     }
 
     private class AlphaAndBiasObserver extends Observable.OnPropertyChangedCallback {

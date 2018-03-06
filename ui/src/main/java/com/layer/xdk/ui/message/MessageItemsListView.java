@@ -27,7 +27,6 @@ import java.util.Set;
 
 public class MessageItemsListView extends SwipeRefreshLayout implements LayerChangeEventListener.BackgroundThread.Weak {
 
-    protected boolean mShouldShowAvatarsInOneOnOneConversations;
     protected RecyclerView mMessagesRecyclerView;
     protected LinearLayoutManager mLinearLayoutManager;
     protected MessagesAdapter2 mAdapter;
@@ -174,9 +173,9 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      */
     private void autoScroll() {
         // Find first since this layout is reversed
-        int lastVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-        if (lastVisiblePosition < 3) {
-            mMessagesRecyclerView.scrollToPosition(0);
+        int firstVisiblePosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        if (firstVisiblePosition < 2) {
+            mLinearLayoutManager.smoothScrollToPosition(mMessagesRecyclerView, null, 0);
         }
     }
 
