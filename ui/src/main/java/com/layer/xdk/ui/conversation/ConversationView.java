@@ -5,7 +5,6 @@ import android.databinding.BindingAdapter;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
@@ -57,6 +56,7 @@ public class ConversationView extends ConstraintLayout {
     public static void setConversation(ConversationView view, Conversation conversation,
                                        LayerClient layerClient, MessageItemsListViewModel viewModel) {
         view.mLayerClient = layerClient;
+        view.mMessageItemListView.setConversation(layerClient, conversation);
 
         view.mBinding.setViewModel(viewModel);
         view.mBinding.executePendingBindings();
@@ -79,9 +79,5 @@ public class ConversationView extends ConstraintLayout {
 
     public void setTypingIndicator(TypingIndicatorLayout typingIndicator) {
         mTypingIndicator = typingIndicator;
-    }
-
-    public void setHeaderView(View headerView) {
-        mMessageItemListView.setHeaderView(headerView);
     }
 }
