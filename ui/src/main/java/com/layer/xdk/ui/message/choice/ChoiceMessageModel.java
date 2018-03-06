@@ -42,13 +42,9 @@ public class ChoiceMessageModel extends MessageModel {
         mSelectedChoices = new HashSet<>();
     }
 
-    public Class<ChoiceMessageView> getRendererType() {
-        return ChoiceMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_choice_message_view;
     }
 
     @Override

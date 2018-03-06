@@ -1,61 +1,67 @@
 package com.layer.xdk.ui.message.choice;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.databinding.XdkUiChoiceMessageViewBinding;
-import com.layer.xdk.ui.message.container.TitledMessageContainer;
-import com.layer.xdk.ui.message.view.MessageView;
 
 import java.util.List;
 import java.util.Set;
 
-public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implements
+public class ChoiceMessageLayout extends LinearLayout implements
         ChoiceButtonSet.OnChoiceClickedListener {
     private XdkUiChoiceMessageViewBinding mBinding;
     private ChoiceButtonSet mChoiceButtonSet;
     private TextView mTitle;
 
-    public ChoiceMessageView(Context context) {
+    public ChoiceMessageLayout(Context context) {
         this(context, null, 0);
     }
 
-    public ChoiceMessageView(Context context, @Nullable AttributeSet attrs) {
+    public ChoiceMessageLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ChoiceMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ChoiceMessageLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater inflater = LayoutInflater.from(context);
+    }
 
-        mBinding = XdkUiChoiceMessageViewBinding.inflate(inflater, this, true);
+    public void setMessageModel(final ChoiceMessageModel model) {
+        if (mBinding == null) {
+            initializeBinding();
+        }
+
+        mBinding.setMessageModel(model);
+        if (model != null) {
+            model.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    if (sender != model) return;
+
+                    if (propertyId == BR.choiceMessageMetadata
+                            || propertyId == BR.selectedChoices) {
+                        processModel((ChoiceMessageModel) sender);
+                    }
+                }
+            });
+
+            updateLabel(model);
+            processModel(model);
+        }
+    }
+
+    private void initializeBinding() {
+        mBinding = DataBindingUtil.getBinding(this);
         mChoiceButtonSet = mBinding.choiceButtonSet;
         mChoiceButtonSet.setOnChoiceClickedListener(this);
         mTitle = mBinding.choiceMessageLabel;
-    }
-
-    @Override
-    public void setMessageModel(final ChoiceMessageModel model) {
-        mBinding.setViewModel(model);
-        model.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                if (sender != model) return;
-
-                if (propertyId == BR.choiceMessageMetadata || propertyId == BR.selectedChoices) {
-                    processModel((ChoiceMessageModel) sender);
-                }
-            }
-        });
-
-        updateLabel(model);
-        processModel(model);
     }
 
     private void processModel(ChoiceMessageModel model) {
@@ -72,10 +78,7 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implement
             mChoiceButtonSet.setAllowMultiSelect(allowMultiSelect);
             mChoiceButtonSet.setEnabledForMe(isEnabledForMe);
 
-            for (ChoiceMetadata choice : choices) {
-                mChoiceButtonSet.addOrUpdateChoice(choice);
-            }
-
+            mChoiceButtonSet.setupViewsForChoices(choices);
             mChoiceButtonSet.setSelection(selectedChoices);
         }
     }
@@ -95,9 +98,9 @@ public class ChoiceMessageView extends MessageView<ChoiceMessageModel> implement
     @Override
     public void onChoiceClick(ChoiceMetadata choice, boolean selected,
             Set<String> selectedChoices) {
-        ChoiceMessageModel viewModel = mBinding.getViewModel();
-        if (viewModel != null) {
-            viewModel.sendResponse(choice, selected, selectedChoices);
+        ChoiceMessageModel messageModel = mBinding.getMessageModel();
+        if (messageModel != null) {
+            messageModel.sendResponse(choice, selected, selectedChoices);
         }
     }
 }

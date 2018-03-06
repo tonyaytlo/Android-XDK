@@ -185,10 +185,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                             ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        for (ChoiceMetadata choiceMetadata : buttonModel.getChoices()) {
-            choiceButtonSet.addOrUpdateChoice(choiceMetadata);
-        }
-
+        choiceButtonSet.setupViewsForChoices(buttonModel.getChoices());
         choiceButtonSet.setEnabledForMe(choiceData.isEnabledForMe());
         choiceButtonSet.setAllowDeselect(choiceData.isAllowDeselect());
         choiceButtonSet.setAllowReselect(choiceData.isAllowReselect());

@@ -18,6 +18,7 @@ import com.layer.xdk.ui.util.Log;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,38 +72,56 @@ public class ChoiceButtonSet extends LinearLayout {
         mEnabledForMe = enabledForMe;
     }
 
-    public void addOrUpdateChoice(final ChoiceMetadata choice) {
-        AppCompatButton choiceButton = findViewWithTag(choice.getId());
-        if (choiceButton == null) {
-            // Instantiate
-            choiceButton = new AppCompatButton((getContext()));
-
-            // Style it
-            choiceButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
-            choiceButton.setTransformationMethod(null);
-            choiceButton.setLines(1);
-            choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                    .getDimension(R.dimen.xdk_ui_choice_button_message_button_text_size));
-            choiceButton.setTextColor(mChoiceButtonColorStateList);
-            choiceButton.setSingleLine(false);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                choiceButton.setStateListAnimator(null);
-            }
-
-            // Add it
-            LayoutParams layoutParams;
-            if (getOrientation() == VERTICAL) {
-                layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
-                        .LayoutParams.WRAP_CONTENT);
-            } else {
-                layoutParams = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
-            }
-            addView(choiceButton, layoutParams);
-
-            choiceButton.setTag(choice.getId());
+    public void setupViewsForChoices(List<ChoiceMetadata> metadata) {
+        mChoiceMetadata.clear();
+        // Ensure we have the right number of views
+        // Add needed views
+        for (int i = getChildCount(); i < metadata.size(); i++) {
+            addButton();
         }
 
+        // Remove extra views
+        int childCount = getChildCount();
+        for (int i = metadata.size(); i < childCount; i++) {
+            removeViewAt(i);
+        }
+
+        // Set up buttons
+        for (int i = 0; i < getChildCount(); i++) {
+            updateChoice(((AppCompatButton) getChildAt(i)), metadata.get(i));
+        }
+    }
+
+    private void addButton() {
+        // Instantiate
+        AppCompatButton choiceButton = new AppCompatButton((getContext()));
+
+        // Style it
+        choiceButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
+        choiceButton.setTransformationMethod(null);
+        choiceButton.setLines(1);
+        choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
+                .getDimension(R.dimen.xdk_ui_choice_button_message_button_text_size));
+        choiceButton.setTextColor(mChoiceButtonColorStateList);
+        choiceButton.setSingleLine(false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            choiceButton.setStateListAnimator(null);
+        }
+
+        // Add it
+        LayoutParams layoutParams;
+        if (getOrientation() == VERTICAL) {
+            layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup
+                    .LayoutParams.WRAP_CONTENT);
+        } else {
+            layoutParams = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.0f);
+        }
+        addView(choiceButton, layoutParams);
+    }
+
+    public void updateChoice(AppCompatButton choiceButton, final ChoiceMetadata choice) {
+        choiceButton.setTag(choice.getId());
         choiceButton.setText(choice.getText());
 
         mChoiceMetadata.put(choice.getId(), choice);
