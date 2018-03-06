@@ -72,7 +72,10 @@ public class EmptyMessageContainer extends FrameLayout implements MessageContain
         messageBinding.setVariable(BR.messageModel, model);
 
         if (model != null) {
-            model.addOnPropertyChangedCallback(new HasContentCallback());
+            HasContentCallback hasContentCallback = new HasContentCallback();
+            model.addOnPropertyChangedCallback(hasContentCallback);
+            // Initiate the view properties as this will only be called if the model changes
+            hasContentCallback.onPropertyChanged(model, BR._all);
             setContentBackground(model);
         }
         messageBinding.executePendingBindings();

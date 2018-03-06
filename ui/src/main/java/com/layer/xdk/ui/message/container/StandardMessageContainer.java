@@ -11,7 +11,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Constraints;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -70,7 +70,11 @@ public class StandardMessageContainer extends ConstraintLayout implements Messag
 
         getBinding().setMessageModel(model);
         if (model != null) {
-            model.addOnPropertyChangedCallback(new HasContentOrMetadataCallback());
+            HasContentOrMetadataCallback hasContentOrMetadataCallback =
+                    new HasContentOrMetadataCallback();
+            model.addOnPropertyChangedCallback(hasContentOrMetadataCallback);
+            // Initiate the view properties as this will only be called if the model changes
+            hasContentOrMetadataCallback.onPropertyChanged(model, BR._all);
             setContentBackground(model);
         }
 
@@ -97,31 +101,29 @@ public class StandardMessageContainer extends ConstraintLayout implements Messag
     private class HasContentOrMetadataCallback extends Observable.OnPropertyChangedCallback {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId != BR.hasContent && propertyId != BR.hasMetadata) {
-                return;
-            }
             MessageModel messageModel = (MessageModel) sender;
             View messageRoot = getBinding().xdkUiStandardMessageContainerContentView.getRoot();
-            if (propertyId == BR.hasContent) {
+            if (propertyId == BR.hasContent || propertyId == BR._all) {
                 messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
-            } else {
+            }
+            if (propertyId == BR.hasMetadata || propertyId == BR._all) {
+                ConstraintSet set = new ConstraintSet();
+                set.clone(StandardMessageContainer.this);
+
                 int minWidth;
-                int bottomMargin = 0;
+                int bottomPadding = 0;
                 if (messageModel.getHasMetadata()) {
                     minWidth = getResources().getDimensionPixelSize(
                             R.dimen.xdk_ui_standard_message_container_min_width);
-                    bottomMargin = getResources().getDimensionPixelOffset(
-                            R.dimen.xdk_ui_margin_tiny);
+                    bottomPadding = getResources().getDimensionPixelOffset(R.dimen.xdk_ui_margin_small);
                 } else {
                     minWidth = getResources().getDimensionPixelSize(
                             R.dimen.xdk_ui_standard_message_container_min_width_zero);
-
                 }
-                messageRoot.setMinimumWidth(minWidth);
-                Constraints.LayoutParams layoutParams =
-                        (Constraints.LayoutParams) messageRoot.getLayoutParams();
-                layoutParams.bottomMargin = bottomMargin;
-                messageRoot.setLayoutParams(layoutParams);
+
+                set.constrainMinWidth(messageRoot.getId(), minWidth);
+                set.applyTo(StandardMessageContainer.this);
+                setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), bottomPadding);
             }
         }
     }

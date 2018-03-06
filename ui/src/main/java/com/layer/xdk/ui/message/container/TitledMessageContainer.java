@@ -10,6 +10,7 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.constraint.Constraints;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -69,7 +70,11 @@ public class TitledMessageContainer extends ConstraintLayout implements MessageC
 
         getBinding().setMessageModel(model);
         if (model != null) {
-            model.addOnPropertyChangedCallback(new HasContentOrMetadataCallback());
+            HasContentOrMetadataCallback hasContentOrMetadataCallback =
+                    new HasContentOrMetadataCallback();
+            model.addOnPropertyChangedCallback(hasContentOrMetadataCallback);
+            // Initiate the view properties as this will only be called if the model changes
+            hasContentOrMetadataCallback.onPropertyChanged(model, BR._all);
             setContentBackground(model);
         }
 
@@ -101,7 +106,10 @@ public class TitledMessageContainer extends ConstraintLayout implements MessageC
             if (propertyId == BR.hasContent || propertyId == BR._all) {
                 messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
             }
-            if (propertyId == BR.hasMetadata || propertyId == BR._all){
+            if (propertyId == BR.hasMetadata || propertyId == BR._all) {
+                ConstraintSet set = new ConstraintSet();
+                set.clone(TitledMessageContainer.this);
+
                 int minWidth;
                 int topMargin = 0;
                 if (messageModel.getHasMetadata()) {
@@ -113,7 +121,8 @@ public class TitledMessageContainer extends ConstraintLayout implements MessageC
                             R.dimen.xdk_ui_titled_message_container_min_width_zero);
 
                 }
-                messageRoot.setMinimumWidth(minWidth);
+                set.constrainMinWidth(messageRoot.getId(), minWidth);
+                set.applyTo(TitledMessageContainer.this);
                 Constraints.LayoutParams layoutParams =
                         (Constraints.LayoutParams) messageRoot.getLayoutParams();
                 layoutParams.topMargin = topMargin;

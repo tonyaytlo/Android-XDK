@@ -2,15 +2,14 @@ package com.layer.xdk.ui.message.file;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 
-import com.layer.xdk.ui.databinding.XdkUiFileMessageLayoutBinding;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.message.MessageViewHelper;
 
-public class FileMessageView extends MessageView<FileMessageModel> {
-    private XdkUiFileMessageLayoutBinding mBinding;
+public class FileMessageView extends AppCompatImageView {
+    private MessageViewHelper mMessageViewHelper;
 
     public FileMessageView(Context context) {
         this(context, null, 0);
@@ -22,22 +21,17 @@ public class FileMessageView extends MessageView<FileMessageModel> {
 
     public FileMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        mBinding = XdkUiFileMessageLayoutBinding.inflate(layoutInflater, this, true);
+        mMessageViewHelper = new MessageViewHelper(context);
 
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                FileMessageModel model = mBinding.getViewModel();
-                if (model != null) {
-                    performAction(model.getActionEvent(), model.getActionData());
-                }
+                mMessageViewHelper.performAction();
             }
         });
     }
 
-    @Override
     public void setMessageModel(FileMessageModel model) {
-        mBinding.setViewModel(model);
+        mMessageViewHelper.setMessageModel(model);
     }
 }
