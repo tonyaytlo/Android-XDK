@@ -17,7 +17,7 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
@@ -25,6 +25,7 @@ import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandle
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -52,13 +53,9 @@ public class ProductMessageModel extends MessageModel {
         mOptions = new ArrayList<>();
     }
 
-    public Class<? extends MessageView> getRendererType() {
-        return ProductMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_product_message_view;
     }
 
     @Override
@@ -69,9 +66,17 @@ public class ProductMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, ProductMessageMetadata.class);
         mOptions.clear();
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing product message", e);
+            }
+        }
     }
 
     @Override
