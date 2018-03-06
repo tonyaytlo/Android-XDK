@@ -13,7 +13,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
@@ -31,13 +30,9 @@ public class CarouselMessageModel extends MessageModel {
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
-    public Class<? extends MessageView> getRendererType() {
-        return CarouselMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_carousel_message_view;
     }
 
     @Override
@@ -96,16 +91,24 @@ public class CarouselMessageModel extends MessageModel {
         if (super.getActionEvent() != null) {
             return super.getActionEvent();
         }
-        return mMetadata.getAction().getEvent();
+
+        if (mMetadata.getAction() != null) {
+            return mMetadata.getAction().getEvent();
+        }
+        return null;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
             return super.getActionData();
         }
 
-        return mMetadata.getAction().getData();
+        if (mMetadata.getAction() != null) {
+            return mMetadata.getAction().getData();
+        }
+        return new JsonObject();
     }
 
     @Nullable
