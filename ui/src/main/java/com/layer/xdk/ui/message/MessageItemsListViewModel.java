@@ -1,46 +1,118 @@
 package com.layer.xdk.ui.message;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.paging.LivePagedListBuilder;
+import android.arch.paging.PagedList;
+import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
+import com.layer.sdk.query.Predicate;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
+import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
+import com.layer.xdk.ui.message.action.OpenFileActionHandler;
+import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
+import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
+import com.layer.xdk.ui.message.binder.BinderRegistry;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 public class MessageItemsListViewModel extends BaseObservable {
-//    protected MessageItemsAdapter mMessageItemsAdapter;
-    private MessagesAdapter2 mAdapter2;
+    private static final int DEFAULT_PAGE_SIZE = 30;
+    private static final int DEFAULT_PREFETCH_DISTANCE = 60;
 
-    public MessageItemsListViewModel(LayerClient layerClient,
+    private LayerClient mLayerClient;
+    private MessagesAdapter2 mAdapter;
+    private Conversation mConversation;
+    private Predicate mQueryPredicate;
+    private BinderRegistry mBinderRegistry;
+    private LiveData<PagedList<MessageModel>> mMessageModelList;
+    private Observer<PagedList<MessageModel>> mMessageModelListObserver;
+
+    public MessageItemsListViewModel(Context context, LayerClient layerClient,
                                      ImageCacheWrapper imageCacheWrapper,
                                      DateFormatter dateFormatter,
                                      IdentityFormatter identityFormatter) {
-//        mMessageItemsAdapter = new MessageItemsAdapter(context, layerClient,
-//                imageCacheWrapper, dateFormatter, identityFormatter);
+        mLayerClient = layerClient;
+        mBinderRegistry = new BinderRegistry(context, layerClient);
+        mAdapter = new MessagesAdapter2(layerClient, imageCacheWrapper, dateFormatter,
+                identityFormatter);
 
-        mAdapter2 = new MessagesAdapter2(layerClient,
-                imageCacheWrapper, dateFormatter, identityFormatter);
-
-
-
+        ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
 
     }
 
-//    @Bindable
-//    public MessageItemsAdapter getAdapter() {
-//        return mMessageItemsAdapter;
-//    }
+    public void setConversation(Conversation conversation) {
+        mConversation = conversation;
+        if (conversation != null) {
+            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
+            createAndObserveMessageModelList();
+        }
+        notifyChange();
+    }
 
     @Bindable
     public MessagesAdapter2 getAdapter() {
-        return mAdapter2;
+        return mAdapter;
     }
 
     public void setItemClickListener(OnItemClickListener<Message> itemClickListener) {
 //        mMessageItemsAdapter.setItemClickListener(itemClickListener);
+    }
+
+    /**
+     * Set a custom predicate to use during the query for messages instead of the default.
+     *
+     * @param queryPredicate predicate to use for message query
+     */
+    @SuppressWarnings("unused")
+    public void setQueryPredicate(@Nullable Predicate queryPredicate) {
+        mQueryPredicate = queryPredicate;
+        // Only re-create the list if the conversation has already been set. Else just rely on the
+        // initial creation to happen when the conversation is set.
+        if (mConversation != null) {
+            createAndObserveMessageModelList();
+            notifyChange();
+        }
+    }
+
+    /**
+     * Creates the {@link PagedList} and observes for changes so the adapter can be updated. If a
+     * {@link PagedList} already exists then the observer will be removed before creating a new one.
+     */
+    private void createAndObserveMessageModelList() {
+        // Remove observer if this is an update
+        if (mMessageModelList != null) {
+            mMessageModelList.removeObserver(mMessageModelListObserver);
+        }
+
+        mMessageModelList = new LivePagedListBuilder<>(
+                new MessagesDataSourceFactory(mLayerClient, mBinderRegistry, mConversation,
+                        mQueryPredicate),
+                new PagedList.Config.Builder()
+                        .setEnablePlaceholders(false)
+                        .setPageSize(DEFAULT_PAGE_SIZE)
+                        .setPrefetchDistance(DEFAULT_PREFETCH_DISTANCE)
+                        .build()
+        ).build();
+
+        mMessageModelListObserver = new Observer<PagedList<MessageModel>>() {
+            @Override
+            public void onChanged(@Nullable PagedList<MessageModel> messages) {
+                mAdapter.submitList(messages);
+            }
+        };
+        mMessageModelList.observeForever(mMessageModelListObserver);
     }
 }
