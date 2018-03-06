@@ -101,6 +101,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                 addOrUpdateButtonsFromModel();
             }
         });
+        mBinding.executePendingBindings();
     }
 
     private void addOrUpdateButtonsFromModel() {

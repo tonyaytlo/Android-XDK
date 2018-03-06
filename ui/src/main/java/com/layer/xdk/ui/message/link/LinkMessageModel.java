@@ -13,6 +13,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
@@ -20,6 +21,7 @@ import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandle
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class LinkMessageModel extends MessageModel {
@@ -39,13 +41,9 @@ public class LinkMessageModel extends MessageModel {
         mGson = gsonBuilder.create();
     }
 
-    public Class<LinkMessageView> getRendererType() {
-        return LinkMessageView.class;
-    }
-
     @Override
     public int getViewLayoutId() {
-        return 0;
+        return R.layout.xdk_ui_link_message_view;
     }
 
     @Override
@@ -55,8 +53,16 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
         mLinkMessageMetadata = mGson.fromJson(reader, LinkMessageMetadata.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing link message", e);
+            }
+        }
     }
 
     @Override
@@ -159,8 +165,7 @@ public class LinkMessageModel extends MessageModel {
                 return null;
             }
 
-            builder.fit(true)
-                    .tag(getClass().getSimpleName());
+            builder.tag(getClass().getSimpleName());
 
             return builder.build();
         }
