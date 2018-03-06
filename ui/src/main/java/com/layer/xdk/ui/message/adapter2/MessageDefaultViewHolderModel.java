@@ -8,6 +8,7 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
@@ -38,7 +39,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private String mSenderName;
     private Set<Identity> mSender = Collections.emptySet();
     private String mReadReceipt;
-    private SpannableString mDateTime;
+    private CharSequence mDateTime;
     private boolean mIsReadReceiptVisible;
     private boolean mShouldDisplayAvatarSpace;
     private boolean mIsAvatarViewVisible;
@@ -49,8 +50,8 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private boolean mShouldShowPresenceForCurrentUser;
 
     public MessageDefaultViewHolderModel(Context context, LayerClient layerClient,
-            ImageCacheWrapper imageCacheWrapper,IdentityFormatter identityFormatter,
-            DateFormatter dateFormatter) {
+                                         ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
+                                         DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);
         mEnableReadReceipts = true;
         mShowAvatars = true;
@@ -81,17 +82,32 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     }
 
     protected void updateReceivedAtDateAndTime() {
-        if (getItem().getGrouping().contains(MessageGrouping.GROUP_START)
-                && !getItem().getGrouping().contains(MessageGrouping.OLDEST_MESSAGE)) {
+        EnumSet<MessageGrouping> grouping = getItem().getGrouping();
+        if (grouping == null) {
+            mShouldShowDateTimeForMessage = false;
+            return;
+        }
+        if (grouping.contains(MessageGrouping.OLDEST_MESSAGE)) {
+            Conversation conversation = getItem().getMessage().getConversation();
+            Date createdAt = conversation.getCreatedAt();
+            if (createdAt != null) {
+                String conversationStartTime = getDateFormatter().formatTime(conversation.getCreatedAt());
+                mDateTime = getContext().getString(R.string.xdk_ui_messages_list_header_conversation_start_time, conversationStartTime);
+                mShouldShowDateTimeForMessage = true;
+            } else {
+                mShouldShowDateTimeForMessage = false;
+            }
+        } else if (grouping.contains(MessageGrouping.GROUP_START)) {
             Date receivedAt = getItem().getMessage().getReceivedAt();
             if (receivedAt == null) receivedAt = new Date();
 
             String day = getDateFormatter().formatTimeDay(receivedAt);
             String time = getDateFormatter().formatTime(receivedAt);
-            mDateTime = new SpannableString(String.format("%s %s", day, time));
-            mDateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
+            SpannableString dateTime = new SpannableString(String.format("%s %s", day, time));
+            dateTime.setSpan(new StyleSpan(Typeface.BOLD), 0, day.length(),
                     Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
+            mDateTime = dateTime;
             mShouldShowDateTimeForMessage = true;
         } else {
             mShouldShowDateTimeForMessage = false;

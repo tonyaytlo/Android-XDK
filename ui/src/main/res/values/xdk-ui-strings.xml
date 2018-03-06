@@ -124,4 +124,5 @@
 
     <string name="xdk_ui_unhandled_message_text">No model registered to handle MIME Type: %s</string>
     <string name="xdk_ui_unhandled_message_text_legacy">No model registered to handle legacy MIME Type set: %s</string>
+    <string name="xdk_ui_messages_list_header_conversation_start_time">Conversation began %s</string>
 </resources>

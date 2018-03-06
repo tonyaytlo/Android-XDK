@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
@@ -32,6 +33,8 @@ import com.layer.xdk.ui.message.adapter2.decoration.SubGroupStartItemDecoration;
 import com.layer.xdk.ui.message.messagetypes.MessageStyle;
 import com.layer.xdk.ui.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class MessageItemsListView extends SwipeRefreshLayout implements LayerChangeEventListener.BackgroundThread.Weak {
@@ -45,7 +48,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     protected LayerClient mLayerClient;
     protected Conversation mConversation;
     private int mNumberOfItemsPerSync = 20;
-    private View mHeaderView;
+    private TextView mEmptyListTextView;
 
     public MessageItemsListView(Context context) {
         this(context, null);
@@ -57,7 +60,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
         inflate(getContext(), R.layout.xdk_ui_message_items_list, this);
         mMessagesRecyclerView = findViewById(R.id.xdk_ui_message_recycler);
-        mHeaderView = new EmptyMessageListHeaderView(getContext());
+        mEmptyListTextView = findViewById(R.id.xdk_ui_messages_recycler_empty_text);
 
         mLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mLinearLayoutManager.setReverseLayout(true);
@@ -78,25 +81,8 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         });
     }
 
-    private void removeEmptyHeaderView() {
-        //Check the default data source state of the Adapter, if HeaderView, FooterView are set on the Adapter
-//        int count = (mAdapter.getHeaderView() == null ? 0 : 1) + (mAdapter.getFooterView() == null ? 0 : 1);
-//        if (mAdapter.getHeaderView() == mHeaderView && count != mAdapter.getItemCount()) {
-//            mAdapter.setHeaderView(null);
-//            mAdapter.setShouldShowHeader(false);
-//        }
-    }
-
-    public void removeHeaderView() {
-//        mAdapter.setHeaderView(null);
-    }
-
     public void onDestroy() {
         mLayerClient.unregisterEventListener(this);
-    }
-
-    public void setHeaderView(View headerView) {
-//        mAdapter.setHeaderView(headerView);
     }
 
     public void setAdapter(final MessagesAdapter2 adapter) {
@@ -147,7 +133,17 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mAdapter.registerAdapterDataObserver(new MessagesAdapter2.NewMessageReceivedObserver() {
             @Override
             public void onNewMessageReceived() {
+                if (mEmptyListTextView.getVisibility() == VISIBLE && mAdapter.getItemCount() > 0) {
+                    mEmptyListTextView.setVisibility(GONE);
+                }
                 autoScroll();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                if (mAdapter.getItemCount() == 0) {
+                    mEmptyListTextView.setVisibility(VISIBLE);
+                }
             }
         });
     }
@@ -288,6 +284,11 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mConversation = conversation;
         mLayerClient = layerClient;
 
+        mEmptyListTextView.setText(getEmptyConversationHeaderText(getContext(), conversation.getParticipants(), layerClient.getAuthenticatedUser()));
+        if (mAdapter.getItemCount() == 0) {
+            mEmptyListTextView.setVisibility(VISIBLE);
+        }
+
 //        mAdapter.setQuery(query, null);
 //        if (conversation != null) {
 //            mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
@@ -322,6 +323,47 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mShouldShowAvatarsInOneOnOneConversations = ta.getBoolean(R.styleable.MessageItemsListView_shouldShowAvatarsInOneOnOneConversations, false);
         ta.recycle();
         mMessageStyle = messageStyleBuilder.build();
+    }
+
+    private String getEmptyConversationHeaderText(Context context, Set<Identity> participants, Identity authenticatedUser) {
+
+        if (participants.size() == 0 || authenticatedUser == null) return "";
+        participants.remove(authenticatedUser);
+        List<Identity> participantList = new ArrayList<>(participants);
+
+        String headerText;
+
+        switch (participants.size()) {
+            case 0:
+                headerText = context.getString(
+                        R.string.xdk_ui_empty_conversation_with_zero_participant);
+                break;
+            case 1:
+                headerText = context.getString(
+                        R.string.xdk_ui_empty_conversation_with_one_participant,
+                        participantList.get(0).getDisplayName());
+                break;
+            case 2:
+                headerText = context.getString(
+                        R.string.xdk_ui_empty_conversation_with_two_participants,
+                        participantList.get(0).getDisplayName(),
+                        participantList.get(1).getDisplayName());
+                break;
+            case 3:
+                headerText = context.getString(
+                        R.string.xdk_ui_empty_conversation_with_three_participants,
+                        participantList.get(0).getDisplayName(),
+                        participantList.get(1).getDisplayName());
+                break;
+            default:
+                int remainder = participantList.size() - 2;
+                headerText = context.getString(
+                        R.string.xdk_ui_empty_conversation_with_many_participants,
+                        participantList.get(0).getDisplayName(),
+                        participantList.get(1).getDisplayName(), remainder);
+        }
+
+        return headerText;
     }
 
 

@@ -93,8 +93,4 @@ public class ConversationView extends ConstraintLayout {
     public void onDestroy() {
         mMessageItemListView.onDestroy();
     }
-
-    public void setHeaderView(View headerView) {
-        mMessageItemListView.setHeaderView(headerView);
-    }
 }
