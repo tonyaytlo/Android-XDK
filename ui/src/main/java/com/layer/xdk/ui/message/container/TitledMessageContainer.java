@@ -2,19 +2,15 @@ package com.layer.xdk.ui.message.container;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
-import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewStub;
 
-import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiTitledMessageContainerBinding;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -45,22 +41,24 @@ public class TitledMessageContainer extends MessageContainer {
     }
 
     @Override
-    public <T extends MessageModel> void setMessageModel(T model) {
-        View messageView = getBinding().xdkUiTitledMessageContainerContentView.getRoot();
-        ViewDataBinding messageBinding = DataBindingUtil.getBinding(messageView);
-        messageBinding.setVariable(BR.messageModel, model);
+    protected View getMessageView() {
+        return getBinding().xdkUiTitledMessageContainerContentView.getRoot();
+    }
 
-        getBinding().setMessageModel(model);
-        if (model != null) {
-            HasContentOrMetadataCallback hasContentOrMetadataCallback =
-                    new HasContentOrMetadataCallback();
-            model.addOnPropertyChangedCallback(hasContentOrMetadataCallback);
-            // Initiate the view properties as this will only be called if the model changes
-            hasContentOrMetadataCallback.onPropertyChanged(model, BR._all);
-            setContentBackground(model);
+    @Override
+    protected int getContainerMinimumWidth(boolean hasMetadata) {
+        if (hasMetadata) {
+            return getResources().getDimensionPixelSize(
+                    R.dimen.xdk_ui_titled_message_container_min_width);
         }
+        return getResources().getDimensionPixelSize(
+                R.dimen.xdk_ui_titled_message_container_min_width_zero);
+    }
 
-        messageBinding.executePendingBindings();
+    @Override
+    public <T extends MessageModel> void setMessageModel(T model) {
+        super.setMessageModel(model);
+        getBinding().setMessageModel(model);
         getBinding().executePendingBindings();
     }
 
@@ -78,31 +76,5 @@ public class TitledMessageContainer extends MessageContainer {
             mBinding = DataBindingUtil.getBinding(this);
         }
         return mBinding;
-    }
-
-    private class HasContentOrMetadataCallback extends Observable.OnPropertyChangedCallback {
-        @Override
-        public void onPropertyChanged(Observable sender, int propertyId) {
-            MessageModel messageModel = (MessageModel) sender;
-            View messageRoot = getBinding().xdkUiTitledMessageContainerContentView.getRoot();
-            if (propertyId == BR.hasContent || propertyId == BR._all) {
-                messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
-            }
-            if (propertyId == BR.hasMetadata || propertyId == BR._all) {
-                ConstraintSet set = new ConstraintSet();
-                set.clone(TitledMessageContainer.this);
-
-                int minWidth;
-                if (messageModel.getHasMetadata()) {
-                    minWidth = getResources().getDimensionPixelSize(
-                            R.dimen.xdk_ui_titled_message_container_min_width);
-                } else {
-                    minWidth = getResources().getDimensionPixelSize(
-                            R.dimen.xdk_ui_titled_message_container_min_width_zero);
-                }
-                set.constrainMinWidth(messageRoot.getId(), minWidth);
-                set.applyTo(TitledMessageContainer.this);
-            }
-        }
     }
 }

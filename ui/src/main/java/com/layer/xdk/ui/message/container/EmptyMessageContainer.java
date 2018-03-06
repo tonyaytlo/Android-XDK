@@ -2,7 +2,6 @@ package com.layer.xdk.ui.message.container;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
 import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
@@ -14,7 +13,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
@@ -52,24 +50,20 @@ public class EmptyMessageContainer extends MessageContainer {
     }
 
     @Override
-    public <T extends MessageModel> void setMessageModel(T model) {
+    protected View getMessageView() {
         if (getChildCount() == 0) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.w("No message view set on this container");
             }
             throw new IllegalStateException("No message view set on this container");
         }
-        ViewDataBinding messageBinding = DataBindingUtil.getBinding(getChildAt(0));
-        messageBinding.setVariable(BR.messageModel, model);
+        return getChildAt(0);
+    }
 
-        if (model != null) {
-            HasContentCallback hasContentCallback = new HasContentCallback();
-            model.addOnPropertyChangedCallback(hasContentCallback);
-            // Initiate the view properties as this will only be called if the model changes
-            hasContentCallback.onPropertyChanged(model, BR._all);
-            setContentBackground(model);
-        }
-        messageBinding.executePendingBindings();
+    @Override
+    protected int getContainerMinimumWidth(boolean hasMetadata) {
+        // This container doesn't have a minimum width
+        return 0;
     }
 
     @Override
@@ -79,16 +73,5 @@ public class EmptyMessageContainer extends MessageContainer {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));
         }
         getChildAt(0).setBackgroundDrawable(background);
-    }
-
-    private class HasContentCallback extends Observable.OnPropertyChangedCallback {
-        @Override
-        public void onPropertyChanged(Observable sender, int propertyId) {
-            if (propertyId == BR.hasContent || propertyId == BR._all) {
-                MessageModel messageModel = (MessageModel) sender;
-                View messageRoot = getChildAt(0);
-                messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
-            }
-        }
     }
 }

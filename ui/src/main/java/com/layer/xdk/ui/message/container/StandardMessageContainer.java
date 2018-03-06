@@ -3,13 +3,11 @@ package com.layer.xdk.ui.message.container;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
-import android.databinding.ViewDataBinding;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -46,22 +44,33 @@ public class StandardMessageContainer extends MessageContainer {
     }
 
     @Override
+    protected View getMessageView() {
+        return getBinding().xdkUiStandardMessageContainerContentView.getRoot();
+    }
+
+    @Override
+    protected int getContainerMinimumWidth(boolean hasMetadata) {
+        if (hasMetadata) {
+            return getResources().getDimensionPixelSize(
+                    R.dimen.xdk_ui_standard_message_container_min_width);
+        }
+        return getResources().getDimensionPixelSize(
+                R.dimen.xdk_ui_standard_message_container_min_width_zero);
+    }
+
+    @Override
     public <T extends MessageModel> void setMessageModel(T model) {
-        View messageView = getBinding().xdkUiStandardMessageContainerContentView.getRoot();
-        ViewDataBinding messageBinding = DataBindingUtil.getBinding(messageView);
-        messageBinding.setVariable(BR.messageModel, model);
+        super.setMessageModel(model);
 
         getBinding().setMessageModel(model);
         if (model != null) {
-            HasContentOrMetadataCallback hasContentOrMetadataCallback =
-                    new HasContentOrMetadataCallback();
-            model.addOnPropertyChangedCallback(hasContentOrMetadataCallback);
+            BottomPaddingCallback bottomPaddingCallback = new BottomPaddingCallback();
+            model.addOnPropertyChangedCallback(bottomPaddingCallback);
             // Initiate the view properties as this will only be called if the model changes
-            hasContentOrMetadataCallback.onPropertyChanged(model, BR._all);
+            bottomPaddingCallback.onPropertyChanged(model, BR._all);
             setContentBackground(model);
         }
 
-        messageBinding.executePendingBindings();
         getBinding().executePendingBindings();
     }
 
@@ -81,31 +90,16 @@ public class StandardMessageContainer extends MessageContainer {
         return mBinding;
     }
 
-    private class HasContentOrMetadataCallback extends Observable.OnPropertyChangedCallback {
+    private class BottomPaddingCallback extends Observable.OnPropertyChangedCallback {
         @Override
         public void onPropertyChanged(Observable sender, int propertyId) {
             MessageModel messageModel = (MessageModel) sender;
-            View messageRoot = getBinding().xdkUiStandardMessageContainerContentView.getRoot();
-            if (propertyId == BR.hasContent || propertyId == BR._all) {
-                messageRoot.setVisibility(messageModel.getHasContent() ? VISIBLE : GONE);
-            }
             if (propertyId == BR.hasMetadata || propertyId == BR._all) {
-                ConstraintSet set = new ConstraintSet();
-                set.clone(StandardMessageContainer.this);
-
-                int minWidth;
                 int bottomPadding = 0;
                 if (messageModel.getHasMetadata()) {
-                    minWidth = getResources().getDimensionPixelSize(
-                            R.dimen.xdk_ui_standard_message_container_min_width);
-                    bottomPadding = getResources().getDimensionPixelOffset(R.dimen.xdk_ui_margin_small);
-                } else {
-                    minWidth = getResources().getDimensionPixelSize(
-                            R.dimen.xdk_ui_standard_message_container_min_width_zero);
+                    bottomPadding = getResources().getDimensionPixelOffset(
+                            R.dimen.xdk_ui_margin_small);
                 }
-
-                set.constrainMinWidth(messageRoot.getId(), minWidth);
-                set.applyTo(StandardMessageContainer.this);
                 setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), bottomPadding);
             }
         }
