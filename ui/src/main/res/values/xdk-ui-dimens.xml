@@ -79,9 +79,8 @@
     <dimen name="xdk_ui_message_item_top_bottom_margin">6dp</dimen>
     <dimen name="xdk_ui_zero_padding">0dp</dimen>
     
-    <dimen name="xdk_ui_group_start_item_decoration_height">14dp</dimen>
-    <dimen name="xdk_ui_sub_group_start_item_decoration_height">12dp</dimen>
-    <dimen name="xdk_ui_sub_group_inner_item_decoration_height">4dp</dimen>
+    <dimen name="xdk_ui_group_start_item_decoration_height">8dp</dimen>
+    <dimen name="xdk_ui_sub_group_start_item_decoration_height">8dp</dimen>
 
 
     <!-- ####################################################################################### -->

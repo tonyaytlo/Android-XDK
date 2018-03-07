@@ -18,7 +18,6 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.TypingIndicatorLayout;
 import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
 import com.layer.xdk.ui.message.adapter2.decoration.GroupStartItemDecoration;
-import com.layer.xdk.ui.message.adapter2.decoration.SubGroupInnerItemDecoration;
 import com.layer.xdk.ui.message.adapter2.decoration.SubGroupStartItemDecoration;
 
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
         mMessagesRecyclerView.addItemDecoration(new GroupStartItemDecoration(context));
         mMessagesRecyclerView.addItemDecoration(new SubGroupStartItemDecoration(context));
-        mMessagesRecyclerView.addItemDecoration(new SubGroupInnerItemDecoration(context));
 
         setOnRefreshListener(new OnRefreshListener() {
             @Override
