@@ -55,6 +55,7 @@ public class MessageItemsListViewModel extends BaseObservable {
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
         if (conversation != null) {
+            mAdapter.setOneOnOneConversation(conversation.getParticipants().size() == 2);
             mAdapter.setReadReceiptsEnabled(conversation.isReadReceiptsEnabled());
             createAndObserveMessageModelList();
         }

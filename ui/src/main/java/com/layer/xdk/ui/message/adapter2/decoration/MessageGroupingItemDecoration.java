@@ -24,7 +24,8 @@ public abstract class MessageGroupingItemDecoration extends RecyclerView.ItemDec
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         MessageModel model = getMessageModel(view, parent);
-        if (shouldDraw(model.getGrouping())) {
+        // Null check for footer
+        if (model != null && shouldDraw(model.getGrouping())) {
             outRect.top = mOffsetSize;
         }
     }

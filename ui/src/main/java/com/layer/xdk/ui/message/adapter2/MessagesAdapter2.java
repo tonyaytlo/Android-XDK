@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Identity;
+import com.layer.xdk.ui.TypingIndicatorLayout;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -20,18 +22,26 @@ import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
+import java.util.Set;
+
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
+
+    private static final int VIEW_TYPE_FOOTER = "footer".hashCode();
 
     private final LayerClient mLayerClient;
     private final ImageCacheWrapper mImageCacheWrapper;
     private final DateFormatter mDateFormatter;
     private final IdentityFormatter mIdentityFormatter;
 
+    private boolean mOneOnOneConversation;
     private boolean mShouldShowAvatarInOneOnOneConversations;
     private boolean mShouldShowAvatarPresence = true;
     private boolean mShouldShowAvatarForCurrentUser;
     private boolean mShouldShowPresenceForCurrentUser;
     private boolean mReadReceiptsEnabled = true;
+    private boolean mShowFooter = true;
+    private View mFooterView;
+    private Set<Identity> mUsersTyping;
 
     private MessageModel mLastModelForViewTypeLookup;
     private OnItemLongClickListener<MessageModel> mItemLongClickListener;
@@ -50,49 +60,45 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        MessageModel model = getModelForViewType(viewType);
+        if (VIEW_TYPE_FOOTER == viewType) {
+            return createFooterViewHolder(parent);
+        }
 
-        // TODO AND-1242 Header/footer creations
+        MessageModel model = getModelForViewType(viewType);
 
         if (model instanceof StatusMessageModel || model instanceof ResponseMessageModel) {
             return createStatusViewHolder(parent);
         } else {
             return createDefaultViewHolder(parent, model);
         }
-
-
-//        if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
-//            return createStatusViewHolder(parent);
-//        }
-//
-//        return createDefaultViewHolder(parent);
-
-//        if (viewType == mBinderRegistry.VIEW_TYPE_HEADER) {
-//            return createHeaderViewHolder(parent);
-//        } else if (viewType == mBinderRegistry.VIEW_TYPE_FOOTER) {
-//            return createFooterViewHolder(parent);
-//        } else if (viewType >= mBinderRegistry.VIEW_TYPE_LEGACY_START && viewType <= mBinderRegistry.VIEW_TYPE_LEGACY_END) {
-//            MessageCell messageCell = mBinderRegistry.getMessageCellForViewType(viewType);
-////            messageCell.mCellFactory.setStyle(getStyle());
-//            return createLegacyMessageItemViewHolder(parent, messageCell);
-//        } else if (viewType == mBinderRegistry.VIEW_TYPE_STATUS) {
-//            return createStatusViewHolder(parent);
-//        } else if (viewType != mBinderRegistry.VIEW_TYPE_UNKNOWN){
-//            return createDefaultViewHolder(parent);
-//        } else {
-//            throw new IllegalStateException("Unknown View Type");
-//        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
+        if (position == getFooterPosition()) {
+            bindFooter((MessageFooterViewHolder) holder);
+            return;
+        }
         MessageModel item = getItem(position);
         holder.bindItem(item);
     }
 
+    private void bindFooter(MessageFooterViewHolder holder) {
+        holder.clear();
+
+        if (mFooterView.getParent() != null) {
+            ((ViewGroup) mFooterView.getParent()).removeView(mFooterView);
+        }
+
+        boolean shouldAvatarViewBeVisible = !(isOneOnOneConversation() & !getShouldShowAvatarInOneOnOneConversations());
+        holder.bind(mUsersTyping, mFooterView, shouldAvatarViewBeVisible);
+    }
+
     @Override
     public int getItemViewType(int position) {
-        // TODO AND-1242 Header/footer
+        if (position == getFooterPosition()) {
+            return VIEW_TYPE_FOOTER;
+        }
 
         mLastModelForViewTypeLookup = getItem(position);
         return mLastModelForViewTypeLookup.getMimeTypeTree().hashCode();
@@ -101,6 +107,13 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     @NonNull
     @Override
     protected MessageModel getItem(int position) {
+        if (mFooterView != null && mShowFooter) {
+            if (position == 0) {
+                throw new IllegalArgumentException("Cannot fetch the footer view");
+            }
+            position--;
+        }
+
         MessageModel item = super.getItem(position);
         if (item == null) {
             if (Log.isLoggable(Log.ERROR)) {
@@ -111,28 +124,24 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         return item;
     }
 
+    @Override
+    public int getItemCount() {
+        int count = super.getItemCount();
+        if (mFooterView != null && mShowFooter) {
+            return count + 1;
+        }
+        return count;
+    }
 
     /*
      * ViewHolders
      */
 
-
-
-//    protected MessageItemHeaderViewHolder createHeaderViewHolder(ViewGroup parent) {
-//        return new MessageItemHeaderViewHolder(parent,
-//                new MessageItemHeaderViewModel(mContext, mLayerClient));
-//    }
-//
-//    protected MessageItemFooterViewHolder createFooterViewHolder(ViewGroup parent) {
-//        MessageItemLegacyViewModel viewModel = new MessageItemLegacyViewModel(parent.getAppContext(),
-//                mLayerClient, getImageCacheWrapper(), getIdentityEventListener());
-//
-//        viewModel.setEnableReadReceipts(false);
-//        viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
-//        viewModel.setShowPresence(false);
-//
-//        return new MessageItemFooterViewHolder(parent, viewModel, getImageCacheWrapper());
-//    }
+    protected MessageFooterViewHolder createFooterViewHolder(ViewGroup parent) {
+        MessageFooterViewHolderModel model = new MessageFooterViewHolderModel(parent.getContext(),
+                mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
+        return new MessageFooterViewHolder(parent, model);
+    }
 
 
     protected MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, MessageModel model) {
@@ -174,6 +183,13 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
      * Settings
      */
 
+    public boolean isOneOnOneConversation() {
+        return mOneOnOneConversation;
+    }
+
+    public void setOneOnOneConversation(boolean oneOnOneConversation) {
+        mOneOnOneConversation = oneOnOneConversation;
+    }
 
     /**
      * @return If the AvatarViewModel for the other participant in a one on one conversation  will
@@ -292,6 +308,39 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
             return oldItem.deepEquals(newItem);
         }
     };
+
+    public boolean shouldShowFooter() {
+        return mShowFooter;
+    }
+
+    public void setShowFooter(boolean showFooter) {
+        mShowFooter = showFooter;
+    }
+
+    public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
+        if (mShowFooter) {
+            boolean isNull = footerView == null;
+            boolean wasNull = mFooterView == null;
+            mFooterView = footerView;
+            mUsersTyping = users;
+
+            if (wasNull && !isNull) {
+                // Insert
+                notifyItemInserted(0);
+            } else if (!wasNull && isNull) {
+                // Delete
+                notifyItemRemoved(0);
+            } else if (!wasNull && !isNull) {
+                // Change
+                notifyItemChanged(0);
+            }
+        }
+    }
+
+    public int getFooterPosition() {
+        if (mShowFooter && mFooterView != null) return 0;
+        return -1;
+    }
 
     /**
      * Listens for inserts to the beginning of an MessagesAdapter2. This will be called when items

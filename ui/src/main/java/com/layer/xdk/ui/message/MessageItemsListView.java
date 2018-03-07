@@ -182,11 +182,10 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-//     * @see MessagesAdapter2#setFooterView(View, Set)
+     * @see MessagesAdapter2#setFooterView(TypingIndicatorLayout, Set)
      */
     public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
-//        mAdapter.setFooterView(footerView, users);
-        autoScroll();
+        mAdapter.setFooterView(footerView, users);
     }
 
     /**
@@ -200,7 +199,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mLayerClient = layerClient;
 
         mEmptyListTextView.setText(getEmptyConversationHeaderText(getContext(), conversation.getParticipants(), layerClient.getAuthenticatedUser()));
-        if (mAdapter.getItemCount() == 0) {
+        if (mAdapter != null && mAdapter.getItemCount() == 0) {
             mEmptyListTextView.setVisibility(VISIBLE);
         }
     }
