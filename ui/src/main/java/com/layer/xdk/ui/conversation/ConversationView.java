@@ -47,7 +47,7 @@ public class ConversationView extends ConstraintLayout {
         mTypingIndicator.setTypingActivityListener(new TypingIndicatorLayout.TypingActivityListener() {
             @Override
             public void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active, Set<Identity> users) {
-              mMessageItemListView.setFooterView(active ? typingIndicator : null, users);
+              mMessageItemListView.setTypingIndicatorLayout(active ? typingIndicator : null, users);
             }
         });
     }

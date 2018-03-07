@@ -13,17 +13,16 @@ import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 import java.util.Collections;
 import java.util.Set;
 
-public class MessageFooterViewHolderModel extends MessageViewHolderModel {
+public class MessageTypingIndicatorViewHolderModel extends MessageViewHolderModel {
 
     private Set<Identity> mParticipants = Collections.emptySet();
     private boolean mAvatarViewVisible;
     private boolean mTypingIndicatorMessageVisible;
     private String mTypingIndicatorMessage;
-    private boolean mMessageFooterAnimationVisible;
+    private boolean mAnimationVisible;
     private ImageCacheWrapper mImageCacheWrapper;
 
-
-    public MessageFooterViewHolderModel(Context context, LayerClient layerClient,
+    public MessageTypingIndicatorViewHolderModel(Context context, LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);
@@ -62,12 +61,12 @@ public class MessageFooterViewHolderModel extends MessageViewHolderModel {
         mTypingIndicatorMessage = typingIndicatorMessage;
     }
 
-    public boolean isMessageFooterAnimationVisible() {
-        return mMessageFooterAnimationVisible;
+    public boolean isAnimationVisible() {
+        return mAnimationVisible;
     }
 
-    public void setMessageFooterAnimationVisible(boolean messageFooterAnimationVisible) {
-        mMessageFooterAnimationVisible = messageFooterAnimationVisible;
+    public void setAnimationVisible(boolean animationVisible) {
+        mAnimationVisible = animationVisible;
     }
 
     public ImageCacheWrapper getImageCacheWrapper() {

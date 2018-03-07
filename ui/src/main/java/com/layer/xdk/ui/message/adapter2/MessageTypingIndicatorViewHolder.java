@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.XdkUiMessageItemFooterBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageItemTypingIndicatorBinding;
 
 import java.util.Set;
 
@@ -17,10 +17,10 @@ import java.util.Set;
  *
  * Note that this doesn't have a {@link com.layer.xdk.ui.message.model.MessageModel}.
  */
-public class MessageFooterViewHolder extends MessageViewHolder<MessageFooterViewHolderModel, XdkUiMessageItemFooterBinding> {
+public class MessageTypingIndicatorViewHolder extends MessageViewHolder<MessageTypingIndicatorViewHolderModel, XdkUiMessageItemTypingIndicatorBinding> {
 
-    public MessageFooterViewHolder(ViewGroup parent, MessageFooterViewHolderModel model) {
-        super(parent, R.layout.xdk_ui_message_item_footer, model);
+    public MessageTypingIndicatorViewHolder(ViewGroup parent, MessageTypingIndicatorViewHolderModel model) {
+        super(parent, R.layout.xdk_ui_message_item_typing_indicator, model);
         getBinding().setViewHolderModel(model);
 
         getBinding().avatar.init(new AvatarViewModelImpl(model.getImageCacheWrapper()), model.getIdentityFormatter());
@@ -37,15 +37,15 @@ public class MessageFooterViewHolder extends MessageViewHolder<MessageFooterView
         getBinding().root.removeAllViews();
     }
 
-    public void bind(Set<Identity> users, View footerView, boolean shouldAvatarBeVisible) {
-        getBinding().root.addView(footerView);
+    public void bind(Set<Identity> users, View typingIndicatorLayout, boolean shouldAvatarBeVisible) {
+        getBinding().root.addView(typingIndicatorLayout);
         getViewHolderModel().setParticipants(users);
         getViewHolderModel().setAvatarViewVisible(shouldAvatarBeVisible);
         int numberOfUsers = users.size();
 
         if (numberOfUsers > 2) {
             getViewHolderModel().setTypingIndicatorMessageVisible(true);
-            getViewHolderModel().setMessageFooterAnimationVisible(false);
+            getViewHolderModel().setAnimationVisible(false);
             String firstUser = "", secondUser = "";
             int counter = 0;
 
@@ -58,14 +58,14 @@ public class MessageFooterViewHolder extends MessageViewHolder<MessageFooterView
                     break;
                 }
             }
-            Resources resources = footerView.getContext().getResources();
+            Resources resources = typingIndicatorLayout.getContext().getResources();
             int remainingUsers = numberOfUsers % 2;
             String typingIndicatorMessage = resources.getQuantityString(R.plurals.xdk_ui_typing_indicator_message,
                     remainingUsers, firstUser, secondUser, remainingUsers);
             getViewHolderModel().setTypingIndicatorMessage(typingIndicatorMessage);
         } else {
             getViewHolderModel().setTypingIndicatorMessageVisible(false);
-            getViewHolderModel().setMessageFooterAnimationVisible(true);
+            getViewHolderModel().setAnimationVisible(true);
         }
 
         getViewHolderModel().notifyChange();

@@ -180,10 +180,10 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-     * @see MessagesAdapter2#setFooterView(TypingIndicatorLayout, Set)
+     * @see MessagesAdapter2#setTypingIndicatorLayout(TypingIndicatorLayout, Set)
      */
-    public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
-        mAdapter.setFooterView(footerView, users);
+    public void setTypingIndicatorLayout(TypingIndicatorLayout layout, Set<Identity> users) {
+        mAdapter.setTypingIndicatorLayout(layout, users);
     }
 
     /**

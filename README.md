@@ -240,7 +240,7 @@ The <a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">Typin
         typingIndicator.setTypingActivityListener(new TypingIndicatorLayout.TypingActivityListener() {
             @Override
             public void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active, Set<Identity> users) {
-                messageItemListView.setFooterView(active ? typingIndicator : null, users);
+                messageItemListView.setTypingIndicatorLayout(active ? typingIndicator : null, users);
             }
         });
 ```

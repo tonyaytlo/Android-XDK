@@ -26,7 +26,7 @@ import java.util.Set;
 
 public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
 
-    private static final int VIEW_TYPE_FOOTER = "footer".hashCode();
+    private static final int VIEW_TYPE_TYPING_INDICATOR = "TypingIndicator".hashCode();
 
     private final LayerClient mLayerClient;
     private final ImageCacheWrapper mImageCacheWrapper;
@@ -39,8 +39,8 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     private boolean mShouldShowAvatarForCurrentUser;
     private boolean mShouldShowPresenceForCurrentUser;
     private boolean mReadReceiptsEnabled = true;
-    private boolean mShowFooter = true;
-    private View mFooterView;
+    private boolean mShowTypingIndicator = true;
+    private View mTypingIndicatorLayout;
     private Set<Identity> mUsersTyping;
 
     private MessageModel mLastModelForViewTypeLookup;
@@ -60,8 +60,8 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (VIEW_TYPE_FOOTER == viewType) {
-            return createFooterViewHolder(parent);
+        if (VIEW_TYPE_TYPING_INDICATOR == viewType) {
+            return createTypingIndicatorViewHolder(parent);
         }
 
         MessageModel model = getModelForViewType(viewType);
@@ -75,29 +75,29 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        if (position == getFooterPosition()) {
-            bindFooter((MessageFooterViewHolder) holder);
+        if (position == getTypingIndicatorPosition()) {
+            bindTypingIndicator((MessageTypingIndicatorViewHolder) holder);
             return;
         }
         MessageModel item = getItem(position);
         holder.bindItem(item);
     }
 
-    private void bindFooter(MessageFooterViewHolder holder) {
+    private void bindTypingIndicator(MessageTypingIndicatorViewHolder holder) {
         holder.clear();
 
-        if (mFooterView.getParent() != null) {
-            ((ViewGroup) mFooterView.getParent()).removeView(mFooterView);
+        if (mTypingIndicatorLayout.getParent() != null) {
+            ((ViewGroup) mTypingIndicatorLayout.getParent()).removeView(mTypingIndicatorLayout);
         }
 
         boolean shouldAvatarViewBeVisible = !(isOneOnOneConversation() & !getShouldShowAvatarInOneOnOneConversations());
-        holder.bind(mUsersTyping, mFooterView, shouldAvatarViewBeVisible);
+        holder.bind(mUsersTyping, mTypingIndicatorLayout, shouldAvatarViewBeVisible);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == getFooterPosition()) {
-            return VIEW_TYPE_FOOTER;
+        if (position == getTypingIndicatorPosition()) {
+            return VIEW_TYPE_TYPING_INDICATOR;
         }
 
         mLastModelForViewTypeLookup = getItem(position);
@@ -107,9 +107,9 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     @NonNull
     @Override
     protected MessageModel getItem(int position) {
-        if (mFooterView != null && mShowFooter) {
+        if (mTypingIndicatorLayout != null && mShowTypingIndicator) {
             if (position == 0) {
-                throw new IllegalArgumentException("Cannot fetch the footer view");
+                throw new IllegalArgumentException("Cannot fetch the typing indicator view");
             }
             position--;
         }
@@ -127,7 +127,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     @Override
     public int getItemCount() {
         int count = super.getItemCount();
-        if (mFooterView != null && mShowFooter) {
+        if (mTypingIndicatorLayout != null && mShowTypingIndicator) {
             return count + 1;
         }
         return count;
@@ -137,10 +137,14 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
      * ViewHolders
      */
 
-    protected MessageFooterViewHolder createFooterViewHolder(ViewGroup parent) {
-        MessageFooterViewHolderModel model = new MessageFooterViewHolderModel(parent.getContext(),
-                mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
-        return new MessageFooterViewHolder(parent, model);
+    protected MessageTypingIndicatorViewHolder createTypingIndicatorViewHolder(ViewGroup parent) {
+        MessageTypingIndicatorViewHolderModel model = new MessageTypingIndicatorViewHolderModel(
+                parent.getContext(),
+                mLayerClient,
+                getImageCacheWrapper(),
+                mIdentityFormatter,
+                mDateFormatter);
+        return new MessageTypingIndicatorViewHolder(parent, model);
     }
 
 
@@ -309,19 +313,19 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         }
     };
 
-    public boolean shouldShowFooter() {
-        return mShowFooter;
+    public boolean shouldShowTypingIndicator() {
+        return mShowTypingIndicator;
     }
 
-    public void setShowFooter(boolean showFooter) {
-        mShowFooter = showFooter;
+    public void setShowTypingIndicator(boolean showTypingIndicator) {
+        mShowTypingIndicator = showTypingIndicator;
     }
 
-    public void setFooterView(TypingIndicatorLayout footerView, Set<Identity> users) {
-        if (mShowFooter) {
-            boolean isNull = footerView == null;
-            boolean wasNull = mFooterView == null;
-            mFooterView = footerView;
+    public void setTypingIndicatorLayout(TypingIndicatorLayout layout, Set<Identity> users) {
+        if (mShowTypingIndicator) {
+            boolean isNull = layout == null;
+            boolean wasNull = mTypingIndicatorLayout == null;
+            mTypingIndicatorLayout = layout;
             mUsersTyping = users;
 
             if (wasNull && !isNull) {
@@ -337,8 +341,8 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         }
     }
 
-    public int getFooterPosition() {
-        if (mShowFooter && mFooterView != null) return 0;
+    private int getTypingIndicatorPosition() {
+        if (mShowTypingIndicator && mTypingIndicatorLayout != null) return 0;
         return -1;
     }
 
