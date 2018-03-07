@@ -28,7 +28,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/xdk_ui_message_cluster_space">
+        android:paddingTop="@dimen/xdk_ui_message_model_vh_padding"
+        android:paddingBottom="@dimen/xdk_ui_message_model_vh_padding">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -40,9 +41,9 @@
                 android:id="@+id/avatar"
                 android:layout_width="@dimen/xdk_ui_avatar_width"
                 android:layout_height="@dimen/xdk_ui_avatar_height"
-                android:layout_marginBottom="@dimen/xdk_ui_message_item_cell_padding_bottom"
-                android:layout_marginLeft="@dimen/xdk_ui_message_item_avatar_padding_left"
-                android:layout_marginStart="@dimen/xdk_ui_message_item_avatar_padding_left"
+                android:layout_marginBottom="@dimen/xdk_ui_typing_indicator_padding_vertical"
+                android:layout_marginLeft="@dimen/xdk_ui_message_model_vh_avatar_padding_left"
+                android:layout_marginStart="@dimen/xdk_ui_message_model_vh_avatar_padding_left"
                 android:layout_marginRight="@dimen/xdk_ui_avatar_right_padding_message"
                 android:layout_marginEnd="@dimen/xdk_ui_avatar_right_padding_message"
                 android:visibility="@{viewHolderModel.avatarViewVisible ? View.VISIBLE : View.GONE}"

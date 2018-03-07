@@ -32,8 +32,8 @@ public class BubbleTypingIndicatorFactory implements TypingIndicatorLayout.Typin
     public LinearLayout onCreateView(Context context) {
         Resources r = context.getResources();
 
-        int minWidth = r.getDimensionPixelSize(R.dimen.xdk_ui_message_item_cell_min_width);
-        int minHeight = r.getDimensionPixelSize(R.dimen.xdk_ui_message_item_cell_min_height);
+        int minWidth = r.getDimensionPixelSize(R.dimen.xdk_ui_message_model_cell_min_width);
+        int minHeight = r.getDimensionPixelSize(R.dimen.xdk_ui_message_model_cell_min_height);
         int dotSize = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_size);
         int dotSpace = r.getDimensionPixelSize(R.dimen.xdk_ui_typing_indicator_dot_space);
 
@@ -43,7 +43,7 @@ public class BubbleTypingIndicatorFactory implements TypingIndicatorLayout.Typin
         l.setGravity(Gravity.CENTER);
         l.setOrientation(LinearLayout.HORIZONTAL);
         l.setLayoutParams(new TypingIndicatorLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        l.setBackgroundDrawable(r.getDrawable(R.drawable.xdk_ui_message_item_cell_them));
+        l.setBackgroundDrawable(r.getDrawable(R.drawable.xdk_ui_bubble_typing_indicator_background));
 
         ImageView v;
         LinearLayout.LayoutParams vp;

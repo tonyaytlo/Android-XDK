@@ -33,7 +33,7 @@ import java.util.Set;
 public class ImageMessageModel extends MessageModel {
     private static final String ROLE_SOURCE = "source";
     private static final String ROLE_PREVIEW = "preview";
-    private static final int PLACEHOLDER = R.drawable.xdk_ui_message_item_cell_placeholder;
+    private static final int PLACEHOLDER = R.drawable.xdk_ui_image_message_model_placeholder;
 
     public static final String ACTION_EVENT_OPEN_URL = "open-url";
 

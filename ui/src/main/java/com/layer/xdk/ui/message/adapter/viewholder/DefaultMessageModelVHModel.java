@@ -123,7 +123,6 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
     }
 
     protected void updateSenderDependentElements(MessageModel model) {
-
         Message message = model.getMessage();
         EnumSet<MessageGrouping> grouping = model.getGrouping();
         if (isMyMessage()) {
@@ -136,7 +135,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
                 message.markAsRead();
             }
 
-            // Sender name, only for first message in cluster
+            // Sender name, only for first message in sub group
             if (!isInAOneOnOneConversation() && grouping != null &&
                     grouping.contains(MessageGrouping.SUB_GROUP_START)) {
                 Identity sender = model.getMessage().getSender();
@@ -163,12 +162,12 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
                 mIsPresenceVisible = false;
             }
         } else if (grouping != null && grouping.contains(MessageGrouping.SUB_GROUP_END)) {
-            // Last message in cluster
+            // Last message in sub group
             mIsAvatarViewVisible = !isMyMessage();
             mShouldDisplayAvatarSpace = true;
             mIsPresenceVisible = mIsAvatarViewVisible && mShowPresence;
         } else {
-            // Invisible for clustered messages to preserve proper spacing
+            // Invisible for grouped messages to preserve proper spacing
             mIsAvatarViewVisible = false;
             mShouldDisplayAvatarSpace = true;
             mIsPresenceVisible = false;
@@ -202,13 +201,13 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
                 // Use 2 to include one other participant plus the current user
                 if (statuses.size() > 2) {
                     mReadReceipt = getContext().getResources()
-                            .getQuantityString(R.plurals.xdk_ui_message_item_read_muliple_participants, readCount, readCount);
+                            .getQuantityString(R.plurals.xdk_ui_message_status_read_multiple_participants, readCount, readCount);
                 } else {
-                    mReadReceipt = getContext().getString(R.string.xdk_ui_message_item_read);
+                    mReadReceipt = getContext().getString(R.string.xdk_ui_message_status_read);
                 }
             } else if (delivered) {
                 mIsReadReceiptVisible = true;
-                mReadReceipt = getContext().getString(R.string.xdk_ui_message_item_delivered);
+                mReadReceipt = getContext().getString(R.string.xdk_ui_message_status_delivered);
             } else {
                 mIsReadReceiptVisible = false;
             }

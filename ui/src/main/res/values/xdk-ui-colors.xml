@@ -166,7 +166,7 @@
     <color name="xdk_ui_product_option_item_view_text_color">@color/xdk_ui_text_gray</color>
 
     <!-- ########## -->
-    <!-- Receipt Message Item View -->
+    <!-- Receipt Message View -->
     <!-- ########## -->
 
     <color name="xdk_ui_receipt_message_view_detail_title_text">@color/xdk_ui_text_gray</color>

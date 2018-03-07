@@ -32,7 +32,7 @@ public class EmptyMessageContainer extends MessageContainer {
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
         setCornerRadius(context.getResources()
-                .getDimension(R.dimen.xdk_ui_standard_message_container_corner_radius));
+                .getDimension(R.dimen.xdk_ui_message_model_cell_radius));
     }
 
     @Override

@@ -149,9 +149,9 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
     @SuppressWarnings("unchecked")
     private LoadRangeResults loadRangeInternal(int position, int requestedLoadSize) {
         LoadRangeResults results = new LoadRangeResults();
-        // Load an additional after for cluster calculation
+        // Load an additional after for grouping calculation
         int loadSizeForGrouping = requestedLoadSize + 1;
-        // Load an additional before for cluster calculation
+        // Load an additional before for grouping calculation
 
         if (position != 0) {
             results.mExtraAtBeginning = true;
@@ -164,7 +164,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
                 .sortDescriptor(new SortDescriptor(Message.Property.POSITION,
                         SortDescriptor.Order.DESCENDING))
                 .offset(position)
-                .limit(loadSizeForGrouping) // Additional for clustering calculation
+                .limit(loadSizeForGrouping)
                 .build());
 
         results.mMessages = (List<Message>) messages;
