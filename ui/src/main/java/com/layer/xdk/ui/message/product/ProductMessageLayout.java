@@ -6,7 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 
 public class ProductMessageLayout extends ConstraintLayout {
     private MessageViewHelper mMessageViewHelper;

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.databinding.XdkUiReceiptMessageViewBinding;
-import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
 

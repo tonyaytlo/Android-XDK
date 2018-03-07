@@ -17,8 +17,8 @@ import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
-import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
-import com.layer.xdk.ui.message.adapter2.MessagesDataSourceFactory;
+import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
+import com.layer.xdk.ui.message.adapter.MessageModelDataSourceFactory;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
@@ -30,7 +30,7 @@ public class MessageItemsListViewModel extends BaseObservable {
     private static final int DEFAULT_PREFETCH_DISTANCE = 60;
 
     private LayerClient mLayerClient;
-    private MessagesAdapter2 mAdapter;
+    private MessageModelAdapter mAdapter;
     private Conversation mConversation;
     private Predicate mQueryPredicate;
     private BinderRegistry mBinderRegistry;
@@ -43,7 +43,7 @@ public class MessageItemsListViewModel extends BaseObservable {
                                      IdentityFormatter identityFormatter) {
         mLayerClient = layerClient;
         mBinderRegistry = new BinderRegistry(context, layerClient);
-        mAdapter = new MessagesAdapter2(layerClient, imageCacheWrapper, dateFormatter,
+        mAdapter = new MessageModelAdapter(layerClient, imageCacheWrapper, dateFormatter,
                 identityFormatter);
 
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
@@ -63,7 +63,7 @@ public class MessageItemsListViewModel extends BaseObservable {
     }
 
     @Bindable
-    public MessagesAdapter2 getAdapter() {
+    public MessageModelAdapter getAdapter() {
         return mAdapter;
     }
 
@@ -98,7 +98,7 @@ public class MessageItemsListViewModel extends BaseObservable {
         }
 
         mMessageModelList = new LivePagedListBuilder<>(
-                new MessagesDataSourceFactory(mLayerClient, mBinderRegistry, mConversation,
+                new MessageModelDataSourceFactory(mLayerClient, mBinderRegistry, mConversation,
                         mQueryPredicate),
                 new PagedList.Config.Builder()
                         .setEnablePlaceholders(false)

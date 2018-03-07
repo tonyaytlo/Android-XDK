@@ -20,7 +20,7 @@ import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
-import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.container.MessageContainer;

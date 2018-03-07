@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.viewmodel;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 import android.content.Context;
 import android.databinding.BaseObservable;
@@ -11,7 +11,7 @@ import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 
-public class MessageViewHolderModel extends BaseObservable {
+public class MessageModelVHModel extends BaseObservable {
     private Context mContext;
     private LayerClient mLayerClient;
 
@@ -22,7 +22,7 @@ public class MessageViewHolderModel extends BaseObservable {
 
     private View.OnLongClickListener mOnLongClickListener;
 
-    public MessageViewHolderModel(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
+    public MessageModelVHModel(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
         mContext = context;
         mLayerClient = layerClient;
 

@@ -1,10 +1,10 @@
-package com.layer.xdk.ui.message.adapter2.decoration;
+package com.layer.xdk.ui.message.adapter.decoration;
 
 
 import android.content.Context;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.adapter2.MessageGrouping;
+import com.layer.xdk.ui.message.adapter.MessageGrouping;
 
 import java.util.EnumSet;
 

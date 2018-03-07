@@ -24,7 +24,7 @@
 
         <variable
             name="viewHolderModel"
-            type="com.layer.xdk.ui.message.adapter2.MessageDefaultViewHolderModel"/>
+            type="com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

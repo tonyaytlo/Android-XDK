@@ -16,9 +16,9 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.TypingIndicatorLayout;
-import com.layer.xdk.ui.message.adapter2.MessagesAdapter2;
-import com.layer.xdk.ui.message.adapter2.decoration.GroupStartItemDecoration;
-import com.layer.xdk.ui.message.adapter2.decoration.SubGroupStartItemDecoration;
+import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
+import com.layer.xdk.ui.message.adapter.decoration.GroupStartItemDecoration;
+import com.layer.xdk.ui.message.adapter.decoration.SubGroupStartItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
 
     protected RecyclerView mMessagesRecyclerView;
     protected LinearLayoutManager mLinearLayoutManager;
-    protected MessagesAdapter2 mAdapter;
+    protected MessageModelAdapter mAdapter;
 
     protected LayerClient mLayerClient;
     protected Conversation mConversation;
@@ -65,11 +65,11 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         });
     }
 
-    public void setAdapter(final MessagesAdapter2 adapter) {
+    public void setAdapter(final MessageModelAdapter adapter) {
         mAdapter = adapter;
         mMessagesRecyclerView.setAdapter(adapter);
 
-        mAdapter.registerAdapterDataObserver(new MessagesAdapter2.NewMessageReceivedObserver() {
+        mAdapter.registerAdapterDataObserver(new MessageModelAdapter.NewMessageReceivedObserver() {
             @Override
             public void onNewMessageReceived() {
                 if (mEmptyListTextView.getVisibility() == VISIBLE && mAdapter.getItemCount() > 0) {
@@ -151,7 +151,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-     * @see MessagesAdapter2#getShouldShowAvatarInOneOnOneConversations()
+     * @see MessageModelAdapter#getShouldShowAvatarInOneOnOneConversations()
      */
     public boolean getShouldShowAvatarInOneOnOneConversations() {
         return mAdapter.getShouldShowAvatarInOneOnOneConversations();
@@ -160,7 +160,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-     * @see MessagesAdapter2#setShouldShowAvatarInOneOnOneConversations(boolean)
+     * @see MessageModelAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
      */
     public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
         mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
@@ -180,7 +180,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     /**
      * Convenience pass-through to this list's MessagesAdapter.
      *
-     * @see MessagesAdapter2#setTypingIndicatorLayout(TypingIndicatorLayout, Set)
+     * @see MessageModelAdapter#setTypingIndicatorLayout(TypingIndicatorLayout, Set)
      */
     public void setTypingIndicatorLayout(TypingIndicatorLayout layout, Set<Identity> users) {
         mAdapter.setTypingIndicatorLayout(layout, users);

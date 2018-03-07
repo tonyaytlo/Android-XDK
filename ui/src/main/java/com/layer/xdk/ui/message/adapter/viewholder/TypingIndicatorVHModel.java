@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 
 import android.content.Context;
@@ -8,12 +8,11 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 import java.util.Collections;
 import java.util.Set;
 
-public class MessageTypingIndicatorViewHolderModel extends MessageViewHolderModel {
+public class TypingIndicatorVHModel extends MessageModelVHModel {
 
     private Set<Identity> mParticipants = Collections.emptySet();
     private boolean mAvatarViewVisible;
@@ -22,7 +21,7 @@ public class MessageTypingIndicatorViewHolderModel extends MessageViewHolderMode
     private boolean mAnimationVisible;
     private ImageCacheWrapper mImageCacheWrapper;
 
-    public MessageTypingIndicatorViewHolderModel(Context context, LayerClient layerClient,
+    public TypingIndicatorVHModel(Context context, LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);

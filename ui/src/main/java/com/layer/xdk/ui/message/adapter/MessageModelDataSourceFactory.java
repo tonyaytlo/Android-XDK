@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter;
 
 
 import android.arch.paging.DataSource;
@@ -12,10 +12,10 @@ import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 /**
- * Factory that handles creations of {@link MessagesDataSource}. This contains the variables used
+ * Factory that handles creations of {@link MessageModelDataSource}. This contains the variables used
  * to create new instances of the DataSource when old ones become invalid.
  */
-public class MessagesDataSourceFactory implements DataSource.Factory<Integer, MessageModel> {
+public class MessageModelDataSourceFactory implements DataSource.Factory<Integer, MessageModel> {
 
     private final LayerClient mLayerClient;
     private final Conversation mConversation;
@@ -31,7 +31,7 @@ public class MessagesDataSourceFactory implements DataSource.Factory<Integer, Me
      * @param conversation conversation to fetch the messages for
      * @param predicate custom predicate to use for the query or null if default should be used
      */
-    public MessagesDataSourceFactory(@NonNull LayerClient layerClient,
+    public MessageModelDataSourceFactory(@NonNull LayerClient layerClient,
             @NonNull BinderRegistry binderRegistry,
             @NonNull Conversation conversation,
             @Nullable Predicate predicate) {
@@ -44,6 +44,6 @@ public class MessagesDataSourceFactory implements DataSource.Factory<Integer, Me
 
     @Override
     public DataSource<Integer, MessageModel> create() {
-        return new MessagesDataSource(mLayerClient, mConversation, mPredicate, mBinderRegistry, mGroupingCalculator);
+        return new MessageModelDataSource(mLayerClient, mConversation, mPredicate, mBinderRegistry, mGroupingCalculator);
     }
 }

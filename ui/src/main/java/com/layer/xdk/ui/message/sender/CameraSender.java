@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.messagetypes.threepartimage;
+package com.layer.xdk.ui.message.sender;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,7 +21,6 @@ import com.layer.sdk.messaging.PushNotificationPayload;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.image.ImageMessageComposer;
 import com.layer.xdk.ui.message.image.RichImageMessageComposer;
-import com.layer.xdk.ui.message.messagetypes.AttachmentSender;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;
 

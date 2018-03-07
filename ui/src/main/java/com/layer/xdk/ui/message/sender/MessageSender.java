@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.messagetypes;
+package com.layer.xdk.ui.message.sender;
 
 import android.content.Context;
 

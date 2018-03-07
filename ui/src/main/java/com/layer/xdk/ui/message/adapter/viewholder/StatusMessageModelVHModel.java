@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 
 import android.content.Context;
@@ -11,15 +11,14 @@ import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 @SuppressWarnings("WeakerAccess")
-public class MessageStatusViewHolderModel extends MessageViewHolderModel {
+public class StatusMessageModelVHModel extends MessageModelVHModel {
     private boolean mEnableReadReceipts;
     private boolean mVisible;
     private CharSequence mText;
 
-    public MessageStatusViewHolderModel(Context context, LayerClient layerClient,
+    public StatusMessageModelVHModel(Context context, LayerClient layerClient,
             IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);

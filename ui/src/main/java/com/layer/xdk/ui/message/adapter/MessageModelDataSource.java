@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter;
 
 
 import android.arch.paging.PositionalDataSource;
@@ -30,7 +30,7 @@ import java.util.List;
  * Messages from a {@link LayerClient}. This will convert them to {@link MessageModel} objects
  * before returning, thus doing the heavier computation of the conversion on the background thread.
  */
-public class MessagesDataSource extends PositionalDataSource<MessageModel> {
+public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
 
     private final GroupingCalculator mGroupingCalculator;
     private final LayerClient mLayerClient;
@@ -51,7 +51,7 @@ public class MessagesDataSource extends PositionalDataSource<MessageModel> {
      * @param groupingCalculator calculator to use for message grouping
      */
     @SuppressWarnings("WeakerAccess")
-    protected MessagesDataSource(@NonNull LayerClient layerClient,
+    protected MessageModelDataSource(@NonNull LayerClient layerClient,
             @NonNull final Conversation conversation,
             @Nullable Predicate predicate,
             @NonNull BinderRegistry binderRegistry,

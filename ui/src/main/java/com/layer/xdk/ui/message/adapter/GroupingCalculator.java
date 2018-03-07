@@ -1,5 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
-
+package com.layer.xdk.ui.message.adapter;
 
 
 import android.support.annotation.NonNull;

@@ -4,11 +4,12 @@ package com.layer.xdk.ui.message.view;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 /**
  * Allows a view to handle inner view inflations when used with a
- * {@link com.layer.xdk.ui.message.adapter2.MessagesAdapter2} instance. Primarily used for complex
+ * {@link MessageModelAdapter} instance. Primarily used for complex
  * {@link MessageModel} views that can contain {@link MessageModel}s and need to lay those out
  * inside a certain view.
  */

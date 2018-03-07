@@ -28,7 +28,7 @@ public class MessageSenderRepository {
      *
      * @param conversation conversation to send the message on
      * @param choiceResponse model to populate the response message
-     * @return result of {@link com.layer.xdk.ui.message.messagetypes.MessageSender#send(Message)}
+     * @return result of {@link com.layer.xdk.ui.message.sender.MessageSender#send(Message)}
      */
     public boolean sendChoiceResponse(Conversation conversation, ChoiceResponseModel choiceResponse) {
         ResponseSender responseSender = new ResponseSender(mContext, mLayerClient);

@@ -21,7 +21,8 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.message.adapter2.MessageGrouping;
+import com.layer.xdk.ui.message.adapter.MessageGrouping;
+import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
@@ -475,7 +476,7 @@ public abstract class MessageModel extends BaseObservable {
     /**
      * Get the {@link MessageGrouping} for this model when shown in an adapter. This will only be
      * valid for root models and should be null for inner models. No grouping will be set if this
-     * is not passed through a {@link com.layer.xdk.ui.message.adapter2.GroupingCalculator}.
+     * is not passed through a {@link com.layer.xdk.ui.message.adapter.GroupingCalculator}.
      *
      * @return set of grouping values for the root model or null if it is an inner model or none
      * has been set.
@@ -487,7 +488,7 @@ public abstract class MessageModel extends BaseObservable {
 
     /**
      * Set the {@link MessageGrouping} value for this model. This is usually used to handle
-     * decoration and view state in a {@link com.layer.xdk.ui.message.adapter2.MessagesAdapter2}.
+     * decoration and view state in a {@link MessageModelAdapter}.
      *
      * @param grouping set of groupings
      */

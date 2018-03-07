@@ -29,7 +29,7 @@ import com.layer.sdk.messaging.PushNotificationPayload;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.message.messagetypes.AttachmentSender;
+import com.layer.xdk.ui.message.sender.AttachmentSender;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 

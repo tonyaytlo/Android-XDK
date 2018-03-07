@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter;
 
 
 import android.arch.paging.PagedListAdapter;
@@ -12,6 +12,13 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.TypingIndicatorLayout;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
+import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
+import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
+import com.layer.xdk.ui.message.adapter.viewholder.StatusMessageModelVH;
+import com.layer.xdk.ui.message.adapter.viewholder.StatusMessageModelVHModel;
+import com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVH;
+import com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVHModel;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
@@ -24,7 +31,7 @@ import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Set;
 
-public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageViewHolder> {
+public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageModelVH> {
 
     private static final int VIEW_TYPE_TYPING_INDICATOR = "TypingIndicator".hashCode();
 
@@ -47,7 +54,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     private OnItemLongClickListener<MessageModel> mItemLongClickListener;
 
 
-    public MessagesAdapter2(LayerClient layerClient,
+    public MessageModelAdapter(LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
         super(DIFF_CALLBACK);
@@ -59,7 +66,7 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
 
     @NonNull
     @Override
-    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessageModelVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (VIEW_TYPE_TYPING_INDICATOR == viewType) {
             return createTypingIndicatorViewHolder(parent);
         }
@@ -74,16 +81,16 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageModelVH holder, int position) {
         if (position == getTypingIndicatorPosition()) {
-            bindTypingIndicator((MessageTypingIndicatorViewHolder) holder);
+            bindTypingIndicator((TypingIndicatorVH) holder);
             return;
         }
         MessageModel item = getItem(position);
         holder.bindItem(item);
     }
 
-    private void bindTypingIndicator(MessageTypingIndicatorViewHolder holder) {
+    private void bindTypingIndicator(TypingIndicatorVH holder) {
         holder.clear();
 
         if (mTypingIndicatorLayout.getParent() != null) {
@@ -137,19 +144,19 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
      * ViewHolders
      */
 
-    protected MessageTypingIndicatorViewHolder createTypingIndicatorViewHolder(ViewGroup parent) {
-        MessageTypingIndicatorViewHolderModel model = new MessageTypingIndicatorViewHolderModel(
+    protected TypingIndicatorVH createTypingIndicatorViewHolder(ViewGroup parent) {
+        TypingIndicatorVHModel model = new TypingIndicatorVHModel(
                 parent.getContext(),
                 mLayerClient,
                 getImageCacheWrapper(),
                 mIdentityFormatter,
                 mDateFormatter);
-        return new MessageTypingIndicatorViewHolder(parent, model);
+        return new TypingIndicatorVH(parent, model);
     }
 
 
-    protected MessageDefaultViewHolder createDefaultViewHolder(ViewGroup parent, MessageModel model) {
-        MessageDefaultViewHolderModel viewModel = new MessageDefaultViewHolderModel(
+    protected DefaultMessageModelVH createDefaultViewHolder(ViewGroup parent, MessageModel model) {
+        DefaultMessageModelVHModel viewModel = new DefaultMessageModelVHModel(
                 parent.getContext(),
                 mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
 
@@ -160,19 +167,19 @@ public class MessagesAdapter2 extends PagedListAdapter<MessageModel, MessageView
         viewModel.setShouldShowPresenceForCurrentUser(getShouldShowPresenceForCurrentUser());
         viewModel.setItemLongClickListener(getItemLongClickListener());
 
-        MessageDefaultViewHolder viewHolder = new MessageDefaultViewHolder(parent, viewModel);
+        DefaultMessageModelVH viewHolder = new DefaultMessageModelVH(parent, viewModel);
         inflateDefaultViewHolder(viewHolder, model);
         return viewHolder;
     }
 
-    protected MessageStatusViewHolder createStatusViewHolder(ViewGroup parent) {
-        MessageStatusViewHolderModel viewModel = new MessageStatusViewHolderModel(parent.getContext(),
+    protected StatusMessageModelVH createStatusViewHolder(ViewGroup parent) {
+        StatusMessageModelVHModel viewModel = new StatusMessageModelVHModel(parent.getContext(),
                 mLayerClient, mIdentityFormatter, mDateFormatter);
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
-        return new MessageStatusViewHolder(parent, viewModel);
+        return new StatusMessageModelVH(parent, viewModel);
     }
 
-    private void inflateDefaultViewHolder(MessageDefaultViewHolder viewHolder, MessageModel model) {
+    private void inflateDefaultViewHolder(DefaultMessageModelVH viewHolder, MessageModel model) {
         MessageContainer rootMessageContainer =
                 (MessageContainer) viewHolder.inflateViewContainer(model.getContainerViewLayoutId());
 

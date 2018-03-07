@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 import android.databinding.Observable;
 import android.support.constraint.ConstraintLayout;
@@ -10,16 +10,17 @@ import android.view.ViewStub;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.databinding.XdkUiMessageItemDefaultBinding;
+import com.layer.xdk.ui.databinding.XdkUiMessageModelVhDefaultBinding;
 import com.layer.xdk.ui.message.container.MessageContainer;
 
-public class MessageDefaultViewHolder extends MessageViewHolder<MessageDefaultViewHolderModel,XdkUiMessageItemDefaultBinding > {
+public class DefaultMessageModelVH extends
+        MessageModelVH<DefaultMessageModelVHModel, XdkUiMessageModelVhDefaultBinding > {
 
     // Cache this so we know not to re-set the bias on the constraint layout
     private Boolean mCurrentlyMyMessage;
 
-    public MessageDefaultViewHolder(ViewGroup parent, final MessageDefaultViewHolderModel viewModel) {
-        super(parent, R.layout.xdk_ui_message_item_default, viewModel);
+    public DefaultMessageModelVH(ViewGroup parent, final DefaultMessageModelVHModel viewModel) {
+        super(parent, R.layout.xdk_ui_message_model_vh_default, viewModel);
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());

@@ -6,7 +6,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 
 public class TextMessageView extends AppCompatTextView {
 

@@ -1,9 +1,8 @@
-package com.layer.xdk.ui.message;
+package com.layer.xdk.ui.message.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.google.gson.JsonObject;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;

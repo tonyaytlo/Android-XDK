@@ -14,7 +14,7 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.PushNotificationPayload;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.messagetypes.AttachmentSender;
+import com.layer.xdk.ui.message.sender.AttachmentSender;
 import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.Util;
 

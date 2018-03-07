@@ -1,12 +1,12 @@
-package com.layer.xdk.ui.message.adapter2.decoration;
+package com.layer.xdk.ui.message.adapter.decoration;
 
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.layer.xdk.ui.message.adapter2.MessageGrouping;
-import com.layer.xdk.ui.message.adapter2.MessageViewHolder;
+import com.layer.xdk.ui.message.adapter.MessageGrouping;
+import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
 
@@ -32,14 +32,14 @@ public abstract class MessageGroupingItemDecoration extends RecyclerView.ItemDec
 
     protected MessageModel getMessageModel(View view, RecyclerView parent) {
         RecyclerView.ViewHolder childViewHolder = parent.getChildViewHolder(view);
-        if (!(childViewHolder instanceof MessageViewHolder)) {
+        if (!(childViewHolder instanceof MessageModelVH)) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e("This decoration can only be used with holders of type "
-                        + MessageViewHolder.class.getSimpleName());
+                        + MessageModelVH.class.getSimpleName());
             }
             throw new IllegalStateException("This decoration can only be used with holders of type "
-                    + MessageViewHolder.class.getSimpleName());
+                    + MessageModelVH.class.getSimpleName());
         }
-        return ((MessageViewHolder) childViewHolder).getItem();
+        return ((MessageModelVH) childViewHolder).getItem();
     }
 }

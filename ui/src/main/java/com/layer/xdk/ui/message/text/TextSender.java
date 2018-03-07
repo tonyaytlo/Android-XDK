@@ -7,7 +7,7 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
-import com.layer.xdk.ui.message.messagetypes.MessageSender;
+import com.layer.xdk.ui.message.sender.MessageSender;
 
 public abstract class TextSender extends MessageSender {
     private int mMaxNotificationLength;

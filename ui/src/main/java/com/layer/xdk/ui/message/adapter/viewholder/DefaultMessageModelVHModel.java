@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 import android.content.Context;
 import android.databinding.Bindable;
@@ -13,10 +13,10 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +24,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
+public class DefaultMessageModelVHModel extends MessageModelVHModel {
 
     // Config
     private boolean mEnableReadReceipts;
@@ -49,7 +49,7 @@ public class MessageDefaultViewHolderModel extends MessageViewHolderModel {
     private boolean mShouldCurrentUserPresenceBeVisible;
     private boolean mShouldShowPresenceForCurrentUser;
 
-    public MessageDefaultViewHolderModel(Context context, LayerClient layerClient,
+    public DefaultMessageModelVHModel(Context context, LayerClient layerClient,
                                          ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
                                          DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);

@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.layer.xdk.ui.databinding.XdkUiLinkMessageViewBinding;
-import com.layer.xdk.ui.message.MessageViewHelper;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 
 public class LinkMessageLayout extends ConstraintLayout {
     private MessageViewHelper mMessageViewHelper;

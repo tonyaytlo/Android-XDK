@@ -22,7 +22,7 @@
 
         <variable
             name="viewHolderModel"
-            type="com.layer.xdk.ui.message.adapter2.MessageTypingIndicatorViewHolderModel" />
+            type="com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVHModel" />
     </data>
 
     <RelativeLayout

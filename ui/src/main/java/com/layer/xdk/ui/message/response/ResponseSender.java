@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-import com.layer.xdk.ui.message.messagetypes.MessageSender;
+import com.layer.xdk.ui.message.sender.MessageSender;
 import com.layer.xdk.ui.message.status.StatusMessageComposer;
 
 import java.util.UUID;

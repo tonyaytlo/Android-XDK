@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.adapter2;
+package com.layer.xdk.ui.message.adapter.viewholder;
 
 
 import android.databinding.DataBindingUtil;
@@ -10,21 +10,20 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.viewmodel.MessageViewHolderModel;
 
-public abstract class MessageViewHolder<VIEW_MODEL extends MessageViewHolderModel, BINDING extends ViewDataBinding> extends
+public abstract class MessageModelVH<VIEW_MODEL extends MessageModelVHModel, BINDING extends ViewDataBinding> extends
         RecyclerView.ViewHolder {
 
     private final VIEW_MODEL mViewModel;
     protected final BINDING mBinding;
 
-    private MessageViewHolder(BINDING binding, VIEW_MODEL viewModel) {
+    private MessageModelVH(BINDING binding, VIEW_MODEL viewModel) {
         super(binding.getRoot());
         mBinding = binding;
         mViewModel = viewModel;
     }
 
-    public MessageViewHolder(ViewGroup parent, @LayoutRes int layoutId, VIEW_MODEL viewModel) {
+    public MessageModelVH(ViewGroup parent, @LayoutRes int layoutId, VIEW_MODEL viewModel) {
         this(DataBindingUtil.<BINDING>inflate(LayoutInflater.from(parent.getContext()), layoutId, parent, false), viewModel);
     }
 
