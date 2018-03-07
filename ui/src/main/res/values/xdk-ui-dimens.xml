@@ -57,7 +57,7 @@
     <!-- # Message Model ViewHolders and Cells                                                 # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_message_model_cell_radius">17.5dp</dimen>
+    <dimen name="xdk_ui_message_model_cell_radius">@dimen/xdk_ui_message_container_corner_radius</dimen>
     <dimen name="xdk_ui_message_model_cell_min_width">30dp</dimen>
     <dimen name="xdk_ui_message_model_cell_min_height">30dp</dimen>
 
@@ -189,16 +189,16 @@
     <dimen name="xdk_ui_text_message_view_text_size">14sp</dimen>
 
     <!-- ####################################################################################### -->
-    <!-- # Message Viewer                                                          # -->
+    <!-- # Message Container                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_message_viewer_background_border_stroke_width">0.5dp</dimen>
+    <dimen name="xdk_ui_message_container_border_stroke_width">0.5dp</dimen>
+    <dimen name="xdk_ui_message_container_corner_radius">17.5dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Standard message container                                                          # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_standard_message_container_corner_radius">@dimen/xdk_ui_message_model_cell_radius</dimen>
     <dimen name="xdk_ui_standard_message_container_min_width">192dp</dimen>
     <dimen name="xdk_ui_standard_message_container_min_width_zero">0dp</dimen>
     <dimen name="xdk_ui_standard_message_container_title_text_size">14sp</dimen>
@@ -209,7 +209,6 @@
     <!-- # Titled message container                                                          # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_titled_message_container_corner_radius">@dimen/xdk_ui_message_model_cell_radius</dimen>
     <dimen name="xdk_ui_titled_message_container_title_text_size">16sp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width">192dp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width_zero">0dp</dimen>

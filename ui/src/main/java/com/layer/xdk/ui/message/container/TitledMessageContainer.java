@@ -28,9 +28,6 @@ public class TitledMessageContainer extends MessageContainer {
 
     public TitledMessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        setCornerRadius(context.getResources()
-                .getDimension(R.dimen.xdk_ui_titled_message_container_corner_radius));
     }
 
     @Override

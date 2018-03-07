@@ -108,7 +108,6 @@
             android:inflatedId="@id/message_view_stub"
             android:minHeight="@dimen/xdk_ui_message_model_cell_min_height"
             android:minWidth="@dimen/xdk_ui_message_model_cell_min_width"
-            android:padding="@dimen/xdk_ui_message_viewer_background_border_stroke_width"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/receipt"
             app:layout_constraintEnd_toStartOf="@+id/current_user_avatar"

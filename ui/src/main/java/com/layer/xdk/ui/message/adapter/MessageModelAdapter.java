@@ -180,8 +180,8 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     }
 
     private void inflateDefaultViewHolder(DefaultMessageModelVH viewHolder, MessageModel model) {
-        MessageContainer rootMessageContainer =
-                (MessageContainer) viewHolder.inflateViewContainer(model.getContainerViewLayoutId());
+        MessageContainer rootMessageContainer = viewHolder.inflateViewContainer(
+                model.getContainerViewLayoutId());
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
         messageView.setOnLongClickListener(viewHolder.getLongClickListener());

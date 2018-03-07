@@ -5,27 +5,38 @@ import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.databinding.ViewDataBinding;
 import android.graphics.Canvas;
+import android.graphics.Outline;
+import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 
 import com.layer.xdk.ui.BR;
+import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 public abstract class MessageContainer extends ConstraintLayout {
     private Path mCornerClippingPath = new Path();
-    private float mCornerRadius = 0.0f;
+    private final float mCornerRadius;
+    private final boolean mUsingOutline;
+    private final Paint mBorderPaint = new Paint();
+    private final RectF mRect = new RectF();
+    private boolean mDrawBorder = true;
 
     public MessageContainer(@NonNull Context context) {
-        this(context, null, 0);
+        this(context, null);
     }
 
     public MessageContainer(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -34,28 +45,54 @@ public abstract class MessageContainer extends ConstraintLayout {
 
     public MessageContainer(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        mCornerRadius = (context.getResources()
+                .getDimension(R.dimen.xdk_ui_message_container_corner_radius));
+
+        mBorderPaint.setColor(
+                ContextCompat.getColor(context, R.color.xdk_ui_message_container_border_color));
+        mBorderPaint.setStrokeWidth(getResources().getDimension(
+                R.dimen.xdk_ui_message_container_border_stroke_width));
+        mBorderPaint.setStyle(Paint.Style.STROKE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mUsingOutline = true;
+            setClipToOutline(true);
+            setOutlineProvider(new ClipOutlineProvider(mCornerRadius));
+        } else {
+            mUsingOutline = false;
+        }
     }
 
     @Override
     public void dispatchDraw(Canvas canvas) {
-        int save = canvas.save();
-        canvas.clipPath(mCornerClippingPath);
-        super.dispatchDraw(canvas);
-        canvas.restoreToCount(save);
+        if (mUsingOutline) {
+            super.dispatchDraw(canvas);
+        } else {
+            int save = canvas.save();
+            canvas.clipPath(mCornerClippingPath);
+            super.dispatchDraw(canvas);
+            canvas.restoreToCount(save);
+        }
+        if (mDrawBorder) {
+            canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mBorderPaint);
+        }
     }
 
     @Override
     protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
         super.onSizeChanged(width, height, oldWidth, oldHeight);
-        RectF r = new RectF(0, 0, width, height);
-        Path path = new Path();
-        path.addRoundRect(r, mCornerRadius, mCornerRadius, Path.Direction.CW);
-        path.close();
-        mCornerClippingPath = path;
+        mRect.set(0, 0, width, height);
+        if (!mUsingOutline) {
+            Path path = new Path();
+            path.addRoundRect(mRect, mCornerRadius, mCornerRadius, Path.Direction.CW);
+            path.close();
+            mCornerClippingPath = path;
+        }
     }
 
-    protected void setCornerRadius(float radius) {
-        mCornerRadius = radius;
+    public void setDrawBorder(boolean drawBorder) {
+        mDrawBorder = drawBorder;
     }
 
     public abstract View inflateMessageView(@LayoutRes int messageViewLayoutId);
@@ -107,5 +144,21 @@ public abstract class MessageContainer extends ConstraintLayout {
                 set.applyTo(MessageContainer.this);
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static class ClipOutlineProvider extends ViewOutlineProvider {
+
+        private float mCornerRadius;
+
+        ClipOutlineProvider(float cornerRadius) {
+            mCornerRadius = cornerRadius;
+        }
+
+        @Override
+        public void getOutline(View view, Outline outline) {
+            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), mCornerRadius);
+        }
+
     }
 }

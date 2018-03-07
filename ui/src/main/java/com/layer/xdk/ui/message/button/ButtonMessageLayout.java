@@ -72,6 +72,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         ViewStub viewStub = mBinding.xdkUiButtonMessageViewContent.getViewStub();
         viewStub.setLayoutResource(contentModel.getContainerViewLayoutId());
         MessageContainer container = (MessageContainer) viewStub.inflate();
+        container.setDrawBorder(false);
         View contentView = container.inflateMessageView(contentModel.getViewLayoutId());
         contentView.setOnLongClickListener(longClickListener);
         if (contentView instanceof ParentMessageView) {

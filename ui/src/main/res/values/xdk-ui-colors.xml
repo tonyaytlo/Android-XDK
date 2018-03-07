@@ -91,12 +91,17 @@
     <color name="xdk_ui_compose_bar_send_button_text_enabled">@color/xdk_ui_color_dark_blue</color>
     <color name="xdk_ui_compose_bar_send_button_text_disabled">@color/xdk_ui_color_primary_gray_5</color>
     <color name="xdk_ui_compose_bar_send_button_text_pressed">@color/xdk_ui_color_dark_blue</color>
+    
+    <!-- ########## -->
+    <!-- Message Container -->
+    <!-- ########## -->
+
+    <color name="xdk_ui_message_container_border_color">@color/xdk_ui_color_primary_gray_3</color>
 
     <!-- ########## -->
     <!-- Standard Message Container -->
     <!-- ########## -->
 
-    <color name="xdk_ui_standard_message_container_border_color">@color/xdk_ui_color_primary_gray_3</color>
     <color name="xdk_ui_standard_message_container_content_view_background">@color/xdk_ui_color_primary_gray</color>
     <color name="xdk_ui_standard_message_container_content_view_title">@color/xdk_ui_text_black</color>
     <color name="xdk_ui_standard_message_container_content_view_subtitle">@color/xdk_ui_text_gray</color>

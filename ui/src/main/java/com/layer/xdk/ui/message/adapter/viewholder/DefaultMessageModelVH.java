@@ -5,7 +5,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
@@ -24,7 +23,6 @@ public class DefaultMessageModelVH extends
 
         getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
-
         getBinding().currentUserAvatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper()),
                 viewModel.getIdentityFormatter());
 
@@ -32,19 +30,6 @@ public class DefaultMessageModelVH extends
 
         getBinding().getRoot().setClickable(true);
         getBinding().getRoot().setOnLongClickListener(viewModel.getOnLongClickListener());
-        getBinding().messageViewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
-            @Override
-            public void onInflate(ViewStub stub, final View inflated) {
-                // TODO AND-1242 - This doesn't quite work since the subviews will overdraw this.
-                // TODO AND-1242 rename resource
-                inflated.setBackgroundResource(R.drawable.xdk_ui_message_viewer_background);
-                int padding = inflated.getContext().getResources().getDimensionPixelSize(
-                        R.dimen.xdk_ui_message_viewer_background_border_stroke_width);
-                inflated.setPadding(padding, padding, padding, padding);
-                getViewHolderModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver
-                        (inflated));
-            }
-        });
 
         getBinding().executePendingBindings();
     }
@@ -60,9 +45,12 @@ public class DefaultMessageModelVH extends
         getViewHolderModel().update();
     }
 
-    public View inflateViewContainer(int containerLayoutId) {
+    public MessageContainer inflateViewContainer(int containerLayoutId) {
         getBinding().messageViewStub.getViewStub().setLayoutResource(containerLayoutId);
-        return getBinding().messageViewStub.getViewStub().inflate();
+        MessageContainer container =
+                (MessageContainer) getBinding().messageViewStub.getViewStub().inflate();
+        getViewHolderModel().addOnPropertyChangedCallback(new AlphaAndBiasObserver(container));
+        return container;
     }
 
     public View.OnLongClickListener getLongClickListener() {

@@ -60,6 +60,9 @@ public class CarouselMessageLayout extends FrameLayout implements ParentMessageV
             // Nothing to do with a non carousel model
             return;
         }
+        // Don't draw a border on the container for this layout
+        ((MessageContainer) getParent()).setDrawBorder(false);
+
         CarouselMessageModel carouselModel = (CarouselMessageModel) model;
 
         mLinearLayout.removeAllViews();
