@@ -13,11 +13,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class MessageModelManager {
     private final Map<String, Constructor<?>> mIdentifierToConstructorMap;
-    private final Map<Set<String>, Constructor<?>> mMimeTypeSetToConstructorMap;
 
     private Context mApplicationContext;
     private LayerClient mLayerClient;
@@ -25,7 +23,6 @@ public class MessageModelManager {
 
     public MessageModelManager(Context applicationContext, LayerClient layerClient) {
         mIdentifierToConstructorMap = new HashMap<>();
-        mMimeTypeSetToConstructorMap = new HashMap<>();
         mApplicationContext = applicationContext;
         mLayerClient = layerClient;
     }
@@ -34,15 +31,6 @@ public class MessageModelManager {
         try {
             Constructor<?> constructor = messageModelClass.getConstructor(Context.class, LayerClient.class, Message.class);
             mIdentifierToConstructorMap.put(modelIdentifier, constructor);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Class does not implement required constructor");
-        }
-    }
-
-    public <T extends MessageModel> void registerLegacyModel(@NonNull Set<String> partMimeTypes, @NonNull Class<T> messageModelClass) {
-        try {
-            Constructor<?> constructor = messageModelClass.getConstructor(Context.class, LayerClient.class, Message.class);
-            mMimeTypeSetToConstructorMap.put(partMimeTypes, constructor);
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException("Class does not implement required constructor");
         }

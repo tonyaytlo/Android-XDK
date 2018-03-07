@@ -57,7 +57,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     public MessageModelAdapter(LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
             IdentityFormatter identityFormatter) {
-        super(DIFF_CALLBACK);
+        super(new MessageModelDiffUtil());
         mLayerClient = layerClient;
         mImageCacheWrapper = imageCacheWrapper;
         mDateFormatter = dateFormatter;
@@ -288,16 +288,19 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     }
 
     /**
-     * Copying this from Groupie which copied it from Epoxy.
+     * Copying this from Groupie which copied it from Epoxy. Basically relies on an implementation
+     * detail of RecyclerView where the view type is fetched right before the view holder is
+     * created. This allows for fast lookups (constant time) of the model that corresponds to the
+     * view holder being created.
+     *
+     * @see <a href="https://github.com/lisawray/groupie/blob/a8e14fc8d7ef69226a0674346667e94bbb41f971/library/src/main/java/com/xwray/groupie/GroupAdapter.java#L423">Groupie algorithm</a>
      */
     private MessageModel getModelForViewType(int viewType) {
         if (mLastModelForViewTypeLookup != null
                 && mLastModelForViewTypeLookup.getMimeTypeTree().hashCode() == viewType) {
-            // We expect this to be a hit 100% of the time
             return mLastModelForViewTypeLookup;
         }
 
-        // To be extra safe in case RecyclerView implementation details change...
         for (int i = 0; i < getItemCount(); i++) {
             MessageModel item = getItem(i);
             if (item.getMimeTypeTree().hashCode() == viewType) {
@@ -307,18 +310,6 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
 
         throw new IllegalStateException("Could not find model for view type: " + viewType);
     }
-
-    private static final DiffUtil.ItemCallback<MessageModel> DIFF_CALLBACK = new DiffUtil.ItemCallback<MessageModel>() {
-        @Override
-        public boolean areItemsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
-            return oldItem.getMessage().getId().equals(newItem.getMessage().getId());
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
-            return oldItem.deepEquals(newItem);
-        }
-    };
 
     public boolean shouldShowTypingIndicator() {
         return mShowTypingIndicator;
@@ -373,4 +364,15 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         public abstract void onNewMessageReceived();
     }
 
+    private static class MessageModelDiffUtil extends DiffUtil.ItemCallback<MessageModel> {
+        @Override
+        public boolean areItemsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
+            return oldItem.getMessage().getId().equals(newItem.getMessage().getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
+            return oldItem.deepEquals(newItem);
+        }
+    };
 }
