@@ -143,6 +143,7 @@ public class ImageMessageModel extends MessageModel {
         }
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {

@@ -111,6 +111,7 @@ public class TextMessageModel extends MessageModel {
         return mActionEvent;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {

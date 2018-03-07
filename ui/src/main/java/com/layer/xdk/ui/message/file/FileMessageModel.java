@@ -131,6 +131,7 @@ public class FileMessageModel extends MessageModel {
         return ACTION_EVENT_OPEN_FILE;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
@@ -142,12 +143,12 @@ public class FileMessageModel extends MessageModel {
         if (getHasSourceMessagePart()) {
             MessagePart sourcePart = MessagePartUtils.getMessagePartWithRole(getMessage(), ROLE_SOURCE);
 
-            String filePath = null;
+            String filePath;
             try {
                 filePath = writeDataToFile(sourcePart.getDataStream());
             } catch (IOException e) {
                 // TODO : AND-1235 How should this error be exposed?
-                return null;
+                return new JsonObject();
             }
 
             jsonObject.addProperty(ACTION_DATA_URI, filePath);

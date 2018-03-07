@@ -139,6 +139,7 @@ public class LocationMessageModel extends MessageModel {
         return null;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
@@ -164,7 +165,7 @@ public class LocationMessageModel extends MessageModel {
                 }
             }
         } else {
-            actionData = null;
+            actionData = new JsonObject();
         }
         return actionData;
     }

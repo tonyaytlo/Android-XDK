@@ -101,6 +101,7 @@ public class LinkMessageModel extends MessageModel {
         return ACTION_OPEN_URL;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {

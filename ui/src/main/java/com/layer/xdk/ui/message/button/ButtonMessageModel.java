@@ -184,6 +184,7 @@ public class ButtonMessageModel extends MessageModel {
         return null;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
