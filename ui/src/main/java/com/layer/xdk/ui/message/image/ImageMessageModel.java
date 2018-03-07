@@ -154,7 +154,7 @@ public class ImageMessageModel extends MessageModel {
             return mMetadata.getAction().getData();
         } else {
             Action action = new Action(ACTION_EVENT_OPEN_URL);
-            String url;
+            String url = null;
             int width, height;
             if (mMetadata.getPreviewUrl() != null) {
                 url = mMetadata.getPreviewUrl();
@@ -167,7 +167,7 @@ public class ImageMessageModel extends MessageModel {
             } else {
                 if (mSourceRequestParameters != null && mSourceRequestParameters.getUri() != null) {
                     url = mSourceRequestParameters.getUri().toString();
-                } else {
+                } else if (mPreviewRequestParameters != null && mPreviewRequestParameters.getUri() != null){
                     url = mPreviewRequestParameters.getUri().toString();
                 }
                 width = mMetadata.getWidth();
