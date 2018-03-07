@@ -93,6 +93,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
             }
         }
 
+        // This is the easy but expensive way to do this. Improve with AND-1374
+        mBinding.xdkUiButtonMessageViewButtonsContainer.removeAllViews();
         addOrUpdateButtonsFromModel();
 
         model.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {

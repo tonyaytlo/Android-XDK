@@ -12,7 +12,7 @@
     </data>
 
 
-    <com.layer.xdk.ui.message.carousel.CarouselMessageView
+    <com.layer.xdk.ui.message.carousel.CarouselMessageLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:messageModel="@{messageModel}"/>

@@ -20,7 +20,7 @@ import com.layer.xdk.ui.message.view.ParentMessageView;
 
 import java.util.List;
 
-public class CarouselMessageView extends FrameLayout implements ParentMessageView {
+public class CarouselMessageLayout extends FrameLayout implements ParentMessageView {
     private HorizontalScrollView mScrollView;
     private LinearLayout mLinearLayout;
     private LayoutInflater mInflater;
@@ -28,15 +28,15 @@ public class CarouselMessageView extends FrameLayout implements ParentMessageVie
     private int mItemVerticalMargins;
     private int mItemHorizontalMargins;
 
-    public CarouselMessageView(Context context) {
+    public CarouselMessageLayout(Context context) {
         this(context, null, 0);
     }
 
-    public CarouselMessageView(Context context, @Nullable AttributeSet attrs) {
+    public CarouselMessageLayout(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CarouselMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CarouselMessageLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mInflater = LayoutInflater.from(context);
         mItemVerticalMargins = Math.round(context.getResources().getDimension(R.dimen.xdk_ui_carousel_message_item_vertical_margins));

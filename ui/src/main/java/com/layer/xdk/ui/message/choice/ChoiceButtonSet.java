@@ -88,7 +88,11 @@ public class ChoiceButtonSet extends LinearLayout {
 
         // Set up buttons
         for (int i = 0; i < getChildCount(); i++) {
-            updateChoice(((AppCompatButton) getChildAt(i)), metadata.get(i));
+            AppCompatButton child = (AppCompatButton) getChildAt(i);
+            // We have to request a layout here since the recycled view may be wider. This needs
+            // optimization (AND-1372)
+            child.requestLayout();
+            updateChoice(child, metadata.get(i));
         }
     }
 
