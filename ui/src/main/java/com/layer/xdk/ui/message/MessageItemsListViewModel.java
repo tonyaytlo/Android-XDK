@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.query.Predicate;
+import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
@@ -36,6 +37,7 @@ public class MessageItemsListViewModel extends BaseObservable {
     private BinderRegistry mBinderRegistry;
     private LiveData<PagedList<MessageModel>> mMessageModelList;
     private Observer<PagedList<MessageModel>> mMessageModelListObserver;
+    private boolean mInitialLoadComplete;
 
     public MessageItemsListViewModel(Context context, LayerClient layerClient,
                                      ImageCacheWrapper imageCacheWrapper,
@@ -110,9 +112,18 @@ public class MessageItemsListViewModel extends BaseObservable {
         mMessageModelListObserver = new Observer<PagedList<MessageModel>>() {
             @Override
             public void onChanged(@Nullable PagedList<MessageModel> messages) {
+                if (!mInitialLoadComplete) {
+                    mInitialLoadComplete = true;
+                    notifyPropertyChanged(BR.initialLoadComplete);
+                }
                 mAdapter.submitList(messages);
             }
         };
         mMessageModelList.observeForever(mMessageModelListObserver);
+    }
+
+    @Bindable
+    public boolean isInitialLoadComplete() {
+        return mInitialLoadComplete;
     }
 }

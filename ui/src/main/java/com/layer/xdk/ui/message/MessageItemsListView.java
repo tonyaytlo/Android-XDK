@@ -87,6 +87,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         });
     }
 
+    public void setInitialLoadComplete(boolean initialLoadComplete) {
+        if (initialLoadComplete && mAdapter != null && mAdapter.getItemCount() == 0) {
+            mEmptyListTextView.setVisibility(VISIBLE);
+        }
+    }
+
     //============================================================================================
     // LayerChangeEventListener.BackgroundThread.Weak Methods
     //============================================================================================
@@ -197,9 +203,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
         mLayerClient = layerClient;
 
         mEmptyListTextView.setText(getEmptyConversationHeaderText(getContext(), conversation.getParticipants(), layerClient.getAuthenticatedUser()));
-        if (mAdapter != null && mAdapter.getItemCount() == 0) {
-            mEmptyListTextView.setVisibility(VISIBLE);
-        }
     }
 
     private String getEmptyConversationHeaderText(Context context, Set<Identity> participants, Identity authenticatedUser) {
