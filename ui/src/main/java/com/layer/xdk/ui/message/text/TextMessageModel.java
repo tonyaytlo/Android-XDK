@@ -2,46 +2,54 @@ package com.layer.xdk.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 
 public class TextMessageModel extends MessageModel {
 
     public final static String ROOT_MIME_TYPE = "application/vnd.layer.text+json";
     private final JsonParser mJsonParser;
 
-    private String mText;
+    private CharSequence mText;
     private String mTitle;
     private String mSubtitle;
     private String mAuthor;
     private String mActionEvent;
     private JsonObject mCustomData;
 
-    public TextMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public TextMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mJsonParser = new JsonParser();
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        return TextMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_text_message_view;
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
+    }
+
+    @Override
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
+    protected void parse(@NonNull MessagePart messagePart) {
         String data = new String(messagePart.getData());
         JsonObject jsonObject = mJsonParser.parse(data).getAsJsonObject();
         mText = jsonObject.has("text") ? jsonObject.get("text").getAsString() : null;
@@ -56,10 +64,29 @@ public class TextMessageModel extends MessageModel {
             mActionEvent = null;
             mCustomData = null;
         }
+
+        linkifyText();
+    }
+
+    @Override
+    protected void processLegacyParts() {
+        MessagePart part = getMessage().getMessageParts().iterator().next();
+        if (part.isContentReady()) {
+            mText = new String(part.getData());
+            linkifyText();
+        } else if (shouldDownloadContentIfNotReady(part)) {
+            part.download(null);
+        }
+    }
+
+    private void linkifyText() {
+        SpannableString spannableString = new SpannableString(mText);
+        Linkify.addLinks(spannableString, Linkify.ALL);
+        mText = spannableString;
     }
 
     @Bindable
-    public String getText() {
+    public CharSequence getText() {
         return mText;
     }
 
@@ -84,6 +111,7 @@ public class TextMessageModel extends MessageModel {
         return mActionEvent;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
@@ -111,24 +139,14 @@ public class TextMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (getHasContent()) {
-            return mTitle != null ? mTitle : mText;
+            return mTitle != null ? mTitle : String.valueOf(mText);
         } else {
-            return getContext().getString(R.string.xdk_ui_text_message_preview_text);
+            return getAppContext().getString(R.string.xdk_ui_text_message_preview_text);
         }
     }
 
     @Override
     public int getBackgroundColor() {
         return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
-    }
-
-    @Bindable
-    public String getAuthorName() {
-        return getIdentityFormatter().getDisplayName(getMessage().getSender());
-    }
-
-    @Bindable
-    public boolean isDownloadingParts() {
-        return getNumberOfPartsCurrentlyDownloading() > 0;
     }
 }

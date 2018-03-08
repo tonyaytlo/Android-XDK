@@ -3,7 +3,6 @@ package com.layer.xdk.ui.recyclerview;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -13,7 +12,6 @@ import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
 public class ItemsRecyclerView<ITEM extends Queryable> extends RecyclerView {
 
     protected ItemRecyclerViewAdapter mAdapter;
-    protected ItemTouchHelper mSwipeItemTouchHelper;
 
     public ItemsRecyclerView(Context context) {
         super(context);

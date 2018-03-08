@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
@@ -35,25 +36,28 @@ public class ChoiceMessageModel extends MessageModel {
     private Set<String> mSelectedChoices;
     private Gson mGson;
 
-    public ChoiceMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ChoiceMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
         mSelectedChoices = new HashSet<>();
     }
 
     @Override
-    public Class<ChoiceMessageView> getRendererType() {
-        return ChoiceMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_choice_message_view;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_titled_message_container;
     }
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
-            processSelections();
-            notifyPropertyChanged(BR.choiceMessageMetadata);
-        }
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
+        processSelections();
+        notifyPropertyChanged(BR.choiceMessageMetadata);
     }
 
     @Override
@@ -72,7 +76,7 @@ public class ChoiceMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
-        String title = getContext().getString(R.string.xdk_ui_choice_message_model_default_title);
+        String title = getAppContext().getString(R.string.xdk_ui_choice_message_model_default_title);
         if (mMetadata != null && mMetadata.getTitle() != null) {
             title = mMetadata.getTitle();
         }
@@ -163,13 +167,13 @@ public class ChoiceMessageModel extends MessageModel {
         String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
         String statusText;
         if (TextUtils.isEmpty(mMetadata.getName())) {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
                     choice.getText());
         } else {
-            statusText = getContext().getString(
+            statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,

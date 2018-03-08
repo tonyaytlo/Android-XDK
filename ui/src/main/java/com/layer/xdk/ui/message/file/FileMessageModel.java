@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
@@ -15,10 +16,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.File;
@@ -55,8 +58,8 @@ public class FileMessageModel extends MessageModel {
 
     private String mFileProviderAuthority;
 
-    public FileMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public FileMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
@@ -64,22 +67,33 @@ public class FileMessageModel extends MessageModel {
     }
 
     @Override
-    public Class<FileMessageView> getRendererType() {
-        return FileMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_file_message_view;
     }
 
     @Override
-    protected void parse(MessagePart messagePart) {
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_standard_message_container;
+    }
+
+    @Override
+    protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        if (getRootMessagePart().equals(messagePart)) {
-            reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
-            setupFileIconDrawable(mMetadata.getMimeType());
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        reader = new JsonReader(inputStreamReader);
+        mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
+        setupFileIconDrawable(mMetadata.getMimeType());
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing file message", e);
+            }
         }
     }
 
     @Override
-    protected boolean shouldDownloadContentIfNotReady(MessagePart messagePart) {
+    protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         return true;
     }
 
@@ -117,6 +131,7 @@ public class FileMessageModel extends MessageModel {
         return ACTION_EVENT_OPEN_FILE;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
@@ -128,12 +143,12 @@ public class FileMessageModel extends MessageModel {
         if (getHasSourceMessagePart()) {
             MessagePart sourcePart = MessagePartUtils.getMessagePartWithRole(getMessage(), ROLE_SOURCE);
 
-            String filePath = null;
+            String filePath;
             try {
                 filePath = writeDataToFile(sourcePart.getDataStream());
             } catch (IOException e) {
                 // TODO : AND-1235 How should this error be exposed?
-                return null;
+                return new JsonObject();
             }
 
             jsonObject.addProperty(ACTION_DATA_URI, filePath);
@@ -152,7 +167,7 @@ public class FileMessageModel extends MessageModel {
                 return mMetadata.getTitle();
             }
         }
-        return getContext().getString(R.string.xdk_ui_file_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_file_message_preview_text);
     }
 
     @Override
@@ -194,7 +209,7 @@ public class FileMessageModel extends MessageModel {
     }
 
     private String writeDataToFile(InputStream inputStream) throws IOException {
-        String appName = getApplicationName(getContext());
+        String appName = getApplicationName(getAppContext());
         File storageDirectory = new File(getPublicStorageDirectoryForFileDownload(mMetadata.getMimeType()), appName);
         if (!storageDirectory.exists() && !storageDirectory.mkdirs()) {
             throw new IllegalStateException("Unable to write to storage directory");
@@ -219,7 +234,7 @@ public class FileMessageModel extends MessageModel {
             inputStream.close();
         }
 
-        return FileProvider.getUriForFile(getContext(), mFileProviderAuthority, file).toString();
+        return FileProvider.getUriForFile(getAppContext(), mFileProviderAuthority, file).toString();
     }
 
     private File getPublicStorageDirectoryForFileDownload(@Nullable String sourceMimeType) {
@@ -237,7 +252,7 @@ public class FileMessageModel extends MessageModel {
             }
         }
 
-        return getContext().getExternalFilesDir(directory);
+        return getAppContext().getExternalFilesDir(directory);
     }
 
     private String getApplicationName(Context context) {

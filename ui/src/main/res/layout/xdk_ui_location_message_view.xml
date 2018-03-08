@@ -9,7 +9,7 @@
         <import type="android.view.View"/>
 
         <variable
-            name="viewModel"
+            name="messageModel"
             type="LocationMessageModel"/>
 
         <variable
@@ -18,28 +18,15 @@
 
     </data>
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/root"
+    <com.layer.xdk.ui.message.location.LocationMessageView
+        android:id="@+id/map_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/map_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:scaleType="fitStart"
-            android:visibility="@{hideMap ? View.GONE : View.VISIBLE}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHeight_default="wrap"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_default="wrap"
-            app:loadFrom="@{viewModel.mapImageRequestParameters}"
-            app:usingImageLoader="@{viewModel.imageCacheWrapper}"/>
-    </android.support.constraint.ConstraintLayout>
-
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="fitStart"
+        android:visibility="@{hideMap ? View.GONE : View.VISIBLE}"
+        app:loadFrom="@{messageModel.mapImageRequestParameters}"
+        app:messageModel="@{messageModel}"
+        app:usingImageLoader="@{messageModel.imageCacheWrapper}"/>
 
 </layout>

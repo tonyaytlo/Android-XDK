@@ -100,6 +100,10 @@ public class Bindings {
 
     @BindingAdapter({"app:loadFrom", "app:usingImageLoader"})
     public static void loadFrom(ImageView imageView, ImageRequestParameters parameters, ImageCacheWrapper imageCacheWrapper) {
+        if (imageCacheWrapper == null) {
+            // No model is set yet
+            return;
+        }
         if (parameters != null) {
             imageCacheWrapper.loadImage(parameters, imageView);
         } else {

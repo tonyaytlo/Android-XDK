@@ -10,14 +10,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,23 +33,34 @@ public class ReceiptMessageModel extends MessageModel {
     private Gson mGson;
     private ReceiptMessageMetadata mMetadata;
 
-    public ReceiptMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ReceiptMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        return ReceiptMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_receipt_message_view;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_titled_message_container;
     }
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
+        mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing receipt message", e);
+            }
         }
     }
 
@@ -82,7 +95,7 @@ public class ReceiptMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        return getContext().getString(R.string.xdk_ui_receipt_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_receipt_message_preview_text);
     }
 
     @NonNull

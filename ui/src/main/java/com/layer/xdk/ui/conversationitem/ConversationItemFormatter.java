@@ -8,16 +8,12 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
-import com.layer.xdk.ui.message.messagetypes.CellFactory;
-import com.layer.xdk.ui.message.messagetypes.generic.GenericCellFactory;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,24 +23,21 @@ import java.util.Set;
 public class ConversationItemFormatter {
     private static final String METADATA_KEY_CONVERSATION_TITLE = "conversationName";
     private static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
-    private static final int PREVIEW_MAX_LENGTH = 40;
 
     private Context mContext;
     private LayerClient mLayerClient;
     private IdentityFormatter mIdentityFormatter;
     private DateFormat mTimeFormat;
     private DateFormat mDateFormat;
-    private List<CellFactory> mCellFactories;
     private BinderRegistry mBinderRegistry;
 
     public ConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter,
-                                     DateFormat timeFormat, DateFormat dateFormat, List<CellFactory> cellFactories) {
+                                     DateFormat timeFormat, DateFormat dateFormat) {
         mContext = context;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
         mTimeFormat = timeFormat;
         mDateFormat = dateFormat;
-        mCellFactories = cellFactories;
         mBinderRegistry = new BinderRegistry(context, layerClient);
     }
 
@@ -98,33 +91,12 @@ public class ConversationItemFormatter {
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        if (!mBinderRegistry.isLegacyMessageType(message) || mBinderRegistry.isStatusMessageType(message)) {
-            String previewText = null;
-            String modelIdentifier = MessagePartUtils.getRootMimeType(message);
-            if (modelIdentifier != null && mBinderRegistry.getMessageModelManager().hasModel(modelIdentifier)) {
-                MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(modelIdentifier);
-                if (model != null) {
-                    model.setMessageModelManager(mBinderRegistry.getMessageModelManager());
-                    model.setMessage(message);
-                    previewText = model.getPreviewText();
-                }
-            }
-            if (previewText != null) {
-                return previewText.length() > PREVIEW_MAX_LENGTH ? previewText.substring(0, PREVIEW_MAX_LENGTH) : previewText;
-            } else {
-                return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
-            }
-        } else {
-            if (mCellFactories != null && !mCellFactories.isEmpty()) {
-                for (CellFactory cellFactory : mCellFactories) {
-                    if (cellFactory.isType(message)) {
-                        return cellFactory.getPreviewText(mContext, message);
-                    }
-                }
-            }
-
-            return GenericCellFactory.getPreview(mContext, message);
+        MessageModel messageModel = mBinderRegistry.getMessageModelManager().getNewModel(message);
+        messageModel.processPartsFromTreeRoot();
+        if (messageModel.getPreviewText() != null) {
+            return messageModel.getPreviewText();
         }
+        return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
     }
 
     protected String formatTime(Date date) {
@@ -148,10 +120,6 @@ public class ConversationItemFormatter {
             timeText = mDateFormat.format(date);
         }
         return timeText;
-    }
-
-    public void setCellFactories(List<CellFactory> cellFactories) {
-        mCellFactories = cellFactories;
     }
 }
 

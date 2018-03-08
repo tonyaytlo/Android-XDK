@@ -4,16 +4,18 @@ package com.layer.xdk.ui.message.status;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.util.Linkify;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
@@ -21,27 +23,36 @@ import java.io.InputStreamReader;
 public class StatusMessageModel extends MessageModel {
 
     public static final String MIME_TYPE = "application/vnd.layer.status+json";
-    private static final int PREVIEW_MAX_LENGTH = 100;
 
     private StatusMessageMetadata mMetadata;
+    private SpannableString mText;
     private final Gson mGson;
 
-    public StatusMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public StatusMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
+    @Override
+    public int getViewLayoutId() {
+        // No view layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
+    }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        // No renderer type since this is rendered inside a MessageItemStatusViewModel
-        return null;
+    public int getContainerViewLayoutId() {
+        // No container layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
     }
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
         mMetadata = mGson.fromJson(reader, StatusMessageMetadata.class);
+        if (mMetadata != null && mMetadata.getText() != null) {
+            mText = new SpannableString(mMetadata.getText());
+            Linkify.addLinks(mText, Linkify.ALL);
+        }
     }
 
     @Override
@@ -75,11 +86,10 @@ public class StatusMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        if (mMetadata != null && mMetadata.getText() != null) {
-            String text = mMetadata.getText();
-            return text.length() > PREVIEW_MAX_LENGTH ? text.substring(0, PREVIEW_MAX_LENGTH) : text;
+        if (mText != null) {
+            return mText.toString();
         }
-        return getContext().getString(R.string.xdk_ui_status_message_preview_text);
+        return getAppContext().getString(R.string.xdk_ui_status_message_preview_text);
     }
 
     @Override
@@ -110,10 +120,7 @@ public class StatusMessageModel extends MessageModel {
     }
 
     @Nullable
-    public String getText() {
-        if (mMetadata != null && mMetadata.getText() != null) {
-            return mMetadata.getText().trim();
-        }
-        return null;
+    public CharSequence getText() {
+        return mText;
     }
 }

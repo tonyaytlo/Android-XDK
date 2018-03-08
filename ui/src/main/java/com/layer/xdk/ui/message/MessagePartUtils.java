@@ -5,14 +5,17 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.message.image.ImageMessageModel;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -207,5 +210,21 @@ public class MessagePartUtils {
         }
 
         return builder.toString();
+    }
+
+    @NonNull
+    public static String getLegacyMessageMimeTypes(@NonNull Message message) {
+        Set<MessagePart> messageParts = message.getMessageParts();
+        Set<String> mimeTypes = new HashSet<>(messageParts.size());
+        for (MessagePart part : messageParts) {
+            // Since images can have varying format, exclude this from the set
+            if (part.getMimeType().startsWith(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX)
+                    && !part.getMimeType().equals(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_PREVIEW)) {
+                mimeTypes.add(LegacyMimeTypes.LEGACY_IMAGE_MIME_TYPE_IMAGE_PREFIX);
+            } else {
+                mimeTypes.add(part.getMimeType());
+            }
+        }
+        return mimeTypes.toString();
     }
 }

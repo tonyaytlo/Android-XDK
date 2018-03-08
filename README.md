@@ -40,10 +40,6 @@ The XDK UI library is located in the `ui` directory.  The table below details th
     </tr>
     <tr><th colspan="2" style="text-align:center;">Factories and Senders</th></tr>
     <tr>
-        <td><a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/CellFactory.java">CellFactory</a></td>
-        <td>Classifies, parses, and renders Messages</td>
-    </tr>
-    <tr>
         <td><a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/MessageSender.java">MessageSender</a></td>
         <td>Sends Messages</td>
     </tr>
@@ -121,7 +117,7 @@ An item click listener can be set via <a href="ui/src/main/java/com/layer/xdk/ui
 ### MessageItemsListView
 
 The <a href="ui/src/main/java/com/layer/xdk/ui/message/MessageItemsListView.java">MessageItemsListView</a>
-is list of Messages, rendered by <a href="ui/src/main/java/com/layer/xdk/ui/message/messagetypes/CellFactory.java">CellFactories</a>. MessageItemsListView
+is list of Messages. MessageItemsListView
 is used in <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationView.java">ConversationView</a>
 
 ##### XML
@@ -146,7 +142,6 @@ is used in <a href="ui/src/main/java/com/layer/xdk/ui/conversation/ConversationV
 
         <com.layer.xdk.ui.message.MessageItemsListView
             app:adapter="@{viewModel.adapter}"
-            app:cellFactories="@{viewModel.cellFactories}"
              ... />
 
     </merge>
@@ -245,7 +240,7 @@ The <a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">Typin
         typingIndicator.setTypingActivityListener(new TypingIndicatorLayout.TypingActivityListener() {
             @Override
             public void onTypingActivityChange(TypingIndicatorLayout typingIndicator, boolean active, Set<Identity> users) {
-                messageItemListView.setFooterView(active ? typingIndicator : null, users);
+                messageItemListView.setTypingIndicatorLayout(active ? typingIndicator : null, users);
             }
         });
 ```

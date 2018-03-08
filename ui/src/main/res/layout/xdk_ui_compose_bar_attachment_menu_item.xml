@@ -18,7 +18,7 @@
 
     <data>
 
-        <import type="com.layer.xdk.ui.message.messagetypes.AttachmentSender"/>
+        <import type="com.layer.xdk.ui.message.sender.AttachmentSender"/>
 
         <variable
             name="sender"

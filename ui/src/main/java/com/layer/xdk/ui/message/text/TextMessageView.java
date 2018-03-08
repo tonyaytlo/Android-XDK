@@ -2,57 +2,36 @@ package com.layer.xdk.ui.message.text;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 
-import com.google.gson.JsonObject;
-import com.layer.xdk.ui.databinding.XdkUiTextMessageViewBinding;
-import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
-import com.layer.xdk.ui.message.container.StandardMessageContainer;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 
-public class TextMessageView extends MessageView<TextMessageModel> {
-    private XdkUiTextMessageViewBinding mBinding;
+public class TextMessageView extends AppCompatTextView {
+
+    private MessageViewHelper mMessageViewHelper;
 
     public TextMessageView(Context context) {
         this(context, null, 0);
     }
 
     public TextMessageView(Context context, @Nullable AttributeSet attrs) {
-        this(context, null, 0);
+        this(context, attrs, 0);
     }
 
     public TextMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        mBinding = XdkUiTextMessageViewBinding.inflate(inflater, this, true);
+        mMessageViewHelper = new MessageViewHelper(context);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mBinding.getViewModel() != null) {
-                    TextMessageModel model = mBinding.getViewModel();
-                    performAction(model.getActionEvent(), model.getActionData());
-                }
+                mMessageViewHelper.performAction();
             }
         });
     }
 
-    @Override
-    public void setMessageModel(TextMessageModel model) {
-        mBinding.setViewModel(model);
-    }
-
-    @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
-    }
-
-    @Override
-    public void performAction(String event, JsonObject customData) {
-        if (!TextUtils.isEmpty(event)) {
-            ActionHandlerRegistry.dispatchEvent(getContext(), event, customData);
-        }
+    public void setMessageModel(@Nullable TextMessageModel model) {
+        mMessageViewHelper.setMessageModel(model);
     }
 }

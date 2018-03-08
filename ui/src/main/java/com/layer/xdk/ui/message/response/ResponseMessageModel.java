@@ -6,23 +6,29 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 
 public class ResponseMessageModel extends MessageModel {
 
     public static final String MIME_TYPE = "application/vnd.layer.response+json";
 
-    public ResponseMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ResponseMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        // No renderer type since this type is not rendered
-        return null;
+    public int getViewLayoutId() {
+        // No view layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        // No container layout since this is rendered inside a MessageItemStatusViewModel
+        return 0;
     }
 
     @Override
@@ -71,7 +77,7 @@ public class ResponseMessageModel extends MessageModel {
     }
 
     @Nullable
-    public String getText() {
+    public CharSequence getText() {
         if (getChildMessageModels() != null && !getChildMessageModels().isEmpty()) {
             return ((StatusMessageModel) getChildMessageModels().get(0)).getText();
         }

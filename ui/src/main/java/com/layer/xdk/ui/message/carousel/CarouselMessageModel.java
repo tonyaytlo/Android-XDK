@@ -9,10 +9,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
@@ -25,14 +25,19 @@ public class CarouselMessageModel extends MessageModel {
     private Gson mGson;
     private CarouselModelMetadata mMetadata;
 
-    public CarouselMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public CarouselMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        return CarouselMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_carousel_message_view;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_empty_message_container;
     }
 
     @Override
@@ -50,10 +55,8 @@ public class CarouselMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        if (messagePart.equals(getRootMessagePart())) {
-            JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, CarouselModelMetadata.class);
-        }
+        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        mMetadata = mGson.fromJson(reader, CarouselModelMetadata.class);
     }
 
     @Override
@@ -88,23 +91,31 @@ public class CarouselMessageModel extends MessageModel {
         if (super.getActionEvent() != null) {
             return super.getActionEvent();
         }
-        return mMetadata.getAction().getEvent();
+
+        if (mMetadata.getAction() != null) {
+            return mMetadata.getAction().getEvent();
+        }
+        return null;
     }
 
+    @NonNull
     @Override
     public JsonObject getActionData() {
         if (super.getActionData().size() > 0) {
             return super.getActionData();
         }
 
-        return mMetadata.getAction().getData();
+        if (mMetadata.getAction() != null) {
+            return mMetadata.getAction().getData();
+        }
+        return new JsonObject();
     }
 
     @Nullable
     @Override
     public String getPreviewText() {
         List<MessageModel> childMessageModels = getChildMessageModelsWithRole(ROLE_CAROUSEL_ITEM);
-        return getContext().getResources().getQuantityString(R.plurals.xdk_ui_carousel_message_preview_text, 0, childMessageModels.size());
+        return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_carousel_message_preview_text, 0, childMessageModels.size());
     }
 
     @Override

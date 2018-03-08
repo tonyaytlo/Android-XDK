@@ -1,16 +1,17 @@
 package com.layer.xdk.ui.message.location;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.layer.xdk.ui.databinding.XdkUiLocationMessageViewBinding;
-import com.layer.xdk.ui.message.container.StandardMessageContainer;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 
-public class LocationMessageView extends MessageView<LocationMessageModel> {
+public class LocationMessageView extends AppCompatImageView {
+    private MessageViewHelper mMessageViewHelper;
     private XdkUiLocationMessageViewBinding mBinding;
 
     public LocationMessageView(Context context) {
@@ -23,26 +24,19 @@ public class LocationMessageView extends MessageView<LocationMessageModel> {
 
     public LocationMessageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        mBinding = XdkUiLocationMessageViewBinding.inflate(layoutInflater, this, true);
+        mMessageViewHelper = new MessageViewHelper(context);
 
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocationMessageModel model = mBinding.getViewModel();
-                performAction(model.getActionEvent(), model.getActionData());
+                mMessageViewHelper.performAction();
             }
         });
     }
 
-    @Override
     public void setMessageModel(LocationMessageModel model) {
-        mBinding.setViewModel(model);
-    }
-
-    @Override
-    public Class<StandardMessageContainer> getContainerClass() {
-        return StandardMessageContainer.class;
+        mBinding = DataBindingUtil.getBinding(this);
+        mMessageViewHelper.setMessageModel(model);
     }
 
     public void hideMap(boolean hideMap) {

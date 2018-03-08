@@ -11,12 +11,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.view.MessageView;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
 import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
@@ -24,6 +25,7 @@ import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandle
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -43,8 +45,8 @@ public class ProductMessageModel extends MessageModel {
     private Gson mGson;
     private ProductMessageMetadata mMetadata;
 
-    public ProductMessageModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    public ProductMessageModel(Context context, LayerClient layerClient, Message message) {
+        super(context, layerClient, message);
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
         mGson = gsonBuilder.create();
@@ -52,17 +54,28 @@ public class ProductMessageModel extends MessageModel {
     }
 
     @Override
-    public Class<? extends MessageView> getRendererType() {
-        return ProductMessageView.class;
+    public int getViewLayoutId() {
+        return R.layout.xdk_ui_product_message_view;
+    }
+
+    @Override
+    public int getContainerViewLayoutId() {
+        return R.layout.xdk_ui_empty_message_container;
     }
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader;
-        if (getRootMessagePart().equals(messagePart)) {
-            reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-            mMetadata = mGson.fromJson(reader, ProductMessageMetadata.class);
-            mOptions.clear();
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        reader = new JsonReader(inputStreamReader);
+        mMetadata = mGson.fromJson(reader, ProductMessageMetadata.class);
+        mOptions.clear();
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing product message", e);
+            }
         }
     }
 
@@ -146,7 +159,7 @@ public class ProductMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String name = getName();
-        return name != null ? name : getContext().getString(R.string.xdk_ui_product_message_preview_text);
+        return name != null ? name : getAppContext().getString(R.string.xdk_ui_product_message_preview_text);
     }
 
     @Bindable
@@ -154,7 +167,7 @@ public class ProductMessageModel extends MessageModel {
     public String getPrice() {
         if (mMetadata != null && mMetadata.getPrice() != null) {
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
-            currencyFormat.setCurrency(Currency.getInstance(mMetadata.getCurrency(getContext())));
+            currencyFormat.setCurrency(Currency.getInstance(mMetadata.getCurrency(getAppContext())));
             return currencyFormat.format(mMetadata.getPrice());
         }
 
@@ -164,7 +177,7 @@ public class ProductMessageModel extends MessageModel {
     @Bindable
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getContext())
+            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
                     .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
                     .build());
         }
@@ -186,8 +199,8 @@ public class ProductMessageModel extends MessageModel {
             }
 
             builder.centerCrop(true)
-                    .resize(getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_width),
-                            getContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_height))
+                    .resize(getAppContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_width),
+                            getAppContext().getResources().getDimensionPixelSize(R.dimen.xdk_ui_product_message_image_height))
                     .tag(getClass().getSimpleName());
 
             return builder.build();
