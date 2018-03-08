@@ -10,24 +10,26 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessageOptions;
 import com.layer.sdk.messaging.MessagePart;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class MockMessageImpl implements Message {
 
-    private List<MessagePart> mMessageParts = new ArrayList<>();
+    private Set<MessagePart> mMessageParts = new HashSet<>();
     private Date mReceivedAtDate;
+    private Conversation mConversation;
 
-    public MockMessageImpl(List<MessagePart> messageParts) {
+
+    public MockMessageImpl(Set<MessagePart> messageParts) {
         mMessageParts = messageParts;
         mReceivedAtDate = new Date();
     }
 
     public MockMessageImpl(MessagePart... messageParts) {
-        mMessageParts = new ArrayList<>();
+        mMessageParts = new HashSet<>();
         Collections.addAll(mMessageParts, messageParts);
         mReceivedAtDate = new Date();
     }
@@ -54,11 +56,11 @@ public class MockMessageImpl implements Message {
 
     @Override
     public Conversation getConversation() {
-        return null;
+        return mConversation;
     }
 
     @Override
-    public List<MessagePart> getMessageParts() {
+    public Set<MessagePart> getMessageParts() {
         return mMessageParts;
     }
 
@@ -101,5 +103,15 @@ public class MockMessageImpl implements Message {
     @Override
     public MessageOptions getOptions() {
         return null;
+    }
+
+    @Nullable
+    @Override
+    public Date getUpdatedAt() {
+        return null;
+    }
+
+    public void setConversation(Conversation conversation) {
+        mConversation = conversation;
     }
 }

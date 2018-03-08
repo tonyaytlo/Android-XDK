@@ -11,13 +11,14 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.Metadata;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MockConversation extends Conversation {
 
     private Set<Identity> mIdentities;
-    private Message mLastMessage;
+    private MockMessageImpl mLastMessage;
 
     public MockConversation(Identity authenticatedUser, int numberOfUsers) {
         if (numberOfUsers < 1) {
@@ -31,6 +32,7 @@ public class MockConversation extends Conversation {
         }
 
         mLastMessage = new MockMessageImpl(new MockMessagePart("Hello".getBytes(), "text/plain"));
+        mLastMessage.setConversation(this);
     }
 
     @Override
@@ -151,5 +153,10 @@ public class MockConversation extends Conversation {
     @Override
     public Integer getTotalUnreadMessageCount() {
         return 0;
+    }
+
+    @Override
+    public Date getCreatedAt() {
+        return null;
     }
 }

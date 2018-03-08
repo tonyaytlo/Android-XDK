@@ -40,6 +40,8 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
+        // Seems to be a conflict between Espresso 3.0.1 and Firebase 11.8.0
+        pickFirst 'protobuf.meta'
     }
 
     // Data binding is still trying to use 25.2.0 for some reason
@@ -99,6 +101,8 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    testImplementation "com.google.truth:truth:0.39"
+    androidTestImplementation "com.google.truth:truth:0.39"
 }
 
 def sdkPom() {

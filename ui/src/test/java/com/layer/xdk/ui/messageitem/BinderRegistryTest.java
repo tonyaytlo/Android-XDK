@@ -1,24 +1,32 @@
 package com.layer.xdk.ui.messageitem;
 
+import static com.google.common.truth.Truth.assertThat;
+
+import static org.mockito.Mockito.mock;
+
 import android.content.Context;
 
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.messaging.Message;
-import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.message.LegacyMimeTypes;
 import com.layer.xdk.ui.message.binder.BinderRegistry;
+import com.layer.xdk.ui.message.button.ButtonMessageModel;
+import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
+import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
+import com.layer.xdk.ui.message.file.FileMessageModel;
+import com.layer.xdk.ui.message.image.ImageMessageModel;
+import com.layer.xdk.ui.message.link.LinkMessageModel;
+import com.layer.xdk.ui.message.location.LocationMessageModel;
+import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.product.ProductMessageModel;
+import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
+import com.layer.xdk.ui.message.response.ResponseMessageModel;
+import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.text.TextMessageModel;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 
 public class BinderRegistryTest {
@@ -29,55 +37,59 @@ public class BinderRegistryTest {
     @Mock
     Context context;
 
-    @Mock
-    Message message1, message2;
-
-    @Mock
-    MessagePart message1Part1, message1Part2;
-
-    @Mock
-    MessagePart message2Part1, message2Part2, message2Part3;
-
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
-        when(message1Part1.getMimeType()).thenReturn("application/vnd.layer.card.response+json;role=root");
-        when(message1Part2.getMimeType()).thenReturn("application/vnd.layer.card.text+json;role=message;parent-node-id=e004b419-2e53-4680-88cf-6938b365a2c0");
-
-        when(message2Part1.getMimeType()).thenReturn("image/jpeg");
-        when(message2Part2.getMimeType()).thenReturn("image/jpeg+preview");
-        when(message2Part3.getMimeType()).thenReturn("application/json+imageSize");
-
-        List<MessagePart> message1Parts = new ArrayList<>();
-        Collections.addAll(message1Parts, message1Part1, message1Part2);
-
-        when(message1.getMessageParts()).thenReturn(message1Parts);
-
-        List<MessagePart> message2Parts = new ArrayList<>();
-        Collections.addAll(message2Parts, message2Part1, message2Part2, message2Part3);
-
-        when(message2.getMessageParts()).thenReturn(message2Parts);
     }
 
     @Test
-    public void testMessageIsCardType() {
+    public void testDefaultModels() {
         BinderRegistry binderRegistry = new BinderRegistry(context, layerClient);
-
-        assertThat(binderRegistry.isLegacyMessageType(message1), is(false));
+        assertThat(binderRegistry.hasModel(TextMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(LegacyMimeTypes.LEGACY_TEXT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ImageMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(LegacyMimeTypes.LEGACY_SINGLE_PART_MIME_TYPES)).isTrue();
+        assertThat(binderRegistry.hasModel(LegacyMimeTypes.LEGACY_THREE_PART_MIME_TYPES)).isTrue();
+        assertThat(binderRegistry.hasModel(LocationMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(LegacyMimeTypes.LEGACY_LOCATION_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(LinkMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(FileMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ButtonMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ChoiceMessageModel.MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(CarouselMessageModel.MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ProductMessageModel.MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(StatusMessageModel.MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ReceiptMessageModel.MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(ResponseMessageModel.MIME_TYPE)).isTrue();
     }
 
     @Test
-    public void testMessageIsLegacyType() {
+    public void testModelRegistration() {
         BinderRegistry binderRegistry = new BinderRegistry(context, layerClient);
+        MessageModel mockModel = mock(MessageModel.class);
+        String modelIdentifier = "SampleIdentifier";
+        binderRegistry.registerModel(modelIdentifier, mockModel.getClass());
 
-        assertThat(binderRegistry.isLegacyMessageType(message2), is(true));
+        assertThat(binderRegistry.hasModel(modelIdentifier)).isTrue();
     }
 
     @Test
-    public void testGetViewTypeForUnknownCardType() {
+    public void testModelRemoval() {
         BinderRegistry binderRegistry = new BinderRegistry(context, layerClient);
+        MessageModel mockModel = mock(MessageModel.class);
+        String modelIdentifier = "SampleIdentifier";
+        binderRegistry.registerModel(modelIdentifier, mockModel.getClass());
 
-        assertThat(binderRegistry.getViewType(message1), is(binderRegistry.VIEW_TYPE_UNKNOWN));
+        assertThat(binderRegistry.hasModel(TextMessageModel.ROOT_MIME_TYPE)).isTrue();
+        assertThat(binderRegistry.hasModel(modelIdentifier)).isTrue();
+
+        binderRegistry.remove(TextMessageModel.ROOT_MIME_TYPE);
+        binderRegistry.remove(modelIdentifier);
+
+        assertThat(binderRegistry.hasModel(TextMessageModel.ROOT_MIME_TYPE)).isFalse();
+        assertThat(binderRegistry.hasModel(modelIdentifier)).isFalse();
+
+        // Ensure a default is still there
+        assertThat(binderRegistry.hasModel(LegacyMimeTypes.LEGACY_TEXT_MIME_TYPE)).isTrue();
     }
 }

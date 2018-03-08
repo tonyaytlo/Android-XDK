@@ -85,8 +85,8 @@ public class MockLayerClient extends LayerClient {
     }
 
     @Override
-    public Message newMessage(MessageOptions messageOptions, List<MessagePart> list) {
-        return new MockMessageImpl(list);
+    public Message newMessage(MessageOptions messageOptions, Set<MessagePart> set) {
+        return new MockMessageImpl(set);
     }
 
     @Override

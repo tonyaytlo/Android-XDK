@@ -1,5 +1,8 @@
 package com.layer.xdk.ui.message.model;
 
+
+import static com.google.common.truth.Truth.assertThat;
+
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
@@ -9,9 +12,6 @@ import com.layer.xdk.ui.message.text.TextMessageModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-
-import static org.junit.Assert.assertNotNull;
 
 public class MessageModelManagerTest {
 
@@ -30,6 +30,6 @@ public class MessageModelManagerTest {
     @Test
     public void testTextMessageModelRegistration() {
         mMessageModelManager.registerModel("TextMessageModel", TextMessageModel.class);
-        assertNotNull(mMessageModelManager.getNewModel("TextMessageModel"));
+        assertThat(mMessageModelManager.hasModel("TextMessageModel")).isTrue();
     }
 }

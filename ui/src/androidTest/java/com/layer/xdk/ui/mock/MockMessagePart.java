@@ -1,6 +1,7 @@
 package com.layer.xdk.ui.mock;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Message;
@@ -8,6 +9,7 @@ import com.layer.sdk.messaging.MessagePart;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Date;
 
 public class MockMessagePart extends MessagePart {
     private static int sInstanceCount = 0;
@@ -70,5 +72,11 @@ public class MockMessagePart extends MessagePart {
     @Override
     public void deleteLocalContent() {
 
+    }
+
+    @Nullable
+    @Override
+    public Date getUpdatedAt() {
+        return null;
     }
 }
