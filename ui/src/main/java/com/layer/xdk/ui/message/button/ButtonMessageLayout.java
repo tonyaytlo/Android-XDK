@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
+import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
@@ -167,8 +168,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
     private void addOrUpdateChoiceButtons(@NonNull ButtonMetadata metadata) {
         if (metadata.getChoices() == null || metadata.getChoices().isEmpty()) return;
-        final ButtonMetadata.ButtonChoiceMetadata choiceData = metadata.getButtonChoiceMetadata();
-        if (choiceData == null || choiceData.getResponseName() == null) {
+        final ChoiceConfigMetadata choiceConfig = metadata.getChoiceConfigMetadata();
+        if (choiceConfig == null) {
             if (Log.isLoggable(Log.WARN)) {
                 Log.w("No response name for this choice set, not adding choice buttons");
             }
@@ -176,7 +177,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         }
 
         // Prefix this tag in case buttons have the same response name
-        String buttonSetTag = BUTTON_SET_TAG_PREFIX + choiceData.getResponseName();
+        String buttonSetTag = BUTTON_SET_TAG_PREFIX + choiceConfig.getResponseName();
         ChoiceButtonSet choiceButtonSet = findViewWithTag(buttonSetTag);
         if (choiceButtonSet == null) {
             choiceButtonSet = new ChoiceButtonSet(getContext());
@@ -189,10 +190,10 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         }
 
         choiceButtonSet.setupViewsForChoices(metadata.getChoices());
-        choiceButtonSet.setEnabledForMe(choiceData.isEnabledForMe());
-        choiceButtonSet.setAllowDeselect(choiceData.isAllowDeselect());
-        choiceButtonSet.setAllowReselect(choiceData.isAllowReselect());
-        choiceButtonSet.setAllowMultiSelect(choiceData.isAllowMultiselect());
+        choiceButtonSet.setEnabledForMe(choiceConfig.isEnabledForMe());
+        choiceButtonSet.setAllowDeselect(choiceConfig.isAllowDeselect());
+        choiceButtonSet.setAllowReselect(choiceConfig.isAllowReselect());
+        choiceButtonSet.setAllowMultiSelect(choiceConfig.isAllowMultiselect());
 
         choiceButtonSet.setOnChoiceClickedListener(new ChoiceButtonSet.OnChoiceClickedListener() {
             @Override
@@ -200,13 +201,13 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                     Set<String> selectedChoices) {
                 ButtonMessageModel messageModel = mBinding.getMessageModel();
                 if (messageModel != null) {
-                    messageModel.onChoiceClicked(choiceData, choice, selected, selectedChoices);
+                    messageModel.onChoiceClicked(choiceConfig, choice, selected, selectedChoices);
                 }
             }
         });
 
         Set<String> selectedChoices = mBinding.getMessageModel().getSelectedChoices(
-                choiceData.getResponseName());
+                choiceConfig.getResponseName());
 
         choiceButtonSet.setSelection(selectedChoices);
     }

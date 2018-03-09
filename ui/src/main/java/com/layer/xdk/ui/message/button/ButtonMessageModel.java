@@ -15,6 +15,7 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
+import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ChoiceResponseModel;
 import com.layer.xdk.ui.message.response.ResponseSummary;
@@ -66,17 +67,17 @@ public class ButtonMessageModel extends MessageModel {
             if (ButtonMetadata.TYPE_CHOICE.equals(metadata.getType())) {
                 JsonObject data = metadata.getData();
                 if (data != null) {
-                    ButtonMetadata.ButtonChoiceMetadata choiceData = mGson.fromJson(data,
-                            ButtonMetadata.ButtonChoiceMetadata.class);
-                    metadata.setButtonChoiceMetadata(choiceData);
-                    choiceData.setEnabledForMe(getIsEnabledForMe(choiceData));
+                    ChoiceConfigMetadata choiceConfig = mGson.fromJson(data,
+                            ChoiceConfigMetadata.class);
+                    metadata.setChoiceConfigMetadata(choiceConfig);
+                    choiceConfig.setEnabledForMe(getIsEnabledForMe(choiceConfig));
 
-                    String responseName = choiceData.getResponseName();
+                    String responseName = choiceConfig.getResponseName();
 
                     Set<String> selectedChoices = getSelectedChoices(responseName);
                     selectedChoices.clear();
-                    if (choiceData.getPreselectedChoice() != null) {
-                        selectedChoices.add(choiceData.getPreselectedChoice());
+                    if (choiceConfig.getPreselectedChoice() != null) {
+                        selectedChoices.add(choiceConfig.getPreselectedChoice());
                     }
                 }
             }
@@ -108,12 +109,12 @@ public class ButtonMessageModel extends MessageModel {
         notifyChange();
     }
 
-    private boolean getIsEnabledForMe(ButtonMetadata.ButtonChoiceMetadata choiceData) {
-        if (getLayerClient().getAuthenticatedUser() == null || mMetadata == null) {
+    private boolean getIsEnabledForMe(ChoiceConfigMetadata config) {
+        if (getAuthenticatedUserId() == null) {
             return false;
         }
-        String myUserID = getLayerClient().getAuthenticatedUser().getId().toString();
-        return choiceData.getEnabledFor() == null || choiceData.getEnabledFor().contains(myUserID);
+        String myUserID = getAuthenticatedUserId().toString();
+        return config.getEnabledFor() == null || config.getEnabledFor().contains(myUserID);
 
     }
 
@@ -223,21 +224,21 @@ public class ButtonMessageModel extends MessageModel {
         return mMetadata != null ? mMetadata.getButtonMetadata() : null;
     }
 
-    public void onChoiceClicked(ButtonMetadata.ButtonChoiceMetadata choiceData, ChoiceMetadata choice,
+    public void onChoiceClicked(ChoiceConfigMetadata choiceConfig, ChoiceMetadata choice,
                                 boolean selected, Set<String> selectedChoices) {
-        sendResponse(choiceData, choice, selected, selectedChoices);
+        sendResponse(choiceConfig, choice, selected, selectedChoices);
 
         ActionHandlerRegistry.dispatchChoiceSelection(getAppContext(), choice, this, getRootModelForTree());
 
     }
 
     @SuppressWarnings("WeakerAccess")
-    void sendResponse(ButtonMetadata.ButtonChoiceMetadata choiceData, @NonNull ChoiceMetadata choice,
+    void sendResponse(ChoiceConfigMetadata choiceConfig, @NonNull ChoiceMetadata choice,
                       boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(
                 getLayerClient().getAuthenticatedUser());
         String statusText;
-        if (TextUtils.isEmpty(choiceData.getName())) {
+        if (TextUtils.isEmpty(choiceConfig.getName())) {
             statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
@@ -249,14 +250,14 @@ public class ButtonMessageModel extends MessageModel {
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,
                     choice.getText(),
-                    choiceData.getName());
+                    choiceConfig.getName());
         }
 
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(getMessage().getId(),
                 rootPartId, statusText);
-        choiceResponseModel.addChoices(choiceData.getResponseName(), selectedChoices);
+        choiceResponseModel.addChoices(choiceConfig.getResponseName(), selectedChoices);
 
         MessageSenderRepository messageSenderRepository = getMessageSenderRepository();
         messageSenderRepository.sendChoiceResponse(getMessage().getConversation(),

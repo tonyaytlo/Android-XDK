@@ -5,6 +5,7 @@ import android.databinding.BaseObservable;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
+import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ButtonMetadata extends BaseObservable{
     @SerializedName("data")
     private JsonObject mData;
 
-    private transient ButtonChoiceMetadata mButtonChoiceMetadata;
+    private transient ChoiceConfigMetadata mChoiceConfigMetadata;
 
     public String getType() {
         return mType;
@@ -69,102 +70,12 @@ public class ButtonMetadata extends BaseObservable{
         mData = data;
     }
 
-    public ButtonChoiceMetadata getButtonChoiceMetadata() {
-        return mButtonChoiceMetadata;
+    public ChoiceConfigMetadata getChoiceConfigMetadata() {
+        return mChoiceConfigMetadata;
     }
 
-    public void setButtonChoiceMetadata(ButtonChoiceMetadata buttonChoiceMetadata) {
-        mButtonChoiceMetadata = buttonChoiceMetadata;
-    }
-
-    public class ButtonChoiceMetadata {
-
-        @SerializedName("response_name")
-        private String mResponseName;
-
-        @SerializedName("name")
-        private String mName;
-
-        @SerializedName("preselected_choice")
-        private String mPreselectedChoice;
-
-        @SerializedName("allow_reselect")
-        private boolean mAllowReselect;
-
-        @SerializedName("allow_deselect")
-        private boolean mAllowDeselect;
-
-        @SerializedName("allow_multiselect")
-        private boolean mAllowMultiselect;
-
-        @SerializedName("enabled_for")
-        private List<String> mEnabledFor;
-
-        private transient boolean mEnabledForMe;
-
-        public String getResponseName() {
-            return mResponseName;
-        }
-
-        public void setResponseName(String responseName) {
-            mResponseName = responseName;
-        }
-
-        public String getName() {
-            return mName;
-        }
-
-        public void setName(String name) {
-            mName = name;
-        }
-
-        public String getPreselectedChoice() {
-            return mPreselectedChoice;
-        }
-
-        public void setPreselectedChoice(String preselectedChoice) {
-            mPreselectedChoice = preselectedChoice;
-        }
-
-        public boolean isAllowReselect() {
-            return mAllowReselect;
-        }
-
-        public void setAllowReselect(boolean allowReselect) {
-            mAllowReselect = allowReselect;
-        }
-
-        public boolean isAllowDeselect() {
-            return mAllowDeselect;
-        }
-
-        public void setAllowDeselect(boolean allowDeselect) {
-            mAllowDeselect = allowDeselect;
-        }
-
-        public boolean isAllowMultiselect() {
-            return mAllowMultiselect;
-        }
-
-        public void setAllowMultiselect(boolean allowMultiselect) {
-            mAllowMultiselect = allowMultiselect;
-        }
-
-        public List<String> getEnabledFor() {
-            return mEnabledFor;
-        }
-
-        public void setEnabledFor(List<String> enabledFor) {
-            mEnabledFor = enabledFor;
-        }
-
-        public boolean isEnabledForMe() {
-            return mEnabledForMe;
-        }
-
-        public void setEnabledForMe(boolean enabledForMe) {
-            mEnabledForMe = enabledForMe;
-        }
+    public void setChoiceConfigMetadata(ChoiceConfigMetadata config) {
+        mChoiceConfigMetadata = config;
     }
 
 }
