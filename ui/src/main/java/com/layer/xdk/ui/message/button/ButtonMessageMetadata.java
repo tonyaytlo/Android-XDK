@@ -6,13 +6,13 @@ import java.util.List;
 
 public class ButtonMessageMetadata {
     @SerializedName("buttons")
-    private List<ButtonModel> mButtonModels;
+    private List<ButtonMetadata> mButtonMetadata;
 
-    public List<ButtonModel> getButtonModels() {
-        return mButtonModels;
+    public List<ButtonMetadata> getButtonMetadata() {
+        return mButtonMetadata;
     }
 
-    public void setButtonModels(List<ButtonModel> buttonModels) {
-        mButtonModels = buttonModels;
+    public void setButtonMetadata(List<ButtonMetadata> buttonMetadata) {
+        mButtonMetadata = buttonMetadata;
     }
 }

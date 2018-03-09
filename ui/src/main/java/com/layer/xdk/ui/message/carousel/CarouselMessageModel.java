@@ -23,7 +23,7 @@ public class CarouselMessageModel extends MessageModel {
     private static final String ROLE_CAROUSEL_ITEM = "carousel-item";
 
     private Gson mGson;
-    private CarouselModelMetadata mMetadata;
+    private CarouselMessageMetadata mMetadata;
 
     public CarouselMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
@@ -56,7 +56,7 @@ public class CarouselMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-        mMetadata = mGson.fromJson(reader, CarouselModelMetadata.class);
+        mMetadata = mGson.fromJson(reader, CarouselMessageMetadata.class);
     }
 
     @Override

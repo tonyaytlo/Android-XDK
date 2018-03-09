@@ -62,13 +62,13 @@ public class ButtonMessageModel extends MessageModel {
         mMetadata = mGson.fromJson(reader, ButtonMessageMetadata.class);
 
         // Populate choice data objects
-        for (ButtonModel buttonModel : mMetadata.getButtonModels()) {
-            if (ButtonModel.TYPE_CHOICE.equals(buttonModel.getType())) {
-                JsonObject data = buttonModel.getData();
+        for (ButtonMetadata metadata : mMetadata.getButtonMetadata()) {
+            if (ButtonMetadata.TYPE_CHOICE.equals(metadata.getType())) {
+                JsonObject data = metadata.getData();
                 if (data != null) {
-                    ButtonModel.ChoiceData choiceData = mGson.fromJson(data,
-                            ButtonModel.ChoiceData.class);
-                    buttonModel.setChoiceData(choiceData);
+                    ButtonMetadata.ButtonChoiceMetadata choiceData = mGson.fromJson(data,
+                            ButtonMetadata.ButtonChoiceMetadata.class);
+                    metadata.setButtonChoiceMetadata(choiceData);
                     choiceData.setEnabledForMe(getIsEnabledForMe(choiceData));
 
                     String responseName = choiceData.getResponseName();
@@ -108,7 +108,7 @@ public class ButtonMessageModel extends MessageModel {
         notifyChange();
     }
 
-    private boolean getIsEnabledForMe(ButtonModel.ChoiceData choiceData) {
+    private boolean getIsEnabledForMe(ButtonMetadata.ButtonChoiceMetadata choiceData) {
         if (getLayerClient().getAuthenticatedUser() == null || mMetadata == null) {
             return false;
         }
@@ -163,7 +163,7 @@ public class ButtonMessageModel extends MessageModel {
             if (title != null) {
                 return title;
             } else {
-                return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonModels().size());
+                return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonMetadata().size());
             }
         }
 
@@ -219,11 +219,11 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @Nullable
-    public List<ButtonModel> getButtonModels() {
-        return mMetadata != null ? mMetadata.getButtonModels() : null;
+    public List<ButtonMetadata> getButtonMetadata() {
+        return mMetadata != null ? mMetadata.getButtonMetadata() : null;
     }
 
-    public void onChoiceClicked(ButtonModel.ChoiceData choiceData, ChoiceMetadata choice,
+    public void onChoiceClicked(ButtonMetadata.ButtonChoiceMetadata choiceData, ChoiceMetadata choice,
                                 boolean selected, Set<String> selectedChoices) {
         sendResponse(choiceData, choice, selected, selectedChoices);
 
@@ -232,7 +232,7 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @SuppressWarnings("WeakerAccess")
-    void sendResponse(ButtonModel.ChoiceData choiceData, @NonNull ChoiceMetadata choice,
+    void sendResponse(ButtonMetadata.ButtonChoiceMetadata choiceData, @NonNull ChoiceMetadata choice,
                       boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(
                 getLayerClient().getAuthenticatedUser());

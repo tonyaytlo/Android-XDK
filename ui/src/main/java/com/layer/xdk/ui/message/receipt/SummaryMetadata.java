@@ -2,7 +2,7 @@ package com.layer.xdk.ui.message.receipt;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Summary {
+public class SummaryMetadata {
     @SerializedName("shipping_cost")
     private Double mShippingCost;
 

@@ -112,25 +112,25 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         if (model == null) {
             return;
         }
-        List<ButtonModel> buttonModels = model.getButtonModels();
-        if (buttonModels != null) {
-            for (ButtonModel buttonModel : buttonModels) {
-                addOrUpdateButton(buttonModel);
+        List<ButtonMetadata> buttonMetadata = model.getButtonMetadata();
+        if (buttonMetadata != null) {
+            for (ButtonMetadata metadata : buttonMetadata) {
+                addOrUpdateButton(metadata);
             }
         }
     }
 
-    private void addOrUpdateButton(ButtonModel buttonModel) {
-        if (buttonModel.getType().equals(ButtonModel.TYPE_ACTION)) {
-            addOrUpdateActionButton(buttonModel);
-        } else if (buttonModel.getType().equals(ButtonModel.TYPE_CHOICE)) {
-            addOrUpdateChoiceButtons(buttonModel);
+    private void addOrUpdateButton(ButtonMetadata metadata) {
+        if (metadata.getType().equals(ButtonMetadata.TYPE_ACTION)) {
+            addOrUpdateActionButton(metadata);
+        } else if (metadata.getType().equals(ButtonMetadata.TYPE_CHOICE)) {
+            addOrUpdateChoiceButtons(metadata);
         }
     }
 
-    private void addOrUpdateActionButton(@NonNull final ButtonModel buttonModel) {
+    private void addOrUpdateActionButton(@NonNull final ButtonMetadata metadata) {
         //Instantiate
-        AppCompatButton actionButton = findViewWithTag(buttonModel.getText());
+        AppCompatButton actionButton = findViewWithTag(metadata.getText());
         if (actionButton == null) {
             actionButton = new AppCompatButton(getContext());
 
@@ -142,7 +142,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
             actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
                     .getDimension(R.dimen.xdk_ui_button_message_action_button_text_size));
             actionButton.setTextColor(mActionButtonColorStateList);
-            actionButton.setTag(buttonModel.getText());
+            actionButton.setTag(metadata.getText());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 actionButton.setStateListAnimator(null);
@@ -156,7 +156,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         }
 
         // Bind data to it
-        actionButton.setText(buttonModel.getText());
+        actionButton.setText(metadata.getText());
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,9 +165,9 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         });
     }
 
-    private void addOrUpdateChoiceButtons(@NonNull ButtonModel buttonModel) {
-        if (buttonModel.getChoices() == null || buttonModel.getChoices().isEmpty()) return;
-        final ButtonModel.ChoiceData choiceData = buttonModel.getChoiceData();
+    private void addOrUpdateChoiceButtons(@NonNull ButtonMetadata metadata) {
+        if (metadata.getChoices() == null || metadata.getChoices().isEmpty()) return;
+        final ButtonMetadata.ButtonChoiceMetadata choiceData = metadata.getButtonChoiceMetadata();
         if (choiceData == null || choiceData.getResponseName() == null) {
             if (Log.isLoggable(Log.WARN)) {
                 Log.w("No response name for this choice set, not adding choice buttons");
@@ -188,7 +188,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                             ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        choiceButtonSet.setupViewsForChoices(buttonModel.getChoices());
+        choiceButtonSet.setupViewsForChoices(metadata.getChoices());
         choiceButtonSet.setEnabledForMe(choiceData.isEnabledForMe());
         choiceButtonSet.setAllowDeselect(choiceData.isAllowDeselect());
         choiceButtonSet.setAllowReselect(choiceData.isAllowReselect());

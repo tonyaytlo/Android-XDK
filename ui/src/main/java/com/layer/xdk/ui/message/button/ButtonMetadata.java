@@ -8,7 +8,7 @@ import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 
 import java.util.List;
 
-public class ButtonModel extends BaseObservable{
+public class ButtonMetadata extends BaseObservable{
     public static final String TYPE_ACTION = "action";
     public static final String TYPE_CHOICE = "choice";
 
@@ -27,7 +27,7 @@ public class ButtonModel extends BaseObservable{
     @SerializedName("data")
     private JsonObject mData;
 
-    private transient ChoiceData mChoiceData;
+    private transient ButtonChoiceMetadata mButtonChoiceMetadata;
 
     public String getType() {
         return mType;
@@ -69,15 +69,15 @@ public class ButtonModel extends BaseObservable{
         mData = data;
     }
 
-    public ChoiceData getChoiceData() {
-        return mChoiceData;
+    public ButtonChoiceMetadata getButtonChoiceMetadata() {
+        return mButtonChoiceMetadata;
     }
 
-    public void setChoiceData(ChoiceData choiceData) {
-        mChoiceData = choiceData;
+    public void setButtonChoiceMetadata(ButtonChoiceMetadata buttonChoiceMetadata) {
+        mButtonChoiceMetadata = buttonChoiceMetadata;
     }
 
-    public class ChoiceData {
+    public class ButtonChoiceMetadata {
 
         @SerializedName("response_name")
         private String mResponseName;

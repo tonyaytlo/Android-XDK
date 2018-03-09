@@ -3,7 +3,7 @@ package com.layer.xdk.ui.message.carousel;
 import com.google.gson.annotations.SerializedName;
 import com.layer.xdk.ui.message.model.Action;
 
-public class CarouselModelMetadata {
+public class CarouselMessageMetadata {
     @SerializedName("action")
     private Action mAction;
 

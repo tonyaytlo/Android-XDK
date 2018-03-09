@@ -20,16 +20,16 @@ public class ReceiptMessageMetadata {
     private String mCurrency;
 
     @SerializedName("discounts")
-    private List<Discount> mDiscounts;
+    private List<DiscountMetadata> mDiscounts;
 
     @SerializedName("order")
-    private Order mOrder;
+    private OrderMetadata mOrder;
 
     @SerializedName("payment_method")
     private String mPaymentMethod;
 
     @SerializedName("summary")
-    private Summary mSummary;
+    private SummaryMetadata mSummary;
 
     @SerializedName("title")
     private String mTitle;
@@ -43,11 +43,11 @@ public class ReceiptMessageMetadata {
         return mCurrency != null ? mCurrency : context.getString(R.string.xdk_ui_product_message_model_default_currency);
     }
 
-    public List<Discount> getDiscounts() {
+    public List<DiscountMetadata> getDiscounts() {
         return mDiscounts;
     }
 
-    public Order getOrder() {
+    public OrderMetadata getOrder() {
         return mOrder;
     }
 
@@ -55,7 +55,7 @@ public class ReceiptMessageMetadata {
         return mPaymentMethod;
     }
 
-    public Summary getSummary() {
+    public SummaryMetadata getSummary() {
         return mSummary;
     }
 
@@ -71,11 +71,11 @@ public class ReceiptMessageMetadata {
         mCurrency = currency;
     }
 
-    public void setDiscounts(List<Discount> discounts) {
+    public void setDiscounts(List<DiscountMetadata> discounts) {
         mDiscounts = discounts;
     }
 
-    public void setOrder(Order order) {
+    public void setOrder(OrderMetadata order) {
         mOrder = order;
     }
 
@@ -83,7 +83,7 @@ public class ReceiptMessageMetadata {
         mPaymentMethod = paymentMethod;
     }
 
-    public void setSummary(Summary summary) {
+    public void setSummary(SummaryMetadata summary) {
         mSummary = summary;
     }
 

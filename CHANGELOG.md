@@ -1,5 +1,15 @@
 # Android XDK
 
+## 1.0.0-pre3
+
+### Migration Guide
+  * Some POJOs that held JSON data were renamed. 
+    - `.message.button.ButtonModel` -> `.message.button.ButtonMetadata`
+    - `.message.button.ButtonModel.ChoiceData` -> `.message.button.ButtonMetadata.ButtonChoiceMetadata`
+    - `.message.carousel.CarouselModelMetadata` -> `.message.carousel.CarouselMessageMetadata`
+    - `.message.receipt.Discount` -> `.message.receipt.DiscountMetadata`
+    - `.message.receipt.Summary` -> `.message.receipt.SummaryMetadata`
+
 ## 1.0.0-pre2
 
 ### Features
