@@ -70,9 +70,9 @@ public class ImageMessageModel extends MessageModel {
             mMetadata = new ImageMessageMetadata();
             if (parts.getInfoPart() != null) {
                 JSONObject infoObject = new JSONObject(new String(parts.getInfoPart().getData()));
-                mMetadata.setOrientation(infoObject.getInt("orientation"));
-                mMetadata.setWidth(infoObject.getInt("width"));
-                mMetadata.setHeight(infoObject.getInt("height"));
+                mMetadata.mOrientation = infoObject.getInt("orientation");
+                mMetadata.mWidth = infoObject.getInt("width");
+                mMetadata.mHeight = infoObject.getInt("height");
             }
             if (parts.getPreviewPart() != null) {
                 parsePreviewPart(parts.getPreviewPart());
@@ -136,8 +136,8 @@ public class ImageMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getEvent();
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
         } else {
             return ACTION_EVENT_OPEN_URL;
         }
@@ -150,18 +150,20 @@ public class ImageMessageModel extends MessageModel {
             return super.getActionData();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getData();
+        if (mMetadata == null) {
+            return new JsonObject();
+        } else if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getData();
         } else {
             Action action = new Action(ACTION_EVENT_OPEN_URL);
             String url = null;
             int width, height;
-            if (mMetadata.getPreviewUrl() != null) {
-                url = mMetadata.getPreviewUrl();
+            if (mMetadata.mPreviewUrl != null) {
+                url = mMetadata.mPreviewUrl;
                 width = mMetadata.getPreviewWidth();
                 height = mMetadata.getPreviewHeight();
-            } else if (mMetadata.getSourceUrl() != null) {
-                url = mMetadata.getSourceUrl();
+            } else if (mMetadata.mSourceUrl != null) {
+                url = mMetadata.mSourceUrl;
                 width = mMetadata.getWidth();
                 height = mMetadata.getHeight();
             } else {
@@ -175,10 +177,10 @@ public class ImageMessageModel extends MessageModel {
             }
 
             action.getData().addProperty("url", url);
-            action.getData().addProperty("mime-type", mMetadata.getMimeType());
+            action.getData().addProperty("mime-type", mMetadata.mMimeType);
             action.getData().addProperty("width", width);
             action.getData().addProperty("height", height);
-            action.getData().addProperty("orientation", mMetadata.getOrientation());
+            action.getData().addProperty("orientation", mMetadata.mOrientation);
             return action.getData();
         }
     }
@@ -205,20 +207,20 @@ public class ImageMessageModel extends MessageModel {
             String previewUrl;
             int width = 0;
             int height = 0;
-            if (mMetadata.getPreviewUrl() != null) {
-                previewUrl = mMetadata.getPreviewUrl();
+            if (mMetadata.mPreviewUrl != null) {
+                previewUrl = mMetadata.mPreviewUrl;
                 width = mMetadata.getPreviewWidth();
                 height = mMetadata.getPreviewHeight();
-            } else if (mMetadata.getSourceUrl() != null) {
-                previewUrl = mMetadata.getSourceUrl();
+            } else if (mMetadata.mSourceUrl != null) {
+                previewUrl = mMetadata.mSourceUrl;
                 width = mMetadata.getWidth();
                 height = mMetadata.getHeight();
 
-                sourceRequestBuilder.url(mMetadata.getSourceUrl());
+                sourceRequestBuilder.url(mMetadata.mSourceUrl);
                 if (width > 0 && height > 0) {
                     sourceRequestBuilder.resize(width, height);
                 }
-                sourceRequestBuilder.exifOrientation(mMetadata.getOrientation())
+                sourceRequestBuilder.exifOrientation(mMetadata.mOrientation)
                         .tag(getClass().getSimpleName());
 
                 mSourceRequestParameters = sourceRequestBuilder.build();
@@ -232,7 +234,7 @@ public class ImageMessageModel extends MessageModel {
 
             previewRequestBuilder.url(previewUrl)
                     .placeHolder(PLACEHOLDER)
-                    .exifOrientation(mMetadata.getOrientation())
+                    .exifOrientation(mMetadata.mOrientation)
                     .tag(getClass().getSimpleName());
 
             mPreviewRequestParameters = previewRequestBuilder.build();
@@ -244,11 +246,11 @@ public class ImageMessageModel extends MessageModel {
         if (messagePart.getId() != null) {
             builder.uri(messagePart.getId());
         } else {
-            builder.url(mMetadata.getPreviewUrl());
+            builder.url(mMetadata.mPreviewUrl);
         }
 
         builder.placeHolder(PLACEHOLDER)
-                .exifOrientation(mMetadata.getOrientation())
+                .exifOrientation(mMetadata.mOrientation)
                 .tag(getClass().getSimpleName());
 
         if (mMetadata.getPreviewWidth() > 0 && mMetadata.getPreviewHeight() > 0) {
@@ -262,12 +264,12 @@ public class ImageMessageModel extends MessageModel {
         if (messagePart.getId() != null) {
             builder.uri(messagePart.getId());
         } else {
-            builder.url(mMetadata.getSourceUrl());
+            builder.url(mMetadata.mSourceUrl);
         }
 
         builder.placeHolder(PLACEHOLDER)
                 .resize(mMetadata.getWidth(), mMetadata.getHeight())
-                .exifOrientation(mMetadata.getOrientation())
+                .exifOrientation(mMetadata.mOrientation)
                 .tag(getClass().getSimpleName());
 
         mSourceRequestParameters = builder.build();
@@ -305,17 +307,17 @@ public class ImageMessageModel extends MessageModel {
 
     @Override
     public String getTitle() {
-        return mMetadata != null ? mMetadata.getTitle() : null;
+        return mMetadata != null ? mMetadata.mTitle : null;
     }
 
     @Override
     public String getDescription() {
-        return mMetadata != null ? mMetadata.getSubtitle() : null;
+        return mMetadata != null ? mMetadata.mSubtitle : null;
     }
 
     @Override
     public String getFooter() {
-        return mMetadata != null ? mMetadata.getSubtitle() : null;
+        return mMetadata != null ? mMetadata.mSubtitle : null;
     }
 
     @Override

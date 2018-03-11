@@ -31,9 +31,9 @@
             android:paddingRight="@dimen/xdk_ui_margin_medium"
             android:paddingStart="@dimen/xdk_ui_margin_medium"
             android:paddingTop="@dimen/xdk_ui_margin_medium"
-            android:text="@{messageModel.choiceMessageMetadata.label}"
+            android:text="@{messageModel.label}"
             android:textSize="@dimen/xdk_ui_choice_button_message_label_text_size"
-            app:visibleOrGone="@{messageModel.hasContent &amp;&amp; messageModel.choiceMessageMetadata.label!=null}"/>
+            app:visibleOrGone="@{messageModel.hasContent &amp;&amp; messageModel.label!=null}"/>
 
         <com.layer.xdk.ui.message.choice.ChoiceButtonSet
             android:id="@+id/choice_button_set"

@@ -63,21 +63,21 @@ public class ButtonMessageModel extends MessageModel {
         mMetadata = mGson.fromJson(reader, ButtonMessageMetadata.class);
 
         // Populate choice data objects
-        for (ButtonMetadata metadata : mMetadata.getButtonMetadata()) {
-            if (ButtonMetadata.TYPE_CHOICE.equals(metadata.getType())) {
-                JsonObject data = metadata.getData();
+        for (ButtonMetadata metadata : mMetadata.mButtonMetadata) {
+            if (ButtonMetadata.TYPE_CHOICE.equals(metadata.mType)) {
+                JsonObject data = metadata.mData;
                 if (data != null) {
                     ChoiceConfigMetadata choiceConfig = mGson.fromJson(data,
                             ChoiceConfigMetadata.class);
-                    metadata.setChoiceConfigMetadata(choiceConfig);
-                    choiceConfig.setEnabledForMe(getIsEnabledForMe(choiceConfig));
+                    metadata.mChoiceConfigMetadata = choiceConfig;
+                    choiceConfig.mEnabledForMe = getIsEnabledForMe(choiceConfig);
 
                     String responseName = choiceConfig.getResponseName();
 
                     Set<String> selectedChoices = getSelectedChoices(responseName);
                     selectedChoices.clear();
-                    if (choiceConfig.getPreselectedChoice() != null) {
-                        selectedChoices.add(choiceConfig.getPreselectedChoice());
+                    if (choiceConfig.mPreselectedChoice != null) {
+                        selectedChoices.add(choiceConfig.mPreselectedChoice);
                     }
                 }
             }
@@ -92,7 +92,7 @@ public class ButtonMessageModel extends MessageModel {
         mResponseSummary = mGson.fromJson(reader, ResponseSummary.class);
 
         if (mResponseSummary != null && mResponseSummary.hasData()) {
-            for (Map.Entry<String, JsonObject> participantResponses : mResponseSummary.getParticipantData().entrySet()) {
+            for (Map.Entry<String, JsonObject> participantResponses : mResponseSummary.mParticipantData.entrySet()) {
                 for (String responseName : mSelectedChoiceIds.keySet()) {
                     if (participantResponses.getValue().has(responseName)) {
                         Set<String> selectedChoices = getSelectedChoices(responseName);
@@ -114,7 +114,7 @@ public class ButtonMessageModel extends MessageModel {
             return false;
         }
         String myUserID = getAuthenticatedUserId().toString();
-        return config.getEnabledFor() == null || config.getEnabledFor().contains(myUserID);
+        return config.mEnabledFor == null || config.mEnabledFor.contains(myUserID);
 
     }
 
@@ -164,7 +164,7 @@ public class ButtonMessageModel extends MessageModel {
             if (title != null) {
                 return title;
             } else {
-                return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.getButtonMetadata().size());
+                return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_button_message_preview_text, 0, mMetadata.mButtonMetadata.size());
             }
         }
 
@@ -221,7 +221,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @Nullable
     public List<ButtonMetadata> getButtonMetadata() {
-        return mMetadata != null ? mMetadata.getButtonMetadata() : null;
+        return mMetadata != null ? mMetadata.mButtonMetadata : null;
     }
 
     public void onChoiceClicked(ChoiceConfigMetadata choiceConfig, ChoiceMetadata choice,
@@ -238,19 +238,19 @@ public class ButtonMessageModel extends MessageModel {
         String userName = getIdentityFormatter().getDisplayName(
                 getLayerClient().getAuthenticatedUser());
         String statusText;
-        if (TextUtils.isEmpty(choiceConfig.getName())) {
+        if (TextUtils.isEmpty(choiceConfig.mName)) {
             statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
-                    choice.getText());
+                    choice.mText);
         } else {
             statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,
-                    choice.getText(),
-                    choiceConfig.getName());
+                    choice.mText,
+                    choiceConfig.mName);
         }
 
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());

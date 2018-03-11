@@ -1,8 +1,6 @@
 package com.layer.xdk.ui.message.response;
 
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
@@ -14,37 +12,11 @@ import java.util.Map;
 public class ResponseMetadata {
 
     @SerializedName("response_to")
-    private String mMessageIdToRespondTo;
+    public String mMessageIdToRespondTo;
 
     @SerializedName("response_to_node_id")
-    private String mPartIdToRespondTo;
+    public String mPartIdToRespondTo;
 
     @SerializedName("participant_data")
-    private Map<Object, Object> mParticipantData;
-
-    @Nullable
-    public String getMessageIdToRespondTo() {
-        return mMessageIdToRespondTo;
-    }
-
-    public void setMessageIdToRespondTo(@Nullable String messageIdToRespondTo) {
-        mMessageIdToRespondTo = messageIdToRespondTo;
-    }
-
-    @Nullable
-    public String getPartIdToRespondTo() {
-        return mPartIdToRespondTo;
-    }
-
-    public void setPartIdToRespondTo(@Nullable String partIdToRespondTo) {
-        mPartIdToRespondTo = partIdToRespondTo;
-    }
-
-    public Map<Object, Object> getParticipantData() {
-        return mParticipantData;
-    }
-
-    public void setParticipantData(Map<Object, Object> participantData) {
-        mParticipantData = participantData;
-    }
+    public Map<Object, Object> mParticipantData;
 }

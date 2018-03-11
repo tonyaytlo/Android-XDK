@@ -14,7 +14,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.Util;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.io.File;
@@ -99,12 +98,12 @@ public class RichImageMessageComposer extends ImageMessageComposer {
         ExifInterface exifData = getExifData(inputStream);
 
         ImageMessageMetadata metadata = new ImageMessageMetadata();
-        metadata.setHeight(sourceBounds.outHeight);
-        metadata.setWidth(sourceBounds.outWidth);
-        metadata.setPreviewHeight(previewBounds.outHeight);
-        metadata.setPreviewWidth(previewBounds.outWidth);
-        metadata.setMimeType(sourceBounds.outMimeType);
-        metadata.setOrientation(exifData.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0));
+        metadata.mHeight = sourceBounds.outHeight;
+        metadata.mWidth = sourceBounds.outWidth;
+        metadata.mPreviewHeight = previewBounds.outHeight;
+        metadata.mPreviewWidth = previewBounds.outWidth;
+        metadata.mMimeType = sourceBounds.outMimeType;
+        metadata.mOrientation = exifData.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
 
         return getLayerClient().newMessagePart(MessagePartUtils.getAsRoleRoot(ROOT_MIME_TYPE),
                 mGson.toJson(metadata).getBytes());

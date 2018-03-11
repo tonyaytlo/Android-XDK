@@ -83,9 +83,9 @@ public class LocationMessageModel extends MessageModel {
             JSONObject json = new JSONObject(
                     new String(getMessage().getMessageParts().iterator().next().getData()));
 
-            mMetadata.setLatitude(json.optDouble(LEGACY_KEY_LATITUDE, 0));
-            mMetadata.setLongitude(json.optDouble(LEGACY_KEY_LONGITUDE, 0));
-            mMetadata.setTitle(json.optString(LEGACY_KEY_LABEL, null));
+            mMetadata.mLatitude = json.optDouble(LEGACY_KEY_LATITUDE, 0);
+            mMetadata.mLongitude = json.optDouble(LEGACY_KEY_LONGITUDE, 0);
+            mMetadata.mTitle = json.optString(LEGACY_KEY_LABEL, null);
         } catch (JSONException e) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e(e.getMessage(), e);
@@ -104,15 +104,15 @@ public class LocationMessageModel extends MessageModel {
             // Return null here since title is used for the marker name
             return null;
         }
-        return mMetadata != null ? mMetadata.getTitle() : null;
+        return mMetadata != null ? mMetadata.mTitle : null;
     }
 
     @Nullable
     @Override
     public String getDescription() {
         if (mMetadata != null) {
-            if (mMetadata.getDescription() != null) {
-                return mMetadata.getDescription();
+            if (mMetadata.mDescription != null) {
+                return mMetadata.mDescription;
             } else {
                 return mMetadata.getFormattedAddress();
             }
@@ -133,7 +133,7 @@ public class LocationMessageModel extends MessageModel {
         }
 
         if (mMetadata != null) {
-            return mMetadata.getAction() != null ? mMetadata.getAction().getEvent() : ACTION_EVENT_OPEN_MAP;
+            return mMetadata.mAction != null ? mMetadata.mAction.getEvent() : ACTION_EVENT_OPEN_MAP;
         }
 
         return null;
@@ -149,19 +149,19 @@ public class LocationMessageModel extends MessageModel {
         JsonObject actionData;
 
         if (mMetadata != null) {
-            if (mMetadata.getAction() != null) {
-                actionData = mMetadata.getAction().getData();
+            if (mMetadata.mAction != null) {
+                actionData = mMetadata.mAction.getData();
             } else {
                 actionData = new JsonObject();
-                if (mMetadata.getLongitude() != null && mMetadata.getLatitude() != null) {
-                    actionData.addProperty("latitude", mMetadata.getLatitude());
-                    actionData.addProperty("longitude", mMetadata.getLongitude());
+                if (mMetadata.mLongitude != null && mMetadata.mLatitude != null) {
+                    actionData.addProperty("latitude", mMetadata.mLatitude);
+                    actionData.addProperty("longitude", mMetadata.mLongitude);
                 } else if (mMetadata.getFormattedAddress() != null) {
                     actionData.addProperty("address", mMetadata.getFormattedAddress());
                 }
 
-                if (mMetadata.getTitle() != null) {
-                    actionData.addProperty("title", mMetadata.getTitle());
+                if (mMetadata.mTitle != null) {
+                    actionData.addProperty("title", mMetadata.mTitle);
                 }
             }
         } else {
@@ -192,6 +192,11 @@ public class LocationMessageModel extends MessageModel {
         return mMetadata;
     }
 
+    @Nullable
+    public String getFormattedAddress() {
+        return mMetadata != null ? mMetadata.getFormattedAddress() : null;
+    }
+
     public ImageCacheWrapper getImageCacheWrapper() {
         if (sImageCacheWrapper == null) {
             sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
@@ -215,8 +220,8 @@ public class LocationMessageModel extends MessageModel {
                     .append("&markers=");
 
             // Set location parameters or geocode
-            if (mMetadata.getLatitude() != null && mMetadata.getLongitude() != null) {
-                url.append(mMetadata.getLatitude()).append(",").append(mMetadata.getLongitude());
+            if (mMetadata.mLatitude != null && mMetadata.mLongitude != null) {
+                url.append(mMetadata.mLatitude).append(",").append(mMetadata.mLongitude);
             } else if (mMetadata.getFormattedAddress() != null) {
                 url.append(mMetadata.getFormattedAddress());
             } else {

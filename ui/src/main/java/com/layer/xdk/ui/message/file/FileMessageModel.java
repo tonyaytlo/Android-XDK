@@ -82,7 +82,7 @@ public class FileMessageModel extends MessageModel {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
-        setupFileIconDrawable(mMetadata.getMimeType());
+        setupFileIconDrawable(mMetadata.mMimeType);
         try {
             inputStreamReader.close();
         } catch (IOException e) {
@@ -100,20 +100,20 @@ public class FileMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
-        return mMetadata != null ? mMetadata.getTitle() : null;
+        return mMetadata != null ? mMetadata.mTitle : null;
     }
 
     @Nullable
     @Override
     public String getDescription() {
-        return mMetadata != null ? mMetadata.getAuthor() : null;
+        return mMetadata != null ? mMetadata.mAuthor : null;
     }
 
     @Nullable
     @Override
     public String getFooter() {
-        if (mMetadata != null && mMetadata.getSize() > 0) {
-            return "" + (mMetadata.getSize() / 1024) + " KB";
+        if (mMetadata != null && mMetadata.mSize > 0) {
+            return "" + (mMetadata.mSize / 1024) + " KB";
         }
         return null;
     }
@@ -124,8 +124,8 @@ public class FileMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mMetadata != null && mMetadata.getAction() != null) {
-            return mMetadata.getAction().getEvent();
+        if (mMetadata != null && mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
         }
 
         return ACTION_EVENT_OPEN_FILE;
@@ -139,7 +139,7 @@ public class FileMessageModel extends MessageModel {
         }
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(ACTION_DATA_FILE_MIME_TYPE, mMetadata.getMimeType());
+        jsonObject.addProperty(ACTION_DATA_FILE_MIME_TYPE, mMetadata.mMimeType);
         if (getHasSourceMessagePart()) {
             MessagePart sourcePart = MessagePartUtils.getMessagePartWithRole(getMessage(), ROLE_SOURCE);
 
@@ -153,7 +153,7 @@ public class FileMessageModel extends MessageModel {
 
             jsonObject.addProperty(ACTION_DATA_URI, filePath);
         } else {
-            jsonObject.addProperty(ACTION_DATA_URI, mMetadata.getSourceUrl());
+            jsonObject.addProperty(ACTION_DATA_URI, mMetadata.mSourceUrl);
         }
 
         return jsonObject;
@@ -163,8 +163,8 @@ public class FileMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         if (getHasContent()) {
-            if (mMetadata.getTitle() != null) {
-                return mMetadata.getTitle();
+            if (mMetadata.mTitle != null) {
+                return mMetadata.mTitle;
             }
         }
         return getAppContext().getString(R.string.xdk_ui_file_message_preview_text);
@@ -210,13 +210,13 @@ public class FileMessageModel extends MessageModel {
 
     private String writeDataToFile(InputStream inputStream) throws IOException {
         String appName = getApplicationName(getAppContext());
-        File storageDirectory = new File(getPublicStorageDirectoryForFileDownload(mMetadata.getMimeType()), appName);
+        File storageDirectory = new File(getPublicStorageDirectoryForFileDownload(mMetadata.mMimeType), appName);
         if (!storageDirectory.exists() && !storageDirectory.mkdirs()) {
             throw new IllegalStateException("Unable to write to storage directory");
         }
 
         // Accounting for the possibility that no title is present, try and provide a unique file name
-        String fileName = mMetadata.getTitle() != null ? mMetadata.getTitle() : (appName + "_file_" + UUID.randomUUID());
+        String fileName = mMetadata.mTitle != null ? mMetadata.mTitle : (appName + "_file_" + UUID.randomUUID());
 
         File file = new File(storageDirectory, fileName);
         OutputStream output = new FileOutputStream(file);

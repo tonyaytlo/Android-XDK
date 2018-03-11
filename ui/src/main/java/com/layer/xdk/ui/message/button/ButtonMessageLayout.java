@@ -122,16 +122,16 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
     }
 
     private void addOrUpdateButton(ButtonMetadata metadata) {
-        if (metadata.getType().equals(ButtonMetadata.TYPE_ACTION)) {
+        if (metadata.mType.equals(ButtonMetadata.TYPE_ACTION)) {
             addOrUpdateActionButton(metadata);
-        } else if (metadata.getType().equals(ButtonMetadata.TYPE_CHOICE)) {
+        } else if (metadata.mType.equals(ButtonMetadata.TYPE_CHOICE)) {
             addOrUpdateChoiceButtons(metadata);
         }
     }
 
     private void addOrUpdateActionButton(@NonNull final ButtonMetadata metadata) {
         //Instantiate
-        AppCompatButton actionButton = findViewWithTag(metadata.getText());
+        AppCompatButton actionButton = findViewWithTag(metadata.mText);
         if (actionButton == null) {
             actionButton = new AppCompatButton(getContext());
 
@@ -143,7 +143,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
             actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
                     .getDimension(R.dimen.xdk_ui_button_message_action_button_text_size));
             actionButton.setTextColor(mActionButtonColorStateList);
-            actionButton.setTag(metadata.getText());
+            actionButton.setTag(metadata.mText);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 actionButton.setStateListAnimator(null);
@@ -157,7 +157,7 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         }
 
         // Bind data to it
-        actionButton.setText(metadata.getText());
+        actionButton.setText(metadata.mText);
         actionButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,8 +167,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
     }
 
     private void addOrUpdateChoiceButtons(@NonNull ButtonMetadata metadata) {
-        if (metadata.getChoices() == null || metadata.getChoices().isEmpty()) return;
-        final ChoiceConfigMetadata choiceConfig = metadata.getChoiceConfigMetadata();
+        if (metadata.mChoices == null || metadata.mChoices.isEmpty()) return;
+        final ChoiceConfigMetadata choiceConfig = metadata.mChoiceConfigMetadata;
         if (choiceConfig == null) {
             if (Log.isLoggable(Log.WARN)) {
                 Log.w("No response name for this choice set, not adding choice buttons");
@@ -189,11 +189,11 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
                             ViewGroup.LayoutParams.WRAP_CONTENT));
         }
 
-        choiceButtonSet.setupViewsForChoices(metadata.getChoices());
-        choiceButtonSet.setEnabledForMe(choiceConfig.isEnabledForMe());
-        choiceButtonSet.setAllowDeselect(choiceConfig.isAllowDeselect());
-        choiceButtonSet.setAllowReselect(choiceConfig.isAllowReselect());
-        choiceButtonSet.setAllowMultiSelect(choiceConfig.isAllowMultiselect());
+        choiceButtonSet.setupViewsForChoices(metadata.mChoices);
+        choiceButtonSet.setEnabledForMe(choiceConfig.mEnabledForMe);
+        choiceButtonSet.setAllowDeselect(choiceConfig.mAllowDeselect);
+        choiceButtonSet.setAllowReselect(choiceConfig.mAllowReselect);
+        choiceButtonSet.setAllowMultiSelect(choiceConfig.mAllowMultiselect);
 
         choiceButtonSet.setOnChoiceClickedListener(new ChoiceButtonSet.OnChoiceClickedListener() {
             @Override

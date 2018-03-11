@@ -31,7 +31,7 @@ public class LinkMessageModel extends MessageModel {
 
     private static ImageCacheWrapper sImageCacheWrapper;
 
-    private LinkMessageMetadata mLinkMessageMetadata;
+    private LinkMessageMetadata mMetadata;
     private Gson mGson;
 
     public LinkMessageModel(Context context, LayerClient layerClient, Message message) {
@@ -55,7 +55,7 @@ public class LinkMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mLinkMessageMetadata = mGson.fromJson(reader, LinkMessageMetadata.class);
+        mMetadata = mGson.fromJson(reader, LinkMessageMetadata.class);
         try {
             inputStreamReader.close();
         } catch (IOException e) {
@@ -73,19 +73,19 @@ public class LinkMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
-        return mLinkMessageMetadata != null ? mLinkMessageMetadata.getTitle() : null;
+        return mMetadata != null ? mMetadata.mTitle : null;
     }
 
     @Nullable
     @Override
     public String getDescription() {
-        return mLinkMessageMetadata != null ? mLinkMessageMetadata.getDescription() : null;
+        return mMetadata != null ? mMetadata.mDescription : null;
     }
 
     @Nullable
     @Override
     public String getFooter() {
-        return mLinkMessageMetadata != null ? mLinkMessageMetadata.getAuthor() : null;
+        return mMetadata != null ? mMetadata.mAuthor : null;
     }
 
     @Override
@@ -94,8 +94,8 @@ public class LinkMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mLinkMessageMetadata != null && mLinkMessageMetadata.getAction() != null) {
-            return mLinkMessageMetadata.getAction().getEvent();
+        if (mMetadata != null && mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
         }
 
         return ACTION_OPEN_URL;
@@ -109,12 +109,12 @@ public class LinkMessageModel extends MessageModel {
         }
 
         JsonObject actionData;
-        if (mLinkMessageMetadata != null) {
-            if (mLinkMessageMetadata.getAction() != null) {
-                actionData = mLinkMessageMetadata.getAction().getData();
+        if (mMetadata != null) {
+            if (mMetadata.mAction != null) {
+                actionData = mMetadata.mAction.getData();
             } else {
                 actionData = new JsonObject();
-                actionData.addProperty("url", mLinkMessageMetadata.getUrl());
+                actionData.addProperty("url", mMetadata.mUrl);
             }
         } else {
             actionData = super.getActionData();
@@ -130,7 +130,7 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     public boolean getHasContent() {
-        return mLinkMessageMetadata != null;
+        return mMetadata != null;
     }
 
     @Nullable
@@ -140,8 +140,16 @@ public class LinkMessageModel extends MessageModel {
         return title != null ? title : getAppContext().getString(R.string.xdk_ui_link_message_preview_text);
     }
 
+    public String getImageUrl() {
+        return mMetadata != null ? mMetadata.mImageUrl : null;
+    }
+
+    public String getUrl() {
+        return mMetadata != null ? mMetadata.mUrl : null;
+    }
+
     public LinkMessageMetadata getMetadata() {
-        return mLinkMessageMetadata;
+        return mMetadata;
     }
 
     public ImageCacheWrapper getImageCacheWrapper() {
@@ -160,8 +168,8 @@ public class LinkMessageModel extends MessageModel {
     public ImageRequestParameters getImageRequestParameters() {
         if (getHasContent()) {
             ImageRequestParameters.Builder builder = new ImageRequestParameters.Builder();
-            if (mLinkMessageMetadata.getImageUrl() != null) {
-                builder.url(mLinkMessageMetadata.getImageUrl());
+            if (mMetadata.mImageUrl != null) {
+                builder.url(mMetadata.mImageUrl);
             } else {
                 return null;
             }

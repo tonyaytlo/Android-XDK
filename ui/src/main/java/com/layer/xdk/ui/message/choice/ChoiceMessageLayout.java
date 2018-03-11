@@ -67,11 +67,11 @@ public class ChoiceMessageLayout extends LinearLayout implements
     private void processModel(ChoiceMessageModel model) {
         ChoiceMessageMetadata metadata = model.getChoiceMessageMetadata();
         if (metadata != null) {
-            List<ChoiceMetadata> choices = metadata.getChoices();
+            List<ChoiceMetadata> choices = metadata.mChoices;
             Set<String> selectedChoices = model.getSelectedChoices();
-            boolean allowReselect = metadata.isAllowReselect();
-            boolean allowDeselect = metadata.isAllowDeselect();
-            boolean allowMultiSelect = metadata.isAllowMultiselect();
+            boolean allowReselect = metadata.mAllowReselect;
+            boolean allowDeselect = metadata.mAllowDeselect;
+            boolean allowMultiSelect = metadata.mAllowMultiselect;
             boolean isEnabledForMe = model.getIsEnabledForMe();
 
             mChoiceButtonSet.setAllowDeselect(allowDeselect);
@@ -87,7 +87,7 @@ public class ChoiceMessageLayout extends LinearLayout implements
     private void updateLabel(ChoiceMessageModel model) {
         if (!model.getHasContent()) return;
 
-        String label = model.getChoiceMessageMetadata().getLabel();
+        String label = model.getChoiceMessageMetadata().mLabel;
         if (!TextUtils.isEmpty(label)) {
             mTitle.setText(label);
             mTitle.setVisibility(VISIBLE);

@@ -33,10 +33,10 @@ public class ResponseMessagePartComposer {
 
     private ResponseMetadata createResponseMetadata(ResponseModel responseModel) {
         ResponseMetadata responseMetadata = new ResponseMetadata();
-        responseMetadata.setMessageIdToRespondTo(responseModel.getMessageIdToRespondTo().toString());
-        responseMetadata.setPartIdToRespondTo(responseModel.getPartIdToRespondTo().toString());
+        responseMetadata.mMessageIdToRespondTo = responseModel.getMessageIdToRespondTo().toString();
+        responseMetadata.mPartIdToRespondTo = responseModel.getPartIdToRespondTo().toString();
 
-        responseMetadata.setParticipantData(responseModel.getParticipantData());
+        responseMetadata.mParticipantData = responseModel.getParticipantData();
         return responseMetadata;
     }
 }

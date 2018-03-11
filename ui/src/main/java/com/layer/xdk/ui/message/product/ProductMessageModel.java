@@ -112,9 +112,9 @@ public class ProductMessageModel extends MessageModel {
     public String getActionEvent() {
         String actionEvent = super.getActionEvent();
         if (actionEvent == null && mMetadata != null) {
-            if (mMetadata.getAction() != null) {
-                actionEvent = mMetadata.getAction().getEvent();
-            } else if (mMetadata.getUrl() != null) {
+            if (mMetadata.mAction != null) {
+                actionEvent = mMetadata.mAction.getEvent();
+            } else if (mMetadata.mUrl != null) {
                 actionEvent = DEFAULT_ACTION_EVENT;
             }
         }
@@ -127,10 +127,10 @@ public class ProductMessageModel extends MessageModel {
     public JsonObject getActionData() {
         JsonObject data = super.getActionData();
         if (data.size() == 0 && mMetadata != null) {
-            if (mMetadata.getAction() != null) {
-                data = mMetadata.getAction().getData();
-            } else if (mMetadata.getUrl() != null) {
-                data.addProperty(DEFAULT_ACTION_DATA_KEY, mMetadata.getUrl());
+            if (mMetadata.mAction != null) {
+                data = mMetadata.mAction.getData();
+            } else if (mMetadata.mUrl != null) {
+                data.addProperty(DEFAULT_ACTION_DATA_KEY, mMetadata.mUrl);
             }
         }
 
@@ -140,19 +140,19 @@ public class ProductMessageModel extends MessageModel {
     @Nullable
     @Bindable
     public String getBrand() {
-        return mMetadata != null ? mMetadata.getBrand() : null;
+        return mMetadata != null ? mMetadata.mBrand : null;
     }
 
     @Nullable
     @Bindable
     public String getName() {
-        return mMetadata != null ? mMetadata.getName() : null;
+        return mMetadata != null ? mMetadata.mName : null;
     }
 
     @Nullable
     @Bindable
     public String getProductDescription() {
-        return mMetadata != null ? mMetadata.getDescription() : null;
+        return mMetadata != null ? mMetadata.mDescription : null;
     }
 
     @Nullable
@@ -165,10 +165,10 @@ public class ProductMessageModel extends MessageModel {
     @Bindable
     @Nullable
     public String getPrice() {
-        if (mMetadata != null && mMetadata.getPrice() != null) {
+        if (mMetadata != null && mMetadata.mPrice != null) {
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
             currencyFormat.setCurrency(Currency.getInstance(mMetadata.getCurrency(getAppContext())));
-            return currencyFormat.format(mMetadata.getPrice());
+            return currencyFormat.format(mMetadata.mPrice);
         }
 
         return null;
@@ -189,8 +189,8 @@ public class ProductMessageModel extends MessageModel {
     public ImageRequestParameters getImageRequestParameters() {
         if (mMetadata != null) {
             ImageRequestParameters.Builder builder = new ImageRequestParameters.Builder();
-            String url = mMetadata.getImageUrls() != null && mMetadata.getImageUrls().size() > 0 ?
-                    mMetadata.getImageUrls().get(0) : null;
+            String url = mMetadata.mImageUrls != null && mMetadata.mImageUrls.size() > 0 ?
+                    mMetadata.mImageUrls.get(0) : null;
 
             if (url != null) {
                 builder.url(url);
@@ -241,12 +241,12 @@ public class ProductMessageModel extends MessageModel {
                 // Use just the first choice for now, the remaining will be displayed in an
                 // expanded product message view, to be built later.
                 String choiceId = iterator != null && iterator.hasNext() ? iterator.next() : null;
-                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().getChoices() : null;
+                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().mChoices : null;
 
                 if (choices != null && choices.size() > 0) {
                     for (ChoiceMetadata choice : choices) {
-                        if (choice.getId().equals(choiceId)) {
-                            productTexts.add(choice.getText());
+                        if (choice.mId.equals(choiceId)) {
+                            productTexts.add(choice.mText);
 
                             break;
                         }

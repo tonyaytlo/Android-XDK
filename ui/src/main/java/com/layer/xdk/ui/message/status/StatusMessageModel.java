@@ -49,8 +49,8 @@ public class StatusMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
         mMetadata = mGson.fromJson(reader, StatusMessageMetadata.class);
-        if (mMetadata != null && mMetadata.getText() != null) {
-            mText = new SpannableString(mMetadata.getText());
+        if (mMetadata != null && mMetadata.mText != null) {
+            mText = new SpannableString(mMetadata.mText);
             Linkify.addLinks(mText, Linkify.ALL);
         }
     }
@@ -98,8 +98,8 @@ public class StatusMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getEvent();
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
         }
         return null;
     }
@@ -112,8 +112,8 @@ public class StatusMessageModel extends MessageModel {
             return super.getActionData();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getData();
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getData();
         }
 
         return new JsonObject();

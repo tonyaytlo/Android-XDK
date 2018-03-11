@@ -1,5 +1,7 @@
 package com.layer.xdk.ui.message.location;
 
+import static android.support.v4.content.ContextCompat.checkSelfPermission;
+
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -34,8 +36,6 @@ import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
 import java.lang.ref.WeakReference;
-
-import static android.support.v4.content.ContextCompat.checkSelfPermission;
 
 /**
  * CurrentLocationSender creates a Location Message with the user's latest location.
@@ -188,8 +188,8 @@ public class CurrentLocationSender extends AttachmentSender {
             String myName = me == null ? "" : sender.mIdentityFormatter.getDisplayName(me);
 
             LocationMessageMetadata locationMessageMetadata = new LocationMessageMetadata();
-            locationMessageMetadata.setLatitude(location.getLatitude());
-            locationMessageMetadata.setLongitude(location.getLongitude());
+            locationMessageMetadata.mLatitude = location.getLatitude();
+            locationMessageMetadata.mLongitude = location.getLongitude();
 
             String notification = context.getString(R.string.xdk_ui_notification_location, myName);
             String mimeType = MessagePartUtils.getAsRoleRoot(LocationMessageModel.ROOT_MIME_TYPE);

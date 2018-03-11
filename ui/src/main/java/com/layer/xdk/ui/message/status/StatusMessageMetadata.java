@@ -1,8 +1,6 @@
 package com.layer.xdk.ui.message.status;
 
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
 import com.layer.xdk.ui.message.model.Action;
 
@@ -12,26 +10,8 @@ import com.layer.xdk.ui.message.model.Action;
 public class StatusMessageMetadata {
 
     @SerializedName("text")
-    private String mText;
+    public String mText;
 
     @SerializedName("action")
-    private Action mAction;
-
-    @Nullable
-    public String getText() {
-        return mText;
-    }
-
-    public void setText(@Nullable String text) {
-        mText = text;
-    }
-
-    @Nullable
-    public Action getAction() {
-        return mAction;
-    }
-
-    public void setAction(@Nullable Action action) {
-        mAction = action;
-    }
+    public Action mAction;
 }

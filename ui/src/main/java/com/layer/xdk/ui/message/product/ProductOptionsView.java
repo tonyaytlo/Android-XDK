@@ -45,17 +45,17 @@ public class ProductOptionsView extends LinearLayout {
         if (mOptions != null && !mOptions.isEmpty()) {
             for (ChoiceMessageModel option : mOptions) {
                 String choiceId = option.getSelectedChoices() != null ? option.getSelectedChoices().iterator().next() : null;
-                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().getChoices() : null;
+                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().mChoices : null;
 
                 if (choices != null && choices.size() > 0) {
                     for (ChoiceMetadata choice : choices) {
-                        if (choice.getId().equals(choiceId)) {
+                        if (choice.mId.equals(choiceId)) {
                             // Instantiate and add view
                             XdkUiProductOptionViewItemBinding binding = XdkUiProductOptionViewItemBinding.inflate(LayoutInflater.from(getContext()), this, true);
 
                             // Set data on it
-                            binding.optionTitle.setText(option.getChoiceMessageMetadata().getLabel());
-                            binding.optionText.setText(choice.getText());
+                            binding.optionTitle.setText(option.getChoiceMessageMetadata().mLabel);
+                            binding.optionText.setText(choice.mText);
 
                             break;
                         }

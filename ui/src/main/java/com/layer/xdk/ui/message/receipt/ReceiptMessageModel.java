@@ -1,10 +1,8 @@
 package com.layer.xdk.ui.message.receipt;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -72,7 +70,7 @@ public class ReceiptMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
-        return mMetadata != null && mMetadata.getTitle() != null ? mMetadata.getTitle() : "Order Confirmation";
+        return mMetadata != null && mMetadata.mTitle != null ? mMetadata.mTitle : "Order Confirmation";
     }
 
     @Nullable
@@ -128,20 +126,19 @@ public class ReceiptMessageModel extends MessageModel {
         return null;
     }
 
-    public ReceiptMessageMetadata getMetadata() {
-        return mMetadata;
+    @Nullable
+    public String getPaymentMethod() {
+        return mMetadata != null ? mMetadata.mPaymentMethod : null;
     }
 
-    public void setMetadata(ReceiptMessageMetadata metadata) {
-        mMetadata = metadata;
-    }
-
-    @BindingAdapter("app:receiptCostToDisplay")
-    public static void displayFormattedCost(TextView textView, ReceiptMessageMetadata metadata) {
-        if (metadata == null) return;
-        String cost = metadata.getTotalCostToDisplay(textView.getContext());
-        if (cost != null) {
-            textView.setText(cost);
+    @NonNull
+    public String getFormattedCost() {
+        if (mMetadata != null) {
+            String cost = mMetadata.getTotalCostToDisplay(getAppContext());
+            if (cost != null) {
+                return cost;
+            }
         }
+        return "";
     }
 }

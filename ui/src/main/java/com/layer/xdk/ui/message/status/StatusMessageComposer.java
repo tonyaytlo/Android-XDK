@@ -37,7 +37,7 @@ public class StatusMessageComposer {
                 MIME_TYPE_ROLE,
                 parentNodeId.toString());
         StatusMessageMetadata statusMetadata = new StatusMessageMetadata();
-        statusMetadata.setText(status);
+        statusMetadata.mText = status;
         return layerClient.newMessagePart(statusMimeType, gson.toJson(statusMetadata).getBytes());
     }
 

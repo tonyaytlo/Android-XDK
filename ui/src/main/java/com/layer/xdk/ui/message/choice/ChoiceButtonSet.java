@@ -125,10 +125,10 @@ public class ChoiceButtonSet extends LinearLayout {
     }
 
     public void updateChoice(AppCompatButton choiceButton, final ChoiceMetadata choice) {
-        choiceButton.setTag(choice.getId());
-        choiceButton.setText(choice.getText());
+        choiceButton.setTag(choice.mId);
+        choiceButton.setText(choice.mText);
 
-        mChoiceMetadata.put(choice.getId(), choice);
+        mChoiceMetadata.put(choice.mId, choice);
 
         choiceButton.setOnClickListener(new OnClickListener() {
             @Override

@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:loadFrom="@{messageModel.imageRequestParameters}"
             app:usingImageLoader="@{messageModel.imageCacheWrapper}"
-            app:visibleOrGone="@{messageModel.metadata.imageUrl!=null}"/>
+            app:visibleOrGone="@{messageModel.imageUrl!=null}"/>
 
         <TextView
             android:id="@+id/link_message_text_view"
@@ -46,7 +46,7 @@
             android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
             android:autoLink="web"
             android:linksClickable="false"
-            android:text="@{messageModel.metadata.url}"
+            android:text="@{messageModel.url}"
             android:textColor="@{messageModel.messageFromMe ? @color/xdk_ui_text_message_view_body_me : @color/xdk_ui_text_message_view_body_them}"
             android:textSize="@dimen/xdk_ui_link_message_url_text_size"
             app:layout_constrainedWidth="true"
@@ -55,7 +55,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibleOrGone="@{messageModel.metadata.imageUrl==null}"
+            app:visibleOrGone="@{messageModel.imageUrl==null}"
             tools:text="wwww.sampleurl.com"/>
     </com.layer.xdk.ui.message.link.LinkMessageLayout>
 </layout>

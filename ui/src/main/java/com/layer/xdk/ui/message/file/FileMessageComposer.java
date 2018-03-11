@@ -89,16 +89,16 @@ public class FileMessageComposer {
 
         }
 
-        metadata.setTitle(fileName);
-        metadata.setSize(fileSize);
-        metadata.setMimeType(getMimeType(context, uri));
+        metadata.mTitle = fileName;
+        metadata.mSize = fileSize;
+        metadata.mMimeType = getMimeType(context, uri);
         return metadata;
     }
 
     private MessagePart getSourceMessagePart(LayerClient layerClient, InputStream inputStream,
             FileMessageMetadata metadata, @NonNull UUID parentNodeId) {
-        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.getMimeType(), "source",
+        String mimeType = MessagePartUtils.getAsRoleWithParentId(metadata.mMimeType, "source",
                 parentNodeId.toString());
-        return layerClient.newMessagePart(mimeType, inputStream, metadata.getSize());
+        return layerClient.newMessagePart(mimeType, inputStream, metadata.mSize);
     }
 }

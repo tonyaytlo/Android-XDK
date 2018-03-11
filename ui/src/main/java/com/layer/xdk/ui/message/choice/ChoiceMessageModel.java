@@ -77,8 +77,8 @@ public class ChoiceMessageModel extends MessageModel {
     @Override
     public String getTitle() {
         String title = getAppContext().getString(R.string.xdk_ui_choice_message_model_default_title);
-        if (mMetadata != null && mMetadata.getTitle() != null) {
-            title = mMetadata.getTitle();
+        if (mMetadata != null && mMetadata.mTitle != null) {
+            title = mMetadata.mTitle;
         }
 
         return title;
@@ -118,7 +118,7 @@ public class ChoiceMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getPreviewText() {
-        if (getHasContent() && mMetadata.getChoices().size() > 0) {
+        if (getHasContent() && mMetadata.mChoices.size() > 0) {
             return getTitle();
         }
         return null;
@@ -131,6 +131,11 @@ public class ChoiceMessageModel extends MessageModel {
     }
 
     @Bindable
+    public String getLabel() {
+        return mMetadata != null ? mMetadata.mLabel : null;
+    }
+
+    @Bindable
     public Set<String> getSelectedChoices() {
         return new HashSet<>(mSelectedChoices);
     }
@@ -140,8 +145,8 @@ public class ChoiceMessageModel extends MessageModel {
         if (getLayerClient().getAuthenticatedUser() == null || mMetadata == null)
             return false;
         String myUserID = getLayerClient().getAuthenticatedUser().getId().toString();
-        if (mMetadata.getEnabledFor() != null) {
-            return mMetadata.getEnabledFor().contains(myUserID);
+        if (mMetadata.mEnabledFor != null) {
+            return mMetadata.mEnabledFor.contains(myUserID);
         }
 
         return true;
@@ -150,7 +155,7 @@ public class ChoiceMessageModel extends MessageModel {
     private void processSelections() {
         mSelectedChoices.clear();
         if (mResponseSummary != null && mResponseSummary.hasData()) {
-            for (Map.Entry<String, JsonObject> participantResponses : mResponseSummary.getParticipantData().entrySet()) {
+            for (Map.Entry<String, JsonObject> participantResponses : mResponseSummary.mParticipantData.entrySet()) {
                 if (participantResponses.getValue().has(mMetadata.getResponseName())) {
                     String[] ids = participantResponses.getValue().get(mMetadata.getResponseName()).getAsString().split(",");
                     mSelectedChoices.addAll(Arrays.asList(ids));
@@ -158,27 +163,27 @@ public class ChoiceMessageModel extends MessageModel {
                     mSelectedChoices.remove("");
                 }
             }
-        } else if (mMetadata.getPreselectedChoice() != null) {
-            mSelectedChoices.add(mMetadata.getPreselectedChoice());
+        } else if (mMetadata.mPreselectedChoice != null) {
+            mSelectedChoices.add(mMetadata.mPreselectedChoice);
         }
     }
 
     void sendResponse(@NonNull ChoiceMetadata choice, boolean selected, @NonNull Set<String> selectedChoices) {
         String userName = getIdentityFormatter().getDisplayName(getLayerClient().getAuthenticatedUser());
         String statusText;
-        if (TextUtils.isEmpty(mMetadata.getName())) {
+        if (TextUtils.isEmpty(mMetadata.mName)) {
             statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_selected
                             : R.string.xdk_ui_response_message_status_text_deselected,
                     userName,
-                    choice.getText());
+                    choice.mText);
         } else {
             statusText = getAppContext().getString(
                     selected ? R.string.xdk_ui_response_message_status_text_with_name_selected
                             : R.string.xdk_ui_response_message_status_text_with_name_deselected,
                     userName,
-                    choice.getText(),
-                    mMetadata.getName());
+                    choice.mText,
+                    mMetadata.mName);
         }
         UUID rootPartId = UUID.fromString(getRootMessagePart().getId().getLastPathSegment());
 

@@ -63,7 +63,7 @@
                 android:text="@string/xdk_ui_receipt_message_payment_method_title"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_title_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_title_size"
-                app:visibleOrGone="@{messageModel.metadata.paymentMethod!=null}"/>
+                app:visibleOrGone="@{messageModel.paymentMethod!=null}"/>
 
             <TextView
                 android:id="@+id/payment_method_value"
@@ -73,10 +73,10 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{messageModel.metadata.paymentMethod}"
+                android:text="@{messageModel.paymentMethod}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
-                app:visibleOrGone="@{messageModel.metadata.paymentMethod!=null}"/>
+                app:visibleOrGone="@{messageModel.paymentMethod!=null}"/>
 
             <TextView
                 android:id="@+id/shipping_address_title"
@@ -98,7 +98,7 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{messageModel.shippingAddressLocationModel.metadata.formattedAddress}"
+                android:text="@{messageModel.shippingAddressLocationModel.formattedAddress}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
                 app:visibleOrGone="@{messageModel.shippingAddressLocationModel!=null &amp;&amp; messageModel.shippingAddressLocationModel.metadata!=null}"/>
@@ -123,7 +123,7 @@
                 android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
                 android:gravity="start"
                 android:maxLines="3"
-                android:text="@{messageModel.billingAddressLocationModel.metadata.formattedAddress}"
+                android:text="@{messageModel.billingAddressLocationModel.formattedAddress}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_detail_value_size"
                 app:visibleOrGone="@{messageModel.billingAddressLocationModel!=null &amp;&amp; messageModel.billingAddressLocationModel.metadata!=null}"/>
@@ -155,6 +155,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{messageModel.formattedCost}"
                 android:textColor="@color/xdk_ui_receipt_message_view_detail_value_text"
                 android:textSize="@dimen/xdk_ui_receipt_message_view_total_value_size"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -162,8 +163,7 @@
                 app:layout_constraintStart_toEndOf="@+id/total_title"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_default="percent"
-                app:layout_constraintWidth_percent="50"
-                app:receiptCostToDisplay="@{messageModel.metadata}"/>
+                app:layout_constraintWidth_percent="50"/>
         </android.support.constraint.ConstraintLayout>
 
     </com.layer.xdk.ui.message.receipt.ReceiptMessageLayout>

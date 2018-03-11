@@ -33,8 +33,8 @@ public class ActionHandlerRegistry {
 
     public static void dispatchChoiceSelection(@NonNull Context context, ChoiceMetadata choice,
             MessageModel model, MessageModel rootModel) {
-        if (sChoiceHandlers.containsKey(choice.getId())) {
-            sChoiceHandlers.get(choice.getId()).onChoiceSelect(context, choice, model, rootModel);
+        if (sChoiceHandlers.containsKey(choice.mId)) {
+            sChoiceHandlers.get(choice.mId).onChoiceSelect(context, choice, model, rootModel);
         }
     }
 }

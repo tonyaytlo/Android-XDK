@@ -4,15 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess") // For Gson serialization/de-serialization
 public class ButtonMessageMetadata {
+
     @SerializedName("buttons")
-    private List<ButtonMetadata> mButtonMetadata;
-
-    public List<ButtonMetadata> getButtonMetadata() {
-        return mButtonMetadata;
-    }
-
-    public void setButtonMetadata(List<ButtonMetadata> buttonMetadata) {
-        mButtonMetadata = buttonMetadata;
-    }
+    public List<ButtonMetadata> mButtonMetadata;
 }

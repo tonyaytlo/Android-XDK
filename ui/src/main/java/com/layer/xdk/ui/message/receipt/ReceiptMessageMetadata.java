@@ -12,27 +12,29 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings("WeakerAccess") // For Gson serialization/de-serialization
 public class ReceiptMessageMetadata {
+
     @SerializedName("created_at")
-    private String mCreatedAt;
+    public String mCreatedAt;
 
     @SerializedName("currency")
-    private String mCurrency;
+    public String mCurrency;
 
     @SerializedName("discounts")
-    private List<DiscountMetadata> mDiscounts;
+    public List<DiscountMetadata> mDiscounts;
 
     @SerializedName("order")
-    private OrderMetadata mOrder;
+    public OrderMetadata mOrder;
 
     @SerializedName("payment_method")
-    private String mPaymentMethod;
+    public String mPaymentMethod;
 
     @SerializedName("summary")
-    private SummaryMetadata mSummary;
+    public SummaryMetadata mSummary;
 
     @SerializedName("title")
-    private String mTitle;
+    public String mTitle;
 
     public String getCreatedAt() {
         return mCreatedAt;
@@ -43,60 +45,12 @@ public class ReceiptMessageMetadata {
         return mCurrency != null ? mCurrency : context.getString(R.string.xdk_ui_product_message_model_default_currency);
     }
 
-    public List<DiscountMetadata> getDiscounts() {
-        return mDiscounts;
-    }
-
-    public OrderMetadata getOrder() {
-        return mOrder;
-    }
-
-    public String getPaymentMethod() {
-        return mPaymentMethod;
-    }
-
-    public SummaryMetadata getSummary() {
-        return mSummary;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        mCreatedAt = createdAt;
-    }
-
-    public void setCurrency(String currency) {
-        mCurrency = currency;
-    }
-
-    public void setDiscounts(List<DiscountMetadata> discounts) {
-        mDiscounts = discounts;
-    }
-
-    public void setOrder(OrderMetadata order) {
-        mOrder = order;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        mPaymentMethod = paymentMethod;
-    }
-
-    public void setSummary(SummaryMetadata summary) {
-        mSummary = summary;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
     @Nullable
     public String getTotalCostToDisplay(@NonNull Context context) {
-        if (mSummary != null && mSummary.getTotalCost() != null) {
+        if (mSummary != null && mSummary.mTotalCost != null) {
             NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
             currencyFormat.setCurrency(Currency.getInstance(getCurrency(context)));
-            return currencyFormat.format(mSummary.getTotalCost());
+            return currencyFormat.format(mSummary.mTotalCost);
         }
 
         return null;

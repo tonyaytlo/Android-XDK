@@ -43,11 +43,11 @@ public class CarouselMessageModel extends MessageModel {
     @Override
     protected void processChildParts() {
         super.processChildParts();
-        if (mMetadata != null && mMetadata.getAction() != null) {
+        if (mMetadata != null && mMetadata.mAction != null) {
             List<MessageModel> childModels = getChildMessageModels();
             if (childModels != null) {
                 for (MessageModel model : childModels) {
-                    model.setAction(mMetadata.getAction());
+                    model.setAction(mMetadata.mAction);
                 }
             }
         }
@@ -92,8 +92,8 @@ public class CarouselMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getEvent();
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
         }
         return null;
     }
@@ -105,8 +105,8 @@ public class CarouselMessageModel extends MessageModel {
             return super.getActionData();
         }
 
-        if (mMetadata.getAction() != null) {
-            return mMetadata.getAction().getData();
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getData();
         }
         return new JsonObject();
     }
