@@ -1,19 +1,13 @@
 package com.layer.xdk.ui.message.choice;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.HashMap;
@@ -23,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class ChoiceButtonSet extends LinearLayout {
-    private ColorStateList mChoiceButtonColorStateList;
     private boolean mAllowReselect;
     private boolean mAllowDeselect;
     private boolean mAllowMultiSelect;
@@ -48,8 +41,6 @@ public class ChoiceButtonSet extends LinearLayout {
 
         // Default orientation
         setOrientation(VERTICAL);
-
-        mChoiceButtonColorStateList = ContextCompat.getColorStateList(context, R.color.xdk_ui_choice_button_selector);
     }
 
     public void setOnChoiceClickedListener(OnChoiceClickedListener onChoiceClickedListener) {
@@ -88,7 +79,7 @@ public class ChoiceButtonSet extends LinearLayout {
 
         // Set up buttons
         for (int i = 0; i < getChildCount(); i++) {
-            AppCompatButton child = (AppCompatButton) getChildAt(i);
+            ChoiceButton child = (ChoiceButton) getChildAt(i);
             // We have to request a layout here since the recycled view may be wider. This needs
             // optimization (AND-1372)
             child.requestLayout();
@@ -98,20 +89,7 @@ public class ChoiceButtonSet extends LinearLayout {
 
     private void addButton() {
         // Instantiate
-        AppCompatButton choiceButton = new AppCompatButton((getContext()));
-
-        // Style it
-        choiceButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
-        choiceButton.setTransformationMethod(null);
-        choiceButton.setLines(1);
-        choiceButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                .getDimension(R.dimen.xdk_ui_choice_button_message_button_text_size));
-        choiceButton.setTextColor(mChoiceButtonColorStateList);
-        choiceButton.setSingleLine(false);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            choiceButton.setStateListAnimator(null);
-        }
+        ChoiceButton choiceButton = new ChoiceButton((getContext()));
 
         // Add it
         LayoutParams layoutParams;
@@ -124,7 +102,7 @@ public class ChoiceButtonSet extends LinearLayout {
         addView(choiceButton, layoutParams);
     }
 
-    public void updateChoice(AppCompatButton choiceButton, final ChoiceMetadata choice) {
+    public void updateChoice(ChoiceButton choiceButton, final ChoiceMetadata choice) {
         choiceButton.setTag(choice.mId);
         choiceButton.setText(choice.mText);
 
@@ -169,18 +147,18 @@ public class ChoiceButtonSet extends LinearLayout {
         boolean somethingIsSelected = false;
 
         for (int i = 0; i < getChildCount(); i++) {
-            AppCompatButton choiceButton = (AppCompatButton) getChildAt(i);
+            ChoiceButton choiceButton = (ChoiceButton) getChildAt(i);
             String tag = (String) choiceButton.getTag();
             if (choiceIds.contains(tag)) {
-                choiceButton.setSelected(true);
+                choiceButton.setChecked(true);
                 somethingIsSelected = true;
             } else {
-                choiceButton.setSelected(false);
+                choiceButton.setChecked(false);
             }
         }
 
         for (int i = 0; i < getChildCount(); i++) {
-            AppCompatButton button = (AppCompatButton) getChildAt(i);
+            ChoiceButton button = (ChoiceButton) getChildAt(i);
             if (!mEnabledForMe || (somethingIsSelected && !mAllowReselect) || (button.isSelected() && !mAllowDeselect)) {
                 button.setEnabled(false);
             } else {

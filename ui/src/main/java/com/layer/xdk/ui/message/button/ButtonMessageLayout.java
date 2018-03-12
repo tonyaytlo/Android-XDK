@@ -1,18 +1,13 @@
 package com.layer.xdk.ui.message.button;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -20,12 +15,12 @@ import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
-import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
-import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
+import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.util.Log;
 
@@ -37,7 +32,6 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
     private XdkUiButtonMessageViewBinding mBinding;
     private MessageViewHelper mMessageViewHelper;
-    private ColorStateList mActionButtonColorStateList;
 
     public ButtonMessageLayout(Context context) {
         this(context, null, 0);
@@ -51,9 +45,6 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         super(context, attrs, defStyleAttr);
 
         mMessageViewHelper = new MessageViewHelper(context);
-
-        // TODO Use the choice selector until AND-1271 is fixed
-        mActionButtonColorStateList = ContextCompat.getColorStateList(context, R.color.xdk_ui_choice_button_selector);
     }
 
     @Override
@@ -133,21 +124,9 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         //Instantiate
         AppCompatButton actionButton = findViewWithTag(metadata.mText);
         if (actionButton == null) {
-            actionButton = new AppCompatButton(getContext());
+            actionButton = new AppCompatButton(getContext(), null, R.attr.MessageButton);
 
-            // Style it
-            actionButton.setBackgroundResource(R.drawable.xdk_ui_choice_set_button_background_selector);
-            actionButton.setTransformationMethod(null);
-            actionButton.setLines(1);
-            actionButton.setEllipsize(TextUtils.TruncateAt.END);
-            actionButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, getContext().getResources()
-                    .getDimension(R.dimen.xdk_ui_button_message_action_button_text_size));
-            actionButton.setTextColor(mActionButtonColorStateList);
             actionButton.setTag(metadata.mText);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                actionButton.setStateListAnimator(null);
-            }
 
             // Add it
             mBinding.xdkUiButtonMessageViewButtonsContainer.addView(actionButton,

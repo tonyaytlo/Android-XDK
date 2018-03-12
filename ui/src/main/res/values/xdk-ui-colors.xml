@@ -16,7 +16,7 @@
 <resources>
 
     <color name="transparent">@android:color/transparent</color>
-    <color name="xdk_ui_color_primary_blue">#FF21AAE1</color>
+    <color name="xdk_ui_color_primary_blue">#FF19A5E4</color>
     <color name="xdk_ui_color_dark_blue">#FF1094D0</color>
     <color name="xdk_ui_color_primary_gray">#F2F2F2</color>
 
@@ -133,29 +133,6 @@
 
     <color name="xdk_ui_location_message_background">@android:color/white</color>
     <color name="xdk_ui_location_message_marker_color">@android:color/holo_red_dark</color>
-
-    <!-- ########## -->
-    <!-- Button Message View -->
-    <!-- ########## -->
-
-    <color name="xdk_ui_button_message_action_button_text_enabled">@color/xdk_ui_text_blue</color>
-    <color name="xdk_ui_button_message_action_button_text_disabled">@color/xdk_ui_text_gray</color>
-    <color name="xdk_ui_button_message_action_button_text_pressed">@android:color/black</color>
-
-    <color name="xdk_ui_button_message_choice_button_text_enabled">@color/xdk_ui_text_blue</color>
-    <color name="xdk_ui_button_message_choice_button_text_disabled">@color/xdk_ui_text_gray</color>
-    <color name="xdk_ui_button_message_choice_button_text_pressed">@android:color/white</color>
-
-    <color name="xdk_ui_choice_button_background_enabled">@android:color/white</color>
-    <color name="xdk_ui_choice_button_background_enabled_stroke">@color/xdk_ui_color_primary_blue</color>
-    <color name="xdk_ui_choice_button_background_disabled">@color/xdk_ui_color_primary_gray_3</color>
-    <color name="xdk_ui_choice_button_background_pressed">@color/xdk_ui_color_primary_blue</color>
-    <color name="xdk_ui_choice_button_background_selected">@color/xdk_ui_color_primary_blue</color>
-
-    <color name="xdk_ui_choice_button_text_enabled">@color/xdk_ui_text_blue</color>
-    <color name="xdk_ui_choice_button_text_disabled">@color/xdk_ui_text_gray</color>
-    <color name="xdk_ui_choice_button_text_pressed">@android:color/white</color>
-    <color name="xdk_ui_choice_button_text_selected">@android:color/white</color>
 
     <!-- ########## -->
     <!-- Product Message View -->

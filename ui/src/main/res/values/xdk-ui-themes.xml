@@ -8,6 +8,8 @@
         <item name="ComposeBar">@style/ComposeBar</item>
         <item name="AddressBar">@style/AddressBar</item>
         <item name="TypingIndicator">@style/TypingIndicator</item>
+        <item name="MessageButton">@style/Message.Button</item>
+        <item name="MessageChoiceButton">@style/Message.Button.Choice</item>
 
         <item name="colorPrimary">@color/xdk_ui_action_bar_background</item>
         <item name="colorPrimaryDark">@color/xdk_ui_status_bar_background</item>

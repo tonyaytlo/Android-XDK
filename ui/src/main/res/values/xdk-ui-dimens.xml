@@ -235,19 +235,17 @@
     <dimen name="xdk_ui_file_message_image_width">190dp</dimen>
 
     <!-- ####################################################################################### -->
-    <!-- # Button Message View                                                                   # -->
+    <!-- # Message buttons                                                                     # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_button_message_action_button_text_size">17sp</dimen>
-    <dimen name="xdk_ui_button_message_choice_button_text_size">17sp</dimen>
+    <dimen name="xdk_ui_message_button_padding">12dp</dimen>
+    <dimen name="xdk_ui_message_button_text_size">17sp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Choice Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
     <dimen name="xdk_ui_choice_button_message_label_text_size">17sp</dimen>
-    <dimen name="xdk_ui_choice_button_message_button_text_size">17sp</dimen>
-    <dimen name="xdk_ui_choice_button_message_button_stroke_width">1dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Choice Message View                                                                   # -->

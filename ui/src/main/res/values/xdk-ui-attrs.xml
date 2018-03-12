@@ -10,6 +10,8 @@
     <attr name="TypingIndicator" format="reference" />
     <attr name="AvatarView" format="reference" />
     <attr name="PresenceView" format="reference" />
+    <attr name="MessageButton" format="reference" />
+    <attr name="MessageChoiceButton" format="reference" />
 
     <!-- #################################### -->
     <!-- Styleable UI Component Attributes -->
