@@ -110,14 +110,14 @@ public class ChoiceButtonSet extends LinearLayout {
 
         choiceButton.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view) {
-                String choiceId = (String) view.getTag();
-                boolean willBeSelected = !view.isSelected();
+            public void onClick(View v) {
+                ChoiceButton button = (ChoiceButton) v;
+                String choiceId = (String) button.getTag();
                 toggleChoice(choiceId);
 
                 ChoiceMetadata choice = mChoiceMetadata.get(choiceId);
                 if (mOnChoiceClickedListener != null) {
-                    mOnChoiceClickedListener.onChoiceClick(choice, willBeSelected, mSelectedChoiceIds);
+                    mOnChoiceClickedListener.onChoiceClick(choice, button.isChecked(), mSelectedChoiceIds);
                 } else if (Log.isLoggable(Log.VERBOSE)) {
                     Log.v("Clicked choice but no OnChoiceClickedListener is registered. Choice: " + choiceId);
                 }
@@ -144,14 +144,14 @@ public class ChoiceButtonSet extends LinearLayout {
 
     public void setSelection(@NonNull Set<String> choiceIds) {
         mSelectedChoiceIds = choiceIds;
-        boolean somethingIsSelected = false;
+        boolean somethingIsChecked = false;
 
         for (int i = 0; i < getChildCount(); i++) {
             ChoiceButton choiceButton = (ChoiceButton) getChildAt(i);
             String tag = (String) choiceButton.getTag();
             if (choiceIds.contains(tag)) {
                 choiceButton.setChecked(true);
-                somethingIsSelected = true;
+                somethingIsChecked = true;
             } else {
                 choiceButton.setChecked(false);
             }
@@ -159,7 +159,7 @@ public class ChoiceButtonSet extends LinearLayout {
 
         for (int i = 0; i < getChildCount(); i++) {
             ChoiceButton button = (ChoiceButton) getChildAt(i);
-            if (!mEnabledForMe || (somethingIsSelected && !mAllowReselect) || (button.isSelected() && !mAllowDeselect)) {
+            if (!mEnabledForMe || (somethingIsChecked && !mAllowReselect) || (button.isChecked() && !mAllowDeselect)) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);

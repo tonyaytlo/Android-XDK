@@ -38,7 +38,6 @@ public class ChoiceMessageLayout extends LinearLayout implements
             initializeBinding();
         }
 
-        mBinding.setMessageModel(model);
         if (model != null) {
             model.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
                 @Override
