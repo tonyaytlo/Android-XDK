@@ -20,8 +20,14 @@ android {
 
         consumerProguardFiles 'proguard-rules.pro'
 
-        multiDexEnabled true
         testInstrumentationRunner "com.layer.xdk.ui.TestButlerRunner"
+    }
+
+    buildTypes {
+        debug {
+            // Only enable multidex for debug builds as test libraries pushes it over the limit
+            multiDexEnabled true
+        }
     }
 
     dataBinding {
@@ -86,9 +92,11 @@ dependencies {
     api 'com.android.support.constraint:constraint-layout:1.1.0-beta5'
     implementation "com.android.support:exifinterface:27.1.0"
 
-
-    compile "android.arch.paging:runtime:1.0.0-alpha6"
-    compile "android.arch.lifecycle:livedata:1.1.0"
+    // Keep as api so MessageItemsListViewModel can be used
+    api "android.arch.paging:runtime:1.0.0-alpha6"
+    implementation "android.arch.lifecycle:livedata:1.1.0"
+    // Include only for debug builds (namely for tests)
+    debugImplementation 'com.android.support:multidex:1.0.3'
 
     // Testing
     testImplementation 'junit:junit:4.12'
