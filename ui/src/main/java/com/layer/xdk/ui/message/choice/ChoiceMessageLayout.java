@@ -100,7 +100,7 @@ public class ChoiceMessageLayout extends LinearLayout implements
             Set<String> selectedChoices) {
         ChoiceMessageModel messageModel = mBinding.getMessageModel();
         if (messageModel != null) {
-            messageModel.sendResponse(choice, selected, selectedChoices);
+            messageModel.onChoiceClicked(choice, selected, selectedChoices);
         }
     }
 }

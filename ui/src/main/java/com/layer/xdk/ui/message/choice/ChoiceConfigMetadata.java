@@ -1,7 +1,9 @@
 package com.layer.xdk.ui.message.choice;
 
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
@@ -46,5 +48,13 @@ public class ChoiceConfigMetadata {
         } else {
             return mResponseName;
         }
+    }
+
+    public void setEnabledForMe(@Nullable Uri authenticatedUserId) {
+        if (authenticatedUserId == null) {
+            mEnabledForMe = false;
+        }
+        String myUserID = authenticatedUserId.toString();
+        mEnabledForMe = mEnabledFor == null || mEnabledFor.contains(myUserID);
     }
 }

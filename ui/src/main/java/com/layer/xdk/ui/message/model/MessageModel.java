@@ -29,6 +29,7 @@ import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -77,6 +78,7 @@ public abstract class MessageModel extends BaseObservable {
     private Date mMessageUpdatedAt;
     private Set<MessagePart.TransferStatus> mMessagePartTransferStatus;
     private Set<Date> mMessagePartUpdatedAt;
+    private byte[] mMessageLocalData;
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
@@ -96,6 +98,7 @@ public abstract class MessageModel extends BaseObservable {
 
         mParticipantCount = mMessage.getConversation().getParticipants().size();
         mChildMessageModels = new ArrayList<>();
+        mMessageLocalData = mMessage.getLocalData();
     }
 
     protected abstract void parse(@NonNull MessagePart messagePart);
@@ -612,6 +615,10 @@ public abstract class MessageModel extends BaseObservable {
 
         if (mMessagePartTransferStatus == null ? other.mMessagePartTransferStatus != null
                 : !mMessagePartTransferStatus.equals(other.mMessagePartTransferStatus)) {
+            return false;
+        }
+
+        if (!Arrays.equals(mMessageLocalData, other.mMessageLocalData)) {
             return false;
         }
 

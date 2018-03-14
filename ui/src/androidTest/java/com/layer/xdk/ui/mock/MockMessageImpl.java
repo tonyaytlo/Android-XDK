@@ -114,4 +114,15 @@ public class MockMessageImpl implements Message {
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
     }
+
+    @Override
+    public void putLocalData(@Nullable byte[] bytes) {
+
+    }
+
+    @Nullable
+    @Override
+    public byte[] getLocalData() {
+        return null;
+    }
 }

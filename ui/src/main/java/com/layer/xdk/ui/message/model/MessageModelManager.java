@@ -53,6 +53,7 @@ public class MessageModelManager {
 
     @NonNull
     public MessageModel getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
+        Throwable exception;
         try {
             Constructor<? extends MessageModel> constructor =
                     (Constructor<? extends MessageModel>)
@@ -67,15 +68,18 @@ public class MessageModelManager {
             }
         } catch (IllegalAccessException e) {
             // Handled below
+            exception = e;
         } catch (InstantiationException e) {
             // Handled below
+            exception = e;
         } catch (InvocationTargetException e) {
             // Handled below
+            exception = e;
         }
 
         if (Log.isLoggable(Log.ERROR)) {
             Log.e("Failed to instantiate a new MessageModel instance. Ensure an appropriate"
-                    + " constructor exists.");
+                    + " constructor exists.", exception);
         }
         throw new IllegalStateException("Failed to instantiate a new MessageModel instance."
                 + " Ensure an appropriate constructor exists.");

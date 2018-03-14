@@ -64,7 +64,7 @@ ext {
 
 dependencies {
     // Layer SDK
-    api ('com.layer.sdk:layer-sdk:1.0.0-pre2') {
+    api ('com.layer.sdk:layer-sdk:1.0.0-pre3') {
         exclude group: 'com.google.firebase', module: 'firebase-messaging'
         exclude group: 'com.google.firebase', module: 'firebase-core'
     }
