@@ -189,7 +189,9 @@ public abstract class MessageModel extends BaseObservable {
 
         for (MessagePart childMessagePart : mChildMessageParts) {
             if (childMessagePart.isContentReady()) {
-                parseChildPart(childMessagePart);
+                if (parseChildPart(childMessagePart)) {
+                    continue;
+                }
             } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
                 childMessagePart.download(null);
             }
@@ -213,8 +215,20 @@ public abstract class MessageModel extends BaseObservable {
         // Standard operation is no-op
     }
 
-    protected void parseChildPart(@NonNull MessagePart childMessagePart) {
-        // Standard operation is no-op
+    /**
+     * <p>
+     *     Override this method to optionally consume the supplied MessagePart without having the
+     *     framework attempt to generate a model from it.
+     *
+     *     The method defaults to returning false, upon which the framework will attempt to
+     *     generate a MessageModel instance from the currently registered MessageModel types.
+     * </p>
+     *
+     * @param childMessagePart a MessagePart that has declared this MessageModel as its parent
+     * @return true if the implementing class has consumed this MessagePart
+     */
+    protected boolean parseChildPart(@NonNull MessagePart childMessagePart) {
+        return false;
     }
 
     private String createMimeTypeTree() {

@@ -117,12 +117,16 @@ public class ImageMessageModel extends MessageModel {
     }
 
     @Override
-    protected void parseChildPart(@NonNull MessagePart childMessagePart) {
+    protected boolean parseChildPart(@NonNull MessagePart childMessagePart) {
         if (MessagePartUtils.isRole(childMessagePart, ROLE_PREVIEW)) {
             parsePreviewPart(childMessagePart);
+            return true;
         } else if (MessagePartUtils.isRole(childMessagePart, ROLE_SOURCE)) {
             parseSourcePart(childMessagePart);
+            return true;
         }
+
+        return false;
     }
 
     @Override
