@@ -19,6 +19,7 @@
     <color name="xdk_ui_color_primary_blue">#FF19A5E4</color>
     <color name="xdk_ui_color_dark_blue">#FF1094D0</color>
     <color name="xdk_ui_color_primary_gray">#F2F2F2</color>
+    <color name="xdk_ui_color_athens_gray">#E9EBEF</color>
 
     <color name="xdk_ui_color_primary_gray_1">#FFF3F3F3</color>
     <color name="xdk_ui_color_primary_gray_3">#FFDADDE4</color>
@@ -75,6 +76,9 @@
     <color name="xdk_ui_presence_away">#fff7ca40</color>
     <color name="xdk_ui_presence_invisible">#ff50c062</color>
     <color name="xdk_ui_presence_offline">#ff99999c</color>
+
+    <color name="xdk_ui_message_button_text_disabled">#421094D0</color>
+    <color name="xdk_ui_message_button_background_disabled_selected">#6619A5E4</color>
 
 
     <!-- ########## -->
