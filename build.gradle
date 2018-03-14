@@ -11,9 +11,15 @@ buildscript {
     }
 }
 
+def preReleaseRepoUrl = System.getenv("LAYER_PRERELEASE_REPO_URL")
+
 allprojects {
     repositories {
         jcenter()
         maven { url "https://raw.githubusercontent.com/layerhq/releases-android/master/releases/" }
+        if (preReleaseRepoUrl != null) {
+            println "Using Pre-release repository: " + preReleaseRepoUrl
+            maven { url preReleaseRepoUrl }
+        }
     }
 }
