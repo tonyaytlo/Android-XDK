@@ -31,7 +31,7 @@ public abstract class MessageContainer extends ConstraintLayout {
     private Path mCornerClippingPath = new Path();
     private final float mCornerRadius;
     private final boolean mUsingOutline;
-    private final Paint mBorderPaint = new Paint();
+    private final Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF mRect = new RectF();
     private boolean mDrawBorder = true;
 

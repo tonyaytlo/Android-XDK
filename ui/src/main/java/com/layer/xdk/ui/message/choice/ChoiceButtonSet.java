@@ -3,11 +3,13 @@ package com.layer.xdk.ui.message.choice;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.HashMap;
@@ -41,6 +43,8 @@ public class ChoiceButtonSet extends LinearLayout {
 
         // Default orientation
         setOrientation(VERTICAL);
+        setShowDividers(SHOW_DIVIDER_MIDDLE);
+        setDividerDrawable(ContextCompat.getDrawable(context, R.drawable.xdk_ui_linear_layout_divider_vertical));
     }
 
     public void setOnChoiceClickedListener(OnChoiceClickedListener onChoiceClickedListener) {

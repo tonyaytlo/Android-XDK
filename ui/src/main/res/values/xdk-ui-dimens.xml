@@ -51,6 +51,7 @@
     <dimen name="xdk_ui_text_size_chip">13sp</dimen>
     <dimen name="xdk_ui_text_size_status">11sp</dimen>
     <dimen name="xdk_ui_cursor_width">1dp</dimen>
+    <dimen name="xdk_ui_linear_layout_divider_thickness">0.5dp</dimen>
 
 
     <!-- ####################################################################################### -->
@@ -192,8 +193,8 @@
     <!-- # Message Container                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_message_container_border_stroke_width">0.5dp</dimen>
-    <dimen name="xdk_ui_message_container_corner_radius">17.5dp</dimen>
+    <dimen name="xdk_ui_message_container_border_stroke_width">1dp</dimen>
+    <dimen name="xdk_ui_message_container_corner_radius">16dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Standard message container                                                          # -->
