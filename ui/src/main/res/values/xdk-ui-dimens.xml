@@ -51,7 +51,7 @@
     <dimen name="xdk_ui_text_size_chip">13sp</dimen>
     <dimen name="xdk_ui_text_size_status">11sp</dimen>
     <dimen name="xdk_ui_cursor_width">1dp</dimen>
-    <dimen name="xdk_ui_linear_layout_divider_thickness">0.5dp</dimen>
+    <dimen name="xdk_ui_divider_thickness">0.5dp</dimen>
 
 
     <!-- ####################################################################################### -->
@@ -210,9 +210,11 @@
     <!-- # Titled message container                                                          # -->
     <!-- ####################################################################################### -->
 
+    <dimen name="xdk_ui_titled_message_container_icon_size">24dp</dimen>
     <dimen name="xdk_ui_titled_message_container_title_text_size">16sp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width">192dp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width_zero">0dp</dimen>
+    <dimen name="xdk_ui_titled_message_container_divider">0.5dp</dimen>
 
     <!-- ####################################################################################### -->
     <!-- # Location Message View                                                                   # -->

@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.container;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.ViewStub;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiTitledMessageContainerBinding;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.view.IconProvider;
 
 public class TitledMessageContainer extends MessageContainer {
     private XdkUiTitledMessageContainerBinding mBinding;
@@ -34,7 +36,24 @@ public class TitledMessageContainer extends MessageContainer {
     public View inflateMessageView(@LayoutRes int messageViewLayoutId) {
         ViewStub viewStub = getBinding().xdkUiTitledMessageContainerContentView.getViewStub();
         viewStub.setLayoutResource(messageViewLayoutId);
-        return viewStub.inflate();
+        View inflatedView = viewStub.inflate();
+
+        if (inflatedView instanceof IconProvider) {
+            IconProvider iconProvider = (IconProvider) inflatedView;
+            Drawable icon = iconProvider.getIconDrawable();
+            if (icon != null) {
+                // TODO : AND-1370 Stop imposing size constraints on icons and use correctly sized assets
+                int size = getResources().getDimensionPixelSize(R.dimen.xdk_ui_titled_message_container_icon_size);
+                icon.setBounds(0, 0, size, size);
+                getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(icon, null, null, null);
+            } else {
+                getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(null, null, null, null);
+            }
+        } else {
+            getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(null, null, null, null);
+        }
+
+        return inflatedView;
     }
 
     @Override

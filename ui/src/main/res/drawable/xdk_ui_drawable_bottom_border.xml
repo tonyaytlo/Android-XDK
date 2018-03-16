@@ -3,17 +3,17 @@
     <item>
         <shape android:shape="rectangle">
             <stroke
-                android:width="1dp"
+                android:width="@dimen/xdk_ui_divider_thickness"
                 android:color="@color/xdk_ui_color_primary_gray_3" />
             <solid android:color="@color/transparent" />
         </shape>
     </item>
 
     <item
-        android:bottom="1dp">
+        android:bottom="@dimen/xdk_ui_divider_thickness">
         <shape android:shape="rectangle">
             <stroke
-                android:width="1dp"
+                android:width="@dimen/xdk_ui_divider_thickness"
                 android:color="@color/xdk_ui_window_background" />
         </shape>
     </item>

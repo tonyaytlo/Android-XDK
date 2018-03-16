@@ -23,7 +23,7 @@
             android:id="@+id/xdk_ui_titled_message_container_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/xdk_ui_drawable_bottom_border"
+            android:drawablePadding="@dimen/xdk_ui_margin_small"
             android:ellipsize="end"
             android:maxLines="3"
             android:paddingBottom="@dimen/xdk_ui_margin_small"
@@ -43,16 +43,25 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginTop="0dp"/>
 
+        <View
+            android:id="@+id/xdk_ui_titled_message_container_divider"
+            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_titled_message_container_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/xdk_ui_titled_message_container_divider"
+            android:background="@color/xdk_ui_color_primary_gray_3"/>
+
         <ViewStub
             android:id="@+id/xdk_ui_titled_message_container_content_view"
-            android:inflatedId="@id/xdk_ui_titled_message_container_content_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inflatedId="@id/xdk_ui_titled_message_container_content_view"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_titled_message_container_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/xdk_ui_titled_message_container_divider"/>
 
     </com.layer.xdk.ui.message.container.TitledMessageContainer>
 </layout>

@@ -44,7 +44,7 @@ public class ChoiceButtonSet extends LinearLayout {
         // Default orientation
         setOrientation(VERTICAL);
         setShowDividers(SHOW_DIVIDER_MIDDLE);
-        setDividerDrawable(ContextCompat.getDrawable(context, R.drawable.xdk_ui_linear_layout_divider_vertical));
+        setDividerDrawable(ContextCompat.getDrawable(context, R.drawable.xdk_ui_linear_layout_divider_horizontal));
     }
 
     public void setOnChoiceClickedListener(OnChoiceClickedListener onChoiceClickedListener) {
