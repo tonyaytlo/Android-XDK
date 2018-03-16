@@ -41,7 +41,7 @@ public class ConversationItemViewModelTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(mConversationItemFormatter.getConversationTitle(any(Identity.class), any(Conversation.class), any((Set.class)))).thenReturn(CONVERSATION_TITLE);
+        when(mConversationItemFormatter.getConversationTitle(any(Conversation.class))).thenReturn(CONVERSATION_TITLE);
         when(mConversationItemFormatter.getLastMessagePreview(any(Conversation.class))).thenReturn(CONVERSATION_SUBTITLE);
         when(mConversationItemFormatter.getTimeStamp(any(Conversation.class))).thenReturn(CONVERSATION_TIMESTAMP);
 

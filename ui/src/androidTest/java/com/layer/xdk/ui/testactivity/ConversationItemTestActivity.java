@@ -12,6 +12,7 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
+import com.layer.xdk.ui.conversationitem.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.identity.IdentityFormatter;
@@ -39,7 +40,7 @@ public class ConversationItemTestActivity extends Activity {
         DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
         IdentityFormatter identityFormatter = new IdentityFormatterImpl(getApplicationContext());
-        mConversationItemFormatter = new ConversationItemFormatter(this, layerClient, identityFormatter, dateFormat, timeFormat);
+        mConversationItemFormatter = new DefaultConversationItemFormatter(this, layerClient, identityFormatter, dateFormat, timeFormat);
 
         Identity authenticatedUser = layerClient.getAuthenticatedUser();
         Conversation conversation = new MockConversation(authenticatedUser, 3);

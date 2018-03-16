@@ -46,7 +46,7 @@ public class ConversationItemViewModel extends FourPartItemViewModel<Conversatio
 
     @Bindable
     public String getTitle() {
-        return mConversationItemFormatter.getConversationTitle(mAuthenticatedUser, getItem(), getItem().getParticipants());
+        return mConversationItemFormatter.getConversationTitle(getItem());
     }
 
     @Bindable
