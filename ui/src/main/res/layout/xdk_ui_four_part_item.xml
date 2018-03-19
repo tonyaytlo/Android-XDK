@@ -39,10 +39,10 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="@{style.itemHeight, default=wrap_content}"
-        android:layout_marginLeft="@dimen/xdk_ui_margin_large"
-        android:layout_marginStart="@dimen/xdk_ui_margin_large"
-        android:layout_marginTop="@dimen/xdk_ui_margin_large"
-        android:background="@drawable/xdk_ui_item_foreground_selector"
+        android:paddingLeft="@dimen/xdk_ui_margin_large"
+        android:paddingStart="@dimen/xdk_ui_margin_large"
+        android:paddingTop="@dimen/xdk_ui_margin_large"
+        android:background="?android:attr/selectableItemBackground"
         tools:layout_height="wrap_content">
 
         <com.layer.xdk.ui.avatar.AvatarView
