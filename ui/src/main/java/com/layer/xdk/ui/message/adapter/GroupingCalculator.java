@@ -13,9 +13,15 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 public class GroupingCalculator {
 
     private static final long GROUP_TIME_THRESHOLD = TimeUnit.MINUTES.toMillis(30);
+
+    @Inject
+    public GroupingCalculator() {
+    }
 
     public void calculateGrouping(List<MessageModel> models) {
         MessageModel previousModel = null;

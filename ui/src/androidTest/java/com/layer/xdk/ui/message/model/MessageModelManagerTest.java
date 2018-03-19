@@ -7,7 +7,9 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
 import com.layer.sdk.LayerClient;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.text.TextMessageModel;
+import com.layer.xdk.ui.util.DateFormatter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +23,17 @@ public class MessageModelManagerTest {
     @Mock
     private LayerClient mLayerClient;
 
+    @Mock
+    IdentityFormatter mIdentityFormatter;
+
+    @Mock
+    DateFormatter mDateFormatter;
+
     @Before
     public void setup() {
         mContext = InstrumentationRegistry.getTargetContext();
-        mMessageModelManager = new MessageModelManager(mContext, mLayerClient);
+        mMessageModelManager = new MessageModelManager(mContext, mLayerClient, mIdentityFormatter,
+                mDateFormatter);
     }
 
     @Test

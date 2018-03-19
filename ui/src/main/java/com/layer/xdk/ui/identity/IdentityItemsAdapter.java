@@ -1,6 +1,7 @@
 package com.layer.xdk.ui.identity;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
@@ -9,9 +10,11 @@ import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
 import com.layer.xdk.ui.style.FourPartItemStyle;
-import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+
+import javax.inject.Inject;
+
+import dagger.internal.Factory;
 
 public class IdentityItemsAdapter extends ItemRecyclerViewAdapter<Identity, IdentityItemViewModel,
         XdkUiFourPartItemBinding, FourPartItemStyle, FourPartItemViewHolder<Identity, IdentityItemViewModel>> {
@@ -19,23 +22,24 @@ public class IdentityItemsAdapter extends ItemRecyclerViewAdapter<Identity, Iden
     protected static final String TAG = "IdentityItemsAdapter";
 
     protected ImageCacheWrapper mImageCacheWrapper;
-    private DateFormatter mDateFormatter;
-    private IdentityFormatter mIdentityFormatter;
+    private final Factory<IdentityItemViewModel> mItemViewModelFactory;
 
-    public IdentityItemsAdapter(Context context, LayerClient layerClient,
-                                ImageCacheWrapper imageCacheWrapper) {
+    @Inject
+    public IdentityItemsAdapter(Context context,
+            LayerClient layerClient,
+            ImageCacheWrapper imageCacheWrapper,
+            Factory<IdentityItemViewModel> itemViewModelFactory) {
         super(context, layerClient, TAG, false);
         mImageCacheWrapper = imageCacheWrapper;
-        mDateFormatter = new DateFormatterImpl(context);
-        mIdentityFormatter = new IdentityFormatterImpl(context);
+        mItemViewModelFactory = itemViewModelFactory;
     }
 
+    @NonNull
     @Override
-    public FourPartItemViewHolder<Identity, IdentityItemViewModel> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FourPartItemViewHolder<Identity, IdentityItemViewModel> onCreateViewHolder(
+            @NonNull ViewGroup parent, int viewType) {
         XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
-        IdentityItemViewModel viewModel = new IdentityItemViewModel(getContext(), getLayerClient());
-        viewModel.setDateFormatter(mDateFormatter);
-        viewModel.setIdentityFormatter(mIdentityFormatter);
+        IdentityItemViewModel viewModel = mItemViewModelFactory.get();
 
         viewModel.setItemClickListener(getItemClickListener());
 
@@ -54,13 +58,5 @@ public class IdentityItemsAdapter extends ItemRecyclerViewAdapter<Identity, Iden
     @Override
     public void onDestroy() {
         // NO OP
-    }
-
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        mDateFormatter = dateFormatter;
-    }
-
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        mIdentityFormatter = identityFormatter;
     }
 }

@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.AvatarStyle;
 import com.layer.xdk.ui.util.imagecache.BitmapWrapper;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -97,9 +96,8 @@ public class AvatarView extends View {
         mParticipants = new LinkedHashSet<>();
     }
 
-    public AvatarView init(@NonNull AvatarViewModel avatarViewModel, @NonNull IdentityFormatter identityFormatter) {
+    public AvatarView init(@NonNull AvatarViewModel avatarViewModel) {
         mViewModel = avatarViewModel;
-        mViewModel.setIdentityFormatter(identityFormatter);
 
         mParticipants = new LinkedHashSet<>();
 

@@ -24,6 +24,8 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 public class DefaultMessageModelVHModel extends MessageModelVHModel {
 
     // Config
@@ -49,9 +51,12 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
     private boolean mShouldCurrentUserPresenceBeVisible;
     private boolean mShouldShowPresenceForCurrentUser;
 
-    public DefaultMessageModelVHModel(Context context, LayerClient layerClient,
-                                         ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
-                                         DateFormatter dateFormatter) {
+    @Inject
+    public DefaultMessageModelVHModel(Context context,
+            LayerClient layerClient,
+            ImageCacheWrapper imageCacheWrapper,
+            IdentityFormatter identityFormatter,
+            DateFormatter dateFormatter) {
         super(context, layerClient, identityFormatter, dateFormatter);
         mEnableReadReceipts = true;
         mShowAvatars = true;

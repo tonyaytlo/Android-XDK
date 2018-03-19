@@ -1,15 +1,16 @@
 package com.layer.xdk.ui.conversationitem;
 
-import android.content.Context;
 import android.databinding.Bindable;
 
-import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class ConversationItemViewModel extends FourPartItemViewModel<Conversation> {
     //View Logic
@@ -19,8 +20,11 @@ public class ConversationItemViewModel extends FourPartItemViewModel<Conversatio
     // View Data
     protected Set<Identity> mParticipantsMinusAuthenticatedUser;
 
-    public ConversationItemViewModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+    @Inject
+    public ConversationItemViewModel(IdentityFormatter identityFormatter,
+            ConversationItemFormatter conversationItemFormatter) {
+        super(identityFormatter);
+        mConversationItemFormatter = conversationItemFormatter;
         mParticipantsMinusAuthenticatedUser = new HashSet<>();
     }
 
@@ -38,10 +42,6 @@ public class ConversationItemViewModel extends FourPartItemViewModel<Conversatio
 
     public void setAuthenticatedUser(Identity authenticatedUser) {
         mAuthenticatedUser = authenticatedUser;
-    }
-
-    public void setConversationItemFormatter(ConversationItemFormatter conversationItemFormatter) {
-        mConversationItemFormatter = conversationItemFormatter;
     }
 
     @Bindable

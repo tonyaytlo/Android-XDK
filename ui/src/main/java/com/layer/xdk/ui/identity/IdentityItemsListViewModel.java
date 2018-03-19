@@ -1,26 +1,24 @@
 package com.layer.xdk.ui.identity;
 
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 
-import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.Query;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
-import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Collection;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 public class IdentityItemsListViewModel extends BaseObservable {
 
     protected IdentityItemsAdapter mItemsAdapter;
 
-    public IdentityItemsListViewModel(Context context, LayerClient layerClient,
-                                      ImageCacheWrapper imageCacheWrapper) {
-        mItemsAdapter = new IdentityItemsAdapter(context, layerClient, imageCacheWrapper);
+    @Inject
+    public IdentityItemsListViewModel(IdentityItemsAdapter itemsAdapter) {
+        mItemsAdapter = itemsAdapter;
     }
 
     public void setIdentities(Set<Identity> identities) {
@@ -44,13 +42,5 @@ public class IdentityItemsListViewModel extends BaseObservable {
     @Bindable
     public IdentityItemsAdapter getAdapter() {
         return mItemsAdapter;
-    }
-
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        mItemsAdapter.setIdentityFormatter(identityFormatter);
-    }
-
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        mItemsAdapter.setDateFormatter(dateFormatter);
     }
 }

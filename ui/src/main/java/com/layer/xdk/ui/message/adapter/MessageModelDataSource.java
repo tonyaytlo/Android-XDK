@@ -17,8 +17,8 @@ import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.Queryable;
 import com.layer.sdk.query.SortDescriptor;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
     private final LayerClient mLayerClient;
     private final Predicate mPredicate;
     private final LayerChangeEventListener.BackgroundThread.Weak listener;
-    private final BinderRegistry mBinderRegistry;
+    private final MessageModelManager mMessageModelManager;
 
     private int mMyNewestMessagePosition = Integer.MAX_VALUE;
 
@@ -47,14 +47,14 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
      * @param layerClient client to use for the query
      * @param conversation conversation to fetch the messages for
      * @param predicate custom predicate to use for the query
-     * @param binderRegistry registry that handles model creation
+     * @param messageModelManager message model manager that handles model creation
      * @param groupingCalculator calculator to use for message grouping
      */
     @SuppressWarnings("WeakerAccess")
     protected MessageModelDataSource(@NonNull LayerClient layerClient,
             @NonNull final Conversation conversation,
             @Nullable Predicate predicate,
-            @NonNull BinderRegistry binderRegistry,
+            @NonNull MessageModelManager messageModelManager,
             @NonNull GroupingCalculator groupingCalculator) {
         mLayerClient = layerClient;
         if (predicate == null) {
@@ -62,7 +62,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
         } else {
             mPredicate = predicate;
         }
-        mBinderRegistry = binderRegistry;
+        mMessageModelManager = messageModelManager;
         mGroupingCalculator = groupingCalculator;
 
         listener = new LayerChangeEventListener.BackgroundThread.Weak() {
@@ -188,7 +188,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
     private List<MessageModel> convertMessagesToModels(LoadRangeResults loadResults) {
         List<MessageModel> models = new ArrayList<>();
         for (Message message : loadResults.mMessages) {
-            MessageModel model = mBinderRegistry.getMessageModelManager().getNewModel(message);
+            MessageModel model = mMessageModelManager.getNewModel(message);
             model.processPartsFromTreeRoot();
             models.add(model);
         }

@@ -6,10 +6,13 @@ import android.text.TextUtils;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 
+import javax.inject.Inject;
+
 public class IdentityFormatterImpl implements IdentityFormatter {
 
     private Context mContext;
 
+    @Inject
     public IdentityFormatterImpl(Context context) {
         mContext = context;
     }

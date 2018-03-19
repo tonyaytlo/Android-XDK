@@ -12,6 +12,8 @@ import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 import java.util.Collections;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 public class TypingIndicatorVHModel extends MessageModelVHModel {
 
     private Set<Identity> mParticipants = Collections.emptySet();
@@ -21,6 +23,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
     private boolean mAnimationVisible;
     private ImageCacheWrapper mImageCacheWrapper;
 
+    @Inject
     public TypingIndicatorVHModel(Context context, LayerClient layerClient,
             ImageCacheWrapper imageCacheWrapper, IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {

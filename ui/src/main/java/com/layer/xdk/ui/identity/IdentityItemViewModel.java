@@ -1,17 +1,23 @@
 package com.layer.xdk.ui.identity;
 
-import android.content.Context;
-
-import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
+import com.layer.xdk.ui.util.DateFormatter;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.inject.Inject;
+
 public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
-    public IdentityItemViewModel(Context context, LayerClient layerClient) {
-        super(context, layerClient);
+
+    @SuppressWarnings("WeakerAccess")
+    protected DateFormatter mDateFormatter;
+
+    @Inject
+    public IdentityItemViewModel(IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
+        super(identityFormatter);
+        mDateFormatter = dateFormatter;
     }
 
     @Override
@@ -32,7 +38,7 @@ public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
 
     @Override
     public String getAccessoryText() {
-        return getDateFormatter().formatTimeDay(getItem().getLastSeenAt());
+        return mDateFormatter.formatTimeDay(getItem().getLastSeenAt());
     }
 
     @Override

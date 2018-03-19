@@ -11,7 +11,7 @@ import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.DateFormatter;
 
-public class MessageModelVHModel extends BaseObservable {
+public abstract class MessageModelVHModel extends BaseObservable {
     private Context mContext;
     private LayerClient mLayerClient;
 
@@ -60,31 +60,15 @@ public class MessageModelVHModel extends BaseObservable {
         return mContext;
     }
 
-    public void setContext(Context context) {
-        mContext = context;
-    }
-
     public LayerClient getLayerClient() {
         return mLayerClient;
-    }
-
-    public void setLayerClient(LayerClient layerClient) {
-        mLayerClient = layerClient;
     }
 
     public IdentityFormatter getIdentityFormatter() {
         return mIdentityFormatter;
     }
 
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        mIdentityFormatter = identityFormatter;
-    }
-
     public DateFormatter getDateFormatter() {
         return mDateFormatter;
-    }
-
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        mDateFormatter = dateFormatter;
     }
 }

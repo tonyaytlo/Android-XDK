@@ -12,11 +12,6 @@ import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 public interface AvatarViewModel {
 
     /**
-     * Set Name Formatter for the Identity
-     */
-    void setIdentityFormatter(IdentityFormatter identityFormatter);
-
-    /**
      * getter for ImageCacherWrapper so that the view can cancel Bitmap Load request
      */
     ImageCacheWrapper getImageCacheWrapper();

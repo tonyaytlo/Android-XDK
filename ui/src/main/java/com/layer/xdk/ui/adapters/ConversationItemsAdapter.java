@@ -1,6 +1,7 @@
 package com.layer.xdk.ui.adapters;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
@@ -9,19 +10,16 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.RecyclerViewController;
-import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
 import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
-import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.style.FourPartItemStyle;
-import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.IdentityRecyclerViewEventListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.util.Collection;
+import javax.inject.Inject;
+
+import dagger.internal.Factory;
 
 public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversation,
         ConversationItemViewModel, XdkUiFourPartItemBinding, FourPartItemStyle,
@@ -31,43 +29,34 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     private long mInitialHistory = 0;
     private final IdentityRecyclerViewEventListener mIdentityEventListener;
 
-    private ConversationItemFormatter mConversationItemFormatter;
     private ImageCacheWrapper mImageCacheWrapper;
 
-    private IdentityFormatter mIdentityFormatter;
-    private DateFormatter mDateFormatter;
+    private Factory<ConversationItemViewModel> mItemViewModelFactory;
 
+    @Inject
     public ConversationItemsAdapter(Context context, LayerClient layerClient,
-                                    Query<Conversation> query,
-                                    Collection<String> updateAttributes,
-                                    ConversationItemFormatter conversationItemFormatter,
-                                    ImageCacheWrapper imageCacheWrapper) {
+                                    ImageCacheWrapper imageCacheWrapper,
+                                    Factory<ConversationItemViewModel> itemViewModelFactory) {
         super(context, layerClient, TAG, false);
-        setQuery(query, updateAttributes);
-        mConversationItemFormatter = conversationItemFormatter;
         mImageCacheWrapper = imageCacheWrapper;
+        mItemViewModelFactory = itemViewModelFactory;
         mIdentityEventListener = new IdentityRecyclerViewEventListener(this);
 
         layerClient.registerEventListener(mIdentityEventListener);
-
-        mIdentityFormatter = new IdentityFormatterImpl(context);
-        mDateFormatter = new DateFormatterImpl(context);
     }
 
     //==============================================================================================
     // Superclass methods
     //==============================================================================================
 
+    @NonNull
     @Override
-    public FourPartItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FourPartItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
-        ConversationItemViewModel viewModel = new ConversationItemViewModel(getContext(), getLayerClient());
-        viewModel.setIdentityFormatter(mIdentityFormatter);
-        viewModel.setDateFormatter(mDateFormatter);
+        ConversationItemViewModel viewModel = mItemViewModelFactory.get();
 
         viewModel.setItemClickListener(getItemClickListener());
         viewModel.setItemLongClickListener(getItemLongClickListener());
-        viewModel.setConversationItemFormatter(mConversationItemFormatter);
         viewModel.setAuthenticatedUser(getLayerClient().getAuthenticatedUser());
 
         FourPartItemViewHolder itemViewHolder = new FourPartItemViewHolder<>(binding, viewModel, getStyle(), mImageCacheWrapper);
@@ -99,19 +88,6 @@ public class ConversationItemsAdapter extends ItemRecyclerViewAdapter<Conversati
     public void onDestroy() {
         getLayerClient().unregisterEventListener(mIdentityEventListener);
     }
-
-    //==============================================================================================
-    // Setters
-    //==============================================================================================
-
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        mIdentityFormatter = identityFormatter;
-    }
-
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        mDateFormatter = dateFormatter;
-    }
-    
 
     //==============================================================================================
     // Initial message history

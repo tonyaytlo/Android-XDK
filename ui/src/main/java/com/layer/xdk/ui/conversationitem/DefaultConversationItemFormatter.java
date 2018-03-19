@@ -9,13 +9,15 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.model.MessageModelManager;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
+
+import javax.inject.Inject;
 
 /**
  * A default implementation of {@link ConversationItemFormatter}
@@ -24,21 +26,22 @@ public class DefaultConversationItemFormatter implements ConversationItemFormatt
     private static final String METADATA_KEY_CONVERSATION_TITLE = "conversationName";
     private static final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
 
-    private Context mContext;
-    private LayerClient mLayerClient;
-    private IdentityFormatter mIdentityFormatter;
-    private DateFormat mTimeFormat;
-    private DateFormat mDateFormat;
-    private BinderRegistry mBinderRegistry;
+    private final Context mContext;
+    private final LayerClient mLayerClient;
+    private final IdentityFormatter mIdentityFormatter;
+    private final DateFormat mTimeFormat;
+    private final DateFormat mDateFormat;
+    private final MessageModelManager mMessageModelManager;
 
-    public DefaultConversationItemFormatter(Context context, LayerClient layerClient, IdentityFormatter identityFormatter,
-                                            DateFormat timeFormat, DateFormat dateFormat) {
+    @Inject
+    public DefaultConversationItemFormatter(Context context, LayerClient layerClient,
+            IdentityFormatter identityFormatter, MessageModelManager messageModelManager) {
         mContext = context;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
-        mTimeFormat = timeFormat;
-        mDateFormat = dateFormat;
-        mBinderRegistry = new BinderRegistry(context, layerClient);
+        mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
+        mDateFormat = android.text.format.DateFormat.getDateFormat(context);
+        mMessageModelManager = messageModelManager;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class DefaultConversationItemFormatter implements ConversationItemFormatt
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        MessageModel messageModel = mBinderRegistry.getMessageModelManager().getNewModel(message);
+        MessageModel messageModel = mMessageModelManager.getNewModel(message);
         messageModel.processPartsFromTreeRoot();
         if (messageModel.getPreviewText() != null) {
             return messageModel.getPreviewText();

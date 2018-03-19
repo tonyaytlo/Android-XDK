@@ -12,12 +12,15 @@ import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 
+import javax.inject.Inject;
+
 @SuppressWarnings("WeakerAccess")
 public class StatusMessageModelVHModel extends MessageModelVHModel {
     private boolean mEnableReadReceipts;
     private boolean mVisible;
     private CharSequence mText;
 
+    @Inject
     public StatusMessageModelVHModel(Context context, LayerClient layerClient,
             IdentityFormatter identityFormatter,
             DateFormatter dateFormatter) {

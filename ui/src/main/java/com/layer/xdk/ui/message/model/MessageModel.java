@@ -19,13 +19,11 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -40,12 +38,12 @@ import java.util.Set;
 
 public abstract class MessageModel extends BaseObservable {
 
-    // TODO AND-1287 Inject these and make them non static. Making static for now to reduce allocs
-    private static IdentityFormatter sIdentityFormatter;
-    private static DateFormatter sDateFormatter;
-
     private final Context mContext;
     private final LayerClient mLayerClient;
+    // These fields are set directly after instantiation by the MessageModelManager
+    private MessageModelManager mMessageModelManager;
+    private IdentityFormatter mIdentityFormatter;
+    private DateFormatter mDateFormatter;
 
     private final Message mMessage;
 
@@ -63,9 +61,6 @@ public abstract class MessageModel extends BaseObservable {
     private List<MessageModel> mChildMessageModels;
     private MessagePart mResponseSummaryPart;
 
-    // TODO AND-1287 Inject this
-    private MessageModelManager mMessageModelManager;
-
     private MessageSenderRepository mMessageSenderRepository;
 
     private Action mAction;
@@ -82,12 +77,6 @@ public abstract class MessageModel extends BaseObservable {
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
-        if (sIdentityFormatter == null) {
-            sIdentityFormatter = new IdentityFormatterImpl(mContext);
-        }
-        if (sDateFormatter == null) {
-            sDateFormatter = new DateFormatterImpl(mContext);
-        }
         mLayerClient = layerClient;
 
         mMessage = message;
@@ -434,7 +423,7 @@ public abstract class MessageModel extends BaseObservable {
                 + "user is null Message: " + getMessage());
     }
 
-    public void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
+    public final void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
         mMessageModelManager = messageModelManager;
     }
 
@@ -475,19 +464,19 @@ public abstract class MessageModel extends BaseObservable {
     }
 
     protected IdentityFormatter getIdentityFormatter() {
-        return sIdentityFormatter;
+        return mIdentityFormatter;
     }
 
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
-        sIdentityFormatter = identityFormatter;
+    public final void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mIdentityFormatter = identityFormatter;
     }
 
     protected DateFormatter getDateFormatter() {
-        return sDateFormatter;
+        return mDateFormatter;
     }
 
-    public void setDateFormatter(DateFormatter dateFormatter) {
-        sDateFormatter = dateFormatter;
+    public final void setDateFormatter(DateFormatter dateFormatter) {
+        mDateFormatter = dateFormatter;
     }
 
     /**

@@ -8,10 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.TypingIndicatorLayout;
-import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
@@ -25,20 +23,17 @@ import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
-import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.Set;
+
+import javax.inject.Inject;
+
+import dagger.internal.Factory;
 
 public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageModelVH> {
 
     private static final int VIEW_TYPE_TYPING_INDICATOR = "TypingIndicator".hashCode();
-
-    private final LayerClient mLayerClient;
-    private final ImageCacheWrapper mImageCacheWrapper;
-    private final DateFormatter mDateFormatter;
-    private final IdentityFormatter mIdentityFormatter;
 
     private boolean mOneOnOneConversation;
     private boolean mShouldShowAvatarInOneOnOneConversations;
@@ -53,15 +48,18 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private MessageModel mLastModelForViewTypeLookup;
     private OnItemLongClickListener<MessageModel> mItemLongClickListener;
 
+    private Factory<DefaultMessageModelVHModel> mDefaultVHModelFactory;
+    private Factory<StatusMessageModelVHModel> mStatusVHModelFactory;
+    private Factory<TypingIndicatorVHModel> mTypingIndicatorVHModelFactory;
 
-    public MessageModelAdapter(LayerClient layerClient,
-            ImageCacheWrapper imageCacheWrapper, DateFormatter dateFormatter,
-            IdentityFormatter identityFormatter) {
+    @Inject
+    public MessageModelAdapter(Factory<DefaultMessageModelVHModel> defaultVHModelFactory,
+            Factory<StatusMessageModelVHModel> statusVHModelFactory,
+            Factory<TypingIndicatorVHModel> typingIndicatorVHModelFactory) {
         super(new MessageModelDiffUtil());
-        mLayerClient = layerClient;
-        mImageCacheWrapper = imageCacheWrapper;
-        mDateFormatter = dateFormatter;
-        mIdentityFormatter = identityFormatter;
+        mDefaultVHModelFactory = defaultVHModelFactory;
+        mStatusVHModelFactory = statusVHModelFactory;
+        mTypingIndicatorVHModelFactory = typingIndicatorVHModelFactory;
     }
 
     @NonNull
@@ -145,21 +143,13 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
      */
 
     protected TypingIndicatorVH createTypingIndicatorViewHolder(ViewGroup parent) {
-        TypingIndicatorVHModel model = new TypingIndicatorVHModel(
-                parent.getContext(),
-                mLayerClient,
-                getImageCacheWrapper(),
-                mIdentityFormatter,
-                mDateFormatter);
+        TypingIndicatorVHModel model = mTypingIndicatorVHModelFactory.get();
         return new TypingIndicatorVH(parent, model);
     }
 
 
     protected DefaultMessageModelVH createDefaultViewHolder(ViewGroup parent, MessageModel model) {
-        DefaultMessageModelVHModel viewModel = new DefaultMessageModelVHModel(
-                parent.getContext(),
-                mLayerClient, getImageCacheWrapper(), mIdentityFormatter, mDateFormatter);
-
+        DefaultMessageModelVHModel viewModel = mDefaultVHModelFactory.get();
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         viewModel.setShowAvatars(getShouldShowAvatarInOneOnOneConversations());
         viewModel.setShowPresence(getShouldShowPresence());
@@ -173,8 +163,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     }
 
     protected StatusMessageModelVH createStatusViewHolder(ViewGroup parent) {
-        StatusMessageModelVHModel viewModel = new StatusMessageModelVHModel(parent.getContext(),
-                mLayerClient, mIdentityFormatter, mDateFormatter);
+        StatusMessageModelVHModel viewModel = mStatusVHModelFactory.get();
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
         return new StatusMessageModelVH(parent, viewModel);
     }
@@ -253,10 +242,6 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
 
     public void setShouldShowPresenceForCurrentUser(boolean shouldShowPresenceForCurrentUser) {
         mShouldShowPresenceForCurrentUser = shouldShowPresenceForCurrentUser;
-    }
-
-    protected ImageCacheWrapper getImageCacheWrapper() {
-        return mImageCacheWrapper;
     }
 
     public boolean areReadReceiptsEnabled() {

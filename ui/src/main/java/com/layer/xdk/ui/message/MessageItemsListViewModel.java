@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.Nullable;
@@ -13,40 +12,35 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.query.Predicate;
 import com.layer.xdk.ui.BR;
-import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.adapter.MessageModelDataSourceFactory;
-import com.layer.xdk.ui.message.binder.BinderRegistry;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
-import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+
+import javax.inject.Inject;
 
 public class MessageItemsListViewModel extends BaseObservable {
     private static final int DEFAULT_PAGE_SIZE = 30;
     private static final int DEFAULT_PREFETCH_DISTANCE = 60;
 
-    private LayerClient mLayerClient;
     private MessageModelAdapter mAdapter;
     private Conversation mConversation;
     private Predicate mQueryPredicate;
-    private BinderRegistry mBinderRegistry;
     private LiveData<PagedList<MessageModel>> mMessageModelList;
     private Observer<PagedList<MessageModel>> mMessageModelListObserver;
+    private MessageModelDataSourceFactory mDataSourceFactory;
     private boolean mInitialLoadComplete;
 
-    public MessageItemsListViewModel(Context context, LayerClient layerClient,
-                                     ImageCacheWrapper imageCacheWrapper,
-                                     DateFormatter dateFormatter,
-                                     IdentityFormatter identityFormatter) {
-        mLayerClient = layerClient;
-        mBinderRegistry = new BinderRegistry(context, layerClient);
-        mAdapter = new MessageModelAdapter(layerClient, imageCacheWrapper, dateFormatter,
-                identityFormatter);
+    @Inject
+    public MessageItemsListViewModel(LayerClient layerClient,
+            MessageModelAdapter messageModelAdapter,
+            MessageModelDataSourceFactory dataSourceFactory) {
+        mAdapter = messageModelAdapter;
+        mDataSourceFactory = dataSourceFactory;
 
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
@@ -98,10 +92,9 @@ public class MessageItemsListViewModel extends BaseObservable {
         if (mMessageModelList != null) {
             mMessageModelList.removeObserver(mMessageModelListObserver);
         }
+        mDataSourceFactory.setConversation(mConversation, mQueryPredicate);
 
-        mMessageModelList = new LivePagedListBuilder<>(
-                new MessageModelDataSourceFactory(mLayerClient, mBinderRegistry, mConversation,
-                        mQueryPredicate),
+        mMessageModelList = new LivePagedListBuilder<>(mDataSourceFactory,
                 new PagedList.Config.Builder()
                         .setEnablePlaceholders(false)
                         .setPageSize(DEFAULT_PAGE_SIZE)

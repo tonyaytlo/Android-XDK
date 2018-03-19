@@ -24,7 +24,7 @@ public class TypingIndicatorVH extends
         super(parent, R.layout.xdk_ui_message_model_vh_typing_indicator, model);
         getBinding().setViewHolderModel(model);
 
-        getBinding().avatar.init(new AvatarViewModelImpl(model.getImageCacheWrapper()), model.getIdentityFormatter());
+        getBinding().avatar.init(new AvatarViewModelImpl(model.getImageCacheWrapper(), model.getIdentityFormatter()));
 
         getBinding().executePendingBindings();
     }

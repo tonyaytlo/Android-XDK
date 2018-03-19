@@ -4,16 +4,17 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
+import javax.inject.Inject;
+
 public class AvatarViewModelImpl implements AvatarViewModel  {
 
     private IdentityFormatter mIdentityFormatter;
     private ImageCacheWrapper mImageCacheWrapper;
 
-    public AvatarViewModelImpl(ImageCacheWrapper imageCacheWrapper) {
+    @Inject
+    public AvatarViewModelImpl(ImageCacheWrapper imageCacheWrapper,
+            IdentityFormatter identityFormatter) {
         mImageCacheWrapper = imageCacheWrapper;
-    }
-
-    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
         mIdentityFormatter = identityFormatter;
     }
 
