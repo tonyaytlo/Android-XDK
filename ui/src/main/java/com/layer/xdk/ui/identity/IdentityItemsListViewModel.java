@@ -12,7 +12,9 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.BR;
-import com.layer.xdk.ui.identity.datasource.IdentityDataSourceFactory;
+import com.layer.xdk.ui.identity.adapter.IdentityDataSourceFactory;
+import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
+import com.layer.xdk.ui.identity.adapter.IdentityItemsAdapter;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 
 import java.util.List;

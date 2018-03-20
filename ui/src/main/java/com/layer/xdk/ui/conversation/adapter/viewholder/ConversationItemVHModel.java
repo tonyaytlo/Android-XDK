@@ -1,9 +1,11 @@
-package com.layer.xdk.ui.conversationitem;
+package com.layer.xdk.ui.conversation.adapter.viewholder;
 
 import android.databinding.Bindable;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
+import com.layer.xdk.ui.conversation.ConversationItemFormatter;
+import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
+import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -12,7 +14,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-public class ConversationItemViewModel extends FourPartItemViewModel<ConversationItemModel> {
+public class ConversationItemVHModel extends FourPartItemVHModel<ConversationItemModel> {
     //View Logic
     protected ConversationItemFormatter mConversationItemFormatter;
 
@@ -20,7 +22,7 @@ public class ConversationItemViewModel extends FourPartItemViewModel<Conversatio
     protected Set<Identity> mParticipantsMinusAuthenticatedUser;
 
     @Inject
-    public ConversationItemViewModel(IdentityFormatter identityFormatter,
+    public ConversationItemVHModel(IdentityFormatter identityFormatter,
             ImageCacheWrapper imageCacheWrapper,
             ConversationItemFormatter conversationItemFormatter) {
         super(identityFormatter, imageCacheWrapper);

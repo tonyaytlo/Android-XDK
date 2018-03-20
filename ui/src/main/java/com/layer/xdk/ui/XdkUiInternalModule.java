@@ -4,8 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
-import com.layer.xdk.ui.identity.IdentityItemViewModel;
+import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
+import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.StatusMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVHModel;
@@ -42,44 +42,44 @@ public class XdkUiInternalModule {
     }
 
     /**
-     * Create a {@link Factory} that creates {@link ConversationItemViewModel} instances. These
+     * Create a {@link Factory} that creates {@link ConversationItemVHModel} instances. These
      * should be new instances as these objects are used in a
      * {@link android.support.v7.widget.RecyclerView}. The {@link Provider} is wrapped in a
      * {@link Factory} to help convey that these should be new instances.
      *
-     * @param provider A provider that creates new instances of {@link ConversationItemViewModel}
-     * @return a factory that produces new instances of {@link ConversationItemViewModel}
+     * @param provider A provider that creates new instances of {@link ConversationItemVHModel}
+     * @return a factory that produces new instances of {@link ConversationItemVHModel}
      */
     @Provides
     @Singleton
     @NonNull
-    public Factory<ConversationItemViewModel> provideConversationItemViewModelFactory(
-            final Provider<ConversationItemViewModel> provider) {
-        return new Factory<ConversationItemViewModel>() {
+    public Factory<ConversationItemVHModel> provideConversationItemViewModelFactory(
+            final Provider<ConversationItemVHModel> provider) {
+        return new Factory<ConversationItemVHModel>() {
             @Override
-            public ConversationItemViewModel get() {
+            public ConversationItemVHModel get() {
                 return provider.get();
             }
         };
     }
 
     /**
-     * Create a {@link Factory} that creates {@link IdentityItemViewModel} instances. These
+     * Create a {@link Factory} that creates {@link IdentityItemVHModel} instances. These
      * should be new instances as these objects are used in a
      * {@link android.support.v7.widget.RecyclerView}. The {@link Provider} is wrapped in a
      * {@link Factory} to help convey that these should be new instances.
      *
-     * @param provider A provider that creates new instances of {@link IdentityItemViewModel}
-     * @return a factory that produces new instances of {@link IdentityItemViewModel}
+     * @param provider A provider that creates new instances of {@link IdentityItemVHModel}
+     * @return a factory that produces new instances of {@link IdentityItemVHModel}
      */
     @Provides
     @Singleton
     @NonNull
-    public Factory<IdentityItemViewModel> provideIdentityItemViewModelFactory(
-            final Provider<IdentityItemViewModel> provider) {
-        return new Factory<IdentityItemViewModel>() {
+    public Factory<IdentityItemVHModel> provideIdentityItemViewModelFactory(
+            final Provider<IdentityItemVHModel> provider) {
+        return new Factory<IdentityItemVHModel>() {
             @Override
-            public IdentityItemViewModel get() {
+            public IdentityItemVHModel get() {
                 return provider.get();
             }
         };

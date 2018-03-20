@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.identity;
+package com.layer.xdk.ui.identity.adapter;
 
 
 import android.support.annotation.NonNull;
@@ -6,13 +6,14 @@ import android.support.annotation.NonNull;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Metadata;
 import com.layer.sdk.messaging.Presence;
+import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 
 import java.util.Date;
 import java.util.Set;
 
 /**
  * Model class that wraps an {@link Identity} object.
- * For use with {@link IdentityItemViewModel}s.
+ * For use with {@link IdentityItemVHModel}s.
  */
 public class IdentityItemModel {
     private final Identity mIdentity;

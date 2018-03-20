@@ -29,7 +29,7 @@ public class ReceiptMessageProductItemView extends FrameLayout {
     }
 
     public void setProductModel(ProductMessageModel productModel) {
-        mBinding.setViewModel(productModel);
+        mBinding.setMessageModel(productModel);
         String subtitle = productModel.getSelectedOptionsAsCommaSeparatedList();
         if (subtitle != null) {
             String text = getContext().getString(R.string.xdk_ui_receipt_product_detail_options, subtitle);

@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.identity;
+package com.layer.xdk.ui.identity.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,39 +6,40 @@ import android.support.v7.util.DiffUtil;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
-import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
+import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
-import com.layer.xdk.ui.fourpartitem.FourPartItemViewHolder;
+import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVH;
+import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 
 import javax.inject.Inject;
 
 import dagger.internal.Factory;
 
-public class IdentityItemsAdapter extends ItemRecyclerViewAdapter<IdentityItemModel, IdentityItemViewModel,
-        XdkUiFourPartItemBinding, FourPartItemStyle, FourPartItemViewHolder<IdentityItemModel, IdentityItemViewModel>> {
+public class IdentityItemsAdapter extends FourPartItemRecyclerViewAdapter<IdentityItemModel, IdentityItemVHModel,
+        XdkUiFourPartItemBinding, FourPartItemStyle, FourPartItemVH<IdentityItemModel, IdentityItemVHModel>> {
 
-    private final Factory<IdentityItemViewModel> mItemViewModelFactory;
+    private final Factory<IdentityItemVHModel> mItemViewModelFactory;
 
     @Inject
     public IdentityItemsAdapter(Context context,
             LayerClient layerClient,
-            Factory<IdentityItemViewModel> itemViewModelFactory) {
+            Factory<IdentityItemVHModel> itemViewModelFactory) {
         super(context, layerClient, new DiffCallback());
         mItemViewModelFactory = itemViewModelFactory;
     }
 
     @NonNull
     @Override
-    public FourPartItemViewHolder<IdentityItemModel, IdentityItemViewModel> onCreateViewHolder(
+    public FourPartItemVH<IdentityItemModel, IdentityItemVHModel> onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
         XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
-        IdentityItemViewModel viewModel = mItemViewModelFactory.get();
+        IdentityItemVHModel viewModel = mItemViewModelFactory.get();
 
         viewModel.setItemClickListener(getItemClickListener());
 
-        FourPartItemViewHolder<IdentityItemModel, IdentityItemViewModel>
-                viewHolder = new FourPartItemViewHolder<>(binding, viewModel, getStyle());
+        FourPartItemVH<IdentityItemModel, IdentityItemVHModel>
+                viewHolder = new FourPartItemVH<>(binding, viewModel, getStyle());
 
         binding.addOnRebindCallback(getOnRebindCallback());
 

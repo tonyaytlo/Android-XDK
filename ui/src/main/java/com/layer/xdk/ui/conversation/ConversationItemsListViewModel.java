@@ -11,9 +11,9 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.BR;
-import com.layer.xdk.ui.adapters.ConversationItemsAdapter;
-import com.layer.xdk.ui.conversation.datasource.ConversationDataSourceFactory;
-import com.layer.xdk.ui.conversationitem.ConversationItemModel;
+import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
+import com.layer.xdk.ui.conversation.adapter.ConversationItemsAdapter;
+import com.layer.xdk.ui.conversation.adapter.ConversationDataSourceFactory;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 

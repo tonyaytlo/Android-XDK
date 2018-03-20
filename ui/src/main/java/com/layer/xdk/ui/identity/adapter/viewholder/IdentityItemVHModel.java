@@ -1,7 +1,9 @@
-package com.layer.xdk.ui.identity;
+package com.layer.xdk.ui.identity.adapter.viewholder;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
+import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel;
+import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
@@ -10,13 +12,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-public class IdentityItemViewModel extends FourPartItemViewModel<IdentityItemModel> {
+public class IdentityItemVHModel extends FourPartItemVHModel<IdentityItemModel> {
 
     @SuppressWarnings("WeakerAccess")
     protected DateFormatter mDateFormatter;
 
     @Inject
-    public IdentityItemViewModel(IdentityFormatter identityFormatter,
+    public IdentityItemVHModel(IdentityFormatter identityFormatter,
             ImageCacheWrapper imageCacheWrapper,
             DateFormatter dateFormatter) {
         super(identityFormatter, imageCacheWrapper);

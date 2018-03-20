@@ -1,17 +1,18 @@
-package com.layer.xdk.ui.viewmodel;
+package com.layer.xdk.ui.fourpartitem.adapter.viewholder;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.view.View;
 
+import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import javax.inject.Inject;
+import java.util.Set;
 
-public class ItemViewModel<ITEM> extends BaseObservable {
+public abstract class FourPartItemVHModel<ITEM> extends BaseObservable {
 
     private ITEM mItem;
     private OnItemClickListener<ITEM> mItemClickListener;
@@ -22,8 +23,7 @@ public class ItemViewModel<ITEM> extends BaseObservable {
     private View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
 
-    @Inject
-    public ItemViewModel(IdentityFormatter identityFormatter, ImageCacheWrapper imageCacheWrapper) {
+    public FourPartItemVHModel(IdentityFormatter identityFormatter, ImageCacheWrapper imageCacheWrapper) {
         mIdentityFormatter = identityFormatter;
         mImageCacheWrapper = imageCacheWrapper;
 
@@ -93,4 +93,19 @@ public class ItemViewModel<ITEM> extends BaseObservable {
     public ImageCacheWrapper getImageCacheWrapper() {
         return mImageCacheWrapper;
     }
+
+    @Bindable
+    public abstract String getTitle();
+
+    @Bindable
+    public abstract String getSubtitle();
+
+    @Bindable
+    public abstract String getAccessoryText();
+
+    @Bindable
+    public abstract boolean isSecondaryState();
+
+    @Bindable
+    public abstract Set<Identity> getIdentities();
 }

@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.conversation.datasource;
+package com.layer.xdk.ui.conversation.adapter;
 
 
 import android.arch.paging.DataSource;
@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.SortDescriptor;
-import com.layer.xdk.ui.conversationitem.ConversationItemModel;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 
 import javax.inject.Inject;

@@ -9,12 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
+import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 
 import java.util.List;
 
-public abstract class FourPartItemsListView<ADAPTER extends ItemRecyclerViewAdapter> extends ConstraintLayout {
+public abstract class FourPartItemsListView<ADAPTER extends FourPartItemRecyclerViewAdapter> extends ConstraintLayout {
 
     protected FourPartItemStyle mFourPartItemStyle;
     protected RecyclerView mItemsRecyclerView;

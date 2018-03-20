@@ -5,7 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.layer.sdk.LayerClient;
-import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
+import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;

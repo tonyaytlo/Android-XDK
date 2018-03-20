@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.adapters;
+package com.layer.xdk.ui.fourpartitem.adapter;
 
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
@@ -11,18 +11,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.layer.sdk.LayerClient;
+import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVH;
+import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.style.ItemStyle;
-import com.layer.xdk.ui.viewmodel.ItemViewModel;
 
 import java.util.List;
 
-public abstract class ItemRecyclerViewAdapter<ITEM,
-        VIEW_HOLDER_MODEL extends ItemViewModel<ITEM>,
+public abstract class FourPartItemRecyclerViewAdapter<ITEM,
+        VIEW_HOLDER_MODEL extends FourPartItemVHModel<ITEM>,
         BINDING extends ViewDataBinding,
         STYLE extends ItemStyle,
-        VIEW_HOLDER extends ItemViewHolder<ITEM, VIEW_HOLDER_MODEL, BINDING, STYLE>>
+        VIEW_HOLDER extends FourPartItemVH<ITEM, VIEW_HOLDER_MODEL>>
         extends PagedListAdapter<ITEM, VIEW_HOLDER> {
 
     private final String TAG;
@@ -39,7 +40,7 @@ public abstract class ItemRecyclerViewAdapter<ITEM,
 
     private OnRebindCallback<BINDING> mOnRebindCallback;
 
-    protected ItemRecyclerViewAdapter(Context context, LayerClient layerClient,
+    protected FourPartItemRecyclerViewAdapter(Context context, LayerClient layerClient,
             @NonNull DiffUtil.ItemCallback<ITEM> diffCallback) {
         super(diffCallback);
         mContext = context;
@@ -94,7 +95,7 @@ public abstract class ItemRecyclerViewAdapter<ITEM,
     }
 
 
-    public ITEM getItem(ItemViewHolder<ITEM, VIEW_HOLDER_MODEL, BINDING, STYLE> viewHolder) {
+    public ITEM getItem(FourPartItemVH<ITEM, VIEW_HOLDER_MODEL> viewHolder) {
         return viewHolder.getItem();
     }
 

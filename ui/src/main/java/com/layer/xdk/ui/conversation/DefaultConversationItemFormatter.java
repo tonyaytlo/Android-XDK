@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.conversationitem;
+package com.layer.xdk.ui.conversation;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

@@ -12,8 +12,8 @@ import com.layer.xdk.ui.XdkUiTestComponent;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
-import com.layer.xdk.ui.identity.IdentityItemModel;
-import com.layer.xdk.ui.identity.IdentityItemViewModel;
+import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
+import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.mock.MockIdentity;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 
@@ -31,15 +31,15 @@ public class IdentityItemTestActivity extends Activity {
         TestActivityFourPartItemBinding binding = DataBindingUtil.setContentView(this, R.layout.test_activity_four_part_item);
         FourPartItemStyle style = new FourPartItemStyle(this, null, 0);
 
-        IdentityItemViewModel viewModel = component.identityItemViewModel();
+        IdentityItemVHModel viewHolderModel = component.identityItemViewModel();
         IdentityItemModel itemModel = new IdentityItemModel(identity);
-        viewModel.setItem(itemModel);
+        viewHolderModel.setItem(itemModel);
 
         AvatarViewModel avatarViewModel = component.avatarViewModel();
 
         binding.testFourPartItem.avatar.init(avatarViewModel);
         binding.testFourPartItem.avatar.setParticipants(identity);
         binding.testFourPartItem.setStyle(style);
-        binding.testFourPartItem.setViewModel(viewModel);
+        binding.testFourPartItem.setViewHolderModel(viewHolderModel);
     }
 }

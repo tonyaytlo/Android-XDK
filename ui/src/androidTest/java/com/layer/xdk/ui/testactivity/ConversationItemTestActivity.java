@@ -13,9 +13,9 @@ import com.layer.xdk.ui.FakeXdkUiModule;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.XdkUiTestComponent;
 import com.layer.xdk.ui.avatar.AvatarViewModel;
-import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
-import com.layer.xdk.ui.conversationitem.ConversationItemModel;
-import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
+import com.layer.xdk.ui.conversation.ConversationItemFormatter;
+import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
+import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.mock.MockConversation;
 import com.layer.xdk.ui.style.FourPartItemStyle;
@@ -40,15 +40,15 @@ public class ConversationItemTestActivity extends Activity {
         TestActivityFourPartItemBinding binding = DataBindingUtil.setContentView(this, R.layout.test_activity_four_part_item);
         FourPartItemStyle style = new FourPartItemStyle(this, null, 0);
 
-        ConversationItemViewModel viewModel = component.conversationItemViewModel();
+        ConversationItemVHModel viewHolderModel = component.conversationItemViewModel();
         ConversationItemModel itemModel = new ConversationItemModel(conversation, null, authenticatedUser);
-        viewModel.setItem(itemModel);
+        viewHolderModel.setItem(itemModel);
 
         AvatarViewModel avatarViewModel = component.avatarViewModel();
         binding.testFourPartItem.avatar.init(avatarViewModel);
 
         binding.testFourPartItem.avatar.setParticipants(conversation.getParticipants());
         binding.testFourPartItem.setStyle(style);
-        binding.testFourPartItem.setViewModel(viewModel);
+        binding.testFourPartItem.setViewHolderModel(viewHolderModel);
     }
 }

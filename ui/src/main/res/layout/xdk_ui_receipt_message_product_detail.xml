@@ -6,7 +6,7 @@
         <import type="com.layer.xdk.ui.message.product.ProductMessageModel"/>
 
         <variable
-            name="viewModel"
+            name="messageModel"
             type="ProductMessageModel"/>
     </data>
 
@@ -27,9 +27,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:loadFrom="@{viewModel.imageRequestParameters}"
-            app:usingImageLoader="@{viewModel.imageCacheWrapper}"
-            app:visibleOrGone="@{viewModel.imageRequestParameters!=null}"/>
+            app:loadFrom="@{messageModel.imageRequestParameters}"
+            app:usingImageLoader="@{messageModel.imageCacheWrapper}"
+            app:visibleOrGone="@{messageModel.imageRequestParameters!=null}"/>
 
         <TextView
             android:id="@+id/title"
@@ -42,7 +42,7 @@
             android:includeFontPadding="false"
             android:lines="1"
             android:paddingBottom="@dimen/xdk_ui_margin_tiny"
-            android:text="@{viewModel.name}"
+            android:text="@{messageModel.name}"
             android:textSize="@dimen/xdk_ui_receipt_message_product_title_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="wrap"
@@ -75,7 +75,7 @@
             android:ellipsize="end"
             android:gravity="start"
             android:lines="1"
-            android:text="@{viewModel.price}"
+            android:text="@{messageModel.price}"
             android:textSize="@dimen/xdk_ui_receipt_message_product_quantity_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_default="wrap"

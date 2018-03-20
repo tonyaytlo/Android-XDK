@@ -10,6 +10,9 @@ import android.content.Context;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
+import com.layer.xdk.ui.conversation.ConversationItemFormatter;
+import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
+import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -47,7 +50,7 @@ public class ConversationItemViewModelTest {
     MessageModel mLastMessageModel;
 
     ConversationItemModel mConversationItemModel;
-    ConversationItemViewModel mViewModel;
+    ConversationItemVHModel mViewModel;
 
     @Before
     public void setup() {
@@ -69,7 +72,7 @@ public class ConversationItemViewModelTest {
 
 
         mConversationItemModel = new ConversationItemModel(mConversation, mLastMessageModel, mParticipant1);
-        mViewModel = new ConversationItemViewModel(mIdentityFormatter, mImageCacheWrapper,
+        mViewModel = new ConversationItemVHModel(mIdentityFormatter, mImageCacheWrapper,
                 mConversationItemFormatter);
         mViewModel.setItem(mConversationItemModel);
     }

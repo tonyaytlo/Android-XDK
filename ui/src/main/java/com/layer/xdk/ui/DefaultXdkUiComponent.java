@@ -3,8 +3,8 @@ package com.layer.xdk.ui;
 import android.content.Context;
 
 import com.layer.sdk.LayerClient;
-import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
-import com.layer.xdk.ui.conversationitem.DefaultConversationItemFormatter;
+import com.layer.xdk.ui.conversation.ConversationItemFormatter;
+import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.model.MessageModelManager;

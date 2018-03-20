@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.conversationitem;
+package com.layer.xdk.ui.conversation.adapter;
 
 
 import android.support.annotation.NonNull;
@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Metadata;
+import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 /**
  * Model class that wraps a {@link Conversation} and its last message's {@link MessageModel} object.
- * For use with {@link ConversationItemViewModel}s.
+ * For use with {@link ConversationItemVHModel}s.
  */
 public class ConversationItemModel {
     private final Conversation mConversation;

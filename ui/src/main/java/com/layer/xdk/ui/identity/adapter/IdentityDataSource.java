@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.identity.datasource;
+package com.layer.xdk.ui.identity.adapter;
 
 
 import android.arch.paging.PositionalDataSource;
@@ -13,7 +13,6 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.Query;
 import com.layer.sdk.query.SortDescriptor;
-import com.layer.xdk.ui.identity.IdentityItemModel;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
