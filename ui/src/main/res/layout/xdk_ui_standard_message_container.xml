@@ -38,7 +38,7 @@
             android:layout_marginLeft="@dimen/xdk_ui_margin_large"
             android:layout_marginRight="@dimen/xdk_ui_margin_large"
             android:layout_marginStart="@dimen/xdk_ui_margin_large"
-            android:layout_marginTop="@dimen/xdk_ui_margin_tiny"
+            android:layout_marginTop="@dimen/xdk_ui_margin_small"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="@{messageModel.title}"
