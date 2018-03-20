@@ -286,12 +286,6 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout menuLayout = (LinearLayout) mAttachmentMenu.getContentView();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            menuLayout.setBackground(mAttachmentSendersBackground);
-        } else {
-            menuLayout.setBackgroundDrawable(mAttachmentSendersBackground);
-        }
-
         XdkUiComposeBarAttachmentMenuItemBinding binding = XdkUiComposeBarAttachmentMenuItemBinding.inflate(inflater, menuLayout, false);
         binding.setSender(sender);
         binding.executePendingBindings();
