@@ -359,5 +359,5 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         public boolean areContentsTheSame(@NonNull MessageModel oldItem, @NonNull MessageModel newItem) {
             return oldItem.deepEquals(newItem);
         }
-    };
+    }
 }

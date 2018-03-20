@@ -11,6 +11,8 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +34,8 @@ public class ConversationItemViewModelTest {
     @Mock
     IdentityFormatter mIdentityFormatter;
     @Mock
+    ImageCacheWrapper mImageCacheWrapper;
+    @Mock
     Conversation mConversation;
     @Mock
     Context mContext;
@@ -40,7 +44,9 @@ public class ConversationItemViewModelTest {
     @Mock
     Identity mParticipant1, mParticipant2, mParticipant3;
     @Mock
+    MessageModel mLastMessageModel;
 
+    ConversationItemModel mConversationItemModel;
     ConversationItemViewModel mViewModel;
 
     @Before
@@ -48,7 +54,8 @@ public class ConversationItemViewModelTest {
         MockitoAnnotations.initMocks(this);
 
         when(mConversationItemFormatter.getConversationTitle(any(Conversation.class))).thenReturn(CONVERSATION_TITLE);
-        when(mConversationItemFormatter.getLastMessagePreview(any(Conversation.class))).thenReturn(CONVERSATION_SUBTITLE);
+        when(mConversationItemFormatter.getLastMessagePreview(any(Conversation.class), any(
+                MessageModel.class))).thenReturn(CONVERSATION_SUBTITLE);
         when(mConversationItemFormatter.getTimeStamp(any(Conversation.class))).thenReturn(CONVERSATION_TIMESTAMP);
 
         when(mConversation.getTotalUnreadMessageCount()).thenReturn(5);
@@ -60,46 +67,35 @@ public class ConversationItemViewModelTest {
         when(mLayerClient.newConversation(any(Identity.class))).thenReturn(mConversation);
         when(mLayerClient.getAuthenticatedUser()).thenReturn(mParticipant1);
 
-        mViewModel = new ConversationItemViewModel(mIdentityFormatter, mConversationItemFormatter);
+
+        mConversationItemModel = new ConversationItemModel(mConversation, mLastMessageModel, mParticipant1);
+        mViewModel = new ConversationItemViewModel(mIdentityFormatter, mImageCacheWrapper,
+                mConversationItemFormatter);
+        mViewModel.setItem(mConversationItemModel);
     }
 
     @Test
     public void testGetTitle() {
-        mViewModel.setAuthenticatedUser(mLayerClient.getAuthenticatedUser());
-        mViewModel.setItem(mConversation);
-
         assertThat(mViewModel.getSubtitle(), is(CONVERSATION_SUBTITLE));
     }
 
     @Test
     public void testGetSubtitle() {
-        mViewModel.setAuthenticatedUser(mLayerClient.getAuthenticatedUser());
-        mViewModel.setItem(mConversation);
-
         assertThat(mViewModel.getSubtitle(), is(CONVERSATION_SUBTITLE));
     }
 
     @Test
     public void testAccessoryText() {
-        mViewModel.setAuthenticatedUser(mLayerClient.getAuthenticatedUser());
-        mViewModel.setItem(mConversation);
-
         assertThat(mViewModel.getAccessoryText(), is(CONVERSATION_TIMESTAMP));
     }
 
     @Test
     public void testIsUnread() {
-        mViewModel.setAuthenticatedUser(mLayerClient.getAuthenticatedUser());
-        mViewModel.setItem(mConversation);
-
         assertThat(mViewModel.isSecondaryState(), is(true));
     }
 
     @Test
     public void testGetParticipantsDoesNotContainAuthenticatedUser() {
-        mViewModel.setAuthenticatedUser(mLayerClient.getAuthenticatedUser());
-        mViewModel.setItem(mConversation);
-
         assertThat(mViewModel.getIdentities().contains(mParticipant1), is(false));
         assertThat(mViewModel.getIdentities().contains(mParticipant2), is(true));
         assertThat(mViewModel.getIdentities().contains(mParticipant3), is(true));

@@ -41,8 +41,8 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
     private int mMyNewestMessagePosition = Integer.MAX_VALUE;
 
     /**
-     * Create a DataSource and registers a listener with the {@link LayerClient} to listen for
-     * relevant change notifications to invalidate if necessary.
+     * Create a {@link android.arch.paging.DataSource} and registers a listener with the
+     * {@link LayerClient} to listen for relevant change notifications to invalidate if necessary.
      *
      * @param layerClient client to use for the query
      * @param conversation conversation to fetch the messages for
@@ -97,7 +97,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
                         // more changes are processed
                         mLayerClient.unregisterEventListener(listener);
                         if (Log.isLoggable(Log.VERBOSE)) {
-                            Log.d("Invalidating DataSource due to change");
+                            Log.d("Invalidating " + MessageModelDataSource.class.getSimpleName() + " due to change");
                         }
                         invalidate();
                         return;
@@ -186,7 +186,7 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
 
     @NonNull
     private List<MessageModel> convertMessagesToModels(LoadRangeResults loadResults) {
-        List<MessageModel> models = new ArrayList<>();
+        List<MessageModel> models = new ArrayList<>(loadResults.mMessages.size());
         for (Message message : loadResults.mMessages) {
             MessageModel model = mMessageModelManager.getNewModel(message);
             model.processPartsFromTreeRoot();

@@ -4,26 +4,28 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.view.View;
 
-import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
+import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import javax.inject.Inject;
 
-public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
+public class ItemViewModel<ITEM> extends BaseObservable {
 
     private ITEM mItem;
     private OnItemClickListener<ITEM> mItemClickListener;
     private OnItemLongClickListener<ITEM> mItemLongClickListener;
     private IdentityFormatter mIdentityFormatter;
+    private ImageCacheWrapper mImageCacheWrapper;
 
     private View.OnClickListener mOnClickListener;
     private View.OnLongClickListener mOnLongClickListener;
 
     @Inject
-    public ItemViewModel(IdentityFormatter identityFormatter) {
+    public ItemViewModel(IdentityFormatter identityFormatter, ImageCacheWrapper imageCacheWrapper) {
         mIdentityFormatter = identityFormatter;
+        mImageCacheWrapper = imageCacheWrapper;
 
         mOnClickListener = new View.OnClickListener() {
             @Override
@@ -53,6 +55,7 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
 
     public void setItem(ITEM item) {
         mItem = item;
+        notifyChange();
     }
 
     public void setEmpty() {
@@ -85,5 +88,9 @@ public class ItemViewModel<ITEM extends Queryable> extends BaseObservable {
 
     public IdentityFormatter getIdentityFormatter() {
         return mIdentityFormatter;
+    }
+
+    public ImageCacheWrapper getImageCacheWrapper() {
+        return mImageCacheWrapper;
     }
 }

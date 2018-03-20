@@ -14,6 +14,7 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.XdkUiTestComponent;
 import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
+import com.layer.xdk.ui.conversationitem.ConversationItemModel;
 import com.layer.xdk.ui.conversationitem.ConversationItemViewModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.mock.MockConversation;
@@ -40,8 +41,8 @@ public class ConversationItemTestActivity extends Activity {
         FourPartItemStyle style = new FourPartItemStyle(this, null, 0);
 
         ConversationItemViewModel viewModel = component.conversationItemViewModel();
-        viewModel.setAuthenticatedUser(layerClient.getAuthenticatedUser());
-        viewModel.setItem(conversation);
+        ConversationItemModel itemModel = new ConversationItemModel(conversation, null, authenticatedUser);
+        viewModel.setItem(itemModel);
 
         AvatarViewModel avatarViewModel = component.avatarViewModel();
         binding.testFourPartItem.avatar.init(avatarViewModel);

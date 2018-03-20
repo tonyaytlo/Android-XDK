@@ -4,6 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Conversation;
+import com.layer.sdk.messaging.Identity;
+import com.layer.xdk.ui.message.model.MessageModel;
+
+import java.util.Set;
 
 /**
  * A formatter for displaying conversation items in the UI
@@ -30,6 +34,16 @@ public interface ConversationItemFormatter {
      * Get a title for the supplied conversation
      *
      * @param conversation to generate the title from
+     * @param participants pre-fetched set of participants on the conversation
+     * @return a title String for conversation
+     */
+    String getConversationTitle(@NonNull Conversation conversation,
+            @NonNull Set<Identity> participants);
+
+    /**
+     * Get a title for the supplied conversation
+     *
+     * @param conversation to generate the title from
      * @return a title String for conversation
      */
     String getConversationTitle(@NonNull Conversation conversation);
@@ -47,8 +61,11 @@ public interface ConversationItemFormatter {
      * Generate a suitable preview for this conversation
      *
      * @param conversation from which the preview is to be generated
+     * @param lastMessageModel model for the last message in the conversation. Null if there is no
+     *                         last message.
      * @return a string suitable to display as a preview for this conversation
      */
     @NonNull
-    String getLastMessagePreview(@NonNull Conversation conversation);
+    String getLastMessagePreview(@NonNull Conversation conversation,
+            @Nullable MessageModel lastMessageModel);
 }

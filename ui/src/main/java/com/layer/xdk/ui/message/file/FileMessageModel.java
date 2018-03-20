@@ -143,6 +143,10 @@ public class FileMessageModel extends MessageModel {
         if (getHasSourceMessagePart()) {
             MessagePart sourcePart = MessagePartUtils.getMessagePartWithRole(getMessage(), ROLE_SOURCE);
 
+            if (sourcePart == null || sourcePart.getDataStream() == null) {
+                return new JsonObject();
+            }
+
             String filePath;
             try {
                 filePath = writeDataToFile(sourcePart.getDataStream());
@@ -208,7 +212,7 @@ public class FileMessageModel extends MessageModel {
         return getHasContent() && MessagePartUtils.hasMessagePartWithRole(getMessage(), ROLE_SOURCE);
     }
 
-    private String writeDataToFile(InputStream inputStream) throws IOException {
+    private String writeDataToFile(@NonNull InputStream inputStream) throws IOException {
         String appName = getApplicationName(getAppContext());
         File storageDirectory = new File(getPublicStorageDirectoryForFileDownload(mMetadata.mMimeType), appName);
         if (!storageDirectory.exists() && !storageDirectory.mkdirs()) {

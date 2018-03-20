@@ -32,7 +32,7 @@
 
         <variable
             name="viewModel"
-            type="FourPartItemViewModel"/>
+            type="com.layer.xdk.ui.fourpartitem.FourPartItemViewModel"/>
     </data>
 
     <android.support.constraint.ConstraintLayout

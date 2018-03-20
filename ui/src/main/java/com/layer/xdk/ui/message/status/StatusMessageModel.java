@@ -16,8 +16,10 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class StatusMessageModel extends MessageModel {
@@ -47,11 +49,19 @@ public class StatusMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
         mMetadata = mGson.fromJson(reader, StatusMessageMetadata.class);
         if (mMetadata != null && mMetadata.mText != null) {
             mText = new SpannableString(mMetadata.mText);
             Linkify.addLinks(mText, Linkify.ALL);
+        }
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing status message", e);
+            }
         }
     }
 

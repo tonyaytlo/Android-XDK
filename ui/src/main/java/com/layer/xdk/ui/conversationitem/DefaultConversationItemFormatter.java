@@ -2,6 +2,7 @@ package com.layer.xdk.ui.conversationitem;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
@@ -10,7 +11,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.model.MessageModelManager;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -31,17 +31,15 @@ public class DefaultConversationItemFormatter implements ConversationItemFormatt
     private final IdentityFormatter mIdentityFormatter;
     private final DateFormat mTimeFormat;
     private final DateFormat mDateFormat;
-    private final MessageModelManager mMessageModelManager;
 
     @Inject
     public DefaultConversationItemFormatter(Context context, LayerClient layerClient,
-            IdentityFormatter identityFormatter, MessageModelManager messageModelManager) {
+            IdentityFormatter identityFormatter) {
         mContext = context;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
         mTimeFormat = android.text.format.DateFormat.getTimeFormat(context);
         mDateFormat = android.text.format.DateFormat.getDateFormat(context);
-        mMessageModelManager = messageModelManager;
     }
 
     @Override
@@ -55,11 +53,16 @@ public class DefaultConversationItemFormatter implements ConversationItemFormatt
 
     @Override
     public String getConversationTitle(@NonNull Conversation conversation) {
+        return getConversationTitle(conversation, conversation.getParticipants());
+    }
+
+    @Override
+    public String getConversationTitle(@NonNull Conversation conversation,
+            @NonNull Set<Identity> participants) {
         String metadataTitle = getConversationMetadataTitle(conversation);
         if (metadataTitle != null) return metadataTitle.trim();
 
         Identity authenticatedUser = mLayerClient.getAuthenticatedUser();
-        Set<Identity> participants = conversation.getParticipants();
         StringBuilder sb = new StringBuilder();
         boolean getOnlyFirstName = participants.size() > 2;
         for (Identity participant : participants) {
@@ -95,14 +98,13 @@ public class DefaultConversationItemFormatter implements ConversationItemFormatt
 
     @NonNull
     @Override
-    public String getLastMessagePreview(@NonNull Conversation conversation) {
+    public String getLastMessagePreview(@NonNull Conversation conversation,
+            @Nullable MessageModel lastMessageModel) {
         Message message = conversation.getLastMessage();
         if (message == null) return "";
 
-        MessageModel messageModel = mMessageModelManager.getNewModel(message);
-        messageModel.processPartsFromTreeRoot();
-        if (messageModel.getPreviewText() != null) {
-            return messageModel.getPreviewText();
+        if (lastMessageModel != null && lastMessageModel.getPreviewText() != null) {
+            return lastMessageModel.getPreviewText();
         }
         return mContext.getString(R.string.xdk_ui_generic_message_preview_text);
     }

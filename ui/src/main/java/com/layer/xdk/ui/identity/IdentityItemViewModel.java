@@ -3,42 +3,39 @@ package com.layer.xdk.ui.identity;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
 import com.layer.xdk.ui.util.DateFormatter;
+import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
+public class IdentityItemViewModel extends FourPartItemViewModel<IdentityItemModel> {
 
     @SuppressWarnings("WeakerAccess")
     protected DateFormatter mDateFormatter;
 
     @Inject
-    public IdentityItemViewModel(IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
-        super(identityFormatter);
+    public IdentityItemViewModel(IdentityFormatter identityFormatter,
+            ImageCacheWrapper imageCacheWrapper,
+            DateFormatter dateFormatter) {
+        super(identityFormatter, imageCacheWrapper);
         mDateFormatter = dateFormatter;
     }
 
     @Override
-    public void setItem(Identity identity) {
-        super.setItem(identity);
-        notifyChange();
-    }
-
-    @Override
     public String getTitle() {
-        return getIdentityFormatter().getDisplayName(getItem());
+        return getIdentityFormatter().getDisplayName(getItem().getIdentity());
     }
 
     @Override
     public String getSubtitle() {
-        return getIdentityFormatter().getMetaData(getItem());
+        return getIdentityFormatter().getMetaData(getItem().getIdentity());
     }
 
     @Override
     public String getAccessoryText() {
-        return mDateFormatter.formatTimeDay(getItem().getLastSeenAt());
+        return mDateFormatter.formatTimeDay(getItem().getIdentity().getLastSeenAt());
     }
 
     @Override
@@ -48,9 +45,6 @@ public class IdentityItemViewModel extends FourPartItemViewModel<Identity> {
 
     @Override
     public Set<Identity> getIdentities() {
-        Set<Identity> identities = new HashSet<>(1);
-        identities.add(getItem());
-
-        return identities;
+        return Collections.singleton(getItem().getIdentity());
     }
 }

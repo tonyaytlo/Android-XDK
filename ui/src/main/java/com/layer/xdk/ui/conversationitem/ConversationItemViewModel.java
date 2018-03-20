@@ -2,70 +2,54 @@ package com.layer.xdk.ui.conversationitem;
 
 import android.databinding.Bindable;
 
-import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.fourpartitem.FourPartItemViewModel;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
 
-public class ConversationItemViewModel extends FourPartItemViewModel<Conversation> {
+public class ConversationItemViewModel extends FourPartItemViewModel<ConversationItemModel> {
     //View Logic
     protected ConversationItemFormatter mConversationItemFormatter;
-    protected Identity mAuthenticatedUser;
 
     // View Data
     protected Set<Identity> mParticipantsMinusAuthenticatedUser;
 
     @Inject
     public ConversationItemViewModel(IdentityFormatter identityFormatter,
+            ImageCacheWrapper imageCacheWrapper,
             ConversationItemFormatter conversationItemFormatter) {
-        super(identityFormatter);
+        super(identityFormatter, imageCacheWrapper);
         mConversationItemFormatter = conversationItemFormatter;
         mParticipantsMinusAuthenticatedUser = new HashSet<>();
     }
 
-    @Override
-    public void setItem(Conversation conversation) {
-        super.setItem(conversation);
-
-        mParticipantsMinusAuthenticatedUser.clear();
-
-        mParticipantsMinusAuthenticatedUser.addAll(conversation.getParticipants());
-        mParticipantsMinusAuthenticatedUser.remove(mAuthenticatedUser);
-
-        notifyChange();
-    }
-
-    public void setAuthenticatedUser(Identity authenticatedUser) {
-        mAuthenticatedUser = authenticatedUser;
-    }
-
     @Bindable
     public String getTitle() {
-        return mConversationItemFormatter.getConversationTitle(getItem());
+        return mConversationItemFormatter.getConversationTitle(getItem().getConversation(), getItem().getParticipants());
     }
 
     @Bindable
     public String getSubtitle() {
-        return mConversationItemFormatter.getLastMessagePreview(getItem());
+        return mConversationItemFormatter.getLastMessagePreview(getItem().getConversation(), getItem().getLastMessageModel());
     }
 
     @Override
     public String getAccessoryText() {
-        return mConversationItemFormatter.getTimeStamp(getItem());
+        return mConversationItemFormatter.getTimeStamp(getItem().getConversation());
     }
 
     @Override
     public boolean isSecondaryState() {
-        return getItem().getTotalUnreadMessageCount() > 0;
+        return getItem().getConversation().getTotalUnreadMessageCount() > 0;
     }
 
     @Override
     public Set<Identity> getIdentities() {
-        return mParticipantsMinusAuthenticatedUser;
+        return getItem().getParticipantsMinusAuthenticatedUser();
     }
 }

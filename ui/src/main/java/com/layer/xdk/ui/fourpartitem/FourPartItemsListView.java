@@ -8,18 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.adapters.ItemRecyclerViewAdapter;
-import com.layer.xdk.ui.recyclerview.ItemsRecyclerView;
 import com.layer.xdk.ui.style.FourPartItemStyle;
 
 import java.util.List;
 
-public abstract class FourPartItemsListView<ITEM extends Queryable, ADAPTER extends ItemRecyclerViewAdapter> extends ConstraintLayout {
+public abstract class FourPartItemsListView<ADAPTER extends ItemRecyclerViewAdapter> extends ConstraintLayout {
 
     protected FourPartItemStyle mFourPartItemStyle;
-    protected ItemsRecyclerView<ITEM> mItemsRecyclerView;
+    protected RecyclerView mItemsRecyclerView;
 
     public FourPartItemsListView(Context context) {
         super(context);
@@ -34,7 +32,7 @@ public abstract class FourPartItemsListView<ITEM extends Queryable, ADAPTER exte
 
     protected void init() {
         inflate(getContext(), R.layout.xdk_ui_four_part_items_list, this);
-        mItemsRecyclerView = (ItemsRecyclerView<ITEM>) findViewById(R.id.xdk_ui_items_recycler);
+        mItemsRecyclerView = findViewById(R.id.xdk_ui_items_recycler);
 
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         manager.setStackFromEnd(false);
@@ -53,10 +51,5 @@ public abstract class FourPartItemsListView<ITEM extends Queryable, ADAPTER exte
     public void setAdapter(ADAPTER adapter) {
         adapter.setStyle(mFourPartItemStyle);
         mItemsRecyclerView.setAdapter(adapter);
-        adapter.refresh();
-    }
-
-    public void onDestroy() {
-        mItemsRecyclerView.onDestroy();
     }
 }

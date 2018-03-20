@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.conversationitem.ConversationItemFormatter;
+import com.layer.xdk.ui.conversationitem.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
@@ -133,7 +134,7 @@ public class ServiceLocator {
     /**
      * Return the {@link ConversationItemFormatter} set on this locator. If no
      * {@link ConversationItemFormatter} is set by the time this is called, a default
-     * {@link com.layer.xdk.ui.conversationitem.DefaultConversationItemFormatter} will be created.
+     * {@link DefaultConversationItemFormatter} will be created.
      *
      * @return conversation item formatter set on this locator or a default formatter if none
      * is supplied

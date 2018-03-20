@@ -171,7 +171,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @Nullable
     public MessageModel getContentModel() {
-        if (getChildMessageModels().size() > 0) {
+        if (getChildMessageModels() != null && getChildMessageModels().size() > 0) {
             return getChildMessageModels().get(0);
         }
 

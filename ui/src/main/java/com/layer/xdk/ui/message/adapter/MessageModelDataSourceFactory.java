@@ -14,8 +14,8 @@ import com.layer.xdk.ui.message.model.MessageModelManager;
 import javax.inject.Inject;
 
 /**
- * Factory that handles creations of {@link MessageModelDataSource}. This contains the variables used
- * to create new instances of the DataSource when old ones become invalid.
+ * Factory that handles creations of {@link MessageModelDataSource}. This contains the variables
+ * used to create new instances of the DataSource when old ones become invalid.
  */
 public class MessageModelDataSourceFactory implements DataSource.Factory<Integer, MessageModel> {
 

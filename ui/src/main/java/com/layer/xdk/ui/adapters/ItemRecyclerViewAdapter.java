@@ -1,32 +1,29 @@
 package com.layer.xdk.ui.adapters;
 
+import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.databinding.OnRebindCallback;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 
 import com.layer.sdk.LayerClient;
-import com.layer.sdk.query.Query;
-import com.layer.sdk.query.Queryable;
-import com.layer.sdk.query.RecyclerViewController;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 import com.layer.xdk.ui.style.ItemStyle;
-import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.viewmodel.ItemViewModel;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
-        VIEW_MODEL extends ItemViewModel<ITEM>, BINDING extends ViewDataBinding,
-        STYLE extends ItemStyle, VIEW_HOLDER extends ItemViewHolder<ITEM, VIEW_MODEL, BINDING, STYLE>>
-        extends RecyclerView.Adapter<VIEW_HOLDER>
-        implements RecyclerViewController.Callback {
+public abstract class ItemRecyclerViewAdapter<ITEM,
+        VIEW_HOLDER_MODEL extends ItemViewModel<ITEM>,
+        BINDING extends ViewDataBinding,
+        STYLE extends ItemStyle,
+        VIEW_HOLDER extends ItemViewHolder<ITEM, VIEW_HOLDER_MODEL, BINDING, STYLE>>
+        extends PagedListAdapter<ITEM, VIEW_HOLDER> {
 
     private final String TAG;
 
@@ -34,8 +31,6 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     private LayoutInflater mLayoutInflater;
     private RecyclerView mRecyclerView;
 
-    private RecyclerViewController<ITEM> mQueryController;
-    private List<ITEM> mItems;
     private LayerClient mLayerClient;
 
     private STYLE mStyle;
@@ -44,11 +39,12 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
 
     private OnRebindCallback<BINDING> mOnRebindCallback;
 
-    protected ItemRecyclerViewAdapter(Context context, LayerClient layerClient, String tag, boolean hasStableIds) {
+    protected ItemRecyclerViewAdapter(Context context, LayerClient layerClient,
+            @NonNull DiffUtil.ItemCallback<ITEM> diffCallback) {
+        super(diffCallback);
         mContext = context;
         mLayerClient = layerClient;
-        TAG = tag;
-        setHasStableIds(hasStableIds);
+        TAG = getClass().getSimpleName();
         mLayoutInflater = LayoutInflater.from(context);
         mOnRebindCallback = new OnRebindCallback<BINDING>() {
             @Override
@@ -80,40 +76,6 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     //==============================================================================================
 
     /**
-     * Set query
-     */
-
-    public void setQuery(Query<ITEM> query, Collection<String> updateAttributes) {
-        mQueryController = mLayerClient.newRecyclerViewController(query, updateAttributes, this);
-        mItems = null;
-    }
-
-    public void setItems(List<ITEM> items) {
-        mItems = items;
-        mQueryController = null;
-        if (mRecyclerView != null) {
-            notifyDataSetChanged();
-        }
-
-    }
-
-    public void setItems(Set<ITEM> items) {
-        List<ITEM> list = new ArrayList<>();
-        list.addAll(items);
-        setItems(list);
-    }
-
-    /**
-     * Refreshes this adapter by re-running the underlying Query.
-     */
-    @CallSuper
-    public void refresh() {
-        if (mQueryController != null) {
-            mQueryController.execute();
-        }
-    }
-
-    /**
      * Bind an empty/null item. Typically for when the query controller is running a query
      * asynchronously
      */
@@ -121,11 +83,6 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     public void onBindEmpty(VIEW_HOLDER holder) {
         holder.setEmpty();
     }
-
-    /**
-     * Performs cleanup when the Activity/Fragment using the adapter is destroyed.
-     */
-    public abstract void onDestroy();
 
     public STYLE getStyle() {
         return mStyle;
@@ -136,42 +93,8 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
         mStyle = style;
     }
 
-    @Override
-    public int getItemCount() {
-        int itemCount;
-        if (mQueryController != null) {
-            itemCount = mQueryController.getItemCount();
-        } else {
-            itemCount = mItems.size();
-        }
-        return itemCount;
-    }
 
-    public Integer getPosition(ITEM item) {
-        if (mQueryController != null) {
-            return mQueryController.getPosition(item);
-        } else {
-            return mItems.indexOf(item);
-        }
-    }
-
-    public Integer getPosition(ITEM item, int lastPosition) {
-        if (mQueryController != null) {
-            return mQueryController.getPosition(item, lastPosition);
-        } else {
-            return mItems.indexOf(item);
-        }
-    }
-
-    public ITEM getItem(int position) {
-        if (mQueryController != null) {
-            return mQueryController.getItem(position);
-        } else {
-            return mItems.get(position);
-        }
-    }
-
-    public ITEM getItem(ItemViewHolder<ITEM, VIEW_MODEL, BINDING, STYLE> viewHolder) {
+    public ITEM getItem(ItemViewHolder<ITEM, VIEW_HOLDER_MODEL, BINDING, STYLE> viewHolder) {
         return viewHolder.getItem();
     }
 
@@ -196,12 +119,8 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     //==============================================================================================
 
     @Override
-    public void onBindViewHolder(VIEW_HOLDER holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(@NonNull VIEW_HOLDER holder, int position, @NonNull List<Object> payloads) {
         if (payloads.isEmpty() || hasNonDataBindingInvalidate(payloads, TAG)) {
-
-            if (mQueryController != null) {
-                mQueryController.updateBoundPosition(position);
-            }
 
             ITEM item = getItem(position);
             if (item != null) {
@@ -214,97 +133,22 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
     }
 
     @Override
-    public final void onBindViewHolder(VIEW_HOLDER holder, int position) {
+    public final void onBindViewHolder(@NonNull VIEW_HOLDER holder, int position) {
         throw new IllegalArgumentException("Use onBindViewHolder(ItemViewHolder<ITEM, VIEW_MODEL, BINDING, STYLE, VIEW_HOLDER> holder, int position, List<Object> payloads) instead");
     }
 
     @CallSuper
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
     }
 
     @CallSuper
     @Override
-    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
         mRecyclerView = null;
     }
 
-    //==============================================================================================
-    // RecyclerViewController.Callback callbacks
-    //==============================================================================================
-
-    @Override
-    public void onQueryDataSetChanged(RecyclerViewController controller) {
-        notifyDataSetChanged();
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryDataSetChanged");
-        }
-    }
-
-    @Override
-    public void onQueryItemChanged(RecyclerViewController controller, int position) {
-        notifyItemChanged(position);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemChanged. Position: " + position);
-        }
-    }
-
-    @Override
-    public void onQueryItemRangeChanged(RecyclerViewController controller, int positionStart, int itemCount) {
-        notifyItemRangeChanged(positionStart, itemCount);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemRangeChanged. Position start: " + positionStart + " Count: " + itemCount);
-        }
-    }
-
-    @Override
-    public void onQueryItemInserted(RecyclerViewController controller, int position) {
-        notifyItemInserted(position);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemInserted. Position: " + position);
-        }
-    }
-
-    @Override
-    public void onQueryItemRangeInserted(RecyclerViewController controller, int positionStart, int itemCount) {
-        notifyItemRangeInserted(positionStart, itemCount);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemRangeInserted. Position start: " + positionStart + " Count: " + itemCount);
-        }
-    }
-
-    @Override
-    public void onQueryItemRemoved(RecyclerViewController controller, int position) {
-        notifyItemRemoved(position);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemRemoved. Position: " + position);
-        }
-    }
-
-    @Override
-    public void onQueryItemRangeRemoved(RecyclerViewController controller, int positionStart, int itemCount) {
-        notifyItemRangeRemoved(positionStart, itemCount);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemRangeRemoved. Position start: " + positionStart + " Count: " + itemCount);
-        }
-    }
-
-    @Override
-    public void onQueryItemMoved(RecyclerViewController controller, int fromPosition, int toPosition) {
-        notifyItemMoved(fromPosition, toPosition);
-
-        if (Log.isPerfLoggable()) {
-            Log.perf(TAG + " - onQueryItemMoved. From: " + fromPosition + " To: " + toPosition);
-        }
-    }
 
     //==============================================================================================
     // Getters
@@ -319,23 +163,11 @@ public abstract class ItemRecyclerViewAdapter<ITEM extends Queryable,
         return mLayoutInflater;
     }
 
-    protected RecyclerViewController<ITEM> getQueryController() {
-        return mQueryController;
-    }
-
-    protected List<ITEM> getItems() {
-        return mItems;
-    }
-
     protected LayerClient getLayerClient() {
         return mLayerClient;
     }
 
     protected OnRebindCallback<BINDING> getOnRebindCallback() {
         return mOnRebindCallback;
-    }
-
-    protected RecyclerView getRecyclerView() {
-        return mRecyclerView;
     }
 }
