@@ -2,6 +2,7 @@ package com.layer.xdk.ui.message.sender;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -93,6 +94,13 @@ public class CameraSender extends AttachmentSender {
 
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputUri);
+
+        // Pre Lollipop devices do not grant the READ_URI and WRITE_URI permissions to the intent
+        // when MediaStore.EXTRA_OUTPUT is used as an extra, thus must be manually granted
+        if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            cameraIntent.setClipData(ClipData.newRawUri("", outputUri));
+            cameraIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
 
         activity.startActivityForResult(cameraIntent, ACTIVITY_REQUEST_CODE);
     }
