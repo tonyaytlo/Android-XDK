@@ -186,7 +186,7 @@
     <!-- # Text Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_text_message_view_max_width">192dp</dimen>
+    <dimen name="xdk_ui_text_message_view_max_width">250dp</dimen>
     <dimen name="xdk_ui_text_message_view_text_size">14sp</dimen>
 
     <!-- ####################################################################################### -->
