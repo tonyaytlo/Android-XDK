@@ -201,8 +201,11 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     public void setConversation(LayerClient layerClient, Conversation conversation) {
         mConversation = conversation;
         mLayerClient = layerClient;
-
-        mEmptyListTextView.setText(getEmptyConversationHeaderText(getContext(), conversation.getParticipants(), layerClient.getAuthenticatedUser()));
+        if (conversation != null) {
+            mEmptyListTextView.setText(
+                    getEmptyConversationHeaderText(getContext(), conversation.getParticipants(),
+                            layerClient.getAuthenticatedUser()));
+        }
     }
 
     private String getEmptyConversationHeaderText(Context context, Set<Identity> participants, Identity authenticatedUser) {
