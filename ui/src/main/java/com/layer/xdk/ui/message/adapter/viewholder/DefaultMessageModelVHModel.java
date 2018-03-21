@@ -103,13 +103,16 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
         if (grouping.contains(MessageGrouping.OLDEST_MESSAGE)) {
             Conversation conversation = getItem().getMessage().getConversation();
             Date createdAt = conversation.getCreatedAt();
-            if (createdAt != null) {
-                String conversationStartTime = getDateFormatter().formatTime(conversation.getCreatedAt());
-                mDateTime = getContext().getString(R.string.xdk_ui_messages_list_header_conversation_start_time, conversationStartTime);
-                mShouldShowDateTimeForMessage = true;
-            } else {
-                mShouldShowDateTimeForMessage = false;
+            if (createdAt == null) {
+                createdAt = new Date();
             }
+
+            String conversationStartTime = getDateFormatter().formatTime(createdAt);
+            String conversationStartFormattedDate = getDateFormatter().formatTimeDay(createdAt);
+            mDateTime = getContext().getString(R.string.xdk_ui_messages_list_header_conversation_start_time,
+                        conversationStartFormattedDate, conversationStartTime);
+            mShouldShowDateTimeForMessage = true;
+
         } else if (grouping.contains(MessageGrouping.GROUP_START)) {
             Date receivedAt = getItem().getMessage().getReceivedAt();
             if (receivedAt == null) receivedAt = new Date();
