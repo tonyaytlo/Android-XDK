@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
@@ -18,10 +19,7 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_LATITUDE = "latitude";
     public static final String KEY_LONGITUDE = "longitude";
-    public static final String KEY_ZOOM = "zoom";
     public static final String KEY_TITLE = "title";
-
-    private static final int DEFAULT_ZOOM = 17;
 
     public GoogleMapsOpenMapActionHandler(LayerClient layerClient) {
         super(layerClient, ACTION_EVENT);
@@ -31,11 +29,6 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
     public void performAction(@NonNull Context context, @Nullable JsonObject data) {
         if (data != null && data.size() > 0) {
             Uri googleMapsUri;
-
-            int zoom = DEFAULT_ZOOM;
-            if (data.has(KEY_ZOOM)) {
-                zoom = data.get(KEY_ZOOM).getAsInt();
-            }
 
             double latitude = 0.0f;
             double longitude = 0.0f;
@@ -51,10 +44,9 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
             }
 
             if (data.has(KEY_ADDRESS)) {
-                googleMapsUri = constructGoogleMapsUri(longitude, latitude,
-                        data.get(KEY_ADDRESS).getAsString(), markerTitle, zoom);
+                googleMapsUri = constructGoogleMapsUri(data.get(KEY_ADDRESS).getAsString());
             } else {
-                googleMapsUri = constructGoogleMapsUri(latitude, longitude, markerTitle, zoom);
+                googleMapsUri = constructGoogleMapsUri(latitude, longitude, markerTitle);
             }
 
             Intent openMapsIntent = new Intent(Intent.ACTION_VIEW, googleMapsUri);
@@ -65,14 +57,37 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
         }
     }
 
-    private Uri constructGoogleMapsUri(double latitude, double longitude, String address, String markerTitle, int zoom) {
-        String queryString = String.format(Locale.US, "geo:%f,%f?q=%s&z=%d(%s)",
-                latitude, longitude, Uri.encode(address), zoom, markerTitle);
+    /**
+     * Constructs a URI for an address per the scheme
+     * <a href="https://developer.android.com/guide/components/intents-common.html#Maps">here </a>.
+     *
+     * @param address the address to send for the maps intent
+     * @return a Uri to use with the {@link Intent#ACTION_VIEW} intent
+     */
+    private Uri constructGoogleMapsUri(String address) {
+        String queryString = String.format(Locale.US, "geo:0,0?q=%s", Uri.encode(address));
         return Uri.parse(queryString);
     }
 
-    private Uri constructGoogleMapsUri(double latitude, double longitude, String markerTitle, int zoom) {
-        String queryString = String.format(Locale.US, "geo:%f,%f?z=%d(%s)", latitude, longitude, zoom, markerTitle);
+    /**
+     * Constructs a URI for a lat/long with option label per the scheme
+     * <a href="https://developer.android.com/guide/components/intents-common.html#Maps">here </a>.
+     *
+     * @param latitude latitude to use for the maps intent
+     * @param longitude longitude to use for the maps intent
+     * @param markerTitle optional label to set on the location
+     * @return a Uri to use with the {@link Intent#ACTION_VIEW} intent
+     */
+    private Uri constructGoogleMapsUri(double latitude, double longitude,
+            @Nullable String markerTitle) {
+        String queryString;
+        if (TextUtils.isEmpty(markerTitle)) {
+            queryString = String.format(Locale.US, "geo:0,0?q=%f,%f", latitude,
+                longitude);
+        } else {
+            queryString = String.format(Locale.US, "geo:0,0?q=%f,%f(%s)", latitude,
+                    longitude, markerTitle);
+        }
         return Uri.parse(queryString);
     }
 }

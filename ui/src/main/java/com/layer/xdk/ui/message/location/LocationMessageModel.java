@@ -223,7 +223,8 @@ public class LocationMessageModel extends MessageModel {
             if (mMetadata.mLatitude != null && mMetadata.mLongitude != null) {
                 url.append(mMetadata.mLatitude).append(",").append(mMetadata.mLongitude);
             } else if (mMetadata.getFormattedAddress() != null) {
-                url.append(mMetadata.getFormattedAddress());
+                // Encode this as there may be spaces
+                url.append(Uri.encode(mMetadata.getFormattedAddress()));
             } else {
                 return null;
             }
