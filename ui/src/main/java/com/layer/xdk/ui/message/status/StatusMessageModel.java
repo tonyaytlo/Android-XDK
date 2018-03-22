@@ -108,7 +108,7 @@ public class StatusMessageModel extends MessageModel {
             return super.getActionEvent();
         }
 
-        if (mMetadata.mAction != null) {
+        if (mMetadata != null && mMetadata.mAction != null) {
             return mMetadata.mAction.getEvent();
         }
         return null;
@@ -122,7 +122,7 @@ public class StatusMessageModel extends MessageModel {
             return super.getActionData();
         }
 
-        if (mMetadata.mAction != null) {
+        if (mMetadata != null && mMetadata.mAction != null) {
             return mMetadata.mAction.getData();
         }
 
