@@ -139,6 +139,9 @@ public class FileMessageModel extends MessageModel {
         }
 
         JsonObject jsonObject = new JsonObject();
+        if (mMetadata == null) {
+            return jsonObject;
+        }
         jsonObject.addProperty(ACTION_DATA_FILE_MIME_TYPE, mMetadata.mMimeType);
         if (getHasSourceMessagePart()) {
             MessagePart sourcePart = MessagePartUtils.getMessagePartWithRole(getMessage(), ROLE_SOURCE);
