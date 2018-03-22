@@ -1,13 +1,12 @@
 package com.layer.xdk.ui.identity.adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.view.ViewGroup;
 
 import com.layer.sdk.LayerClient;
-import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
+import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
 import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVH;
 import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.style.FourPartItemStyle;
@@ -22,10 +21,9 @@ public class IdentityItemsAdapter extends FourPartItemRecyclerViewAdapter<Identi
     private final Factory<IdentityItemVHModel> mItemViewModelFactory;
 
     @Inject
-    public IdentityItemsAdapter(Context context,
-            LayerClient layerClient,
+    public IdentityItemsAdapter(LayerClient layerClient,
             Factory<IdentityItemVHModel> itemViewModelFactory) {
-        super(context, layerClient, new DiffCallback());
+        super(layerClient, new DiffCallback());
         mItemViewModelFactory = itemViewModelFactory;
     }
 
@@ -33,7 +31,8 @@ public class IdentityItemsAdapter extends FourPartItemRecyclerViewAdapter<Identi
     @Override
     public FourPartItemVH<IdentityItemModel, IdentityItemVHModel> onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
-        XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(getLayoutInflater(), parent, false);
+        XdkUiFourPartItemBinding binding = XdkUiFourPartItemBinding.inflate(
+                getLayoutInflater(parent.getContext()), parent, false);
         IdentityItemVHModel viewModel = mItemViewModelFactory.get();
 
         viewModel.setItemClickListener(getItemClickListener());

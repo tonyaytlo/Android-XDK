@@ -28,7 +28,6 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
 
     private final String TAG;
 
-    private Context mContext;
     private LayoutInflater mLayoutInflater;
     private RecyclerView mRecyclerView;
 
@@ -40,13 +39,11 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
 
     private OnRebindCallback<BINDING> mOnRebindCallback;
 
-    protected FourPartItemRecyclerViewAdapter(Context context, LayerClient layerClient,
+    protected FourPartItemRecyclerViewAdapter(LayerClient layerClient,
             @NonNull DiffUtil.ItemCallback<ITEM> diffCallback) {
         super(diffCallback);
-        mContext = context;
         mLayerClient = layerClient;
         TAG = getClass().getSimpleName();
-        mLayoutInflater = LayoutInflater.from(context);
         mOnRebindCallback = new OnRebindCallback<BINDING>() {
             @Override
             public boolean onPreBind(BINDING binding) {
@@ -155,12 +152,10 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
     // Getters
     //==============================================================================================
 
-
-    protected Context getContext() {
-        return mContext;
-    }
-
-    protected LayoutInflater getLayoutInflater() {
+    protected LayoutInflater getLayoutInflater(Context context) {
+        if (mLayoutInflater == null) {
+            mLayoutInflater = LayoutInflater.from(context);
+        }
         return mLayoutInflater;
     }
 
