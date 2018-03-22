@@ -2,8 +2,11 @@ package com.layer.xdk.ui.message.text;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.util.Linkify;
@@ -147,6 +150,17 @@ public class TextMessageModel extends MessageModel {
 
     @Override
     public int getBackgroundColor() {
-        return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
+        return useSimpleColor() ? R.color.xdk_ui_text_message_view_background_simple : R.color.xdk_ui_text_message_view_background;
+    }
+
+    @Bindable
+    @ColorInt
+    public int getTextColor() {
+        @ColorRes int colorRes = useSimpleColor() ? R.color.xdk_ui_text_message_view_body_simple : R.color.xdk_ui_text_message_view_body;
+        return ContextCompat.getColor(getAppContext(), colorRes);
+    }
+
+    private boolean useSimpleColor() {
+        return getParentMessageModel() == null && !getHasMetadata() && isMessageFromMe();
     }
 }

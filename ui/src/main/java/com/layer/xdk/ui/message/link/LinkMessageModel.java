@@ -125,7 +125,7 @@ public class LinkMessageModel extends MessageModel {
 
     @Override
     public int getBackgroundColor() {
-        return isMessageFromMe() ? R.color.xdk_ui_text_message_view_background_me : R.color.xdk_ui_text_message_view_background_them;
+        return R.color.xdk_ui_link_message_view_background;
     }
 
     @Override

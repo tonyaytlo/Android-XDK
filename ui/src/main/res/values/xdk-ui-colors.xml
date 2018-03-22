@@ -120,10 +120,17 @@
     <!-- Text Message View -->
     <!-- ########## -->
 
-    <color name="xdk_ui_text_message_view_body_them">@color/xdk_ui_text_black</color>
-    <color name="xdk_ui_text_message_view_body_me">@color/xdk_ui_text_white</color>
-    <color name="xdk_ui_text_message_view_background_me">@color/xdk_ui_color_primary_blue</color>
-    <color name="xdk_ui_text_message_view_background_them">@color/xdk_ui_color_primary_gray</color>
+    <color name="xdk_ui_text_message_view_body">@color/xdk_ui_text_black</color>
+    <color name="xdk_ui_text_message_view_background">@color/xdk_ui_color_primary_gray</color>
+    <color name="xdk_ui_text_message_view_body_simple">@color/xdk_ui_text_white</color>
+    <color name="xdk_ui_text_message_view_background_simple">@color/xdk_ui_color_primary_blue</color>
+
+    <!-- ########## -->
+    <!-- Link Message View -->
+    <!-- ########## -->
+
+    <color name="xdk_ui_link_message_view_text">@color/xdk_ui_text_black</color>
+    <color name="xdk_ui_link_message_view_background">@color/xdk_ui_color_primary_gray</color>
 
     <!-- ########## -->
     <!-- Image Message View -->

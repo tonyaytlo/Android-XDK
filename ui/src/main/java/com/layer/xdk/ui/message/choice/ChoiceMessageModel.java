@@ -102,11 +102,6 @@ public class ChoiceMessageModel extends MessageModel {
     }
 
     @Override
-    public int getBackgroundColor() {
-        return R.color.transparent;
-    }
-
-    @Override
     public boolean getHasContent() {
         return mMetadata != null;
     }

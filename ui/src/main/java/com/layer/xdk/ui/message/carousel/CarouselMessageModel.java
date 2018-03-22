@@ -117,12 +117,7 @@ public class CarouselMessageModel extends MessageModel {
         List<MessageModel> childMessageModels = getChildMessageModelsWithRole(ROLE_CAROUSEL_ITEM);
         return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_carousel_message_preview_text, 0, childMessageModels.size());
     }
-
-    @Override
-    public int getBackgroundColor() {
-        return R.color.transparent;
-    }
-
+    
     @Override
     public boolean getHasContent() {
         return getChildMessageModels() != null && !getChildMessageModels().isEmpty();

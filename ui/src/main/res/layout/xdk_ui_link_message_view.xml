@@ -47,7 +47,7 @@
             android:autoLink="web"
             android:linksClickable="false"
             android:text="@{messageModel.url}"
-            android:textColor="@{messageModel.messageFromMe ? @color/xdk_ui_text_message_view_body_me : @color/xdk_ui_text_message_view_body_them}"
+            android:textColor="@color/xdk_ui_link_message_view_text"
             android:textSize="@dimen/xdk_ui_link_message_url_text_size"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
