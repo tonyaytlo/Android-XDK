@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.text;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -29,6 +30,7 @@ public class TextMessageView extends AppCompatTextView {
                 mMessageViewHelper.performAction();
             }
         });
+        setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     public void setMessageModel(@Nullable TextMessageModel model) {

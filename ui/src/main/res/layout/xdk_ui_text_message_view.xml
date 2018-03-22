@@ -28,6 +28,7 @@
         android:paddingTop="@dimen/xdk_ui_margin_small"
         android:text="@{messageModel.text}"
         android:textColor="@{messageModel.textColor}"
+        android:textColorLink="@{messageModel.textColorLink}"
         android:textSize="@dimen/xdk_ui_text_message_view_text_size"
         app:messageModel="@{messageModel}"/>
 
