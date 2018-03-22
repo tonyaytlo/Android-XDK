@@ -160,6 +160,13 @@ public class TextMessageModel extends MessageModel {
         return ContextCompat.getColor(getAppContext(), colorRes);
     }
 
+    @Bindable
+    @ColorInt
+    public int getTextColorLink() {
+        @ColorRes int colorRes = useSimpleColor() ? R.color.xdk_ui_text_message_view_body_simple_link : R.color.xdk_ui_text_message_view_body_link;
+        return ContextCompat.getColor(getAppContext(), colorRes);
+    }
+
     private boolean useSimpleColor() {
         return getParentMessageModel() == null && !getHasMetadata() && isMessageFromMe();
     }

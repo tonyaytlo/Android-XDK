@@ -121,8 +121,10 @@
     <!-- ########## -->
 
     <color name="xdk_ui_text_message_view_body">@color/xdk_ui_text_black</color>
+    <color name="xdk_ui_text_message_view_body_link">@color/xdk_ui_text_blue</color>
     <color name="xdk_ui_text_message_view_background">@color/xdk_ui_color_primary_gray</color>
     <color name="xdk_ui_text_message_view_body_simple">@color/xdk_ui_text_white</color>
+    <color name="xdk_ui_text_message_view_body_simple_link">@color/xdk_ui_text_white</color>
     <color name="xdk_ui_text_message_view_background_simple">@color/xdk_ui_color_primary_blue</color>
 
     <!-- ########## -->
