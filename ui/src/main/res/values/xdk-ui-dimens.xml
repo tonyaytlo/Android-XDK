@@ -112,6 +112,7 @@
     <dimen name="xdk_ui_avatar_width_large">48dp</dimen>
     <dimen name="xdk_ui_avatar_height_large">48dp</dimen>
     <dimen name="xdk_ui_avatar_presence_large">14dp</dimen>
+    <dimen name="xdk_ui_presence_outer_stroke">2dp</dimen>
 
     <dimen name="xdk_ui_avatar_width_medium">40dp</dimen>
     <dimen name="xdk_ui_avatar_height_medium">40dp</dimen>

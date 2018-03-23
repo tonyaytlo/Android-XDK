@@ -24,6 +24,9 @@
         <attr name="presenceInvisibleColor" format="color"/>
         <attr name="presenceOfflineColor" format="color"/>
         <attr name="presenceGroupColor" format="color"/>
+        <attr name="presenceShowOuterStroke" format="boolean"/>
+        <attr name="presenceOuterStrokeColor" format="color"/>
+        <attr name="presenceOuterStrokeWidth" format="dimension|reference"/>
     </declare-styleable>
 
     <declare-styleable name="FourPartItemsListView">

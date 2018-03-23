@@ -77,6 +77,7 @@
     <color name="xdk_ui_presence_away">#fff7ca40</color>
     <color name="xdk_ui_presence_invisible">#ff50c062</color>
     <color name="xdk_ui_presence_offline">#ff99999c</color>
+    <color name="xdk_ui_presence_outer_stroke">@android:color/white</color>
 
 
     <!-- ########## -->

@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -19,19 +23,25 @@ import java.util.Collection;
 import java.util.Set;
 
 public class PresenceView extends View {
-
-    private final Paint mBackgroundPaint = new Paint();
-    private final Paint mPresencePaint = new Paint();
-
     private Identity mIdentity;
-    private int mAvailableColor = ContextCompat.getColor(getContext(), R.color.xdk_ui_presence_available);
-    private int mBusyColor = ContextCompat.getColor(getContext(), R.color.xdk_ui_presence_busy);
-    private int mAwayColor = ContextCompat.getColor(getContext(), R.color.xdk_ui_presence_away);
-    private int mInvisibleColor = ContextCompat.getColor(getContext(), R.color.xdk_ui_presence_invisible);
-    private int mOfflineColor = ContextCompat.getColor(getContext(), R.color.xdk_ui_presence_offline);
+    private int mAvailableColor;
+    private int mBusyColor;
+    private int mAwayColor;
+    private int mInvisibleColor;
+    private int mOfflineColor;
+    private int mOuterStrokeColor;
+    private int mOuterStrokeWidth;
+    private boolean mShowOuterStroke;
+
+    private int mDrawableWidth;
+    private int mDrawableHeight;
+
+    private LayerDrawable mPresenceDrawable;
+    private GradientDrawable mOuterDrawable;
+    private GradientDrawable mInnerDrawable;
 
     public PresenceView(Context context) {
-        super(context);
+        this(context, null, 0);
     }
 
     public PresenceView(Context context, @Nullable AttributeSet attrs) {
@@ -40,7 +50,24 @@ public class PresenceView extends View {
 
     public PresenceView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        parseStyle(context, attrs, defStyleAttr);
+
+        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PresenceView, R.attr.PresenceView, defStyleAttr);
+        mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor, ContextCompat.getColor(context, R.color.xdk_ui_presence_available));
+        mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor, getContext().getResources().getColor(R.color.xdk_ui_presence_busy));
+        mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor, getContext().getResources().getColor(R.color.xdk_ui_presence_away));
+        mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor, getContext().getResources().getColor(R.color.xdk_ui_presence_invisible));
+        mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor, getContext().getResources().getColor(R.color.xdk_ui_presence_offline));
+        mOuterStrokeColor = ta.getColor(R.styleable.PresenceView_presenceOuterStrokeColor, ContextCompat.getColor(context, R.color.xdk_ui_presence_outer_stroke));
+        mOuterStrokeWidth = (int) ta.getDimension(R.styleable.PresenceView_presenceOuterStrokeWidth, context.getResources().getDimension(R.dimen.xdk_ui_presence_outer_stroke));
+        mShowOuterStroke = ta.getBoolean(R.styleable.PresenceView_presenceShowOuterStroke, true);
+        ta.recycle();
+
+        mOuterDrawable = new GradientDrawable();
+        mOuterDrawable.setShape(GradientDrawable.OVAL);
+        mInnerDrawable = new GradientDrawable();
+        mInnerDrawable.setShape(GradientDrawable.OVAL);
+
+        mPresenceDrawable = new LayerDrawable(new Drawable[]{mOuterDrawable, mInnerDrawable});
     }
 
     public void setParticipants(Set<Identity> participants) {
@@ -62,13 +89,15 @@ public class PresenceView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        drawPresence(canvas);
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mDrawableWidth = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
+        mDrawableHeight = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
     }
 
-    private void drawPresence(Canvas canvas) {
-
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         Presence.PresenceStatus currentStatus = mIdentity != null ? mIdentity.getPresenceStatus() : null;
         if (currentStatus == null) {
             return;
@@ -76,85 +105,37 @@ public class PresenceView extends View {
 
         switch (currentStatus) {
             case AVAILABLE:
-                drawAvailable(canvas);
+                setupPresenceColors(mAvailableColor, false);
                 break;
             case AWAY:
-                drawAway(canvas);
+                setupPresenceColors(mAwayColor, false);
                 break;
             case OFFLINE:
-                drawOffline(canvas);
+                setupPresenceColors(mOfflineColor, false);
                 break;
             case INVISIBLE:
-                drawInvisible(canvas);
+                setupPresenceColors(mInvisibleColor, true);
                 break;
             case BUSY:
-                drawBusy(canvas);
+                setupPresenceColors(mBusyColor, false);
                 break;
         }
     }
 
-    public void drawAvailable(Canvas canvas) {
-        mPresencePaint.setColor(mAvailableColor);
-        drawPresence(canvas, false);
-    }
+    private void setupPresenceColors(@ColorInt int presenceColor, boolean makeHollow) {
+        mOuterDrawable.setSize(mDrawableWidth, mDrawableHeight);
+        mOuterDrawable.setColor(presenceColor);
+        mOuterDrawable.setStroke(mShowOuterStroke ? mOuterStrokeWidth : 0, mOuterStrokeColor);
 
-    public void drawAway(Canvas canvas) {
-        mPresencePaint.setColor(mAwayColor);
-        drawPresence(canvas, false);
-    }
+        mInnerDrawable.setSize(mDrawableWidth, mDrawableHeight);
+        mInnerDrawable.setColor(makeHollow ? mOuterStrokeColor : presenceColor);
+        mInnerDrawable.setStroke(4 * mOuterStrokeWidth, Color.TRANSPARENT);
 
-    public void drawOffline(Canvas canvas) {
-        mPresencePaint.setColor(mOfflineColor);
-        drawPresence(canvas, true);
-    }
-
-    public void drawInvisible(Canvas canvas) {
-        mPresencePaint.setColor(mInvisibleColor);
-        drawPresence(canvas, true);
-    }
-
-    public void drawBusy(Canvas canvas) {
-        mPresencePaint.setColor(mBusyColor);
-        drawPresence(canvas, false);
-    }
-
-    private void drawPresence(Canvas canvas,boolean makeCircleHollow) {
-
-        int drawableWidth = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
-        int drawableHeight = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
-        float dimension = Math.min(drawableWidth, drawableHeight);
-        float fraction = 1f;
-
-        float outerRadius = fraction * dimension / 2f;
-        float centerX = getPaddingLeft() + outerRadius;
-        float centerY = getPaddingTop() + outerRadius;
-
-        float presenceCenterX = centerX + outerRadius - outerRadius;
-        float presenceCenterY = centerY + outerRadius - outerRadius;
-
-        // Clear background + create border
-        mBackgroundPaint.setColor(Color.WHITE);
-        mBackgroundPaint.setAntiAlias(true);
-        canvas.drawCircle(presenceCenterX, presenceCenterY, outerRadius, mBackgroundPaint);
-
-        // Draw Presence status
-        mPresencePaint.setAntiAlias(true);
-        canvas.drawCircle(presenceCenterX, presenceCenterY, outerRadius, mPresencePaint);
-
-        // Draw hollow if needed
-        if (makeCircleHollow) {
-            canvas.drawCircle(presenceCenterX, presenceCenterY, (outerRadius / 2f), mBackgroundPaint);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(mPresenceDrawable);
+        } else {
+            setBackgroundDrawable(mPresenceDrawable);
         }
     }
 
-    private void parseStyle(Context context, AttributeSet attrs, int defStyle) {
-
-        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PresenceView, R.attr.PresenceView, defStyle);
-        this.mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor, getContext().getResources().getColor(R.color.xdk_ui_presence_available));
-        this.mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor,getContext().getResources().getColor(R.color.xdk_ui_presence_busy));
-        this.mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor, getContext().getResources().getColor(R.color.xdk_ui_presence_away));
-        this.mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor, getContext().getResources().getColor(R.color.xdk_ui_presence_invisible));
-        this.mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor, getContext().getResources().getColor(R.color.xdk_ui_presence_offline));
-        ta.recycle();
-    }
 }

@@ -20,8 +20,7 @@ public abstract class FourPartItemsListView<ADAPTER extends FourPartItemRecycler
     protected RecyclerView mItemsRecyclerView;
 
     public FourPartItemsListView(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public FourPartItemsListView(Context context, AttributeSet attrs) {
