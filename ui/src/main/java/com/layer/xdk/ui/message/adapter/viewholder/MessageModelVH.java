@@ -23,6 +23,7 @@ public abstract class MessageModelVH<VIEW_MODEL extends MessageModelVHModel, BIN
         mViewModel = viewModel;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public MessageModelVH(ViewGroup parent, @LayoutRes int layoutId, VIEW_MODEL viewModel) {
         this(DataBindingUtil.<BINDING>inflate(LayoutInflater.from(parent.getContext()), layoutId, parent, false), viewModel);
     }

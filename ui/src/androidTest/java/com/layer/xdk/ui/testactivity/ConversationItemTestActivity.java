@@ -18,7 +18,7 @@ import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
 import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.mock.MockConversation;
-import com.layer.xdk.ui.style.FourPartItemStyle;
+import com.layer.xdk.ui.fourpartitem.FourPartItemStyle;
 
 public class ConversationItemTestActivity extends Activity {
 

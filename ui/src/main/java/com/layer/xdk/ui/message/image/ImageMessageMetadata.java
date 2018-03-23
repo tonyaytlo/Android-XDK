@@ -4,7 +4,7 @@ import android.support.annotation.Dimension;
 
 import com.google.gson.annotations.SerializedName;
 import com.layer.xdk.ui.message.model.Action;
-import com.layer.xdk.ui.util.display.DisplayUtils;
+import com.layer.xdk.ui.util.DisplayUtils;
 
 @SuppressWarnings("WeakerAccess") // For Gson serialization/de-serialization
 public class ImageMessageMetadata {

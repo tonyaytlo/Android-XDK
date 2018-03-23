@@ -8,16 +8,16 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
-import com.layer.xdk.ui.util.imagepopup.ImagePopupActivity;
+import com.layer.xdk.ui.message.image.popup.ImagePopupActivity;
 
 public class OpenUrlActionHandler extends ActionHandler {
 
-    public static final String KEY_URL = "url";
+    private static final String KEY_URL = "url";
 
-    public static final String KEY_MIME_TYPE = "mime-type";
-    public static final String KEY_HEIGHT = "height";
-    public static final String KEY_WIDTH = "width";
-    public static final String KEY_ORIENTATION = "orientation";
+    private static final String KEY_MIME_TYPE = "mime-type";
+    private static final String KEY_HEIGHT = "height";
+    private static final String KEY_WIDTH = "width";
+    private static final String KEY_ORIENTATION = "orientation";
 
     private Intent mBrowserIntent;
 

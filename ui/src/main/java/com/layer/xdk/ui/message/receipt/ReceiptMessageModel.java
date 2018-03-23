@@ -15,7 +15,7 @@ import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -96,6 +96,7 @@ public class ReceiptMessageModel extends MessageModel {
         return getAppContext().getString(R.string.xdk_ui_receipt_message_preview_text);
     }
 
+    @SuppressWarnings("WeakerAccess")
     @NonNull
     public List<ProductMessageModel> getProductItemModels() {
         List<ProductMessageModel> models = new ArrayList<>();

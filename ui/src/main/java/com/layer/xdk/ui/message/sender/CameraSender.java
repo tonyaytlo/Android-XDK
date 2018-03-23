@@ -44,8 +44,8 @@ public class CameraSender extends AttachmentSender {
     private static final String PERMISSION_READ = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) ? Manifest.permission.READ_EXTERNAL_STORAGE : null;
     private static final String PERMISSION_WRITE = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) ? Manifest.permission.WRITE_EXTERNAL_STORAGE : null;
 
-    public static final int ACTIVITY_REQUEST_CODE = 20;
-    public static final int PERMISSION_REQUEST_CODE = 110;
+    private static final int ACTIVITY_REQUEST_CODE = 20;
+    private static final int PERMISSION_REQUEST_CODE = 110;
 
     private WeakReference<Activity> mActivity = new WeakReference<Activity>(null);
 

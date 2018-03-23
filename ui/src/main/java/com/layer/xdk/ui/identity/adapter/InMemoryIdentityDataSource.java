@@ -33,6 +33,7 @@ public class InMemoryIdentityDataSource extends PositionalDataSource<IdentityIte
      * @param layerClient client to use to listen for changes
      * @param identities identities to populate this data source
      */
+    @SuppressWarnings("WeakerAccess")
     public InMemoryIdentityDataSource(@NonNull LayerClient layerClient,
             @NonNull List<Identity> identities) {
         mLayerClient = layerClient;

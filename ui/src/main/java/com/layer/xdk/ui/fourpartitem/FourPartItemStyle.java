@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.style;
+package com.layer.xdk.ui.fourpartitem;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,7 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.util.AvatarStyle;
+import com.layer.xdk.ui.avatar.AvatarStyle;
+import com.layer.xdk.ui.style.ItemStyle;
 
 public class FourPartItemStyle extends ItemStyle {
 

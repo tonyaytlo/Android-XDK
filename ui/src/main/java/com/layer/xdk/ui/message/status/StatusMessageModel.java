@@ -17,7 +17,7 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

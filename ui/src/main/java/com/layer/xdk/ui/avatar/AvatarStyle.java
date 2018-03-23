@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util;
+package com.layer.xdk.ui.avatar;
 
 import android.graphics.Typeface;
 
@@ -26,18 +26,22 @@ public final class AvatarStyle {
         this.mAvatarTextTypeface = avatarTextTypeface;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public int getAvatarBackgroundColor() {
         return mAvatarBackgroundColor;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public int getAvatarTextColor() {
         return mAvatarTextColor;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Typeface getAvatarTextTypeface() {
         return mAvatarTextTypeface;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public int getAvatarBorderColor() {
         return mAvatarBorderColor;
     }
@@ -91,7 +95,7 @@ public final class AvatarStyle {
             return this;
         }
 
-        public Builder height (float height) {
+        public Builder height(float height) {
             this.height = height;
             return this;
         }

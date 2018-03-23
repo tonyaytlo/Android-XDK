@@ -43,29 +43,28 @@ import java.util.List;
 
 public class ComposeBar extends FrameLayout implements TextWatcher {
 
-    protected EditText mEditText;
-    protected Button mSendButton;
+    private EditText mEditText;
+    private Button mSendButton;
 
     protected OnFocusChangeListener mExternalEditTextOnFocusChangeListener;
 
-    protected ImageButton mLeftButton1;
-    protected ImageButton mLeftButton2;
-    protected ImageButton mLeftButton3;
-    protected ImageButton mDefaultAttachButton;
+    private ImageButton mLeftButton1;
+    private ImageButton mLeftButton2;
+    private ImageButton mLeftButton3;
+    private ImageButton mDefaultAttachButton;
 
-    protected ImageButton mRightButton1;
-    protected ImageButton mRightButton2;
-    protected ImageButton mRightButton3;
-    protected ImageButton mRightButton4;
+    private ImageButton mRightButton1;
+    private ImageButton mRightButton2;
+    private ImageButton mRightButton3;
+    private ImageButton mRightButton4;
 
-    protected LayerClient mLayerClient;
-    protected Conversation mConversation;
+    private Conversation mConversation;
 
-    protected List<AttachmentSender> mAttachmentSenders = new ArrayList<AttachmentSender>();
-    protected TextSender mTextSender;
-    protected MessageSender.Callback mMessageSenderCallback;
+    private List<AttachmentSender> mAttachmentSenders = new ArrayList<AttachmentSender>();
+    private TextSender mTextSender;
+    private MessageSender.Callback mMessageSenderCallback;
 
-    protected PopupWindow mAttachmentMenu;
+    private PopupWindow mAttachmentMenu;
 
     // style
     protected Drawable mAttachmentSendersBackground;
@@ -246,7 +245,6 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
 
     public void setConversation(LayerClient layerClient, Conversation conversation) {
         mConversation = conversation;
-        mLayerClient = layerClient;
         mTextSender = new RichTextSender(getContext(), layerClient);
         mTextSender.setConversation(conversation);
         for (AttachmentSender attachmentSender : mAttachmentSenders) {

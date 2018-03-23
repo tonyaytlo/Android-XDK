@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagepopup;
+package com.layer.xdk.ui.message.image.popup;
 
 import android.app.Activity;
 import android.content.Intent;

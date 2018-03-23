@@ -15,7 +15,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.File;
 import java.io.FileNotFoundException;

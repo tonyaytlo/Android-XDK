@@ -17,6 +17,7 @@ public abstract class ChoiceHandler {
         mChoiceId = choiceId;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public String getChoiceId() {
         return mChoiceId;
     }

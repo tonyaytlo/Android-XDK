@@ -61,10 +61,12 @@ public class Log {
         android.util.Log.w(TAG, message);
     }
 
+    @SuppressWarnings("unused")
     public static void w(String message, Throwable error) {
         android.util.Log.w(TAG, message, error);
     }
 
+    @SuppressWarnings("unused")
     public static void w(Throwable error) {
         android.util.Log.w(TAG, error);
     }

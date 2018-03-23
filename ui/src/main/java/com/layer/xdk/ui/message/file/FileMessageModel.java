@@ -22,7 +22,7 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -211,7 +211,7 @@ public class FileMessageModel extends MessageModel {
         }
     }
 
-    boolean getHasSourceMessagePart() {
+    private boolean getHasSourceMessagePart() {
         return getHasContent() && MessagePartUtils.hasMessagePartWithRole(getMessage(), ROLE_SOURCE);
     }
 

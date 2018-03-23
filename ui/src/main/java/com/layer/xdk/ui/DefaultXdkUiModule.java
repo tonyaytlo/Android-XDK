@@ -8,7 +8,7 @@ import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import javax.inject.Singleton;
 

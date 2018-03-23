@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagecache;
+package com.layer.xdk.ui.message.image.cache;
 
 import android.graphics.Bitmap;
 import android.widget.ImageView;
@@ -22,9 +22,11 @@ public interface ImageCacheWrapper {
      */
     void cancelBitmap(BitmapWrapper bitmapWrapper);
 
-    void pauseTag(String picassoTag);
+    @SuppressWarnings("unused")
+    void pauseTag(String tag);
 
-    void resumeTag(String picassoTag);
+    @SuppressWarnings("unused")
+    void resumeTag(String tag);
 
     void loadImage(ImageRequestParameters imageRequestParameters, ImageView imageView);
 
@@ -37,5 +39,4 @@ public interface ImageCacheWrapper {
         void onSuccess();
         void onFailure();
     }
-
 }

@@ -10,7 +10,7 @@ import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import javax.inject.Singleton;
 
@@ -25,11 +25,13 @@ import dagger.Component;
 @Component(modules = {DefaultXdkUiModule.class})
 public interface DefaultXdkUiComponent extends XdkUiComponent {
 
+    @SuppressWarnings("unused")
     Context applicationContext();
     LayerClient layerClient();
     ImageCacheWrapper imageCacheWrapper();
     IdentityFormatter identityFormatter();
     IdentityFormatterImpl identityFormatterImpl();
+    @SuppressWarnings("unused")
     DateFormatter dateFormatter();
     DateFormatterImpl dateFormatterImpl();
     ConversationItemFormatter conversationItemFormatter();

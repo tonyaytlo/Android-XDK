@@ -14,7 +14,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +27,7 @@ import java.util.UUID;
 
 public class RichImageMessageComposer extends ImageMessageComposer {
     private static final String ROOT_MIME_TYPE = ImageMessageModel.ROOT_MIME_TYPE;
+    private static final int PREVIEW_COMPRESSION_QUALITY = 75;
 
     private Gson mGson;
 

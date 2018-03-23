@@ -15,7 +15,7 @@ import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.mock.MockIdentity;
-import com.layer.xdk.ui.style.FourPartItemStyle;
+import com.layer.xdk.ui.fourpartitem.FourPartItemStyle;
 
 public class IdentityItemTestActivity extends Activity {
 

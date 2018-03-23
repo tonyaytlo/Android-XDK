@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.TypingIndicatorLayout;
+import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
@@ -142,12 +142,13 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
      * ViewHolders
      */
 
+    @SuppressWarnings("WeakerAccess")
     protected TypingIndicatorVH createTypingIndicatorViewHolder(ViewGroup parent) {
         TypingIndicatorVHModel model = mTypingIndicatorVHModelFactory.get();
         return new TypingIndicatorVH(parent, model);
     }
 
-
+    @SuppressWarnings("WeakerAccess")
     protected DefaultMessageModelVH createDefaultViewHolder(ViewGroup parent, MessageModel model) {
         DefaultMessageModelVHModel viewModel = mDefaultVHModelFactory.get();
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
@@ -162,6 +163,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         return viewHolder;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected StatusMessageModelVH createStatusViewHolder(ViewGroup parent) {
         StatusMessageModelVHModel viewModel = mStatusVHModelFactory.get();
         viewModel.setEnableReadReceipts(areReadReceiptsEnabled());
@@ -183,6 +185,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
      * Settings
      */
 
+    @SuppressWarnings("WeakerAccess")
     public boolean isOneOnOneConversation() {
         return mOneOnOneConversation;
     }
@@ -216,6 +219,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
      * shown
      * or not. Defaults to `true`.
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean getShouldShowPresence() {
         return mShouldShowAvatarPresence;
     }
@@ -224,6 +228,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         return mShouldShowAvatarForCurrentUser;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean getShouldShowPresenceForCurrentUser() {
         return mShouldShowPresenceForCurrentUser;
     }
@@ -244,6 +249,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         mShouldShowPresenceForCurrentUser = shouldShowPresenceForCurrentUser;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean areReadReceiptsEnabled() {
         return mReadReceiptsEnabled;
     }
@@ -268,6 +274,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         mItemLongClickListener = itemLongClickListener;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public OnItemLongClickListener<MessageModel> getItemLongClickListener() {
         return mItemLongClickListener;
     }

@@ -15,7 +15,7 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseSummary;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
 import java.util.Collections;
@@ -132,6 +132,7 @@ public class ChoiceMessageModel extends MessageModel {
     }
 
     @Bindable
+    @SuppressWarnings("WeakerAccess")
     public boolean getIsEnabledForMe() {
         return mMetadata.mEnabledForMe;
     }

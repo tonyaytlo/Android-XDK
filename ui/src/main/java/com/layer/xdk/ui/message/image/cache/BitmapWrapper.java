@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagecache;
+package com.layer.xdk.ui.message.image.cache;
 
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
@@ -65,6 +65,7 @@ public class BitmapWrapper {
         return mId;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean hasMultiTransform() {
         return mIsMultiTransform;
     }

@@ -60,6 +60,7 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
         };
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected boolean hasNonDataBindingInvalidate(List<Object> payloads, Object validation) {
         for (Object payload : payloads) {
             if (payload != validation) {
@@ -72,15 +73,6 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
     //==============================================================================================
     // Public API
     //==============================================================================================
-
-    /**
-     * Bind an empty/null item. Typically for when the query controller is running a query
-     * asynchronously
-     */
-    @CallSuper
-    public void onBindEmpty(VIEW_HOLDER holder) {
-        holder.setEmpty();
-    }
 
     public STYLE getStyle() {
         return mStyle;
@@ -104,11 +96,11 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
         mItemLongClickListener = listener;
     }
 
-    public OnItemClickListener<ITEM> getItemClickListener() {
+    protected OnItemClickListener<ITEM> getItemClickListener() {
         return mItemClickListener;
     }
 
-    public OnItemLongClickListener<ITEM> getItemLongClickListener() {
+    protected OnItemLongClickListener<ITEM> getItemLongClickListener() {
         return mItemLongClickListener;
     }
 
@@ -124,8 +116,6 @@ public abstract class FourPartItemRecyclerViewAdapter<ITEM,
             if (item != null) {
                 holder.setItem(item);
                 holder.getBinding().executePendingBindings();
-            } else {
-                onBindEmpty(holder);
             }
         }
     }

@@ -5,7 +5,7 @@ import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.Collections;
 import java.util.Set;

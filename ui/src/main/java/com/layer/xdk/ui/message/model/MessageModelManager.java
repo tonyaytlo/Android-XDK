@@ -69,6 +69,7 @@ public class MessageModelManager {
         registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public <T extends MessageModel> void registerModel(@NonNull String modelIdentifier, @NonNull Class<T> messageModelClass) {
         try {
             Constructor<?> constructor = messageModelClass.getConstructor(Context.class, LayerClient.class, Message.class);
@@ -78,6 +79,7 @@ public class MessageModelManager {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean hasModel(@NonNull String modelIdentifier) {
         return mIdentifierToConstructorMap.containsKey(modelIdentifier);
     }
@@ -93,6 +95,7 @@ public class MessageModelManager {
         return getNewModel(getModelIdentifier(message), message);
     }
 
+    @SuppressWarnings("WeakerAccess")
     @NonNull
     public MessageModel getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
         Throwable exception;

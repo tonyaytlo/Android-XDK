@@ -377,17 +377,20 @@ public abstract class MessageModel extends BaseObservable {
                 || !TextUtils.isEmpty(getFooter());
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Nullable
-    public String getRole() {
+    protected String getRole() {
         return mRole;
     }
 
-    public void setRole(@Nullable String role) {
+    @SuppressWarnings("WeakerAccess")
+    protected void setRole(@Nullable String role) {
         mRole = role;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @NonNull
-    public List<MessageModel> getChildMessageModelsWithRole(@NonNull String role) {
+    protected List<MessageModel> getChildMessageModelsWithRole(@NonNull String role) {
         List<MessageModel> models = new ArrayList<>();
         if (role.equals(mRole)) {
             models.add(this);
@@ -440,8 +443,9 @@ public abstract class MessageModel extends BaseObservable {
         return mMessage;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Nullable
-    public final Uri getAuthenticatedUserId() {
+    protected final Uri getAuthenticatedUserId() {
         return mAuthenticatedUserId;
     }
 

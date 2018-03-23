@@ -19,7 +19,7 @@ import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.choice.ChoiceStateSummary;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseSummary;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -165,6 +165,7 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @Nullable
+    @SuppressWarnings("WeakerAccess")
     public MessageModel getContentModel() {
         if (getChildMessageModels() != null && getChildMessageModels().size() > 0) {
             return getChildMessageModels().get(0);
@@ -174,10 +175,12 @@ public class ButtonMessageModel extends MessageModel {
     }
 
     @Nullable
+    @SuppressWarnings("WeakerAccess")
     public List<ButtonMetadata> getButtonMetadata() {
         return mMetadata != null ? mMetadata.mButtonMetadata : null;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void onChoiceClicked(ChoiceConfigMetadata choiceConfig, ChoiceMetadata choice,
                                 boolean selected, Set<String> selectedChoices) {
         String userId = getLayerClient().getAuthenticatedUser().getUserId();

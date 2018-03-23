@@ -7,7 +7,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.Collections;
 import java.util.Set;
@@ -43,6 +43,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
         return mAvatarViewVisible;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setAvatarViewVisible(boolean avatarViewVisible) {
         mAvatarViewVisible = avatarViewVisible;
     }
@@ -51,6 +52,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
         return mTypingIndicatorMessageVisible;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setTypingIndicatorMessageVisible(boolean typingIndicatorMessageVisible) {
         mTypingIndicatorMessageVisible = typingIndicatorMessageVisible;
     }
@@ -59,6 +61,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
         return mTypingIndicatorMessage;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setTypingIndicatorMessage(String typingIndicatorMessage) {
         mTypingIndicatorMessage = typingIndicatorMessage;
     }
@@ -67,6 +70,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
         return mAnimationVisible;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setAnimationVisible(boolean animationVisible) {
         mAnimationVisible = animationVisible;
     }

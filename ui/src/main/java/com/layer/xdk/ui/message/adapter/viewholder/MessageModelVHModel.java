@@ -22,6 +22,7 @@ public abstract class MessageModelVHModel extends BaseObservable {
 
     private View.OnLongClickListener mOnLongClickListener;
 
+    @SuppressWarnings("WeakerAccess")
     public MessageModelVHModel(Context context, LayerClient layerClient, IdentityFormatter identityFormatter, DateFormatter dateFormatter) {
         mContext = context;
         mLayerClient = layerClient;
@@ -52,6 +53,7 @@ public abstract class MessageModelVHModel extends BaseObservable {
         mItemLongClickListener = listener;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public View.OnLongClickListener getOnLongClickListener() {
         return mOnLongClickListener;
     }
@@ -68,6 +70,7 @@ public abstract class MessageModelVHModel extends BaseObservable {
         return mIdentityFormatter;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public DateFormatter getDateFormatter() {
         return mDateFormatter;
     }

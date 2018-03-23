@@ -10,9 +10,9 @@ import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandler;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -179,6 +179,7 @@ public class ServiceLocator {
      *
      * @param formatter date formatter to use with the XDK UI
      */
+    @SuppressWarnings("unused")
     public void setDateFormatter(@Nullable DateFormatter formatter) {
         mDateFormatter = formatter;
     }

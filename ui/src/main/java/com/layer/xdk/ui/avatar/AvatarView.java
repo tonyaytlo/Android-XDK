@@ -18,9 +18,8 @@ import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.util.AvatarStyle;
-import com.layer.xdk.ui.util.imagecache.BitmapWrapper;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.BitmapWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;

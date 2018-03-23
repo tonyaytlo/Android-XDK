@@ -18,21 +18,15 @@ package com.layer.xdk.ui.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.exceptions.LayerException;
 import com.layer.sdk.listeners.LayerAuthenticationListener;
-import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Identity;
-import com.layer.sdk.messaging.MessagePart;
-import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.BuildConfig;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Util {
@@ -42,7 +36,7 @@ public class Util {
      *
      * @return The app version name.
      */
-    public static String getVersion() {
+    public static String getXdkUiVersion() {
         return BuildConfig.VERSION_NAME;
     }
 
@@ -56,40 +50,7 @@ public class Util {
         manager.setPrimaryClip(clipData);
     }
 
-
-    public static String getInitials(Identity user) {
-        String first = user.getFirstName();
-        String last = user.getLastName();
-        if (!TextUtils.isEmpty(first)) {
-            if (!TextUtils.isEmpty(last)) {
-                return getInitials(first) + getInitials(last);
-            }
-            return getInitials(first);
-        } else if (!TextUtils.isEmpty(last)) {
-            return getInitials(last);
-        } else {
-            return getInitials(user.getDisplayName());
-        }
-    }
-
-    private static String getInitials(String name) {
-        if(TextUtils.isEmpty(name)) return "";
-        if (name.contains(" ")) {
-            String[] nameParts = name.split(" ");
-            int count = 0;
-            StringBuilder b = new StringBuilder();
-            for (String part : nameParts) {
-                String t = part.trim();
-                if (t.isEmpty()) continue;
-                b.append(("" + t.charAt(0)).toUpperCase());
-                if (++count >= 2) break;
-            }
-            return b.toString();
-        } else {
-            return ("" + name.trim().charAt(0)).toUpperCase();
-        }
-    }
-
+    @Deprecated
     @NonNull
     public static String getDisplayName(Identity identity) {
         if (TextUtils.isEmpty(identity.getDisplayName())) {
@@ -108,8 +69,6 @@ public class Util {
         }
         return identity.getDisplayName();
     }
-
-
 
     /**
      * Returns int[] {scaledWidth, scaledHeight} for dimensions that fit within the given maxWidth,
@@ -141,55 +100,6 @@ public class Util {
             }
         }
         return new int[]{scaledWidth, scaledHeight};
-    }
-
-    /**
-     * Synchronously starts downloading the given MessagePart and waits for downloading to complete.
-     * Returns `true` if the MessagePart downloaded successfully within the given period of time, or
-     * `false` otherwise.
-     *
-     * @param layerClient LayerClient to download the MessagePart with.
-     * @param part        MessagePart to download.
-     * @param timeLength  Length of time to wait for downloading.
-     * @param timeUnit    Unit of time to wait for downloading.
-     * @return `true` if the MessagePart content is available, or `false` otherwise.
-     */
-    public static boolean downloadMessagePart(LayerClient layerClient, MessagePart part, int timeLength, TimeUnit timeUnit) {
-        if (part.isContentReady()) return true;
-
-        final CountDownLatch latch = new CountDownLatch(1);
-        final LayerProgressListener listener = new LayerProgressListener.BackgroundThread.Weak() {
-            @Override
-            public void onProgressStart(MessagePart messagePart, Operation operation) {
-
-            }
-
-            @Override
-            public void onProgressUpdate(MessagePart messagePart, Operation operation, long l) {
-
-            }
-
-            @Override
-            public void onProgressComplete(MessagePart messagePart, Operation operation) {
-                latch.countDown();
-            }
-
-            @Override
-            public void onProgressError(MessagePart messagePart, Operation operation, Throwable throwable) {
-                latch.countDown();
-            }
-        };
-        part.download(listener);
-        if (!part.isContentReady()) {
-            try {
-                latch.await(timeLength, timeUnit);
-            } catch (InterruptedException e) {
-                if (Log.isLoggable(Log.ERROR)) {
-                    Log.e(e.getMessage(), e);
-                }
-            }
-        }
-        return part.isContentReady();
     }
 
     /**
@@ -235,13 +145,6 @@ public class Util {
         }
         layerClient.deauthenticate();
     }
-
-    public interface ContentAvailableCallback {
-        void onContentAvailable(LayerClient client, Queryable object);
-
-        void onContentFailed(LayerClient client, Uri objectId, String reason);
-    }
-
 
     public interface DeauthenticationCallback {
         void onDeauthenticationSuccess(LayerClient client);

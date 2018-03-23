@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.json;
+package com.layer.xdk.ui.util;
 
 import com.google.gson.FieldNamingStrategy;
 
@@ -18,7 +18,7 @@ public class AndroidFieldNamingStrategy implements FieldNamingStrategy {
         }
     }
 
-    static String handleWords(final String fieldName) {
+    private String handleWords(final String fieldName) {
         String[] words = UPPERCASE_PATTERN.split(fieldName);
         final StringBuffer sb = new StringBuffer();
         for (String word : words) {

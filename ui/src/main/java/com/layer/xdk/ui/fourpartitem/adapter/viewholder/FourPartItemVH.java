@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
-import com.layer.xdk.ui.style.FourPartItemStyle;
+import com.layer.xdk.ui.fourpartitem.FourPartItemStyle;
 
 public class FourPartItemVH<ITEM, VIEW_HOLDER_MODEL extends FourPartItemVHModel<ITEM>>
         extends RecyclerView.ViewHolder {
@@ -36,11 +36,6 @@ public class FourPartItemVH<ITEM, VIEW_HOLDER_MODEL extends FourPartItemVHModel<
     @CallSuper
     public void setItem(ITEM item) {
         mViewHolderModel.setItem(item);
-    }
-
-    @CallSuper
-    public void setEmpty() {
-
     }
 
     public ITEM getItem() {

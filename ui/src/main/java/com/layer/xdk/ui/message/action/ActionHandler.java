@@ -11,6 +11,7 @@ public abstract class ActionHandler {
     private String mEvent;
     private LayerClient mLayerClient;
 
+    @SuppressWarnings("WeakerAccess")
     public ActionHandler(LayerClient layerClient, String event) {
         mLayerClient = layerClient;
         mEvent = event;

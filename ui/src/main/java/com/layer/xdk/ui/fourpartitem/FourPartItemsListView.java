@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
-import com.layer.xdk.ui.style.FourPartItemStyle;
 
 import java.util.List;
 

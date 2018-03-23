@@ -23,6 +23,7 @@ public class GroupingCalculator {
     public GroupingCalculator() {
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void calculateGrouping(List<MessageModel> models) {
         MessageModel previousModel = null;
         MessageModel currentModel;

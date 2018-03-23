@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagecache;
+package com.layer.xdk.ui.message.image.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -8,8 +8,8 @@ import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.imagecache.transformations.CircleTransform;
-import com.layer.xdk.ui.util.imagecache.transformations.RoundedTransform;
+import com.layer.xdk.ui.message.image.cache.transformations.CircleTransform;
+import com.layer.xdk.ui.message.image.cache.transformations.RoundedTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -21,10 +21,10 @@ import static com.layer.xdk.ui.util.Log.TAG;
 import static com.layer.xdk.ui.util.Log.VERBOSE;
 
 public class PicassoImageCacheWrapper implements ImageCacheWrapper {
-    protected final static CircleTransform SINGLE_TRANSFORM = new CircleTransform(TAG + ".single");
-    protected final static CircleTransform MULTI_TRANSFORM = new CircleTransform(TAG + ".multi");
+    private final static CircleTransform SINGLE_TRANSFORM = new CircleTransform(TAG + ".single");
+    private final static CircleTransform MULTI_TRANSFORM = new CircleTransform(TAG + ".multi");
 
-    protected final Picasso mPicasso;
+    private final Picasso mPicasso;
     /*
         Picasso keeps a weak reference to the target when you load into a target,
         hence we need to keep a strong reference to the targets to prevent Garbage Collector from
@@ -94,8 +94,8 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
     }
 
     @Override
-    public void resumeTag(String picassoTag) {
-        mPicasso.resumeTag(picassoTag);
+    public void resumeTag(String tag) {
+        mPicasso.resumeTag(tag);
     }
 
     @Override
@@ -183,5 +183,4 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
     private boolean isLocalContent(@NonNull Uri uri) {
         return uri != null && (uri.getScheme().equals("file") || uri.getScheme().equals("content"));
     }
-
 }

@@ -15,7 +15,7 @@ import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
 import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import org.junit.Before;
 import org.junit.Test;

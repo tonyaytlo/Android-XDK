@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagepopup;
+package com.layer.xdk.ui.message.image.popup;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,8 +6,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageDecoder;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 
@@ -35,7 +35,7 @@ public class MessagePartDecoder implements ImageDecoder {
             }
             return null;
         }
-        if (!Util.downloadMessagePart(sLayerClient, part, 3, TimeUnit.MINUTES)) {
+        if (!MessagePartUtils.downloadMessagePart(sLayerClient, part, 3, TimeUnit.MINUTES)) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e("Timed out while downloading: " + messagePartId);
             }

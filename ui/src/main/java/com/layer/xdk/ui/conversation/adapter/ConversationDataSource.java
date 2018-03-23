@@ -54,6 +54,7 @@ public class ConversationDataSource extends PositionalDataSource<ConversationIte
      * @param sortDescriptor sort rules to use for the query, null to use the default sorting
      * @param initialHistory number of messages to fetch for the initial history
      */
+    @SuppressWarnings("WeakerAccess")
     public ConversationDataSource(@NonNull LayerClient layerClient,
             @NonNull MessageModelManager messageModelManager,
             @Nullable Predicate predicate,

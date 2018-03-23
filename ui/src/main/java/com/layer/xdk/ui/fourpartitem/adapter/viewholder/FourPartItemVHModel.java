@@ -8,7 +8,7 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.Set;
 
@@ -78,10 +78,12 @@ public abstract class FourPartItemVHModel<ITEM> extends BaseObservable {
         mItemLongClickListener = itemLongClickListener;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public View.OnClickListener getOnClickListener() {
         return mOnClickListener;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public View.OnLongClickListener getOnLongClickListener() {
         return mOnLongClickListener;
     }

@@ -22,13 +22,13 @@
 
         <import type="com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel"/>
 
-        <import type="com.layer.xdk.ui.style.FourPartItemStyle"/>
+        <import type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle"/>
 
         <import type="android.view.View"/>
 
         <variable
             name="style"
-            type="FourPartItemStyle"/>
+            type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle"/>
 
         <variable
             name="viewHolderModel"

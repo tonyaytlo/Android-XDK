@@ -225,7 +225,7 @@ The <a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">Typin
 ##### XML
 
 ```xml
-<com.layer.xdk.ui.TypingIndicatorLayout
+<com.layer.xdk.ui.typingindicator.TypingIndicatorLayout
     android:id="@+id/typing_indicator"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

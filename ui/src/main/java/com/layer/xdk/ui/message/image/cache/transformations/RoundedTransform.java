@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagecache.transformations;
+package com.layer.xdk.ui.message.image.cache.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

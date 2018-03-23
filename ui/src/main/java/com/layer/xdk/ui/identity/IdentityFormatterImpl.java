@@ -53,7 +53,7 @@ public class IdentityFormatterImpl implements IdentityFormatter {
         return null;
     }
 
-    private static String getInitials(String name) {
+    private String getInitials(String name) {
         if (TextUtils.isEmpty(name)) return "";
         if (name.contains(" ")) {
             String[] nameParts = name.split(" ");

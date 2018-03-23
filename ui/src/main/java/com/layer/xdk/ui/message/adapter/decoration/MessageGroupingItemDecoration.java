@@ -15,6 +15,7 @@ import java.util.EnumSet;
 public abstract class MessageGroupingItemDecoration extends RecyclerView.ItemDecoration {
     private final int mOffsetSize;
 
+    @SuppressWarnings("WeakerAccess")
     public MessageGroupingItemDecoration(int offsetSize) {
         mOffsetSize = offsetSize;
     }

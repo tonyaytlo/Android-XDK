@@ -26,13 +26,13 @@ import java.io.OutputStream;
 
 public abstract class ImageMessageComposer {
 
-    public static final int PREVIEW_COMPRESSION_QUALITY = 75;
-    public static final int PREVIEW_MAX_WIDTH = 300;
-    public static final int PREVIEW_MAX_HEIGHT = 300;
+    private static final int PREVIEW_MAX_WIDTH = 300;
+    private static final int PREVIEW_MAX_HEIGHT = 300;
 
     private Context mContext;
     private LayerClient mLayerClient;
 
+    @SuppressWarnings("WeakerAccess")
     public ImageMessageComposer(Context context, LayerClient layerClient) {
         mContext = context;
         mLayerClient = layerClient;
@@ -87,6 +87,7 @@ public abstract class ImageMessageComposer {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected ExifInterface getExifData(@NonNull InputStream inputStream) throws IOException {
         try {
             return new ExifInterface(inputStream);
@@ -98,6 +99,7 @@ public abstract class ImageMessageComposer {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected BitmapFactory.Options getPreviewBounds(InputStream inputStream) {
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -134,6 +136,7 @@ public abstract class ImageMessageComposer {
         return bounds;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected BitmapFactory.Options getBounds(InputStream inputStream) {
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
@@ -142,6 +145,7 @@ public abstract class ImageMessageComposer {
         return bounds;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected Bitmap getPreviewBitmap(BitmapFactory.Options bounds, InputStream inputStream) {
         // Determine preview size
         int[] previewDimensions = Util.scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
@@ -178,6 +182,7 @@ public abstract class ImageMessageComposer {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Nullable
     protected Long getFileSizeFromUri(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);

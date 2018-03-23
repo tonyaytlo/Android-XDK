@@ -16,7 +16,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.Collections;
 import java.util.Date;
@@ -77,6 +77,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
         notifyChange();
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void updateAvatar() {
         EnumSet<MessageGrouping> grouping = getItem().getGrouping();
         if (grouping == null) {
@@ -92,6 +93,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
                 mShouldCurrentUserAvatarBeVisible && mShouldShowPresenceForCurrentUser;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void updateReceivedAtDateAndTime() {
         EnumSet<MessageGrouping> grouping = getItem().getGrouping();
         if (grouping == null) {
@@ -130,6 +132,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void updateSenderDependentElements(MessageModel model) {
         Message message = model.getMessage();
         EnumSet<MessageGrouping> grouping = model.getGrouping();
@@ -182,6 +185,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected void updateRecipientStatus() {
         if (getItem().isMyNewestMessage()) {
             int readCount = 0;
@@ -224,6 +228,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected boolean isInAOneOnOneConversation() {
         return getItem().getParticipantCount() == 2;
     }
@@ -309,6 +314,7 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
     }
 
     @Bindable
+    @SuppressWarnings("WeakerAccess")
     public boolean isMyMessage() {
         return getItem() != null && getItem().isMessageFromMe();
     }

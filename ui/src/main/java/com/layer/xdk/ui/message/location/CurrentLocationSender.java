@@ -33,7 +33,7 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.sender.AttachmentSender;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.lang.ref.WeakReference;
 
@@ -64,6 +64,7 @@ public class CurrentLocationSender extends AttachmentSender {
         this(activity.getString(titleResId), iconResId, activity, layerClient, identityFormatter);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public CurrentLocationSender(String title, @DrawableRes int iconResId, @NonNull Activity activity,
                                  @NonNull LayerClient layerClient,
                                  @NonNull IdentityFormatter identityFormatter) {

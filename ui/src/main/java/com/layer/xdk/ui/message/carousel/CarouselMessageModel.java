@@ -13,7 +13,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -64,6 +64,7 @@ public class CarouselMessageModel extends MessageModel {
         return true;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public List<MessageModel> getCarouselItemModels() {
         return getChildMessageModels();
     }

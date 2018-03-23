@@ -3,9 +3,10 @@ package com.layer.xdk.ui.message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
-import com.layer.xdk.ui.message.image.ImageMessageModel;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -16,12 +17,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MessagePartUtils {
-    public static final String ROLE_SOURCE = "source";
-
     private static final Pattern PARAMETER_ROLE = Pattern.compile("\\s*role\\s*=\\s*\\w+-*\\w*");
     private static final Pattern PARAMETER_IS_ROOT = Pattern.compile(".*;\\s*role\\s*=\\s*root\\s*;?");
 
@@ -40,6 +41,7 @@ public class MessagePartUtils {
         return mimeType.split(";")[0].trim();
     }
 
+    @SuppressWarnings("WeakerAccess")
     @Nullable
     public static Map<String, String> getMimeTypeArguments(MessagePart messagePart) {
         String mimeType = messagePart.getMimeType();
@@ -55,17 +57,6 @@ public class MessagePartUtils {
         }
 
         return arguments;
-    }
-
-    @Nullable
-    public static String getNodeId(@NonNull MessagePart messagePart) {
-        return messagePart.getId().getLastPathSegment();
-    }
-
-    @Nullable
-    public static String getParentNodeId(@NonNull MessagePart messagePart) {
-        Map<String, String> arguments = getMimeTypeArguments(messagePart);
-        return arguments != null ? arguments.get(PARAMETER_KEY_PARENT_NODE_ID) : null;
     }
 
     public static boolean hasMessagePartWithRole(@NonNull Message message, @NonNull String role) {
@@ -107,7 +98,7 @@ public class MessagePartUtils {
         return matcher.find() ? matcher.group(0).split("=")[1].trim() : null;
     }
 
-    public static boolean isRoleRoot(@NonNull MessagePart messagePart) {
+    private static boolean isRoleRoot(@NonNull MessagePart messagePart) {
         String mimeType = messagePart.getMimeType();
         if (mimeType == null || mimeType.isEmpty()) return false;
 
@@ -116,13 +107,6 @@ public class MessagePartUtils {
 
     public static boolean isResponseSummaryPart(@NonNull MessagePart childMessagePart) {
         return isRole(childMessagePart, ROLE_RESPONSE_SUMMARY);
-    }
-
-    public static boolean isParentMessagePart(@NonNull MessagePart rootMessagePart, @NonNull MessagePart childMessagePart) {
-        String parentNodeId = getParentNodeId(childMessagePart);
-        if (parentNodeId == null) return false;
-
-        return parentNodeId.equals(getNodeId(rootMessagePart));
     }
 
     @NonNull
@@ -226,5 +210,54 @@ public class MessagePartUtils {
             }
         }
         return mimeTypes.toString();
+    }
+
+    /**
+     * Synchronously starts downloading the given MessagePart and waits for downloading to complete.
+     * Returns `true` if the MessagePart downloaded successfully within the given period of time, or
+     * `false` otherwise.
+     *
+     * @param layerClient LayerClient to download the MessagePart with.
+     * @param part        MessagePart to download.
+     * @param timeLength  Length of time to wait for downloading.
+     * @param timeUnit    Unit of time to wait for downloading.
+     * @return `true` if the MessagePart content is available, or `false` otherwise.
+     */
+    public static boolean downloadMessagePart(LayerClient layerClient, MessagePart part, int timeLength, TimeUnit timeUnit) {
+        if (part.isContentReady()) return true;
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        final LayerProgressListener listener = new LayerProgressListener.BackgroundThread.Weak() {
+            @Override
+            public void onProgressStart(MessagePart messagePart, Operation operation) {
+
+            }
+
+            @Override
+            public void onProgressUpdate(MessagePart messagePart, Operation operation, long l) {
+
+            }
+
+            @Override
+            public void onProgressComplete(MessagePart messagePart, Operation operation) {
+                latch.countDown();
+            }
+
+            @Override
+            public void onProgressError(MessagePart messagePart, Operation operation, Throwable throwable) {
+                latch.countDown();
+            }
+        };
+        part.download(listener);
+        if (!part.isContentReady()) {
+            try {
+                latch.await(timeLength, timeUnit);
+            } catch (InterruptedException e) {
+                if (Log.isLoggable(Log.ERROR)) {
+                    Log.e(e.getMessage(), e);
+                }
+            }
+        }
+        return part.isContentReady();
     }
 }

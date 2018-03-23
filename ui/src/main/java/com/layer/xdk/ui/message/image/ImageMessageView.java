@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.xdk.ui.message.view.MessageViewHelper;
-import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
+import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 
 public class ImageMessageView extends AppCompatImageView {
 

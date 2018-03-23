@@ -15,7 +15,7 @@ import com.layer.sdk.listeners.LayerChangeEventListener;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.TypingIndicatorLayout;
+import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.adapter.decoration.GroupStartItemDecoration;
 import com.layer.xdk.ui.message.adapter.decoration.SubGroupStartItemDecoration;
@@ -145,11 +145,12 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     // Public Methods
     //============================================================================================
 
-
+    @SuppressWarnings("unused")
     public int getNumberOfItemsPerSync() {
         return mNumberOfItemsPerSync;
     }
 
+    @SuppressWarnings("unused")
     public void setNumberOfItemsPerSync(int numberOfItemsPerSync) {
         mNumberOfItemsPerSync = numberOfItemsPerSync;
     }
@@ -159,6 +160,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      *
      * @see MessageModelAdapter#getShouldShowAvatarInOneOnOneConversations()
      */
+    @SuppressWarnings("unused")
     public boolean getShouldShowAvatarInOneOnOneConversations() {
         return mAdapter.getShouldShowAvatarInOneOnOneConversations();
     }
@@ -168,6 +170,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
      *
      * @see MessageModelAdapter#setShouldShowAvatarInOneOnOneConversations(boolean)
      */
+    @SuppressWarnings("unused")
     public void setShouldShowAvatarInOneOnOneConversations(boolean shouldShowAvatarInOneOnOneConversations) {
         mAdapter.setShouldShowAvatarInOneOnOneConversations(shouldShowAvatarInOneOnOneConversations);
     }

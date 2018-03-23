@@ -89,6 +89,7 @@ public class ConversationItemModel {
      * @param other model to compare to
      * @return true if all properties are equal
      */
+    @SuppressWarnings("WeakerAccess")
     public boolean deepEquals(ConversationItemModel other) {
         if (mUnreadMessageCount != other.mUnreadMessageCount) {
             return false;

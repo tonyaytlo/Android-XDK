@@ -18,11 +18,11 @@ import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
-import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandler;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
+import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;

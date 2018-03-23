@@ -16,10 +16,10 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
 
     private static final String ACTION_EVENT = "open-map";
 
-    public static final String KEY_ADDRESS = "address";
-    public static final String KEY_LATITUDE = "latitude";
-    public static final String KEY_LONGITUDE = "longitude";
-    public static final String KEY_TITLE = "title";
+    private static final String KEY_ADDRESS = "address";
+    private static final String KEY_LATITUDE = "latitude";
+    private static final String KEY_LONGITUDE = "longitude";
+    private static final String KEY_TITLE = "title";
 
     public GoogleMapsOpenMapActionHandler(LayerClient layerClient) {
         super(layerClient, ACTION_EVENT);

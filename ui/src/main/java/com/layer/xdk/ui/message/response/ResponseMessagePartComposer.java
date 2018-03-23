@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.util.json.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 /**
  * Converts {@link ResponseModel}s to {@link MessagePart}s.

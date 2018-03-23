@@ -17,10 +17,12 @@ public class RichTextSender extends TextSender {
         super(context, layerClient);
     }
 
+    @SuppressWarnings("unused")
     public RichTextSender(Context context, LayerClient layerClient, int maxNotificationLength) {
         super(context, layerClient, maxNotificationLength);
     }
 
+    @SuppressWarnings("unused")
     public RichTextSender(Context context, LayerClient layerClient, int maxNotificationLength, IdentityFormatter identityFormatter) {
         super(context, layerClient, maxNotificationLength, identityFormatter);
     }

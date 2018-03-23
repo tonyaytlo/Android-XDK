@@ -9,7 +9,7 @@ import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.adapter.FourPartItemRecyclerViewAdapter;
 import com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVH;
-import com.layer.xdk.ui.style.FourPartItemStyle;
+import com.layer.xdk.ui.fourpartitem.FourPartItemStyle;
 
 import javax.inject.Inject;
 

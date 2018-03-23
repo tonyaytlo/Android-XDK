@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.binding;
+package com.layer.xdk.ui.util;
 
 import android.databinding.BindingAdapter;
 import android.graphics.Typeface;
@@ -9,30 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.ImageRequestParameters;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 
 public class Bindings {
 
     @BindingAdapter({"bind:typeface"})
     public static void setTypeface(TextView textView, Typeface typeface) {
         textView.setTypeface(typeface);
-    }
-
-    @BindingAdapter("android:layout_marginBottom")
-    public static void setBottomMargin(View view, float bottomMargin) {
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-        layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,
-                layoutParams.rightMargin, Math.round(bottomMargin));
-        view.setLayoutParams(layoutParams);
-    }
-
-    @BindingAdapter("android:layout_marginTop")
-    public static void setTopMargin(View view, float topMargin) {
-        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-        layoutParams.setMargins(layoutParams.leftMargin, Math.round(topMargin),
-                layoutParams.rightMargin, layoutParams.bottomMargin);
-        view.setLayoutParams(layoutParams);
     }
 
     @BindingAdapter("android:layout_marginRight")
@@ -75,27 +59,11 @@ public class Bindings {
         view.setLayoutParams(layoutParams);
     }
 
-    @BindingAdapter("android:minWidth")
-    public static void setMinWidth(View view, float width) {
-        view.setMinimumWidth((int) width);
-    }
-
-    @BindingAdapter("android:minHeight")
-    public static void setMinHeight(View view, float height) {
-        view.setMinimumHeight((int) height);
-    }
-
     @BindingAdapter("app:layout_constraintVertical_bias")
     public static void setVerticalBias(View view, float bias) {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
         params.verticalBias = bias;
 
-    }
-
-    @BindingAdapter("app:layout_constraintHorizontal_bias")
-    public static void setHorizontalBias(View view, float bias) {
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-        params.horizontalBias = bias;
     }
 
     @BindingAdapter({"app:loadFrom", "app:usingImageLoader"})
@@ -117,7 +85,7 @@ public class Bindings {
     }
 
     @BindingAdapter("app:imageResource")
-    public static void imageResource(ImageView imageView, @DrawableRes int resource){
+    public static void imageResource(ImageView imageView, @DrawableRes int resource) {
         imageView.setImageResource(resource);
     }
 }

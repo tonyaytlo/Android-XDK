@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagecache;
+package com.layer.xdk.ui.message.image.cache;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -89,6 +89,7 @@ public class ImageRequestParameters {
         return mUrl;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @DrawableRes
     public int getResourceId() {
         return mResourceId;
@@ -99,19 +100,23 @@ public class ImageRequestParameters {
         return mTag;
     }
 
+    @SuppressWarnings("WeakerAccess")
     @DrawableRes
     public int getPlaceholder() {
         return mPlaceholder;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean centerCrop() {
         return mCenterCrop;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean centerInside() {
         return mCenterInside;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean fit() {
         return mFit;
     }
@@ -126,18 +131,22 @@ public class ImageRequestParameters {
         return mTargetHeight;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean shouldApplyCirclularTransform() {
         return mApplyCircularTransform;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public float getCornerRadius() {
         return mCornerRadius;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean hasRoundedTopCorners() {
         return mRoundedTopCorners;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean hasRoundedBottomCorners() {
         return mRoundedBottomCorners;
     }
@@ -147,6 +156,7 @@ public class ImageRequestParameters {
         return mCallBack;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public float getRotationDegrees() {
         return mRotationDegrees;
     }
@@ -155,6 +165,7 @@ public class ImageRequestParameters {
         return mExifOrientation;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public float getExifRotationInDegrees(Context context) {
         int exifOrientation = 0;
         if (mExifOrientation != null) {
@@ -214,10 +225,12 @@ public class ImageRequestParameters {
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean shouldScaleDown() {
         return mOnlyScaleDown;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public boolean noFade() {
         return mNoFade;
     }

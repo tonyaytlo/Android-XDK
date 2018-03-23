@@ -12,8 +12,8 @@ import com.layer.xdk.ui.identity.IdentityFormatterImpl;
 import com.layer.xdk.ui.mock.MockLayerClient;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.DateFormatterImpl;
-import com.layer.xdk.ui.util.imagecache.ImageCacheWrapper;
-import com.layer.xdk.ui.util.imagecache.PicassoImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Provider;

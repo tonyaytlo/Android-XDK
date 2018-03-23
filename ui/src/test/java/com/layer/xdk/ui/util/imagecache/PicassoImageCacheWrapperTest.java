@@ -11,7 +11,10 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.layer.xdk.ui.util.imagecache.requesthandlers.MessagePartRequestHandler;
+import com.layer.xdk.ui.message.image.cache.BitmapWrapper;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;

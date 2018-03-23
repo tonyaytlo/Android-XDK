@@ -13,14 +13,17 @@ public abstract class TextSender extends MessageSender {
     private int mMaxNotificationLength;
     private IdentityFormatter mIdentityFormatter;
 
+    @SuppressWarnings("WeakerAccess")
     public TextSender(Context context, LayerClient layerClient) {
         this(context, layerClient, 200);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public TextSender(Context context, LayerClient layerClient, int maxNotificationLength) {
         this(context, layerClient, maxNotificationLength, new IdentityFormatterImpl(context));
     }
 
+    @SuppressWarnings("WeakerAccess")
     public TextSender(Context context, LayerClient layerClient, int maxNotificationLength, IdentityFormatter identityFormatter) {
         super(context, layerClient);
         mMaxNotificationLength = maxNotificationLength;

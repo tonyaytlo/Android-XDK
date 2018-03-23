@@ -9,23 +9,22 @@ import android.view.LayoutInflater;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.TypingIndicatorLayout;
+import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
 import com.layer.xdk.ui.composebar.ComposeBar;
 import com.layer.xdk.ui.databinding.XdkUiConversationViewBinding;
 import com.layer.xdk.ui.message.MessageItemsListView;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
-import com.layer.xdk.ui.typingindicators.BubbleTypingIndicatorFactory;
+import com.layer.xdk.ui.typingindicator.BubbleTypingIndicatorFactory;
 
 import java.util.Set;
 
 public class ConversationView extends ConstraintLayout {
 
-    protected LayerClient mLayerClient;
-    protected MessageItemsListView mMessageItemListView;
-    protected ComposeBar mComposeBar;
-    protected TypingIndicatorLayout mTypingIndicator;
+    private MessageItemsListView mMessageItemListView;
+    private ComposeBar mComposeBar;
+    private TypingIndicatorLayout mTypingIndicator;
 
-    protected XdkUiConversationViewBinding mBinding;
+    private XdkUiConversationViewBinding mBinding;
 
     public ConversationView(Context context) {
         this(context, null);
@@ -55,7 +54,6 @@ public class ConversationView extends ConstraintLayout {
     @BindingAdapter(value = {"app:conversation", "app:layerClient", "app:messageItemsListViewModel"})
     public static void setConversation(ConversationView view, Conversation conversation,
                                        LayerClient layerClient, MessageItemsListViewModel viewModel) {
-        view.mLayerClient = layerClient;
         view.mMessageItemListView.setConversation(layerClient, conversation);
 
         view.mBinding.setViewModel(viewModel);

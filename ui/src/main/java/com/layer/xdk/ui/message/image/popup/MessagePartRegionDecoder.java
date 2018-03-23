@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.imagepopup;
+package com.layer.xdk.ui.message.image.popup;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,8 +9,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 
 import com.davemorrissey.labs.subscaleview.decoder.ImageRegionDecoder;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.Util;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 
@@ -43,7 +43,7 @@ public class MessagePartRegionDecoder implements ImageRegionDecoder {
         }
 
         mMessagePart = part;
-        if (!Util.downloadMessagePart(sLayerClient, mMessagePart, 3, TimeUnit.MINUTES)) {
+        if (!MessagePartUtils.downloadMessagePart(sLayerClient, mMessagePart, 3, TimeUnit.MINUTES)) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e("Timed out while downloading: " + messagePartId);
             }

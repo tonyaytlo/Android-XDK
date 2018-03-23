@@ -1,8 +1,8 @@
-package com.layer.xdk.ui.util.imagecache.requesthandlers;
+package com.layer.xdk.ui.message.image.cache.requesthandlers;
 
 import android.net.Uri;
 
-import com.layer.xdk.ui.util.Util;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.sdk.query.Queryable;
@@ -42,7 +42,7 @@ public class MessagePartRequestHandler extends com.squareup.picasso.RequestHandl
         if (!(queryable instanceof MessagePart)) return null;
         MessagePart part = (MessagePart) queryable;
         if (part.isContentReady()) return new Result(part.getDataStream(), LoadedFrom.DISK);
-        if (!Util.downloadMessagePart(mLayerClient, part, 3, TimeUnit.MINUTES)) return null;
+        if (!MessagePartUtils.downloadMessagePart(mLayerClient, part, 3, TimeUnit.MINUTES)) return null;
         return new Result(part.getDataStream(), LoadedFrom.NETWORK);
     }
 }

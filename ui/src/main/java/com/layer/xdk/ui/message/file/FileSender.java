@@ -34,6 +34,7 @@ public class FileSender extends AttachmentSender {
         this(activity, layerClient, activity.getString(titleId), R.drawable.ic_insert_drive_file_white_24dp);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public FileSender(Activity activity, LayerClient layerClient, String title, @DrawableRes Integer icon) {
         super(activity.getApplicationContext(), layerClient, title, icon);
         mActivity = new WeakReference<>(activity);

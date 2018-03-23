@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.util.display;
+package com.layer.xdk.ui.util;
 
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
@@ -10,6 +10,7 @@ public class DisplayUtils {
         return (int) (dp * sDisplayMetrics.density);
     }
 
+    @SuppressWarnings("unused")
     public static int pxToDp(int px) {
         return (int) (px / sDisplayMetrics.density);
     }
