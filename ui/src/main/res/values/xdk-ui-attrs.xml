@@ -6,7 +6,6 @@
     <!-- ###################### -->
     <attr name="FourPartItemsListView" format="reference" />
     <attr name="ComposeBar" format="reference" />
-    <attr name="AddressBar" format="reference" />
     <attr name="TypingIndicator" format="reference" />
     <attr name="AvatarView" format="reference" />
     <attr name="PresenceView" format="reference" />
@@ -84,6 +83,8 @@
     </declare-styleable>
 
     <declare-styleable name="ComposeBar">
+        <attr name="inputTextColor" />
+        <attr name="inputTextStyle" />
         <attr name="android:textColor" />
         <attr name="android:textSize" />
         <attr name="inputTextTypeface" />
@@ -114,26 +115,6 @@
         
     </declare-styleable>
 
-    <declare-styleable name="AddressBar">
-        <attr name="inputTextColor" />
-        <attr name="inputTextTypeface" />
-        <attr name="inputTextStyle" />
-        <attr name="inputTextSize" />
-        <attr name="inputUnderlineColor" />
-        <attr name="inputCursorColor" />
-        <attr name="listTextSize" />
-        <attr name="listTextColor" />
-        <attr name="listTextTypeface" />
-        <attr name="listTextStyle" />
-        <attr name="chipTypeface" />
-        <attr name="chipStyle" />
-        <attr name="avatarBackgroundColor" />
-        <attr name="avatarBorderColor" />
-        <attr name="avatarTextColor" />
-        <attr name="avatarTextTypeface" />
-        <attr name="avatarTextStyle" />
-    </declare-styleable>
-
     <declare-styleable name="AvatarView">
         <attr name="maximumAvatars" format="integer"/>
     </declare-styleable>
@@ -149,28 +130,6 @@
     <attr name="inputUnderlineColor" format="color|reference" />
     <attr name="inputCursorColor" format="color|reference" />
 
-    <!-- UI Address Bar -->
-    <attr name="inputTextSize" format="dimension|reference" />
-    <attr name="inputTextColor" format="color|reference" />
-    <attr name="inputTextTypeface" format="string|reference" />
-    <attr name="inputTextStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
-    <attr name="listTextSize" format="dimension|reference" />
-    <attr name="listTextColor" format="color|reference" />
-    <attr name="listTextTypeface" format="string|reference" />
-    <attr name="listTextStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
-    <attr name="chipTypeface" format="string|reference" />
-    <attr name="chipStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
+
 
 </resources>

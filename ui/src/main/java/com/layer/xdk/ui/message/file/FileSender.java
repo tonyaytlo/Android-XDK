@@ -24,8 +24,8 @@ import java.lang.ref.WeakReference;
 public class FileSender extends AttachmentSender {
 
     private static final String PERMISSION_READ = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) ? Manifest.permission.READ_EXTERNAL_STORAGE : null;
-    public static final int ACTIVITY_REQUEST_CODE = 40;
-    public static final int PERMISSION_REQUEST_CODE = 111;
+    private static final int ACTIVITY_REQUEST_CODE = 40;
+    private static final int PERMISSION_REQUEST_CODE = 111;
 
     private WeakReference<Activity> mActivity;
     private FileMessageComposer mFileMessageComposer = new FileMessageComposer();

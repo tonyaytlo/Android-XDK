@@ -41,29 +41,6 @@
         <item name="avatarBorderColor">@color/xdk_ui_avatar_border</item>
     </style>
 
-    <style name="AddressBar">
-        <item name="inputTextColor">@color/xdk_ui_text_black</item>
-        <item name="inputTextTypeface">normal</item>
-        <item name="inputTextStyle">normal</item>
-        <item name="inputTextSize">@dimen/xdk_ui_text_size_input</item>
-        <item name="inputUnderlineColor">@color/xdk_ui_color_primary_blue</item>
-        <item name="inputCursorColor">@color/xdk_ui_color_primary_blue</item>
-        <item name="listTextSize">@dimen/xdk_ui_text_size_input</item>
-        <item name="listTextColor">@color/xdk_ui_text_black</item>
-        <item name="listTextTypeface">normal</item>
-        <item name="listTextStyle">normal</item>
-        <item name="chipTypeface">normal</item>
-        <item name="chipStyle">normal</item>
-        <item name="avatarBackgroundColor">@color/xdk_ui_avatar_background</item>
-        <item name="avatarBorderColor">@color/xdk_ui_avatar_border</item>
-        <item name="avatarTextColor">@color/xdk_ui_text_black</item>
-        <item name="avatarTextTypeface">normal</item>
-        <item name="avatarTextStyle">normal</item>
-    </style>
-
-    <style name="TypingIndicator"></style>
-
-
     <!-- ########## -->
     <!-- Action Bar -->
     <!-- ########## -->

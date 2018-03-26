@@ -15,7 +15,6 @@ import android.support.media.ExifInterface;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.Util;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,6 +35,38 @@ public abstract class ImageMessageComposer {
     public ImageMessageComposer(Context context, LayerClient layerClient) {
         mContext = context;
         mLayerClient = layerClient;
+    }
+
+    /**
+     * Returns int[] {scaledWidth, scaledHeight} for dimensions that fit within the given maxWidth,
+     * maxHeight at the given inWidth, inHeight aspect ratio.  If the in dimensions fit fully inside
+     * the max dimensions, no scaling is applied.  Otherwise, at least one scaled dimension is set
+     * to a max dimension, and the other scaled dimension is scaled to fit.
+     *
+     * @param inWidth
+     * @param inHeight
+     * @param maxWidth
+     * @param maxHeight
+     * @return
+     */
+    private int[] scaleDownInside(int inWidth, int inHeight, int maxWidth, int maxHeight) {
+        int scaledWidth;
+        int scaledHeight;
+        if (inWidth <= maxWidth && inHeight <= maxHeight) {
+            scaledWidth = inWidth;
+            scaledHeight = inHeight;
+        } else {
+            double widthRatio = (double) inWidth / (double) maxWidth;
+            double heightRatio = (double) inHeight / (double) maxHeight;
+            if (widthRatio > heightRatio) {
+                scaledWidth = maxWidth;
+                scaledHeight = (int) Math.round((double) inHeight / widthRatio);
+            } else {
+                scaledHeight = maxHeight;
+                scaledWidth = (int) Math.round((double) inWidth / heightRatio);
+            }
+        }
+        return new int[]{scaledWidth, scaledHeight};
     }
 
     @WorkerThread
@@ -104,7 +135,7 @@ public abstract class ImageMessageComposer {
         BitmapFactory.Options bounds = new BitmapFactory.Options();
         bounds.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(inputStream, null, bounds);
-        int[] previewDimensions = Util.scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
+        int[] previewDimensions = scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v("Preview size: " + previewDimensions[0] + "x" + previewDimensions[1]);
         }
@@ -148,7 +179,7 @@ public abstract class ImageMessageComposer {
     @SuppressWarnings("WeakerAccess")
     protected Bitmap getPreviewBitmap(BitmapFactory.Options bounds, InputStream inputStream) {
         // Determine preview size
-        int[] previewDimensions = Util.scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
+        int[] previewDimensions = scaleDownInside(bounds.outWidth, bounds.outHeight, PREVIEW_MAX_WIDTH, PREVIEW_MAX_HEIGHT);
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v("Preview size: " + previewDimensions[0] + "x" + previewDimensions[1]);
         }

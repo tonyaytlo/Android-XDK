@@ -15,9 +15,6 @@
  */
 package com.layer.xdk.ui.util;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -40,16 +37,6 @@ public class Util {
         return BuildConfig.VERSION_NAME;
     }
 
-    public static void copyToClipboard(Context context, int stringResId, String content) {
-        copyToClipboard(context, context.getString(stringResId), content);
-    }
-
-    public static void copyToClipboard(Context context, String description, String content) {
-        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = new ClipData(description, new String[]{"text/plain"}, new ClipData.Item(content));
-        manager.setPrimaryClip(clipData);
-    }
-
     @Deprecated
     @NonNull
     public static String getDisplayName(Identity identity) {
@@ -68,38 +55,6 @@ public class Util {
             }
         }
         return identity.getDisplayName();
-    }
-
-    /**
-     * Returns int[] {scaledWidth, scaledHeight} for dimensions that fit within the given maxWidth,
-     * maxHeight at the given inWidth, inHeight aspect ratio.  If the in dimensions fit fully inside
-     * the max dimensions, no scaling is applied.  Otherwise, at least one scaled dimension is set
-     * to a max dimension, and the other scaled dimension is scaled to fit.
-     *
-     * @param inWidth
-     * @param inHeight
-     * @param maxWidth
-     * @param maxHeight
-     * @return
-     */
-    public static int[] scaleDownInside(int inWidth, int inHeight, int maxWidth, int maxHeight) {
-        int scaledWidth;
-        int scaledHeight;
-        if (inWidth <= maxWidth && inHeight <= maxHeight) {
-            scaledWidth = inWidth;
-            scaledHeight = inHeight;
-        } else {
-            double widthRatio = (double) inWidth / (double) maxWidth;
-            double heightRatio = (double) inHeight / (double) maxHeight;
-            if (widthRatio > heightRatio) {
-                scaledWidth = maxWidth;
-                scaledHeight = (int) Math.round((double) inHeight / widthRatio);
-            } else {
-                scaledHeight = maxHeight;
-                scaledWidth = (int) Math.round((double) inWidth / heightRatio);
-            }
-        }
-        return new int[]{scaledWidth, scaledHeight};
     }
 
     /**

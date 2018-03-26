@@ -31,6 +31,13 @@ public class MessagePartUtils {
     private static final String PARAMETER_KEY_PARENT_NODE_ID = "parent-node-id";
     private static final String PARAMETER_ITEM_ORDER = "item-order";
 
+    private static boolean isRoleRoot(@NonNull MessagePart messagePart) {
+        String mimeType = messagePart.getMimeType();
+        if (mimeType == null || mimeType.isEmpty()) return false;
+
+        return PARAMETER_IS_ROOT.matcher(mimeType).find();
+    }
+
     @Nullable
     public static String getMimeType(@NonNull MessagePart messagePart) {
         String mimeType = messagePart.getMimeType();
@@ -96,13 +103,6 @@ public class MessagePartUtils {
 
         Matcher matcher = PARAMETER_ROLE.matcher(mimeType);
         return matcher.find() ? matcher.group(0).split("=")[1].trim() : null;
-    }
-
-    private static boolean isRoleRoot(@NonNull MessagePart messagePart) {
-        String mimeType = messagePart.getMimeType();
-        if (mimeType == null || mimeType.isEmpty()) return false;
-
-        return PARAMETER_IS_ROOT.matcher(mimeType).find();
     }
 
     public static boolean isResponseSummaryPart(@NonNull MessagePart childMessagePart) {

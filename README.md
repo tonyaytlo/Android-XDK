@@ -31,10 +31,6 @@ The XDK UI library is located in the `ui` directory.  The table below details th
         <td>A View used to compose and send Messages</td>
     </tr>
     <tr>
-        <td><a href="ui/src/main/java/com/layer/xdk/ui/AddressBar.java">AddressBar</a></td>
-        <td>Participant selection with dynamic filtering</td>
-    </tr>
-    <tr>
         <td><a href="ui/src/main/java/com/layer/xdk/ui/TypingIndicatorLayout.java">TypingIndicatorLayout</a></td>
         <td>Displays TypingIndicator information for a Conversation</td>
     </tr>
@@ -260,36 +256,7 @@ We expect to add support for other handlers in future. If you would like to buil
 
 ### <a name="Identity"></a>Identity
 
-An application server can directly upload user information to Layer server. This user information is called <a href="https://docs.layer.com/sdk/android/identities">Identity</a>. `AddressBar` and `AvatarView` are controls that are used to render the Identity information.
-
-#### AddressBar
-`AddressBar` can be used to show a list of users. For eg, the list of users in a `Conversation` or to show a user list for creating a new `Conversation`.
-
-##### XML
-
-```xml
-<com.layer.xdk.ui.AddressBar
-            android:id="@+id/conversation_launcher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-```
-
-##### Java
-
-```java
-    addressBar = activityMessagesListBinding.conversationLauncher
-        .init(App.getLayerClient(), Util.getImageCacheWrapper())
-        .setOnConversationClickListener(new AddressBar.OnConversationClickListener() {
-            ...
-        })
-        .setOnParticipantSelectionChangeListener(new AddressBar.OnParticipantSelectionChangeListener() {
-            ...
-        })
-        .addTextChangedListener()
-        .setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            ...
-        });
-```
+An application server can directly upload user information to Layer server. This user information is called <a href="https://docs.layer.com/sdk/android/identities">Identity</a>.`AvatarView` is a control that is used to render the Identity information.
 
 #### AvatarView
 `AvatarView`can be used to show information about one user, or a cluster of users. `AvatarView` uses <a href="ui/src/main/java/com/layer/xdk/ui/util/imagecache/ImageCacheWrapper.java">ImageCacheWrapper</a> to abstract any image caching & loading library you wish to use. An implementation of ImageCacheWrapper is available in layer-ui that uses [Picasso](https://github.com/square/picasso).
