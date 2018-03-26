@@ -8,12 +8,12 @@ import com.layer.xdk.ui.R;
 
 import javax.inject.Inject;
 
-public class IdentityFormatterImpl implements IdentityFormatter {
+public class DefaultIdentityFormatter implements IdentityFormatter {
 
     private Context mContext;
 
     @Inject
-    public IdentityFormatterImpl(Context context) {
+    public DefaultIdentityFormatter(Context context) {
         mContext = context;
     }
 

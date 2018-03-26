@@ -10,14 +10,14 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-public class DateFormatterImpl implements DateFormatter {
+public class DefaultDateFormatter implements DateFormatter {
     private final int TIME_HOURS_24 = 24 * 60 * 60 * 1000;
     private final SimpleDateFormat DAY_OF_WEEK;
     private final DateFormat TIME_FORMAT;
     private Context mContext;
 
     @Inject
-    public DateFormatterImpl(Context context) {
+    public DefaultDateFormatter(Context context) {
         mContext = context;
         DAY_OF_WEEK = new SimpleDateFormat("EEE, LLL dd", Locale.getDefault());
         TIME_FORMAT = android.text.format.DateFormat.getTimeFormat(context);

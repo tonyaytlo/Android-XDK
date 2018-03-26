@@ -6,7 +6,7 @@ public interface IdentityFormatter {
     /**
      * Implement to provide appropriately formatted intials for an Identity
      *
-     * @see IdentityFormatterImpl for a sample implementation
+     * @see DefaultIdentityFormatter for a sample implementation
      */
     String getInitials(Identity identity);
 

@@ -8,11 +8,13 @@ import android.support.annotation.Nullable;
 import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
+import com.layer.xdk.ui.util.DefaultDateFormatter;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -109,15 +111,14 @@ public class ServiceLocator {
 
     /**
      * Return the {@link IdentityFormatter} set on this locator. If no {@link IdentityFormatter} is
-     * set by the time this is called, a default
-     * {@link com.layer.xdk.ui.identity.IdentityFormatterImpl} will be created.
+     * set by the time this is called, a {@link DefaultIdentityFormatter} will be created.
      *
      * @return identity formatter set on this locator or a default formatter if none is supplied
      */
     @NonNull
     public IdentityFormatter getIdentityFormatter() {
         if (mIdentityFormatter == null) {
-            mIdentityFormatter = getXdkUiComponent().identityFormatterImpl();
+            mIdentityFormatter = getXdkUiComponent().defaultIdentityFormatter();
         }
         return mIdentityFormatter;
     }
@@ -161,15 +162,14 @@ public class ServiceLocator {
 
     /**
      * Return the {@link DateFormatter} set on this locator. If no {@link DateFormatter} is set by
-     * the time this is called, a default {@link com.layer.xdk.ui.util.DateFormatterImpl} will be
-     * created.
+     * the time this is called, a {@link DefaultDateFormatter} will be created.
      *
      * @return date formatter set on this locator or a default formatter if none is supplied
      */
     @NonNull
     public DateFormatter getDateFormatter() {
         if (mDateFormatter == null) {
-            mDateFormatter = getXdkUiComponent().dateFormatterImpl();
+            mDateFormatter = getXdkUiComponent().defaultDateFormatter();
         }
         return mDateFormatter;
     }

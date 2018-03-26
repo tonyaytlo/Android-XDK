@@ -16,7 +16,7 @@ import com.layer.xdk.ui.R;
 import com.layer.sdk.listeners.LayerTypingIndicatorListener;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ public class AvatarTypingIndicatorFactory implements TypingIndicatorLayout.Typin
             AvatarView avatarView = tag.mPassives.poll();
             if (avatarView == null) {
                 // TODO: allow styling
-                avatarView = new AvatarView(l.getContext()).init(new AvatarViewModelImpl(mImageCacheWrapper, new IdentityFormatterImpl(l.getContext())));
+                avatarView = new AvatarView(l.getContext()).init(new AvatarViewModelImpl(mImageCacheWrapper, new DefaultIdentityFormatter(l.getContext())));
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(avatarDim, avatarDim);
                 params.setMargins(0, 0, avatarSpace, 0);
                 avatarView.setLayoutParams(params);

@@ -6,7 +6,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.message.sender.MessageSender;
 
 public abstract class TextSender extends MessageSender {
@@ -20,7 +20,7 @@ public abstract class TextSender extends MessageSender {
 
     @SuppressWarnings("WeakerAccess")
     public TextSender(Context context, LayerClient layerClient, int maxNotificationLength) {
-        this(context, layerClient, maxNotificationLength, new IdentityFormatterImpl(context));
+        this(context, layerClient, maxNotificationLength, new DefaultIdentityFormatter(context));
     }
 
     @SuppressWarnings("WeakerAccess")

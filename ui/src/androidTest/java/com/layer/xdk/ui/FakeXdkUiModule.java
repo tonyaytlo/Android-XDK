@@ -8,10 +8,10 @@ import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.mock.MockLayerClient;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
+import com.layer.xdk.ui.util.DefaultDateFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.squareup.picasso.Picasso;
@@ -60,7 +60,7 @@ public class FakeXdkUiModule implements XdkUiModule {
     @NonNull
     @Override
     public IdentityFormatter provideIdentityFormatter() {
-        return new IdentityFormatterImpl(mContext);
+        return new DefaultIdentityFormatter(mContext);
     }
 
     @Provides
@@ -68,7 +68,7 @@ public class FakeXdkUiModule implements XdkUiModule {
     @NonNull
     @Override
     public DateFormatter provideDateFormatter() {
-        return new DateFormatterImpl(mContext);
+        return new DefaultDateFormatter(mContext);
     }
 
     @Provides

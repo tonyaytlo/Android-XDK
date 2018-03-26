@@ -6,10 +6,10 @@ import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
-import com.layer.xdk.ui.identity.IdentityFormatterImpl;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.util.DateFormatter;
-import com.layer.xdk.ui.util.DateFormatterImpl;
+import com.layer.xdk.ui.util.DefaultDateFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 
 import javax.inject.Singleton;
@@ -30,10 +30,10 @@ public interface DefaultXdkUiComponent extends XdkUiComponent {
     LayerClient layerClient();
     ImageCacheWrapper imageCacheWrapper();
     IdentityFormatter identityFormatter();
-    IdentityFormatterImpl identityFormatterImpl();
+    DefaultIdentityFormatter defaultIdentityFormatter();
     @SuppressWarnings("unused")
     DateFormatter dateFormatter();
-    DateFormatterImpl dateFormatterImpl();
+    DefaultDateFormatter defaultDateFormatter();
     ConversationItemFormatter conversationItemFormatter();
     DefaultConversationItemFormatter defaultConversationItemFormatter();
     MessageModelManager messageModelManager();
