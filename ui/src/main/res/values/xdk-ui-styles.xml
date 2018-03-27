@@ -42,31 +42,6 @@
     </style>
 
     <!-- ########## -->
-    <!-- Action Bar -->
-    <!-- ########## -->
-    <style name="ActionBar" parent="@style/Widget.AppCompat.ActionBar">
-        <item name="titleTextStyle">@style/ActionBarTitleText</item>
-        <item name="background">@color/xdk_ui_action_bar_background</item>
-    </style>
-
-    <style name="ActionBarTitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/xdk_ui_text_white</item>
-    </style>
-
-    <style name="ActionBarTabText" parent="@style/Widget.AppCompat.ActionBar.TabText">
-        <item name="android:textColor">@color/xdk_ui_text_white</item>
-    </style>
-
-    <style name="ActionBarButton" parent="@style/Widget.AppCompat.ActionButton">
-        <item name="android:tint">@color/xdk_ui_text_white</item>
-    </style>
-
-    <style name="ActionBarOverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:tint">@color/xdk_ui_text_white</item>
-    </style>
-
-
-    <!-- ########## -->
     <!-- Compose Bar -->
     <!-- ########## -->
 

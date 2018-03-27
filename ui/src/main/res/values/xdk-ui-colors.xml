@@ -15,7 +15,6 @@
 -->
 <resources>
 
-    <color name="transparent">@android:color/transparent</color>
     <color name="xdk_ui_color_primary_blue">#FF19A5E4</color>
     <color name="xdk_ui_color_dark_blue">#FF1094D0</color>
     <color name="xdk_ui_color_primary_gray">#F2F2F2</color>
@@ -28,14 +27,8 @@
     <color name="xdk_ui_color_light_black">#3D000000</color>
     <color name="xdk_ui_item_divider_color">#FFE0E0E0</color>
 
-    <color name="xdk_ui_status_bar_background">@color/xdk_ui_color_dark_blue</color>
-    <color name="xdk_ui_action_bar_background">@color/xdk_ui_color_primary_blue</color>
+    <color name="xdk_ui_status_bar_background">@color/xdk_ui_color_primary_blue</color>
     <color name="xdk_ui_window_background">@android:color/white</color>
-    <color name="xdk_ui_navigation_bar_background">@android:color/black</color>
-    <color name="xdk_ui_delete_background">#FFFF5252</color>
-    <color name="xdk_ui_item_background">@android:color/white</color>
-
-    <color name="xdk_ui_floating_button">@color/xdk_ui_color_primary_blue</color>
 
     <color name="xdk_ui_text_black">@android:color/black</color>
     <color name="xdk_ui_text_gray">#FF757575</color>
@@ -47,30 +40,25 @@
     <color name="xdk_ui_button_text_disabled">#42000000</color>
     <color name="xdk_ui_button_text_pressed">@color/xdk_ui_color_primary_blue</color>
 
-    <color name="xdk_ui_item_leavebehind">@color/xdk_ui_color_light_black</color>
-    <color name="xdk_ui_item_swiping">#E0FFFFFF</color>
-
-    <color name="xdk_ui_item_selected">#FFD8D8D8</color>
-    <color name="xdk_ui_item_divider">@color/xdk_ui_item_divider_color</color>
-
     <color name="xdk_ui_view_divider">@color/xdk_ui_item_divider_color</color>
 
     <color name="xdk_ui_dialog_primary">@color/xdk_ui_color_primary_blue</color>
     <color name="xdk_ui_dialog_accent">@color/xdk_ui_color_primary_blue</color>
+
+    <color name="xdk_ui_icon_enabled">#8A000000</color>
+
+    <!-- ########## -->
+    <!-- Avatar     -->
+    <!-- ########## -->
 
     <color name="xdk_ui_avatar_background">#14000000</color>
     <color name="xdk_ui_avatar_border">@android:color/white</color>
     <color name="xdk_ui_avatar_text">@android:color/black</color>
     <color name="xdk_ui_chip_background">@color/xdk_ui_color_primary_gray</color>
 
-    <color name="xdk_ui_cell_them_background">@color/xdk_ui_color_primary_gray</color>
-    <color name="xdk_ui_cell_me_background">@color/xdk_ui_color_primary_blue</color>
-
-    <color name="xdk_ui_icon_enabled">#8A000000</color>
-    <color name="xdk_ui_icon_disabled">@color/xdk_ui_color_light_black</color>
-    <color name="xdk_ui_delete_icon">@android:color/white</color>
-
-    <color name="xdk_ui_image_popup_background">@android:color/black</color>
+    <!-- ########## -->
+    <!-- Presence   -->
+    <!-- ########## -->
 
     <color name="xdk_ui_presence_available">#ff4fbf62</color>
     <color name="xdk_ui_presence_busy">#ffe6443f</color>
@@ -78,7 +66,6 @@
     <color name="xdk_ui_presence_invisible">#ff50c062</color>
     <color name="xdk_ui_presence_offline">#ff99999c</color>
     <color name="xdk_ui_presence_outer_stroke">@android:color/white</color>
-
 
     <!-- ########## -->
     <!-- Compose Bar -->
@@ -137,7 +124,8 @@
     <!-- Image Message View -->
     <!-- ########## -->
 
-    <color name="xdk_ui_image_message_view_background_them">@color/xdk_ui_color_primary_gray</color>
+    <color name="xdk_ui_image_popup_background">@android:color/black</color>
+    <color name="xdk_ui_image_message_placeholder_background">@color/xdk_ui_color_primary_gray</color>
 
     <!-- ########## -->
     <!-- Location Message View -->

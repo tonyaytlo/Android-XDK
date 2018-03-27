@@ -224,7 +224,7 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         mRightButton3.setEnabled(enabled);
         mRightButton4.setEnabled(enabled);
 
-        int color = enabled ? ContextCompat.getColor(this.getContext(), R.color.transparent) : ContextCompat.getColor(this.getContext(), R.color.xdk_ui_color_primary_gray_1);
+        int color = enabled ? ContextCompat.getColor(this.getContext(), android.R.color.transparent) : ContextCompat.getColor(this.getContext(), R.color.xdk_ui_color_primary_gray_1);
         this.setBackgroundColor(color);
     }
 

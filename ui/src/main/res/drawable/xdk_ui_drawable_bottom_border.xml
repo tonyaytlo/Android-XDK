@@ -5,7 +5,7 @@
             <stroke
                 android:width="@dimen/xdk_ui_divider_thickness"
                 android:color="@color/xdk_ui_color_primary_gray_3" />
-            <solid android:color="@color/transparent" />
+            <solid android:color="@android:color/transparent" />
         </shape>
     </item>
 

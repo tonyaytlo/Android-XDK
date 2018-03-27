@@ -19,5 +19,5 @@
     <solid android:color="@android:color/transparent"/>
     <stroke
         android:width="2dp"
-        android:color="@color/xdk_ui_cell_them_background"/>
+        android:color="@color/xdk_ui_image_message_placeholder_background"/>
 </shape>

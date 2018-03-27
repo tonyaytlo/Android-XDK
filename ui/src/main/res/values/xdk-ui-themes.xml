@@ -3,27 +3,10 @@
     <!-- ########### -->
     <!-- UI Style -->
     <!-- ########### -->
-    <style name="Theme.ui.Base.Light" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.XdkUi.Base.Light" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="FourPartItemsListView">@style/FourPartItemsListView</item>
         <item name="ComposeBar">@style/ComposeBar</item>
         <item name="MessageButton">@style/Message.Button</item>
         <item name="MessageChoiceButton">@style/Message.Button.Choice</item>
-        <item name="colorPrimary">@color/xdk_ui_action_bar_background</item>
-        <item name="colorPrimaryDark">@color/xdk_ui_status_bar_background</item>
-
-        <!-- floating action button; EditText cursor -->
-        <item name="colorAccent">@color/xdk_ui_floating_button</item>
-
-        <item name="actionBarStyle">@style/ActionBar</item>
-        <item name="actionBarTabTextStyle">@style/ActionBarTabText</item>
-        <item name="actionMenuTextColor">@color/xdk_ui_text_white</item>
-        <item name="actionButtonStyle">@style/ActionBarButton</item>
-        <item name="actionOverflowButtonStyle">@style/ActionBarOverflowButton</item>
-
-        <item name="android:windowBackground">@color/xdk_ui_window_background</item>
-    </style>
-
-    <style name="Theme.ui.Light" parent="Theme.ui.Base.Light">
-        <!-- v21 adds custom items -->
     </style>
 </resources>

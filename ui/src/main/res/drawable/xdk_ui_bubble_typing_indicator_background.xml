@@ -21,5 +21,5 @@
         android:left="@dimen/xdk_ui_typing_indicator_padding_horizontal"
         android:right="@dimen/xdk_ui_typing_indicator_padding_horizontal"
         android:top="@dimen/xdk_ui_typing_indicator_padding_vertical"/>
-    <solid android:color="@color/xdk_ui_cell_them_background"/>
+    <solid android:color="@color/xdk_ui_text_message_view_background"/>
 </shape>

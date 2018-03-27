@@ -410,7 +410,7 @@ public abstract class MessageModel extends BaseObservable {
     @Bindable
     @ColorRes
     public int getBackgroundColor() {
-        return R.color.transparent;
+        return android.R.color.transparent;
     }
 
     @Bindable
