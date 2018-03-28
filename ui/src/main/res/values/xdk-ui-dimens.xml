@@ -211,7 +211,6 @@
     <!-- # Titled message container                                                          # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_titled_message_container_icon_size">24dp</dimen>
     <dimen name="xdk_ui_titled_message_container_title_text_size">16sp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width">192dp</dimen>
     <dimen name="xdk_ui_titled_message_container_min_width_zero">0dp</dimen>
