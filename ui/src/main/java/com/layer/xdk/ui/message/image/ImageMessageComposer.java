@@ -43,11 +43,11 @@ public abstract class ImageMessageComposer {
      * the max dimensions, no scaling is applied.  Otherwise, at least one scaled dimension is set
      * to a max dimension, and the other scaled dimension is scaled to fit.
      *
-     * @param inWidth
-     * @param inHeight
-     * @param maxWidth
-     * @param maxHeight
-     * @return
+     * @param inWidth input width
+     * @param inHeight input height
+     * @param maxWidth max width
+     * @param maxHeight max height
+     * @return an int[] representing the final scaled width and height
      */
     private int[] scaleDownInside(int inWidth, int inHeight, int maxWidth, int maxHeight) {
         int scaledWidth;

@@ -5,8 +5,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
 
@@ -14,8 +12,6 @@ import com.squareup.picasso.Transformation;
 
 public class RoundedTransform implements Transformation {
     private final Paint mPaint;
-    private final PorterDuffXfermode mShapeXferMode;
-    private final PorterDuffXfermode mBitmapXferMode;
 
     private float mCornerRadius = 0f;
     private boolean mRoundTopCorners;
@@ -23,8 +19,6 @@ public class RoundedTransform implements Transformation {
 
     public RoundedTransform() {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mShapeXferMode = null;
-        mBitmapXferMode = new PorterDuffXfermode((PorterDuff.Mode.SRC_IN));
         mPaint.setAntiAlias(true);
         mRoundTopCorners = true;
         mRoundBottomCorners = true;
@@ -89,17 +83,17 @@ public class RoundedTransform implements Transformation {
      *     canvas.drawPath(path, myPaint);
      * </pre>
      *
-     * @param leftX The X coordinate of the left side of the rectangle
-     * @param topY The Y coordinate of the top of the rectangle
-     * @param rightX The X coordinate of the right side of the rectangle
-     * @param bottomY The Y coordinate of the bottom of the rectangle
-     * @param rx The x-radius of the oval used to round the corners
-     * @param ry The y-radius of the oval used to round the corners
-     * @param topLeft
-     * @param topRight
-     * @param bottomRight
-     * @param bottomLeft
-     * @return
+     * @param leftX       The X coordinate of the left side of the rectangle
+     * @param topY        The Y coordinate of the top of the rectangle
+     * @param rightX      The X coordinate of the right side of the rectangle
+     * @param bottomY     The Y coordinate of the bottom of the rectangle
+     * @param rx          The x-radius of the oval used to round the corners
+     * @param ry          The y-radius of the oval used to round the corners
+     * @param topLeft     Rounds the top left corner
+     * @param topRight    Rounds the top right corner
+     * @param bottomRight Rounds the bottom right corner
+     * @param bottomLeft  Rounds the bottom left corner
+     * @return The resulting {@link Path}
      */
     public static Path RoundedRect(float leftX, float topY, float rightX, float bottomY, float rx,
                                    float ry, boolean topLeft, boolean topRight, boolean

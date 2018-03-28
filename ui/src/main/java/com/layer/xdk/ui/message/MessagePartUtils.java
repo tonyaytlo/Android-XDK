@@ -3,7 +3,6 @@ package com.layer.xdk.ui.message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
@@ -217,13 +216,12 @@ public class MessagePartUtils {
      * Returns `true` if the MessagePart downloaded successfully within the given period of time, or
      * `false` otherwise.
      *
-     * @param layerClient LayerClient to download the MessagePart with.
      * @param part        MessagePart to download.
      * @param timeLength  Length of time to wait for downloading.
      * @param timeUnit    Unit of time to wait for downloading.
      * @return `true` if the MessagePart content is available, or `false` otherwise.
      */
-    public static boolean downloadMessagePart(LayerClient layerClient, MessagePart part, int timeLength, TimeUnit timeUnit) {
+    public static boolean downloadMessagePart(MessagePart part, int timeLength, TimeUnit timeUnit) {
         if (part.isContentReady()) return true;
 
         final CountDownLatch latch = new CountDownLatch(1);

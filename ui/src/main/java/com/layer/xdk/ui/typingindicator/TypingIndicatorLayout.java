@@ -105,6 +105,7 @@ public class TypingIndicatorLayout extends FrameLayout implements LayerTypingInd
     /**
      * Calls Callback.onBindView() with the current list of typists.
      */
+    @SuppressWarnings("unchecked")
     private void refresh() {
         if (mTypingIndicatorFactory == null) return;
         mTypingIndicatorFactory.onBindView(mIndicatorView, mTypists);

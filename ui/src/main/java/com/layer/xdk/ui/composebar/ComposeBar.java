@@ -339,8 +339,8 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
      * callbacks already set on MessageSenders.
      *
      * @param callback Callback to receive MessageSender events.
-     * @return This ComposeBar.
      */
+    @SuppressWarnings("unused")
     public void setMessageSenderCallback(MessageSender.Callback callback) {
         mMessageSenderCallback = callback;
         if (mMessageSenderCallback == null) return;

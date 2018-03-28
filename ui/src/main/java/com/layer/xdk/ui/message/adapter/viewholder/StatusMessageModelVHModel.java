@@ -39,7 +39,7 @@ public class StatusMessageModelVHModel extends MessageModelVHModel {
             }
             throw new IllegalStateException("Expecting either a Response or Status message model");
         }
-        mVisible = ((MessageModel) getItem()).getHasContent();
+        mVisible = getItem().getHasContent();
 
         if (!getItem().isMessageFromMe() && mEnableReadReceipts) {
             getItem().getMessage().markAsRead();

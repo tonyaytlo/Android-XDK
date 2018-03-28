@@ -43,7 +43,7 @@ public class MessagePartRegionDecoder implements ImageRegionDecoder {
         }
 
         mMessagePart = part;
-        if (!MessagePartUtils.downloadMessagePart(sLayerClient, mMessagePart, 3, TimeUnit.MINUTES)) {
+        if (!MessagePartUtils.downloadMessagePart(mMessagePart, 3, TimeUnit.MINUTES)) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e("Timed out while downloading: " + messagePartId);
             }

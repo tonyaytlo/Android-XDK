@@ -42,7 +42,7 @@ public class MessagePartRequestHandler extends com.squareup.picasso.RequestHandl
         if (!(queryable instanceof MessagePart)) return null;
         MessagePart part = (MessagePart) queryable;
         if (part.isContentReady()) return new Result(part.getDataStream(), LoadedFrom.DISK);
-        if (!MessagePartUtils.downloadMessagePart(mLayerClient, part, 3, TimeUnit.MINUTES)) return null;
+        if (!MessagePartUtils.downloadMessagePart(part, 3, TimeUnit.MINUTES)) return null;
         return new Result(part.getDataStream(), LoadedFrom.NETWORK);
     }
 }

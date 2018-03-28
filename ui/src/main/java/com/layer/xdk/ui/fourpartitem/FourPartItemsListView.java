@@ -46,6 +46,7 @@ public abstract class FourPartItemsListView<ADAPTER extends FourPartItemRecycler
         mItemsRecyclerView.setItemAnimator(noChangeAnimator);
     }
 
+    @SuppressWarnings("unchecked")
     public void setAdapter(ADAPTER adapter) {
         adapter.setStyle(mFourPartItemStyle);
         mItemsRecyclerView.setAdapter(adapter);

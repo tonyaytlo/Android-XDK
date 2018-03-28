@@ -26,10 +26,9 @@ public class DefaultDateFormatter implements DateFormatter {
     /**
      * Returns Today, Yesterday, the day of the week within one week, or a date if greater.
      *
-     * @param date
-     * @return
+     * @param date to be formatted
+     * @return a formatted string representing the date
      */
-
     @Override
     public String formatTimeDay(Date date) {
         Calendar cal = Calendar.getInstance();

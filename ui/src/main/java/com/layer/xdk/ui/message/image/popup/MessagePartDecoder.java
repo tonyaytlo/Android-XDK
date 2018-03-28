@@ -35,7 +35,7 @@ public class MessagePartDecoder implements ImageDecoder {
             }
             return null;
         }
-        if (!MessagePartUtils.downloadMessagePart(sLayerClient, part, 3, TimeUnit.MINUTES)) {
+        if (!MessagePartUtils.downloadMessagePart(part, 3, TimeUnit.MINUTES)) {
             if (Log.isLoggable(Log.ERROR)) {
                 Log.e("Timed out while downloading: " + messagePartId);
             }

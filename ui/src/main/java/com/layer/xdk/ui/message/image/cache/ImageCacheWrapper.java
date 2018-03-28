@@ -11,14 +11,14 @@ public interface ImageCacheWrapper {
      * @see BitmapWrapper#setBitmap(Bitmap)
      * Pass the BitmapWrapper to the onSuccess of Callback
      * @see PicassoImageCacheWrapper for sample implementation
-     * @param bitmapWrapper
+     * @param bitmapWrapper a {@link BitmapWrapper} instance to store the fetched Bitmap in
      */
     void fetchBitmap(BitmapWrapper bitmapWrapper, Callback callback);
 
     /**
      * Makes call to cancel BitMap request
      * @see PicassoImageCacheWrapper for sample implementation
-     * @param bitmapWrapper
+     * @param bitmapWrapper {@link BitmapWrapper} instance used to make the fetchBitmap request
      */
     void cancelBitmap(BitmapWrapper bitmapWrapper);
 

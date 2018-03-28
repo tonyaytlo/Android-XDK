@@ -119,9 +119,6 @@
         <attr name="maximumAvatars" format="integer"/>
     </declare-styleable>
 
-    <declare-styleable name="TypingIndicatorLayout"></declare-styleable>
-
-
     <!-- ####################### -->
     <!-- UI Attribute Formats -->
     <!-- ####################### -->

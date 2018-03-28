@@ -105,7 +105,7 @@ public class MessageModelManager {
         return getNewModel(getModelIdentifier(message), message);
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings({"WeakerAccess", "unchecked"})
     @NonNull
     public MessageModel getNewModel(@NonNull String modelIdentifier, @NonNull Message message) {
         Throwable exception;
