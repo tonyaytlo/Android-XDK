@@ -10,7 +10,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -48,7 +48,7 @@ public class AvatarView extends View {
     private int mMaxAvatar = 2;
     private static final float BORDER_SIZE_DP = 1f;
     private static final float MULTI_FRACTION = 0.83f;
-    private Drawable avatarPlaceholder = ContextCompat.getDrawable(getContext(), R.drawable.avatar_placeholder);
+    private final Drawable mAvatarPlaceholder;
 
     static {
         PAINT_TRANSPARENT.setARGB(0, 255, 255, 255);
@@ -80,19 +80,19 @@ public class AvatarView extends View {
     private int mParticipantsInitialSize;
 
     public AvatarView(Context context) {
-        super(context);
-        mParticipants = new LinkedHashSet<>();
+        this(context, null);
     }
 
     public AvatarView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        mParticipants = new LinkedHashSet<>();
     }
 
     public AvatarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         parseStyle(getContext(), attrs, defStyleAttr);
         mParticipants = new LinkedHashSet<>();
+
+        mAvatarPlaceholder = AppCompatResources.getDrawable(getContext(), R.drawable.xdk_ui_avatar_placeholder);
     }
 
     public AvatarView init(@NonNull AvatarViewModel avatarViewModel) {
@@ -324,8 +324,8 @@ public class AvatarView extends View {
             if (mParticipantsInitialSize > 2 && !hasDrawnGroupAvatarResource) {
                 hasDrawnGroupAvatarResource = true;
                 mContentRect.roundOut(mImageRect);
-                avatarPlaceholder.setBounds(mImageRect);
-                avatarPlaceholder.draw(canvas);
+                mAvatarPlaceholder.setBounds(mImageRect);
+                mAvatarPlaceholder.draw(canvas);
             } else {
                 if (bitmap != null && identity.getAvatarImageUrl() != null) {
                     canvas.drawBitmap(bitmap, mContentRect.left, mContentRect.top, PAINT_BITMAP);

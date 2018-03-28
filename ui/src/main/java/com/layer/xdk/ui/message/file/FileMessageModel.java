@@ -194,19 +194,19 @@ public class FileMessageModel extends MessageModel {
     }
 
     private void setupFileIconDrawable(@Nullable String sourceMimeType) {
-        mFileIconDrawable = R.drawable.ui_ic_file_generic;
+        mFileIconDrawable = R.drawable.xdk_ui_file_generic;
 
         if (!TextUtils.isEmpty(sourceMimeType)) {
             if (TEXT_MIME_TYPES.contains(sourceMimeType)) {
-                mFileIconDrawable = R.drawable.ui_ic_file_text;
+                mFileIconDrawable = R.drawable.xdk_ui_file_text;
             } else if (PDF_MIME_TYPES.contains(sourceMimeType)) {
-                mFileIconDrawable = R.drawable.ui_ic_file_pdf;
+                mFileIconDrawable = R.drawable.xdk_ui_file_pdf;
             } else if (AUDIO_MIME_TYPES.contains(sourceMimeType)) {
-                mFileIconDrawable = R.drawable.ui_ic_file_audio;
+                mFileIconDrawable = R.drawable.xdk_ui_file_audio;
             } else if (IMAGE_MIME_TYPES.contains(sourceMimeType)) {
-                mFileIconDrawable = R.drawable.ui_ic_file_image;
+                mFileIconDrawable = R.drawable.xdk_ui_file_image;
             } else if (ZIP_MIME_TYPES.contains(sourceMimeType)) {
-                mFileIconDrawable = R.drawable.ui_ic_file_zip;
+                mFileIconDrawable = R.drawable.xdk_ui_file_zip;
             }
         }
     }

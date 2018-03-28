@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -34,8 +34,8 @@ import com.layer.xdk.ui.databinding.XdkUiComposeBarAttachmentMenuItemBinding;
 import com.layer.xdk.ui.databinding.XdkUiComposeBarBinding;
 import com.layer.xdk.ui.message.sender.AttachmentSender;
 import com.layer.xdk.ui.message.sender.MessageSender;
-import com.layer.xdk.ui.message.text.TextSender;
 import com.layer.xdk.ui.message.text.RichTextSender;
+import com.layer.xdk.ui.message.text.TextSender;
 import com.layer.xdk.ui.util.EditTextUtil;
 
 import java.util.ArrayList;
@@ -289,9 +289,8 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         binding.executePendingBindings();
 
         if (sender.getIcon() != null) {
-            Drawable iconDrawable = ContextCompat.getDrawable(getContext(), sender.getIcon());
-            iconDrawable = DrawableCompat.wrap(iconDrawable);
-            DrawableCompat.setTint(iconDrawable, getResources().getColor(R.color.xdk_ui_icon_enabled));
+            Drawable iconDrawable = AppCompatResources.getDrawable(getContext(), sender.getIcon());
+            DrawableCompat.setTint(iconDrawable, getResources().getColor(R.color.xdk_ui_icon_tint));
             binding.title.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null);
         }
 
