@@ -41,14 +41,7 @@ public class TitledMessageContainer extends MessageContainer {
         if (inflatedView instanceof IconProvider) {
             IconProvider iconProvider = (IconProvider) inflatedView;
             Drawable icon = iconProvider.getIconDrawable();
-            if (icon != null) {
-                // TODO : AND-1370 Stop imposing size constraints on icons and use correctly sized assets
-                int size = getResources().getDimensionPixelSize(R.dimen.xdk_ui_titled_message_container_icon_size);
-                icon.setBounds(0, 0, size, size);
-                getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(icon, null, null, null);
-            } else {
-                getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(null, null, null, null);
-            }
+            getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(icon, null, null, null);
         } else {
             getBinding().xdkUiTitledMessageContainerTitle.setCompoundDrawables(null, null, null, null);
         }

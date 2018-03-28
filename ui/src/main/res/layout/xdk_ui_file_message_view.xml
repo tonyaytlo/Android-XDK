@@ -18,7 +18,6 @@
         android:layout_height="@dimen/xdk_ui_file_message_image_height"
         android:adjustViewBounds="true"
         android:scaleType="center"
-        android:src="@drawable/ui_ic_file_generic"
         app:imageResource="@{messageModel.fileIconDrawable}"
         app:messageModel="@{messageModel}"/>
 

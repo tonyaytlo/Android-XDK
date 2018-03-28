@@ -5,7 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v7.content.res.AppCompatResources;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -109,6 +109,6 @@ public class ChoiceMessageLayout extends LinearLayout implements
 
     @Override
     public Drawable getIconDrawable() {
-        return ContextCompat.getDrawable(getContext(), R.drawable.xdk_ui_choice_message_icon_poll);
+        return AppCompatResources.getDrawable(getContext(), R.drawable.xdk_ui_ic_choice_poll);
     }
 }

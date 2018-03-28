@@ -19,6 +19,7 @@
     <color name="xdk_ui_color_dark_blue">#FF1094D0</color>
     <color name="xdk_ui_color_primary_gray">#F2F2F2</color>
     <color name="xdk_ui_color_athens_gray">#E9EBEF</color>
+    <color name="xdk_ui_color_pale_sky">#6E727A</color>
 
     <color name="xdk_ui_color_primary_gray_1">#FFF3F3F3</color>
     <color name="xdk_ui_color_primary_gray_2">#FFDBDEE4</color>
@@ -45,7 +46,7 @@
     <color name="xdk_ui_dialog_primary">@color/xdk_ui_color_primary_blue</color>
     <color name="xdk_ui_dialog_accent">@color/xdk_ui_color_primary_blue</color>
 
-    <color name="xdk_ui_icon_enabled">#8A000000</color>
+    <color name="xdk_ui_icon_tint">@color/xdk_ui_color_pale_sky</color>
 
     <!-- ########## -->
     <!-- Avatar     -->

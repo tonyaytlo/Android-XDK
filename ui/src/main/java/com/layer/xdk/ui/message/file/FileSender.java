@@ -31,7 +31,7 @@ public class FileSender extends AttachmentSender {
     private FileMessageComposer mFileMessageComposer = new FileMessageComposer();
 
     public FileSender(Activity activity, LayerClient layerClient, @StringRes int titleId) {
-        this(activity, layerClient, activity.getString(titleId), R.drawable.ic_insert_drive_file_white_24dp);
+        this(activity, layerClient, activity.getString(titleId), R.drawable.ic_insert_drive_file_black_24dp);
     }
 
     @SuppressWarnings("WeakerAccess")
