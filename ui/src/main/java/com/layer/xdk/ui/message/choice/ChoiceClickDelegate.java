@@ -9,9 +9,10 @@ import android.text.TextUtils;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.response.ChoiceResponseModel;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,17 +45,16 @@ public class ChoiceClickDelegate {
         mMessageSenderRepository = messageSenderRepository;
         mMessage = message;
     }
-
     /**
      * Send a response message for the selected choice.
      *
      * @param choiceConfig configuration for the choice
      * @param choice choice that was selected
      * @param selected true if the choice is being selected, false if it is being deselected
-     * @param selectedChoices set of selected choices in this choice config
+     * @param results list of OR Set results to send to the server
      */
     public void sendResponse(ChoiceConfigMetadata choiceConfig, @NonNull ChoiceMetadata choice,
-            boolean selected, @NonNull Set<String> selectedChoices) {
+            boolean selected, @NonNull List<OrOperationResult> results) {
         String statusText;
         if (TextUtils.isEmpty(choiceConfig.mName)) {
             statusText = mContext.getString(
@@ -74,11 +74,9 @@ public class ChoiceClickDelegate {
         UUID rootPartId = UUID.fromString(mRootMessagePartId.getLastPathSegment());
 
         ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(mMessage.getId(),
-                rootPartId, statusText);
-        choiceResponseModel.addChoices(choiceConfig.getResponseName(), selectedChoices);
+                rootPartId, statusText, results);
 
-        MessageSenderRepository messageSenderRepository = mMessageSenderRepository;
-        messageSenderRepository.sendChoiceResponse(mMessage.getConversation(),
+        mMessageSenderRepository.sendChoiceResponse(mMessage.getConversation(),
                 choiceResponseModel);
     }
 }

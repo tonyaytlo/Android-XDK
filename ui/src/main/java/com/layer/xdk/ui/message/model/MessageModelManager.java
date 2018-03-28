@@ -3,6 +3,8 @@ package com.layer.xdk.ui.message.model;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
@@ -19,8 +21,11 @@ import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
 import com.layer.xdk.ui.message.receipt.ReceiptMessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
+import com.layer.xdk.ui.message.response.crdt.ORSet;
+import com.layer.xdk.ui.message.response.crdt.ORSetDeserializer;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
+import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 
@@ -38,6 +43,7 @@ public class MessageModelManager {
     private final LayerClient mLayerClient;
     private final IdentityFormatter mIdentityFormatter;
     private final DateFormatter mDateFormatter;
+    private final Gson mGson;
 
     @Inject
     public MessageModelManager(Context applicationContext, LayerClient layerClient,
@@ -47,6 +53,9 @@ public class MessageModelManager {
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
         mDateFormatter = dateFormatter;
+        mGson = new GsonBuilder()
+                .registerTypeAdapter(ORSet.class, new ORSetDeserializer())
+                .setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
         registerDefaultModels();
     }
 
@@ -67,6 +76,7 @@ public class MessageModelManager {
         registerModel(StatusMessageModel.MIME_TYPE, StatusMessageModel.class);
         registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
         registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
+        registerModel(ResponseMessageModel.MIME_TYPE_V2, ResponseMessageModel.class);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -111,6 +121,7 @@ public class MessageModelManager {
                 model.setMessageModelManager(this);
                 model.setIdentityFormatter(mIdentityFormatter);
                 model.setDateFormatter(mDateFormatter);
+                model.setGson(mGson);
                 return model;
             }
         } catch (IllegalAccessException e) {

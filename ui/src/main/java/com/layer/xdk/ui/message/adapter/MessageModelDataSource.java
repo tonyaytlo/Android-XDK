@@ -75,6 +75,11 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
                         case MESSAGE:
                             Message message = (Message) change.getObject();
                             if (message.getConversation().equals(conversation)) {
+                                if ("localData".equals(change.getAttributeName())) {
+                                    // Ignore local data changes since the message would already
+                                    // have the new data
+                                    continue;
+                                }
                                 needsInvalidation = true;
                             }
                             break;

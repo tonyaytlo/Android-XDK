@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -13,7 +11,6 @@ import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -22,12 +19,10 @@ public class CarouselMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.carousel+json";
     private static final String ROLE_CAROUSEL_ITEM = "carousel-item";
 
-    private Gson mGson;
     private CarouselMessageMetadata mMetadata;
 
     public CarouselMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
     @Override
@@ -56,7 +51,7 @@ public class CarouselMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-        mMetadata = mGson.fromJson(reader, CarouselMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, CarouselMessageMetadata.class);
     }
 
     @Override

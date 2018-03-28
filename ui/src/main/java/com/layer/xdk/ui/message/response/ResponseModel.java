@@ -2,9 +2,12 @@ package com.layer.xdk.ui.message.response;
 
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Map;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -15,13 +18,13 @@ public class ResponseModel {
 
     private Uri mMessageIdToRespondTo;
     private UUID mPartIdToRespondTo;
-    private Map<Object, Object> mParticipantData;
+    private List<OrOperationResult> mChanges;
 
     public ResponseModel(@Nullable Uri messageIdToRespondTo, @Nullable UUID partIdToRespondTo,
-            @Nullable Map<Object, Object> participantData) {
+            @NonNull List<OrOperationResult> changes) {
         mMessageIdToRespondTo = messageIdToRespondTo;
         mPartIdToRespondTo = partIdToRespondTo;
-        mParticipantData = participantData;
+        mChanges = changes;
     }
 
     public Uri getMessageIdToRespondTo() {
@@ -40,11 +43,19 @@ public class ResponseModel {
         mPartIdToRespondTo = partIdToRespondTo;
     }
 
-    public Map<Object, Object> getParticipantData() {
-        return mParticipantData;
+    /**
+     * @return list of OR set operations that are part of this response
+     */
+    public List<OrOperationResult> getChanges() {
+        return mChanges;
     }
 
-    public void setParticipantData(Map<Object, Object> participantData) {
-        mParticipantData = participantData;
+    /**
+     * Set the OR set operations to send as part of this response.
+     *
+     * @param changes set of OR set operations that resulted in this change
+     */
+    public void setChanges(List<OrOperationResult> changes) {
+        mChanges = changes;
     }
 }

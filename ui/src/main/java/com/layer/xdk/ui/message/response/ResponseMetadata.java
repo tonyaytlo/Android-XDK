@@ -2,8 +2,9 @@ package com.layer.xdk.ui.message.response;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Metadata for a response message
@@ -17,6 +18,6 @@ public class ResponseMetadata {
     @SerializedName("response_to_node_id")
     public String mPartIdToRespondTo;
 
-    @SerializedName("participant_data")
-    public Map<Object, Object> mParticipantData;
+    @SerializedName("changes")
+    public List<OrOperationResult> mChanges;
 }

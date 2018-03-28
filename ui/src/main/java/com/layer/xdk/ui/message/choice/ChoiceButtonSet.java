@@ -63,6 +63,31 @@ public class ChoiceButtonSet extends LinearLayout {
         mAllowMultiSelect = allowMultiSelect;
     }
 
+    /**
+     * Determine if reselection is allowed. Multi select implicitly allows for reselection
+     *
+     * @return true if reselection is allowed, false otherwise
+     */
+    private boolean isReselectAllowed() {
+        return mAllowReselect || mAllowMultiSelect;
+    }
+
+    /**
+     * Determine if deselection is allowed. Multi select implicitly allows for deselection
+     *
+     * @return true if deselection is allowed, false otherwise
+     */
+    private boolean isDeselectAllowed() {
+        return mAllowDeselect || mAllowMultiSelect;
+    }
+
+    /**
+     *@return true if multi selection is allowed, false otherwise
+     */
+    private boolean isMultiSelectAllowed() {
+        return mAllowMultiSelect;
+    }
+
     public void setEnabledForMe(boolean enabledForMe) {
         mEnabledForMe = enabledForMe;
     }
@@ -121,7 +146,7 @@ public class ChoiceButtonSet extends LinearLayout {
 
                 ChoiceMetadata choice = mChoiceMetadata.get(choiceId);
                 if (mOnChoiceClickedListener != null) {
-                    mOnChoiceClickedListener.onChoiceClick(choice, button.isChecked(), mSelectedChoiceIds);
+                    mOnChoiceClickedListener.onChoiceClick(choice, button.isChecked());
                 } else if (Log.isLoggable(Log.VERBOSE)) {
                     Log.v("Clicked choice but no OnChoiceClickedListener is registered. Choice: " + choiceId);
                 }
@@ -132,12 +157,12 @@ public class ChoiceButtonSet extends LinearLayout {
     private void toggleChoice(String choiceId) {
         if (mSelectedChoiceIds.contains(choiceId)) {
             // Currently selected, deselect if allowed
-            if (mAllowDeselect) {
+            if (isDeselectAllowed()) {
                 mSelectedChoiceIds.remove(choiceId);
             }
         } else {
             // Un-select others if multi-select is not allowed
-            if (!mAllowMultiSelect) {
+            if (!isMultiSelectAllowed()) {
                 mSelectedChoiceIds.clear();
             }
             mSelectedChoiceIds.add(choiceId);
@@ -147,7 +172,7 @@ public class ChoiceButtonSet extends LinearLayout {
     }
 
     public void setSelection(@NonNull Set<String> choiceIds) {
-        mSelectedChoiceIds = choiceIds;
+        mSelectedChoiceIds = new HashSet<>(choiceIds);
         boolean somethingIsChecked = false;
 
         for (int i = 0; i < getChildCount(); i++) {
@@ -163,7 +188,9 @@ public class ChoiceButtonSet extends LinearLayout {
 
         for (int i = 0; i < getChildCount(); i++) {
             ChoiceButton button = (ChoiceButton) getChildAt(i);
-            if (!mEnabledForMe || (somethingIsChecked && !mAllowReselect) || (button.isChecked() && !mAllowDeselect)) {
+            if (!mEnabledForMe
+                    || (somethingIsChecked && !isReselectAllowed())
+                    || (button.isChecked() && !isDeselectAllowed())) {
                 button.setEnabled(false);
             } else {
                 button.setEnabled(true);
@@ -178,8 +205,7 @@ public class ChoiceButtonSet extends LinearLayout {
          *
          * @param choice Metadata of the choice button that was clicked
          * @param selected true if button transitions from unselected -> selected state. False otherwise.
-         * @param selectedChoices choice IDs that are currently in a selected state in this set.
          */
-        void onChoiceClick(ChoiceMetadata choice, boolean selected, Set<String> selectedChoices);
+        void onChoiceClick(ChoiceMetadata choice, boolean selected);
     }
 }

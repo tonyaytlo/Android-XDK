@@ -7,8 +7,6 @@ import android.support.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.util.Linkify;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -17,7 +15,6 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,11 +25,9 @@ public class StatusMessageModel extends MessageModel {
 
     private StatusMessageMetadata mMetadata;
     private SpannableString mText;
-    private final Gson mGson;
 
     public StatusMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
     @Override
@@ -51,7 +46,7 @@ public class StatusMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, StatusMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, StatusMessageMetadata.class);
         if (mMetadata != null && mMetadata.mText != null) {
             mText = new SpannableString(mMetadata.mText);
             Linkify.addLinks(mText, Linkify.ALL);

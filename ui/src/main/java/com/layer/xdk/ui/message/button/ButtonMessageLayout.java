@@ -176,11 +176,10 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
         choiceButtonSet.setOnChoiceClickedListener(new ChoiceButtonSet.OnChoiceClickedListener() {
             @Override
-            public void onChoiceClick(ChoiceMetadata choice, boolean selected,
-                    Set<String> selectedChoices) {
+            public void onChoiceClick(ChoiceMetadata choice, boolean selected) {
                 ButtonMessageModel messageModel = mBinding.getMessageModel();
                 if (messageModel != null) {
-                    messageModel.onChoiceClicked(choiceConfig, choice, selected, selectedChoices);
+                    messageModel.onChoiceClicked(choiceConfig, choice, selected);
                 }
             }
         });

@@ -24,8 +24,7 @@ public class ResponseMessagePartComposer {
     public MessagePart buildResponseMessagePart(LayerClient layerClient, ResponseModel responseModel) {
         Gson gson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
 
-        String rootMimeTpe = MessagePartUtils.getAsRoleRoot(
-                ResponseMessageModel.MIME_TYPE);
+        String rootMimeTpe = MessagePartUtils.getAsRoleRoot(ResponseMessageModel.MIME_TYPE_V2);
 
         ResponseMetadata responseMetadata = createResponseMetadata(responseModel);
         return layerClient.newMessagePart(rootMimeTpe, gson.toJson(responseMetadata).getBytes());
@@ -36,7 +35,7 @@ public class ResponseMessagePartComposer {
         responseMetadata.mMessageIdToRespondTo = responseModel.getMessageIdToRespondTo().toString();
         responseMetadata.mPartIdToRespondTo = responseModel.getPartIdToRespondTo().toString();
 
-        responseMetadata.mParticipantData = responseModel.getParticipantData();
+        responseMetadata.mChanges = responseModel.getChanges();
         return responseMetadata;
     }
 }

@@ -2,11 +2,10 @@ package com.layer.xdk.ui.message.choice;
 
 import android.content.Context;
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
@@ -14,25 +13,26 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.response.ResponseSummary;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.message.response.ResponseSummaryMetadataV2;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
+import com.layer.xdk.ui.util.Log;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ChoiceMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.choice+json";
 
     private ChoiceMessageMetadata mMetadata;
-    private Gson mGson;
-    private ChoiceStateSummary mChoiceStateSummary;
     private ChoiceClickDelegate mChoiceClickDelegate;
+
+    private ChoiceOrSetHelper mChoiceOrSetHelper;
 
     public ChoiceMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
     @Override
@@ -47,22 +47,31 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-        mMetadata = mGson.fromJson(reader, ChoiceMessageMetadata.class);
-        mMetadata.setEnabledForMe(getAuthenticatedUserId());
-        mChoiceStateSummary = new ChoiceStateSummary(getMessage(), mGson,
-                Collections.<ChoiceConfigMetadata>singleton(mMetadata));
-        notifyPropertyChanged(BR.choiceMessageMetadata);
-    }
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
+        mMetadata = getGson().fromJson(reader, ChoiceMessageMetadata.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing choice message", e);
+            }
+        }
 
-    @Override
-    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(responseSummaryPart.getDataStream()));
-        ResponseSummary responseSummary = mGson.fromJson(reader, ResponseSummary.class);
-        mChoiceStateSummary.processRemoteResponseSummary(responseSummary);
+        mMetadata.setEnabledForMe(getAuthenticatedUserId());
+
+        mChoiceOrSetHelper = new ChoiceOrSetHelper(getGson(), getRootMessagePart(),
+                Collections.<ChoiceConfigMetadata>singleton(mMetadata));
+
+        notifyPropertyChanged(BR.choiceMessageMetadata);
         notifyPropertyChanged(BR.selectedChoices);
     }
 
+    @Override
+    protected void processResponseSummaryMetadata(@NonNull ResponseSummaryMetadataV2 metadata) {
+        mChoiceOrSetHelper.processRemoteResponseSummary(metadata);
+        notifyPropertyChanged(BR.selectedChoices);
+    }
 
     @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
@@ -128,7 +137,7 @@ public class ChoiceMessageModel extends MessageModel {
 
     @Bindable
     public Set<String> getSelectedChoices() {
-        return new HashSet<>(mChoiceStateSummary.getSelectedChoices(mMetadata.getResponseName()));
+        return mChoiceOrSetHelper.getSelections(mMetadata.getResponseName());
     }
 
     @Bindable
@@ -137,11 +146,18 @@ public class ChoiceMessageModel extends MessageModel {
         return mMetadata.mEnabledForMe;
     }
 
-    void onChoiceClicked(@NonNull ChoiceMetadata choice, boolean selected, @NonNull Set<String> selectedChoices) {
-        String userId = getLayerClient().getAuthenticatedUser().getUserId();
-        mChoiceStateSummary.handleUserSelectionChange(mMetadata.getResponseName(), selectedChoices,
-                userId);
-        getChoiceClickDelegate().sendResponse(mMetadata, choice, selected, selectedChoices);
+    void onChoiceClicked(@NonNull ChoiceMetadata choice, boolean selected) {
+        Uri identityId = getAuthenticatedUserId();
+        if (identityId == null) {
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("Unable to process a choice with no authenticated user");
+            }
+            return;
+        }
+
+        List<OrOperationResult> orOperationResults = mChoiceOrSetHelper.processLocalSelection(
+                identityId, mMetadata.getResponseName(), selected, choice.mId);
+        getChoiceClickDelegate().sendResponse(mMetadata, choice, selected, orOperationResults);
     }
 
     private ChoiceClickDelegate getChoiceClickDelegate() {

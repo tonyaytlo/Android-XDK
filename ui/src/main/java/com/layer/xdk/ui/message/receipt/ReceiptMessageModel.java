@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
@@ -15,7 +13,6 @@ import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,14 +25,10 @@ public class ReceiptMessageModel extends MessageModel {
     private static final String ROLE_SHIPPING_ADDRESS = "shipping";
     private static final String ROLE_BILLING_ADDRESS = "billing";
 
-    private Gson mGson;
     private ReceiptMessageMetadata mMetadata;
 
     public ReceiptMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
-        mGson = gsonBuilder.create();
     }
 
     @Override
@@ -52,7 +45,7 @@ public class ReceiptMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, ReceiptMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, ReceiptMessageMetadata.class);
         try {
             inputStreamReader.close();
         } catch (IOException e) {

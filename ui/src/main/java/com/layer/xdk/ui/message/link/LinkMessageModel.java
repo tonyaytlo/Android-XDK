@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -18,7 +16,6 @@ import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -32,13 +29,9 @@ public class LinkMessageModel extends MessageModel {
     private static ImageCacheWrapper sImageCacheWrapper;
 
     private LinkMessageMetadata mMetadata;
-    private Gson mGson;
 
     public LinkMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
-        mGson = gsonBuilder.create();
     }
 
     @Override
@@ -55,7 +48,7 @@ public class LinkMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, LinkMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, LinkMessageMetadata.class);
         try {
             inputStreamReader.close();
         } catch (IOException e) {

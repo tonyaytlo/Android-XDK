@@ -1,11 +1,10 @@
 package com.layer.xdk.ui.message.button;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -16,10 +15,11 @@ import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.choice.ChoiceClickDelegate;
 import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
-import com.layer.xdk.ui.message.choice.ChoiceStateSummary;
+import com.layer.xdk.ui.message.choice.ChoiceOrSetHelper;
 import com.layer.xdk.ui.message.model.MessageModel;
-import com.layer.xdk.ui.message.response.ResponseSummary;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.message.response.ResponseSummaryMetadataV2;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
+import com.layer.xdk.ui.util.Log;
 
 import java.io.InputStreamReader;
 import java.util.HashSet;
@@ -29,14 +29,12 @@ import java.util.Set;
 public class ButtonMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.buttons+json";
 
-    private Gson mGson;
     private ButtonMessageMetadata mMetadata;
-    private ChoiceStateSummary mChoiceStateSummary;
+    private ChoiceOrSetHelper mChoiceOrSetHelper;
     private ChoiceClickDelegate mChoiceClickDelegate;
 
     public ButtonMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        mGson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class ButtonMessageModel extends MessageModel {
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
-        mMetadata = mGson.fromJson(reader, ButtonMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, ButtonMessageMetadata.class);
 
         // Populate choice data objects
         Set<ChoiceConfigMetadata> choiceConfigs = new HashSet<>();
@@ -60,7 +58,7 @@ public class ButtonMessageModel extends MessageModel {
             if (ButtonMetadata.TYPE_CHOICE.equals(metadata.mType)) {
                 JsonObject data = metadata.mData;
                 if (data != null) {
-                    ChoiceConfigMetadata choiceConfig = mGson.fromJson(data,
+                    ChoiceConfigMetadata choiceConfig = getGson().fromJson(data,
                             ChoiceConfigMetadata.class);
                     metadata.mChoiceConfigMetadata = choiceConfig;
                     choiceConfig.setEnabledForMe(getAuthenticatedUserId());
@@ -69,22 +67,19 @@ public class ButtonMessageModel extends MessageModel {
             }
 
         }
-        mChoiceStateSummary = new ChoiceStateSummary(getMessage(), mGson, choiceConfigs);
+        mChoiceOrSetHelper = new ChoiceOrSetHelper(getGson(), getRootMessagePart(), choiceConfigs);
         notifyChange();
     }
 
     @Override
-    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
-        JsonReader reader = new JsonReader(new InputStreamReader(responseSummaryPart.getDataStream()));
-
-        ResponseSummary responseSummary = mGson.fromJson(reader, ResponseSummary.class);
-        mChoiceStateSummary.processRemoteResponseSummary(responseSummary);
+    protected void processResponseSummaryMetadata(@NonNull ResponseSummaryMetadataV2 metadata) {
+        mChoiceOrSetHelper.processRemoteResponseSummary(metadata);
         notifyChange();
     }
 
     @NonNull
     Set<String> getSelectedChoices(@NonNull String responseName) {
-        return new HashSet<>(mChoiceStateSummary.getSelectedChoices(responseName));
+        return mChoiceOrSetHelper.getSelections(responseName);
     }
 
     @Override
@@ -182,11 +177,18 @@ public class ButtonMessageModel extends MessageModel {
 
     @SuppressWarnings("WeakerAccess")
     protected void onChoiceClicked(ChoiceConfigMetadata choiceConfig, ChoiceMetadata choice,
-                                boolean selected, Set<String> selectedChoices) {
-        String userId = getLayerClient().getAuthenticatedUser().getUserId();
-        mChoiceStateSummary.handleUserSelectionChange(choiceConfig.getResponseName(),
-                selectedChoices, userId);
-        getChoiceClickDelegate().sendResponse(choiceConfig, choice, selected, selectedChoices);
+            boolean selected) {
+        Uri identityId = getAuthenticatedUserId();
+        if (identityId == null) {
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("Unable to process a choice with no authenticated user");
+            }
+            return;
+        }
+
+        List<OrOperationResult> orOperationResults = mChoiceOrSetHelper.processLocalSelection(
+                identityId, choiceConfig.getResponseName(), selected, choice.mId);
+        getChoiceClickDelegate().sendResponse(choiceConfig, choice, selected, orOperationResults);
 
         ActionHandlerRegistry.dispatchChoiceSelection(getAppContext(), choice, this, getRootModelForTree());
     }

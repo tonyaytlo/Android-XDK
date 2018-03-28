@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 @SuppressWarnings("WeakerAccess") // For Gson serialization/de-serialization
 public class ChoiceConfigMetadata {
     public static final String DEFAULT_RESPONSE_NAME = "selection";
@@ -20,9 +18,6 @@ public class ChoiceConfigMetadata {
 
     @SerializedName("name")
     public String mName;
-
-    @SerializedName("preselected_choice")
-    public String mPreselectedChoice;
 
     @SerializedName("allow_reselect")
     public boolean mAllowReselect;
@@ -34,7 +29,7 @@ public class ChoiceConfigMetadata {
     public boolean mAllowMultiselect;
 
     @SerializedName("enabled_for")
-    public List<String> mEnabledFor;
+    public String mEnabledFor;
 
     @SerializedName("custom_response_data")
     public JsonObject mCustomResponseData;
@@ -53,8 +48,9 @@ public class ChoiceConfigMetadata {
     public void setEnabledForMe(@Nullable Uri authenticatedUserId) {
         if (authenticatedUserId == null) {
             mEnabledForMe = false;
+            return;
         }
         String myUserID = authenticatedUserId.toString();
-        mEnabledForMe = mEnabledFor == null || mEnabledFor.contains(myUserID);
+        mEnabledForMe = mEnabledFor == null || mEnabledFor.equals(myUserID);
     }
 }

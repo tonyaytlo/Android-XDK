@@ -88,7 +88,7 @@ public class ChoiceMessageLayout extends LinearLayout implements
     }
 
     private void updateLabel(ChoiceMessageModel model) {
-        if (!model.getHasContent()) return;
+        if (!model.getHasContent() || model.getChoiceMessageMetadata() == null) return;
 
         String label = model.getChoiceMessageMetadata().mLabel;
         if (!TextUtils.isEmpty(label)) {
@@ -100,11 +100,10 @@ public class ChoiceMessageLayout extends LinearLayout implements
     }
 
     @Override
-    public void onChoiceClick(ChoiceMetadata choice, boolean selected,
-            Set<String> selectedChoices) {
+    public void onChoiceClick(ChoiceMetadata choice, boolean selected) {
         ChoiceMessageModel messageModel = mBinding.getMessageModel();
         if (messageModel != null) {
-            messageModel.onChoiceClicked(choice, selected, selectedChoices);
+            messageModel.onChoiceClicked(choice, selected);
         }
     }
 

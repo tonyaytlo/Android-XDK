@@ -12,7 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
@@ -22,10 +24,13 @@ import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
+import com.layer.xdk.ui.message.response.ResponseSummaryMetadataV2;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -44,6 +49,7 @@ public abstract class MessageModel extends BaseObservable {
     private MessageModelManager mMessageModelManager;
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
+    private Gson mGson;
 
     private final Message mMessage;
 
@@ -59,7 +65,6 @@ public abstract class MessageModel extends BaseObservable {
     private MessageModel mParentMessageModel;
     private List<MessagePart> mChildMessageParts;
     private List<MessageModel> mChildMessageModels;
-    private MessagePart mResponseSummaryPart;
 
     private MessageSenderRepository mMessageSenderRepository;
 
@@ -186,8 +191,7 @@ public abstract class MessageModel extends BaseObservable {
             }
 
             if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
-                mResponseSummaryPart = childMessagePart;
-                processResponseSummaryPart(childMessagePart);
+                parseResponseSummary(childMessagePart);
                 continue;
             }
 
@@ -200,8 +204,54 @@ public abstract class MessageModel extends BaseObservable {
         }
     }
 
-    protected void processResponseSummaryPart(@NonNull MessagePart responseSummaryPart) {
+    /**
+     * Override to handle processing of the metadata from a response summary (v2) part. This part
+     * has a parent node id equal to this model's root message part.
+     *
+     * @param metadata parsed metadata from the response summary part
+     */
+    protected void processResponseSummaryMetadata(@NonNull ResponseSummaryMetadataV2 metadata) {
         // Standard operation is no-op
+    }
+
+    /**
+     * Parse a response summary part that is a child of this message model. This currently only
+     * supports {@link ResponseSummaryMetadataV2} summary objects. Models that use other objects
+     * should override this method and handle parsing themselves.
+     *
+     * @param messagePart part whose role is 'response_summary'
+     */
+    @SuppressWarnings("WeakerAccess")
+    protected void parseResponseSummary(MessagePart messagePart) {
+        String mimeType = MessagePartUtils.getMimeType(messagePart);
+        if (ResponseSummaryMetadataV2.MIME_TYPE.equals(mimeType)) {
+            parseV2ResponseSummary(messagePart);
+        } else {
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("Unknown response summary version: " + mimeType);
+            }
+        }
+    }
+
+    /**
+     * Parse a version 2 response summary and call the
+     * {@link MessageModel#processResponseSummaryMetadata(ResponseSummaryMetadataV2)} method.
+     *
+     * @param messagePart response summary part for a V2 metadata object
+     */
+    private void parseV2ResponseSummary(MessagePart messagePart) {
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
+        ResponseSummaryMetadataV2 responseSummaryMetadata =
+                getGson().fromJson(reader, ResponseSummaryMetadataV2.class);
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Failed to close input stream while parsing response summary", e);
+            }
+        }
+        processResponseSummaryMetadata(responseSummaryMetadata);
     }
 
     /**
@@ -347,11 +397,6 @@ public abstract class MessageModel extends BaseObservable {
 
     protected void addChildMessageModel(MessageModel messageModel) {
         mChildMessageModels.add(messageModel);
-    }
-
-    @Nullable
-    protected MessagePart getResponseSummaryPart() {
-        return mResponseSummaryPart;
     }
 
     public void setAction(Action action) {
@@ -512,6 +557,22 @@ public abstract class MessageModel extends BaseObservable {
 
     public void setMyNewestMessage(boolean myNewestMessage) {
         mMyNewestMessage = myNewestMessage;
+    }
+
+    /**
+     * @return a Gson instance to use for {@link MessagePart} parsing
+     */
+    protected Gson getGson() {
+        return mGson;
+    }
+
+    /**
+     * Set a Gson instance on this model.
+     *
+     * @param gson Gson instance to use
+     */
+    public final void setGson(Gson gson) {
+        mGson = gson;
     }
 
     /**

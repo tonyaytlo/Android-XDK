@@ -6,8 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -22,7 +20,6 @@ import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -42,14 +39,10 @@ public class ProductMessageModel extends MessageModel {
     private List<ChoiceMessageModel> mOptions;
     private static ImageCacheWrapper sImageCacheWrapper;
 
-    private Gson mGson;
     private ProductMessageMetadata mMetadata;
 
     public ProductMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
-        mGson = gsonBuilder.create();
         mOptions = new ArrayList<>();
     }
 
@@ -68,7 +61,7 @@ public class ProductMessageModel extends MessageModel {
         JsonReader reader;
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, ProductMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, ProductMessageMetadata.class);
         mOptions.clear();
         try {
             inputStreamReader.close();
@@ -235,7 +228,7 @@ public class ProductMessageModel extends MessageModel {
     public String getSelectedOptionsAsCommaSeparatedList() {
         List<String> productTexts = new ArrayList<>();
         List<ChoiceMessageModel> options = getOptions();
-        if (options != null && !options.isEmpty()) {
+        if (!options.isEmpty()) {
             for (ChoiceMessageModel option : options) {
                 Iterator<String> iterator = option.getSelectedChoices() != null ? option.getSelectedChoices().iterator() : null;
                 // Use just the first choice for now, the remaining will be displayed in an

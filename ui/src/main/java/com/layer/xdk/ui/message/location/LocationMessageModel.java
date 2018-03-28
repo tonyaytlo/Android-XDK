@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -19,7 +17,6 @@ import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -38,16 +35,11 @@ public class LocationMessageModel extends MessageModel {
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5.0)) / 2.0;
     private static ImageCacheWrapper sImageCacheWrapper;
 
-    private final Gson mGson;
-
     private LocationMessageMetadata mMetadata;
     private boolean mLegacy;
 
     public LocationMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
-        mGson = gsonBuilder.create();
     }
 
     @Override
@@ -64,7 +56,7 @@ public class LocationMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, LocationMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, LocationMessageMetadata.class);
         try {
             inputStreamReader.close();
         } catch (IOException e) {

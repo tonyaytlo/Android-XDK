@@ -3,11 +3,10 @@ package com.layer.xdk.ui.message.response;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
+
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -17,9 +16,16 @@ import java.util.UUID;
 public class ChoiceResponseModel extends ResponseModel {
     private final String mStatusText;
 
+    /**
+     * @param messageIdToRespondTo full ID of the message this is in response to
+     * @param partIdToRespondTo UUID of the message part this is in response to
+     * @param statusText text to use for the status message part
+     * @param results list of OR set operations that resulted in the desired state
+     */
     public ChoiceResponseModel(@NonNull Uri messageIdToRespondTo,
-            @NonNull UUID partIdToRespondTo, @NonNull String statusText) {
-        super(messageIdToRespondTo, partIdToRespondTo, null);
+            @NonNull UUID partIdToRespondTo, @NonNull String statusText,
+            List<OrOperationResult> results) {
+        super(messageIdToRespondTo, partIdToRespondTo, results);
         mStatusText = statusText;
     }
 
@@ -29,21 +35,5 @@ public class ChoiceResponseModel extends ResponseModel {
     @NonNull
     public String getStatusText() {
         return mStatusText;
-    }
-
-    /**
-     * Adds choices to the participant data map
-     *
-     * @param responseName key for the map entry
-     * @param choiceIds values for the map entry
-     */
-    public void addChoices(@NonNull String responseName, @NonNull Collection<String> choiceIds) {
-        Map<Object, Object> participantData = getParticipantData();
-        if (participantData == null) {
-            participantData = new HashMap<>(1);
-            setParticipantData(participantData);
-        }
-
-        participantData.put(responseName, TextUtils.join(",", choiceIds));
     }
 }

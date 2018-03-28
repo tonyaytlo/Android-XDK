@@ -11,8 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -22,7 +20,6 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,6 +28,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,7 +40,7 @@ public class FileMessageModel extends MessageModel {
     private static final String ACTION_DATA_URI = "uri";
     private static final String ACTION_DATA_FILE_MIME_TYPE = "file_mime_type";
 
-    private static final List<String> PDF_MIME_TYPES = Arrays.asList("application/pdf");
+    private static final List<String> PDF_MIME_TYPES = Collections.singletonList("application/pdf");
     private static final List<String> AUDIO_MIME_TYPES = Arrays.asList("application/ogg", "audio/mpeg",
             "audio/wav", "audio/aac", "audio/mp3", "audio/mp4");
     private static final List<String> TEXT_MIME_TYPES = Arrays.asList("text/plain", "application/msword", "text/html");
@@ -52,7 +50,6 @@ public class FileMessageModel extends MessageModel {
             "image/jpg", "image/gif", "image/svg", "image/tiff", "image/bmp");
 
     private FileMessageMetadata mMetadata;
-    private Gson mGson;
     @DrawableRes
     private int mFileIconDrawable;
 
@@ -60,9 +57,6 @@ public class FileMessageModel extends MessageModel {
 
     public FileMessageModel(Context context, LayerClient layerClient, Message message) {
         super(context, layerClient, message);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setFieldNamingStrategy(new AndroidFieldNamingStrategy());
-        mGson = gsonBuilder.create();
         mFileProviderAuthority = context.getPackageName() + ".file_provider";
     }
 
@@ -81,7 +75,7 @@ public class FileMessageModel extends MessageModel {
         JsonReader reader;
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         reader = new JsonReader(inputStreamReader);
-        mMetadata = mGson.fromJson(reader, FileMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, FileMessageMetadata.class);
         setupFileIconDrawable(mMetadata.mMimeType);
         try {
             inputStreamReader.close();
