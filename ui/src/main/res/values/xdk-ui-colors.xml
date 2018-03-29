@@ -102,6 +102,11 @@
     <!-- ########## -->
     <color name="xdk_ui_titled_message_container_content_view_title">@color/xdk_ui_text_black</color>
 
+    <!-- ########## -->
+    <!-- Typing Indicator  -->
+    <!-- ########## -->
+
+    <color name="xdk_ui_typing_indicator_text">@color/xdk_ui_text_light_gray</color>
 
     <!-- ########## -->
     <!-- Text Message View -->

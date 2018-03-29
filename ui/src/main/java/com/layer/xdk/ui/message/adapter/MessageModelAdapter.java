@@ -307,6 +307,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         return mShowTypingIndicator;
     }
 
+    @SuppressWarnings("unused")
     public void setShowTypingIndicator(boolean showTypingIndicator) {
         mShowTypingIndicator = showTypingIndicator;
     }

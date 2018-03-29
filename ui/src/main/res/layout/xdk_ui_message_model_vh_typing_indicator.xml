@@ -18,60 +18,40 @@
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewHolderModel"
-            type="com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVHModel" />
+            type="com.layer.xdk.ui.message.adapter.viewholder.TypingIndicatorVHModel"/>
     </data>
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/animation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/xdk_ui_message_model_vh_padding"
-        android:paddingBottom="@dimen/xdk_ui_message_model_vh_padding">
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/xdk_ui_typing_indicator_padding_vertical"
+        android:paddingEnd="@dimen/xdk_ui_message_model_vh_avatar_padding"
+        android:paddingLeft="@dimen/xdk_ui_message_model_vh_avatar_padding"
+        android:paddingRight="@dimen/xdk_ui_message_model_vh_avatar_padding"
+        android:paddingStart="@dimen/xdk_ui_message_model_vh_avatar_padding"
+        android:paddingTop="@dimen/xdk_ui_message_model_vh_padding">
 
-        <LinearLayout
+        <com.layer.xdk.ui.avatar.AvatarView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/xdk_ui_avatar_width"
+            android:layout_height="@dimen/xdk_ui_avatar_height"
+            android:visibility="@{viewHolderModel.avatarViewVisible ? View.VISIBLE : View.GONE}"
+            app:participants="@{viewHolderModel.participants}"/>
+
+        <FrameLayout
+            android:id="@+id/root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/animation"
-            android:visibility="@{viewHolderModel.animationVisible ? View.VISIBLE : View.GONE}"
-            android:orientation="horizontal">
-            <com.layer.xdk.ui.avatar.AvatarView
-                android:id="@+id/avatar"
-                android:layout_width="@dimen/xdk_ui_avatar_width"
-                android:layout_height="@dimen/xdk_ui_avatar_height"
-                android:layout_marginBottom="@dimen/xdk_ui_typing_indicator_padding_vertical"
-                android:layout_marginLeft="@dimen/xdk_ui_message_model_vh_avatar_padding_left"
-                android:layout_marginStart="@dimen/xdk_ui_message_model_vh_avatar_padding_left"
-                android:layout_marginRight="@dimen/xdk_ui_avatar_right_padding_message"
-                android:layout_marginEnd="@dimen/xdk_ui_avatar_right_padding_message"
-                android:visibility="@{viewHolderModel.avatarViewVisible ? View.VISIBLE : View.GONE}"
-                app:participants="@{viewHolderModel.participants}" />
-
-            <FrameLayout
-                android:id="@+id/root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/xdk_ui_padding_normal">
-            </FrameLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/names"
-            android:layout_below="@id/animation"
-            android:layout_marginTop="@dimen/xdk_ui_typing_indicator_name_top_margin"
-            android:visibility="@{viewHolderModel.typingIndicatorMessageVisible ? View.VISIBLE : View.GONE}"
-            android:text="@{viewHolderModel.typingIndicatorMessage}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/xdk_ui_text_gray"
-            android:textSize="@dimen/xdk_ui_text_size_message_item_metadata"
-            android:paddingLeft="@dimen/xdk_ui_padding_normal"
-            android:paddingStart="@dimen/xdk_ui_padding_normal"
-            android:layout_alignParentBottom="true"
-            android:gravity="center_horizontal"
-            android:maxLines="1"/>
-
-    </RelativeLayout>
+            android:layout_marginEnd="@dimen/xdk_ui_message_model_vh_content_padding"
+            android:layout_marginRight="@dimen/xdk_ui_message_model_vh_content_padding"
+            android:layout_marginLeft="@dimen/xdk_ui_message_model_vh_content_padding"
+            android:layout_marginStart="@dimen/xdk_ui_message_model_vh_content_padding">
+        </FrameLayout>
+    </LinearLayout>
 </layout>

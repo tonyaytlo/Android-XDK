@@ -23,8 +23,9 @@
     <dimen name="xdk_ui_margin_large">12dp</dimen>
     <dimen name="xdk_ui_margin_medium">10dp</dimen>
     <dimen name="xdk_ui_margin_small">8dp</dimen>
-    <dimen name="xdk_ui_margin_tiny">4dp</dimen>
     <dimen name="xdk_ui_margin_normal">6dp</dimen>
+    <dimen name="xdk_ui_margin_tiny">4dp</dimen>
+    <dimen name="xdk_ui_margin_miniscule">2dp</dimen>
 
     <dimen name="xdk_ui_padding_normal">16dp</dimen>
     <dimen name="xdk_ui_padding_narrow">8dp</dimen>
@@ -67,7 +68,8 @@
     <dimen name="xdk_ui_message_model_vh_sender_margin_bottom">1dp</dimen>
     <dimen name="xdk_ui_message_model_vh_padding">2dp</dimen>
     <dimen name="xdk_ui_message_model_vh_time_group_padding">2dp</dimen>
-    <dimen name="xdk_ui_message_model_vh_avatar_padding_left">12dp</dimen>
+    <dimen name="xdk_ui_message_model_vh_avatar_padding">8dp</dimen>
+    <dimen name="xdk_ui_message_model_vh_content_padding">8dp</dimen>
     <dimen name="xdk_ui_message_model_vh_top_bottom_margin">6dp</dimen>
 
     <dimen name="xdk_ui_typing_indicator_padding_vertical">8dp</dimen>
@@ -84,6 +86,7 @@
 
     <dimen name="xdk_ui_typing_indicator_dot_size">4dp</dimen>
     <dimen name="xdk_ui_typing_indicator_dot_space">2dp</dimen>
+    <dimen name="xdk_ui_typing_indicator_text">12sp</dimen>
 
 
     <!-- ####################################################################################### -->

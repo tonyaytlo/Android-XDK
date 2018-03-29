@@ -1,7 +1,6 @@
 package com.layer.xdk.ui.message.adapter.viewholder;
 
 
-import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 
 /**
  * Special type of {@link MessageModelVH} that holds and binds a typing indicator.
- *
+ * <p>
  * Note that this doesn't have a {@link com.layer.xdk.ui.message.model.MessageModel}.
  */
 public class TypingIndicatorVH extends
@@ -40,36 +39,11 @@ public class TypingIndicatorVH extends
 
     public void bind(Set<Identity> users, View typingIndicatorLayout, boolean shouldAvatarBeVisible) {
         getBinding().root.addView(typingIndicatorLayout);
+
         getViewHolderModel().setParticipants(users);
         getViewHolderModel().setAvatarViewVisible(shouldAvatarBeVisible);
-        int numberOfUsers = users.size();
-
-        if (numberOfUsers > 2) {
-            getViewHolderModel().setTypingIndicatorMessageVisible(true);
-            getViewHolderModel().setAnimationVisible(false);
-            String firstUser = "", secondUser = "";
-            int counter = 0;
-
-            for (Identity user : users) {
-                counter++;
-                if (counter == 1) {
-                    firstUser = user.getDisplayName();
-                } else if (counter == 2) {
-                    secondUser = user.getDisplayName();
-                    break;
-                }
-            }
-            Resources resources = typingIndicatorLayout.getContext().getResources();
-            int remainingUsers = numberOfUsers % 2;
-            String typingIndicatorMessage = resources.getQuantityString(R.plurals.xdk_ui_typing_indicator_message,
-                    remainingUsers, firstUser, secondUser, remainingUsers);
-            getViewHolderModel().setTypingIndicatorMessage(typingIndicatorMessage);
-        } else {
-            getViewHolderModel().setTypingIndicatorMessageVisible(false);
-            getViewHolderModel().setAnimationVisible(true);
-        }
-
         getViewHolderModel().notifyChange();
+
         getBinding().executePendingBindings();
     }
 }

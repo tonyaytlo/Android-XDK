@@ -12,6 +12,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.query.Predicate;
 import com.layer.xdk.ui.BR;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
@@ -33,19 +34,20 @@ public class MessageItemsListViewModel extends BaseObservable {
     private LiveData<PagedList<MessageModel>> mMessageModelList;
     private Observer<PagedList<MessageModel>> mMessageModelListObserver;
     private MessageModelDataSourceFactory mDataSourceFactory;
+    private IdentityFormatter mIdentityFormatter;
     private boolean mInitialLoadComplete;
 
     @Inject
     public MessageItemsListViewModel(LayerClient layerClient,
             MessageModelAdapter messageModelAdapter,
-            MessageModelDataSourceFactory dataSourceFactory) {
+            MessageModelDataSourceFactory dataSourceFactory, IdentityFormatter identityFormatter) {
         mAdapter = messageModelAdapter;
         mDataSourceFactory = dataSourceFactory;
+        mIdentityFormatter = identityFormatter;
 
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
-
     }
 
     public void setConversation(Conversation conversation) {
@@ -61,6 +63,11 @@ public class MessageItemsListViewModel extends BaseObservable {
     @Bindable
     public MessageModelAdapter getAdapter() {
         return mAdapter;
+    }
+
+    @Bindable
+    public IdentityFormatter getIdentityFormatter() {
+        return mIdentityFormatter;
     }
 
     public void setItemLongClickListener(OnItemLongClickListener<MessageModel> listener) {

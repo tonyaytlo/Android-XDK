@@ -20,7 +20,6 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
     private boolean mAvatarViewVisible;
     private boolean mTypingIndicatorMessageVisible;
     private String mTypingIndicatorMessage;
-    private boolean mAnimationVisible;
     private ImageCacheWrapper mImageCacheWrapper;
 
     @Inject
@@ -48,6 +47,7 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
         mAvatarViewVisible = avatarViewVisible;
     }
 
+    @SuppressWarnings("unused")
     public boolean isTypingIndicatorMessageVisible() {
         return mTypingIndicatorMessageVisible;
     }
@@ -64,15 +64,6 @@ public class TypingIndicatorVHModel extends MessageModelVHModel {
     @SuppressWarnings("WeakerAccess")
     public void setTypingIndicatorMessage(String typingIndicatorMessage) {
         mTypingIndicatorMessage = typingIndicatorMessage;
-    }
-
-    public boolean isAnimationVisible() {
-        return mAnimationVisible;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void setAnimationVisible(boolean animationVisible) {
-        mAnimationVisible = animationVisible;
     }
 
     public ImageCacheWrapper getImageCacheWrapper() {
