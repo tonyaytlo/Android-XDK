@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/xdk_ui_window_background"
+            android:background="@android:color/white"
             android:gravity="center"
             android:paddingTop="@dimen/xdk_ui_margin_miniscule"
             android:textColor="@color/xdk_ui_typing_indicator_text"

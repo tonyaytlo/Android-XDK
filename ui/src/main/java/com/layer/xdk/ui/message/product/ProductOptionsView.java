@@ -12,6 +12,7 @@ import com.layer.xdk.ui.databinding.XdkUiProductOptionViewItemBinding;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class ProductOptionsView extends LinearLayout {
@@ -44,10 +45,14 @@ public class ProductOptionsView extends LinearLayout {
         removeAllViews();
         if (mOptions != null && !mOptions.isEmpty()) {
             for (ChoiceMessageModel option : mOptions) {
-                String choiceId = option.getSelectedChoices() != null ? option.getSelectedChoices().iterator().next() : null;
-                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null ? option.getChoiceMessageMetadata().mChoices : null;
+                Iterator<String> selectedChoicesIterator = option.getSelectedChoices() != null
+                        ? option.getSelectedChoices().iterator() : null;
+                String choiceId = selectedChoicesIterator != null &&
+                        selectedChoicesIterator.hasNext() ? selectedChoicesIterator.next() : null;
+                List<ChoiceMetadata> choices = option.getChoiceMessageMetadata() != null
+                        ? option.getChoiceMessageMetadata().mChoices : null;
 
-                if (choices != null && choices.size() > 0) {
+                if (choices != null && choices.size() > 0 && choiceId != null) {
                     for (ChoiceMetadata choice : choices) {
                         if (choice.mId.equals(choiceId)) {
                             // Instantiate and add view
