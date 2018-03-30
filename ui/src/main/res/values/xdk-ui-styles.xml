@@ -48,7 +48,6 @@
     <style name="ComposeBar">
         <item name="android:maxLines">5</item>
         <item name="inputTextColor">@color/xdk_ui_text_black</item>
-        <item name="inputTextSize">@dimen/xdk_ui_text_size_input</item>
         <item name="inputTextTypeface">normal</item>
         <item name="inputTextStyle">normal</item>
         <item name="android:enabled">true</item>

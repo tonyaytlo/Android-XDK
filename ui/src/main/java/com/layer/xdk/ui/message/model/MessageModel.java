@@ -20,6 +20,7 @@ import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
@@ -78,6 +79,7 @@ public abstract class MessageModel extends BaseObservable {
     private Set<MessagePart.TransferStatus> mMessagePartTransferStatus;
     private Set<Date> mMessagePartUpdatedAt;
     private byte[] mMessageLocalData;
+    private IdentityItemModel mCachedSender;
 
     public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
         mContext = context.getApplicationContext();
@@ -92,6 +94,7 @@ public abstract class MessageModel extends BaseObservable {
         mParticipantCount = mMessage.getConversation().getParticipants().size();
         mChildMessageModels = new ArrayList<>();
         mMessageLocalData = mMessage.getLocalData();
+        cacheMessageDataForDeepEquals();
     }
 
     protected abstract void parse(@NonNull MessagePart messagePart);
@@ -141,7 +144,6 @@ public abstract class MessageModel extends BaseObservable {
         if (rootMessagePart == null) {
             mMimeTypeTree = createLegacyMimeTypeTree();
             processLegacyParts();
-            cacheMessageDataForDeepEquals();
         } else {
             // Always download the message's root part
             if (!rootMessagePart.isContentReady()) {
@@ -149,7 +151,6 @@ public abstract class MessageModel extends BaseObservable {
             }
 
             processParts(rootMessagePart);
-            cacheMessageDataForDeepEquals();
         }
     }
 
@@ -335,6 +336,10 @@ public abstract class MessageModel extends BaseObservable {
             if (messagePart.getUpdatedAt() != null) {
                 mMessagePartUpdatedAt.add(messagePart.getUpdatedAt());
             }
+        }
+        Identity sender = getMessage().getSender();
+        if (sender != null) {
+            mCachedSender = new IdentityItemModel(sender);
         }
     }
 
@@ -583,7 +588,7 @@ public abstract class MessageModel extends BaseObservable {
      * @param other model to compare to
      * @return true if all properties are equal
      */
-    @SuppressWarnings("SimplifiableIfStatement")
+    @SuppressWarnings({"SimplifiableIfStatement", "RedundantIfStatement"})
     public boolean deepEquals(@NonNull MessageModel other) {
         if (getGrouping() == null ? other.getGrouping() != null
                 : !getGrouping().containsAll(other.getGrouping())) {
@@ -686,6 +691,11 @@ public abstract class MessageModel extends BaseObservable {
         }
 
         if (!Arrays.equals(mMessageLocalData, other.mMessageLocalData)) {
+            return false;
+        }
+
+        if (mCachedSender == null ? other.mCachedSender != null
+                : !mCachedSender.deepEquals(other.mCachedSender)) {
             return false;
         }
 

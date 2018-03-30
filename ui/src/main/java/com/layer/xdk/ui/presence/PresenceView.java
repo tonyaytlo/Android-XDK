@@ -33,9 +33,6 @@ public class PresenceView extends View {
     private int mOuterStrokeWidth;
     private boolean mShowOuterStroke;
 
-    private int mDrawableWidth;
-    private int mDrawableHeight;
-
     private LayerDrawable mPresenceDrawable;
     private GradientDrawable mOuterDrawable;
     private GradientDrawable mInnerDrawable;
@@ -51,15 +48,24 @@ public class PresenceView extends View {
     public PresenceView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PresenceView, R.attr.PresenceView, defStyleAttr);
-        mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor, ContextCompat.getColor(context, R.color.xdk_ui_presence_available));
-        mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor, getContext().getResources().getColor(R.color.xdk_ui_presence_busy));
-        mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor, getContext().getResources().getColor(R.color.xdk_ui_presence_away));
-        mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor, getContext().getResources().getColor(R.color.xdk_ui_presence_invisible));
-        mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor, getContext().getResources().getColor(R.color.xdk_ui_presence_offline));
-        mOuterStrokeColor = ta.getColor(R.styleable.PresenceView_presenceOuterStrokeColor, ContextCompat.getColor(context, R.color.xdk_ui_presence_outer_stroke));
-        mOuterStrokeWidth = (int) ta.getDimension(R.styleable.PresenceView_presenceOuterStrokeWidth, context.getResources().getDimension(R.dimen.xdk_ui_presence_outer_stroke));
-        mShowOuterStroke = ta.getBoolean(R.styleable.PresenceView_presenceShowOuterStroke, true);
+        TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.PresenceView,
+                R.attr.PresenceView, defStyleAttr);
+        mAvailableColor = ta.getColor(R.styleable.PresenceView_presenceAvailableColor,
+                ContextCompat.getColor(context, R.color.xdk_ui_presence_available));
+        mBusyColor = ta.getColor(R.styleable.PresenceView_presenceBusyColor,
+                getContext().getResources().getColor(R.color.xdk_ui_presence_busy));
+        mAwayColor = ta.getColor(R.styleable.PresenceView_presenceAwayColor,
+                getContext().getResources().getColor(R.color.xdk_ui_presence_away));
+        mInvisibleColor = ta.getColor(R.styleable.PresenceView_presenceInvisibleColor,
+                getContext().getResources().getColor(R.color.xdk_ui_presence_invisible));
+        mOfflineColor = ta.getColor(R.styleable.PresenceView_presenceOfflineColor,
+                getContext().getResources().getColor(R.color.xdk_ui_presence_offline));
+        mOuterStrokeColor = ta.getColor(R.styleable.PresenceView_presenceOuterStrokeColor,
+                ContextCompat.getColor(context, R.color.xdk_ui_presence_outer_stroke));
+        mOuterStrokeWidth = (int) ta.getDimension(R.styleable.PresenceView_presenceOuterStrokeWidth,
+                context.getResources().getDimension(R.dimen.xdk_ui_presence_outer_stroke));
+        mShowOuterStroke = ta.getBoolean(R.styleable.PresenceView_presenceShowOuterStroke,
+                true);
         ta.recycle();
 
         mOuterDrawable = new GradientDrawable();
@@ -68,6 +74,12 @@ public class PresenceView extends View {
         mInnerDrawable.setShape(GradientDrawable.OVAL);
 
         mPresenceDrawable = new LayerDrawable(new Drawable[]{mOuterDrawable, mInnerDrawable});
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            setBackground(mPresenceDrawable);
+        } else {
+            setBackgroundDrawable(mPresenceDrawable);
+        }
     }
 
     public void setParticipants(Set<Identity> participants) {
@@ -82,7 +94,28 @@ public class PresenceView extends View {
         if (participants.size() == 1) {
             mIdentity = participants.iterator().next();
             setVisibility(VISIBLE);
-            invalidate();
+            Presence.PresenceStatus currentStatus = mIdentity != null ? mIdentity.getPresenceStatus() : null;
+            if (currentStatus == null) {
+                return;
+            }
+
+            switch (currentStatus) {
+                case AVAILABLE:
+                    setupPresenceColors(mAvailableColor, false);
+                    break;
+                case AWAY:
+                    setupPresenceColors(mAwayColor, false);
+                    break;
+                case OFFLINE:
+                    setupPresenceColors(mOfflineColor, false);
+                    break;
+                case INVISIBLE:
+                    setupPresenceColors(mInvisibleColor, true);
+                    break;
+                case BUSY:
+                    setupPresenceColors(mBusyColor, false);
+                    break;
+            }
         } else {
             setVisibility(INVISIBLE);
         }
@@ -91,51 +124,23 @@ public class PresenceView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        mDrawableWidth = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
-        mDrawableHeight = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
+        int width = getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
+        int height = getMeasuredHeight() - (getPaddingTop() + getPaddingBottom());
+
+        mOuterDrawable.setSize(width, height);
+        mInnerDrawable.setSize(width, height);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Presence.PresenceStatus currentStatus = mIdentity != null ? mIdentity.getPresenceStatus() : null;
-        if (currentStatus == null) {
-            return;
-        }
-
-        switch (currentStatus) {
-            case AVAILABLE:
-                setupPresenceColors(mAvailableColor, false);
-                break;
-            case AWAY:
-                setupPresenceColors(mAwayColor, false);
-                break;
-            case OFFLINE:
-                setupPresenceColors(mOfflineColor, false);
-                break;
-            case INVISIBLE:
-                setupPresenceColors(mInvisibleColor, true);
-                break;
-            case BUSY:
-                setupPresenceColors(mBusyColor, false);
-                break;
-        }
     }
 
     private void setupPresenceColors(@ColorInt int presenceColor, boolean makeHollow) {
-        mOuterDrawable.setSize(mDrawableWidth, mDrawableHeight);
         mOuterDrawable.setColor(presenceColor);
         mOuterDrawable.setStroke(mShowOuterStroke ? mOuterStrokeWidth : 0, mOuterStrokeColor);
 
-        mInnerDrawable.setSize(mDrawableWidth, mDrawableHeight);
         mInnerDrawable.setColor(makeHollow ? mOuterStrokeColor : presenceColor);
         mInnerDrawable.setStroke(4 * mOuterStrokeWidth, Color.TRANSPARENT);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            setBackground(mPresenceDrawable);
-        } else {
-            setBackgroundDrawable(mPresenceDrawable);
-        }
     }
-
 }

@@ -8,6 +8,7 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Metadata;
 import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
+import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.util.HashSet;
@@ -27,6 +28,9 @@ public class ConversationItemModel {
     // Cached values for deep equals
     private final Metadata mMetadata;
     private final int mUnreadMessageCount;
+    // Identities must be copied to separate variables to compare via deepEquals as only one
+    // identity object will ever exist for that identity.
+    private final Set<IdentityItemModel> mCachedParticipants;
 
     /**
      * Constructs a model object
@@ -45,6 +49,10 @@ public class ConversationItemModel {
         mParticipants = mConversation.getParticipants();
         mMetadata = mConversation.getMetadata();
         mUnreadMessageCount = mConversation.getTotalUnreadMessageCount();
+        mCachedParticipants = new HashSet<>(mParticipants.size());
+        for (Identity participant : mParticipants) {
+            mCachedParticipants.add(new IdentityItemModel(participant));
+        }
 
         mParticipantsMinusAuthenticatedUser = new HashSet<>(mConversation.getParticipants());
         mParticipantsMinusAuthenticatedUser.remove(authenticatedUser);
@@ -134,33 +142,18 @@ public class ConversationItemModel {
         if (!mParticipants.equals(other.mParticipants)) {
             return false;
         }
-        // Check participant names
-        Iterator<Identity> participantIterator = mParticipants.iterator();
-        Iterator<Identity> otherParticipantIterator = other.mParticipants.iterator();
+        // Check participants
+        if (mCachedParticipants.size() != other.mCachedParticipants.size()) {
+            return false;
+        }
+        Iterator<IdentityItemModel> participantIterator = mCachedParticipants.iterator();
+        Iterator<IdentityItemModel> otherParticipantIterator = other.mCachedParticipants.iterator();
         while (participantIterator.hasNext() && otherParticipantIterator.hasNext()) {
-            Identity identity = participantIterator.next();
-            Identity otherIdentity = otherParticipantIterator.next();
-            if (identity.getDisplayName() == null ? otherIdentity.getDisplayName() != null
-                    : !identity.getDisplayName().equals(otherIdentity.getDisplayName())) {
-                return false;
-            }
-            if (identity.getFirstName() == null ? otherIdentity.getFirstName() != null
-                    : !identity.getFirstName().equals(otherIdentity.getFirstName())) {
-                return false;
-            }
-            if (identity.getLastName() == null ? otherIdentity.getLastName() != null
-                    : !identity.getLastName().equals(otherIdentity.getLastName())) {
-                return false;
-            }
-            if (identity.getAvatarImageUrl() == null ? otherIdentity.getAvatarImageUrl() != null
-                    : !identity.getAvatarImageUrl().equals(otherIdentity.getAvatarImageUrl())) {
-                return false;
-            }
-            if (identity.getPresenceStatus() == null ? otherIdentity.getPresenceStatus() != null
-                    : !identity.getPresenceStatus().equals(otherIdentity.getPresenceStatus())) {
+            if (!participantIterator.next().deepEquals(otherParticipantIterator.next())) {
                 return false;
             }
         }
+
         return true;
     }
 }
