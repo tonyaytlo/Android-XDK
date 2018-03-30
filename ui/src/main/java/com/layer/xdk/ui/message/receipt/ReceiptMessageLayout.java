@@ -37,7 +37,6 @@ public class ReceiptMessageLayout extends ConstraintLayout {
         if (mBinding == null) {
             initializeBinding();
         }
-        mBinding.setMessageModel(model);
         if (model != null) {
             List<ProductMessageModel> products = model.getProductItemModels();
             if (!products.isEmpty()) {
@@ -62,19 +61,21 @@ public class ReceiptMessageLayout extends ConstraintLayout {
 
     private void initializeBinding() {
         mBinding = DataBindingUtil.getBinding(this);
-        mBinding.shippingAddressValue.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickShippingAddress();
-            }
-        });
+        if (mBinding != null) {
+            mBinding.shippingAddressValue.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickShippingAddress();
+                }
+            });
 
-        mBinding.billingAddressValue.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onClickBillingAddress();
-            }
-        });
+            mBinding.billingAddressValue.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickBillingAddress();
+                }
+            });
+        }
     }
 
     public void onClickBillingAddress() {

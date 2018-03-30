@@ -287,8 +287,8 @@
 
     <dimen name="xdk_ui_receipt_message_view_detail_title_size">12sp</dimen>
     <dimen name="xdk_ui_receipt_message_view_detail_value_size">14sp</dimen>
-    <dimen name="xdk_ui_receipt_message_view_max_width">450dp</dimen>
-    <dimen name="xdk_ui_receipt_message_view_min_width">300dp</dimen>
+    <dimen name="xdk_ui_receipt_message_view_max_width">250dp</dimen>
+    <dimen name="xdk_ui_receipt_message_view_min_width">230dp</dimen>
     <dimen name="xdk_ui_receipt_message_view_total_title_size">14sp</dimen>
     <dimen name="xdk_ui_receipt_message_view_total_value_size">14sp</dimen>
 

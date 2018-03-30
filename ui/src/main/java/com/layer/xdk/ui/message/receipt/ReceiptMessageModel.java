@@ -21,9 +21,9 @@ import java.util.List;
 
 public class ReceiptMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.receipt+json";
-    private static final String ROLE_PRODUCT_ITEM = "product";
-    private static final String ROLE_SHIPPING_ADDRESS = "shipping";
-    private static final String ROLE_BILLING_ADDRESS = "billing";
+    private static final String ROLE_PRODUCT_ITEM = "product-item";
+    private static final String ROLE_SHIPPING_ADDRESS = "shipping-address";
+    private static final String ROLE_BILLING_ADDRESS = "billing-address";
 
     private ReceiptMessageMetadata mMetadata;
 

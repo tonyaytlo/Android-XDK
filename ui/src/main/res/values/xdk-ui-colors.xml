@@ -29,7 +29,6 @@
     <color name="xdk_ui_item_divider_color">#FFE0E0E0</color>
 
     <color name="xdk_ui_status_bar_background">@color/xdk_ui_color_primary_blue</color>
-    <color name="xdk_ui_window_background">@android:color/white</color>
 
     <color name="xdk_ui_text_black">@android:color/black</color>
     <color name="xdk_ui_text_gray">#FF757575</color>
