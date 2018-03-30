@@ -7,6 +7,5 @@
 /build
 ui/src/main/bin
 ui/build
-*.apk
 *.iml
 tools/github-release

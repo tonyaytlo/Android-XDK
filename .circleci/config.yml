@@ -1,68 +1,150 @@
 version: 2
+
+references:
+
+  # Add defined pre-release repo URL to use when looking for dependencies
+  add_prerelease_env_vars: &add_prerelease_env_vars
+    run:
+      name: Exporting pre-release environment variables
+      command: echo 'export LAYER_PRERELEASE_REPO_URL=$PRERELEASE_REPO_URL' >> $BASH_ENV
+
+  # Standard configuration to use when building android artifacts
+  android_config: &android_config
+    working_directory: ~/workspace
+    environment:
+      JVM_OPTS: -Xmx3200m
+    docker:
+      - image: circleci/android:api-27-alpha
+
+  # Helper anchor to pull down the dependency cache
+  restore_cache: &restore_cache
+    restore_cache:
+      key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
+
+  # Helper anchor to download the dependencies
+  download_dependencies: &download_dependencies
+    run:
+      name: Downloading dependencies
+      command: ./gradlew androidDependencies
+
+  # Helper anchor to store the dependencies
+  save_cache: &save_cache
+    save_cache:
+      paths:
+        - ~/.gradle
+      key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
+
+  # Store report outputs from the build
+  store_reports: &store_reports
+    store_artifacts:
+      path: ui/build/reports
+      destination: reports
+
+  # Store test result outputs from the build
+  store_test_results: &store_test_results
+    store_test_results:
+      path: ui/build/test-results
+
+  # Store AAR from the build
+  store_aar: &store_aar
+    store_artifacts:
+      path: ui/build/outputs/aar
+      destination: aar
+
+  # Standard configuration to use for running tests in Test Lab
+  gcloud_config: &gcloud_config
+    working_directory: ~/workspace
+    docker:
+      - image: google/cloud-sdk:latest
+
+  # Copy and decode the gcloud credentials into the environment
+  setup_gcloud_creds: &setup_gcloud_creds
+    run:
+      name: Setting up Google Cloud credentials
+      command: echo $GCLOUD_CLIENT_SECRET | base64 -di > ${HOME}/client-secret.json
+
+  # Save APKs to use for instrumented tests in Test Lab
+  persist_debug_workspace: &persist_debug_workspace
+    persist_to_workspace:
+      root: ~/workspace
+      paths:
+        - ui/build/outputs/apk
+        - tools/dummy.apk
+
 jobs:
-  development:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-27-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
-      LAYER_PRERELEASE_REPO_URL: https://raw.githubusercontent.com/layerhq/releases-android/prerelease/releases/
+  build_debug:
+    <<: *android_config
+    steps:
+      - *add_prerelease_env_vars
+      - checkout
+      - *restore_cache
+      - *download_dependencies
+      - *save_cache
+      - run:
+          name: Building debug AAR
+          command: ./gradlew assembleDebug
+      - run:
+          name: Building test APK
+          command: ./gradlew assembleAndroidTest
+      - run:
+          name: Running lint
+          command: ./gradlew lint
+      - run:
+          name: Running unit tests
+          command: ./gradlew test
+      - *store_reports
+      - *store_test_results
+      - *persist_debug_workspace
+
+  build_release:
+    <<: *android_config
     steps:
       - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
+      - *restore_cache
+      - *download_dependencies
+      - *save_cache
       - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
-      - run:
-          name: Run Tests
-          command: ./gradlew lint test
-      - store_artifacts:
-          path: ui/build/reports
-          destination: reports
-      - store_test_results:
-          path: ui/build/test-results
-  release:
-    working_directory: ~/code
-    docker:
-      - image: circleci/android:api-27-alpha
-    environment:
-      JVM_OPTS: -Xmx3200m
+          name: Building release AAR
+          command: ./gradlew assembleRelease
+      - *store_aar
+
+  run_instrumented_tests:
+    <<: *gcloud_config
     steps:
-      - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
+      - attach_workspace:
+          at: ~/workspace
+      - *setup_gcloud_creds
       - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "ui/build.gradle" }}
+          name: Setting up Google Cloud project
+          command: gcloud config set project layer-build
       - run:
-          name: Run Tests
-          command: ./gradlew lint test
+          name: Authenticating with Google Cloud
+          command: gcloud auth activate-service-account firebase-adminsdk-3boog@layer-build.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+      - run:
+          name: Running instrumented test on Firebase Test Lab
+          command: >-
+            gcloud firebase test android run
+            --app tools/dummy.apk
+            --test ui/build/outputs/apk/androidTest/debug/xdk-ui-debug-androidTest.apk
+            --device model=Nexus5X,version=26,locale=en,orientation=portrait
+            --device model=serranolte,version=19,locale=en,orientation=portrait
+            --device model=sailfish,version=25,locale=en,orientation=portrait
+            --timeout 1m
+      - run:
+          name: Creating directory to store test results
+          command: mkdir firebase
+      - run:
+          name: Downloading results
+          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-ibyywiy6hy2yc-hmfv66tu8vwya | tail -1`*" ~/workspace/firebase/
       - store_artifacts:
-          path: ui/build/reports
-          destination: reports
-      - store_test_results:
-          path: ui/build/test-results
+          path: firebase
+          destination: firebase
 
 workflows:
   version: 2
-  development:
+  build_debug_and_test:
     jobs:
-      - development:
-          filters:
-            branches:
-              ignore: master
-  release:
-    jobs:
-      - release:
-          filters:
-            branches:
-              only: master
+      - build_debug
+      - run_instrumented_tests:
+          requires:
+            - build_debug
