@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
 
 import com.layer.sdk.LayerClient;
@@ -127,7 +126,9 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
             if (change.getObject() != mConversation) continue;
             if (change.getChangeType() != LayerChange.Type.UPDATE) continue;
             if (!change.getAttributeName().equals("historicSyncStatus")) continue;
-            mLayerClient.unregisterEventListener(this);
+            if (change.getNewValue() != Conversation.HistoricSyncStatus.SYNC_PENDING) {
+                mLayerClient.unregisterEventListener(this);
+            }
             refresh();
         }
     }
@@ -137,16 +138,6 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
     //============================================================================================
 
     /**
-     * Automatically refresh on resume.
-     */
-    @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-        if (visibility != View.VISIBLE) return;
-        refresh();
-    }
-
-    /**
      * Refreshes the state of the underlying recycler view
      */
     private void refresh() {
@@ -154,15 +145,22 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
             @Override
             public void run() {
                 if (mConversation == null) {
-                    setEnabled(false);
                     setRefreshing(false);
+                    updateRefreshEnabled();
                     return;
                 }
                 Conversation.HistoricSyncStatus status = mConversation.getHistoricSyncStatus();
-                setEnabled(status == Conversation.HistoricSyncStatus.MORE_AVAILABLE);
                 setRefreshing(status == Conversation.HistoricSyncStatus.SYNC_PENDING);
+                updateRefreshEnabled();
             }
         });
+    }
+
+    private void updateRefreshEnabled() {
+        if (mConversation == null || mConversation.getHistoricSyncStatus()
+                == Conversation.HistoricSyncStatus.NO_MORE_AVAILABLE) {
+            setEnabled(false);
+        }
     }
 
     //============================================================================================
@@ -295,6 +293,7 @@ public class MessageItemsListView extends SwipeRefreshLayout implements LayerCha
                     getEmptyConversationHeaderText(getContext(), conversation.getParticipants(),
                             layerClient.getAuthenticatedUser()));
         }
+        updateRefreshEnabled();
     }
 
     /**

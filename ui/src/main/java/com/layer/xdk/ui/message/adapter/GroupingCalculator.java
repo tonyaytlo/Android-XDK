@@ -4,6 +4,7 @@ package com.layer.xdk.ui.message.adapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.layer.sdk.messaging.Conversation;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
@@ -52,8 +53,11 @@ public class GroupingCalculator {
         }
 
         if (older == null) {
-            // Current should be the first message
-            groupings.add(MessageGrouping.OLDEST_MESSAGE);
+            // Current should be the first message. Check if it is the first in the conversation
+            if (current.getMessage().getConversation().getHistoricSyncStatus() == Conversation
+                    .HistoricSyncStatus.NO_MORE_AVAILABLE) {
+                groupings.add(MessageGrouping.OLDEST_MESSAGE);
+            }
             groupings.add(MessageGrouping.GROUP_START);
             groupings.add(MessageGrouping.SUB_GROUP_START);
         } else {
