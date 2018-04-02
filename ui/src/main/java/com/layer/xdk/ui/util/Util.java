@@ -65,7 +65,7 @@ public class Util {
      */
     public static void deauthenticate(LayerClient layerClient, final DeauthenticationCallback callback) {
         final AtomicBoolean alerted = new AtomicBoolean(false);
-        final LayerAuthenticationListener listener = new LayerAuthenticationListener.BackgroundThread() {
+        final LayerAuthenticationListener listener = new LayerAuthenticationListener.BackgroundThread.Weak() {
             @Override
             public void onAuthenticated(LayerClient layerClient, String s) {
 
@@ -76,6 +76,7 @@ public class Util {
                 if (alerted.compareAndSet(false, true)) {
                     callback.onDeauthenticationSuccess(layerClient);
                 }
+                layerClient.unregisterAuthenticationListener(this);
             }
 
             @Override
@@ -88,6 +89,7 @@ public class Util {
                 if (alerted.compareAndSet(false, true)) {
                     callback.onDeauthenticationFailed(layerClient, e.getMessage());
                 }
+                layerClient.unregisterAuthenticationListener(this);
             }
         };
         layerClient.registerAuthenticationListener(listener);
