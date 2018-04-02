@@ -13,36 +13,35 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import type="com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel"/>
+        <import type="com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel" />
 
-        <import type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle"/>
+        <import type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle" />
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="style"
-            type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle"/>
+            type="com.layer.xdk.ui.fourpartitem.FourPartItemStyle" />
 
         <variable
             name="viewHolderModel"
-            type="com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel"/>
+            type="com.layer.xdk.ui.fourpartitem.adapter.viewholder.FourPartItemVHModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="@{style.itemHeight, default=wrap_content}"
+        android:background="?android:attr/selectableItemBackground"
         android:paddingLeft="@dimen/xdk_ui_margin_large"
         android:paddingStart="@dimen/xdk_ui_margin_large"
         android:paddingTop="@dimen/xdk_ui_margin_large"
-        android:background="?android:attr/selectableItemBackground"
         tools:layout_height="wrap_content">
 
         <com.layer.xdk.ui.avatar.AvatarView
@@ -54,10 +53,11 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:participants="@{viewHolderModel.identities}" app:style="@{style.avatarStyle}"
+            app:participants="@{viewHolderModel.identities}"
+            app:style="@{style.avatarStyle}"
             tools:background="@color/xdk_ui_color_primary_blue"
             tools:layout_height="@dimen/xdk_ui_avatar_height"
-            tools:layout_width="@dimen/xdk_ui_avatar_height"/>
+            tools:layout_width="@dimen/xdk_ui_avatar_height" />
 
         <com.layer.xdk.ui.presence.PresenceView
             android:id="@+id/presence"
@@ -69,7 +69,7 @@
             app:participants="@{viewHolderModel.identities}"
             tools:background="@color/xdk_ui_presence_away"
             tools:layout_height="@dimen/xdk_ui_avatar_presence_height"
-            tools:layout_width="@dimen/xdk_ui_avatar_presence_height"/>
+            tools:layout_width="@dimen/xdk_ui_avatar_presence_height" />
 
         <!-- right content part -->
 
@@ -81,14 +81,16 @@
             android:layout_marginStart="@{style.marginHorizontal}"
             android:ellipsize="end"
             android:maxLines="1"
-            android:maxWidth="@dimen/max_width_four_part_title_text_view"
             android:text="@{viewHolderModel.title}"
             android:textColor="@{viewHolderModel.secondaryState ? style.titleUnreadTextColor : style.titleTextColor}"
             android:textSize="@{style.titleTextSize}"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintLeft_toRightOf="@id/avatar"
+            app:layout_constraintRight_toLeftOf="@+id/right_accessory_text"
             app:layout_constraintTop_toTopOf="@+id/avatar"
             app:typeface="@{viewHolderModel.secondaryState ? style.titleUnreadTextTypeface : style.titleTextTypeface}"
-            tools:text="Title"/>
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/right_accessory_text"
@@ -104,12 +106,12 @@
             android:textSize="@{style.accessoryTextSize}"
             android:visibility="@{style.accessoryTextVisibility}"
             app:layout_constraintBottom_toBottomOf="@+id/title"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toRightOf="@id/title"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@+id/title"
             app:layout_constraintVertical_bias="@{style.subtitleVisibility == View.VISIBLE ? 0.2f : 0.5f}"
             app:typeface="@{viewHolderModel.secondaryState ? style.accessoryUnreadTextTypeface : style.accessoryTextTypeface}"
-            tools:text="Right accessory text"/>
+            tools:text="Right accessory text" />
 
 
         <TextView
@@ -130,7 +132,7 @@
             app:layout_constraintStart_toEndOf="@+id/avatar"
             app:layout_constraintTop_toBottomOf="@+id/title"
             app:typeface="@{viewHolderModel.secondaryState ? style.subtitleUnreadTextTypeface : style.subtitleTextTypeface}"
-            tools:text="Subtitle"/>
+            tools:text="Subtitle" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -162,8 +162,6 @@
     <dimen name="xdk_ui_item_title_medium">18sp</dimen>
     <dimen name="xdk_ui_conversation_item_title_small">16sp</dimen>
     <dimen name="xdk_ui_conversation_item_title_tiny">14sp</dimen>
-    <dimen name="max_width_four_part_subtitle_text_view">300dp</dimen>
-    <dimen name="max_width_four_part_title_text_view">200dp</dimen>
 
     <dimen name="xdk_ui_item_subtitle_large">14sp</dimen>
     <dimen name="xdk_ui_item_subtitle_medium">10sp</dimen>
