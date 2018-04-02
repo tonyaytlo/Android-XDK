@@ -22,13 +22,13 @@ public class ResponseSender extends MessageSender {
     }
 
     /**
-     * Send a response to a choice message. If the {@link ChoiceResponseModel} contains a non empty
+     * Send a response to a choice message. If the {@link ChoiceResponseMetadata} contains a non empty
      * status text then a status message will be added to the message's parts.
      *
-     * @param choiceResponse model for populating the response
+     * @param choiceResponse metadata for populating the response
      * @return result of {@link MessageSender#send(Message)}
      */
-    public boolean sendChoiceResponse(ChoiceResponseModel choiceResponse) {
+    public boolean sendChoiceResponse(ChoiceResponseMetadata choiceResponse) {
         LayerClient layerClient = getLayerClient();
         MessagePart responsePart = new ResponseMessagePartComposer()
                 .buildResponseMessagePart(layerClient, choiceResponse);

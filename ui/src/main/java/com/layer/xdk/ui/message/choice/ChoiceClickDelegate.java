@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.response.ChoiceResponseModel;
+import com.layer.xdk.ui.message.response.ChoiceResponseMetadata;
 import com.layer.xdk.ui.message.response.crdt.OrOperationResult;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 
@@ -73,10 +73,10 @@ public class ChoiceClickDelegate {
 
         UUID rootPartId = UUID.fromString(mRootMessagePartId.getLastPathSegment());
 
-        ChoiceResponseModel choiceResponseModel = new ChoiceResponseModel(mMessage.getId(),
+        ChoiceResponseMetadata responseMetadata = new ChoiceResponseMetadata(mMessage.getId(),
                 rootPartId, statusText, results);
 
         mMessageSenderRepository.sendChoiceResponse(mMessage.getConversation(),
-                choiceResponseModel);
+                responseMetadata);
     }
 }

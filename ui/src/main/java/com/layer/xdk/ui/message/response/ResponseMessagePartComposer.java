@@ -9,33 +9,24 @@ import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 
 /**
- * Converts {@link ResponseModel}s to {@link MessagePart}s.
+ * Converts {@link ResponseMetadata} objects to {@link MessagePart}s.
  */
 @SuppressWarnings("WeakerAccess")
 public class ResponseMessagePartComposer {
 
     /**
-     * Create a {@link MessagePart} from a {@link ResponseModel}
+     * Create a {@link MessagePart} from a {@link ResponseMetadata}
      *
      * @param layerClient used to create the MessagePart
-     * @param responseModel model to use when populating the part
-     * @return a MessagePart built from the ResponseModel data
+     * @param responseMetadata metadata to use when populating the part
+     * @return a MessagePart built from the {@link ResponseMetadata} data
      */
-    public MessagePart buildResponseMessagePart(LayerClient layerClient, ResponseModel responseModel) {
+    public MessagePart buildResponseMessagePart(LayerClient layerClient,
+            ResponseMetadata responseMetadata) {
         Gson gson = new GsonBuilder().setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
 
         String rootMimeTpe = MessagePartUtils.getAsRoleRoot(ResponseMessageModel.MIME_TYPE_V2);
 
-        ResponseMetadata responseMetadata = createResponseMetadata(responseModel);
         return layerClient.newMessagePart(rootMimeTpe, gson.toJson(responseMetadata).getBytes());
-    }
-
-    private ResponseMetadata createResponseMetadata(ResponseModel responseModel) {
-        ResponseMetadata responseMetadata = new ResponseMetadata();
-        responseMetadata.mMessageIdToRespondTo = responseModel.getMessageIdToRespondTo().toString();
-        responseMetadata.mPartIdToRespondTo = responseModel.getPartIdToRespondTo().toString();
-
-        responseMetadata.mChanges = responseModel.getChanges();
-        return responseMetadata;
     }
 }

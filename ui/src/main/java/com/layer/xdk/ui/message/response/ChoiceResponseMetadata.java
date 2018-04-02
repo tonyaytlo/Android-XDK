@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Model class for creating a choice response message.
+ * Metadata for a choice response message.
  */
 @SuppressWarnings("WeakerAccess")
-public class ChoiceResponseModel extends ResponseModel {
-    private final String mStatusText;
+public class ChoiceResponseMetadata extends ResponseMetadata {
+
+    private transient final String mStatusText;
 
     /**
      * @param messageIdToRespondTo full ID of the message this is in response to
@@ -22,7 +23,7 @@ public class ChoiceResponseModel extends ResponseModel {
      * @param statusText text to use for the status message part
      * @param results list of OR set operations that resulted in the desired state
      */
-    public ChoiceResponseModel(@NonNull Uri messageIdToRespondTo,
+    public ChoiceResponseMetadata(@NonNull Uri messageIdToRespondTo,
             @NonNull UUID partIdToRespondTo, @NonNull String statusText,
             List<OrOperationResult> results) {
         super(messageIdToRespondTo, partIdToRespondTo, results);
