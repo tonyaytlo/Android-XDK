@@ -25,16 +25,9 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
     private final static CircleTransform MULTI_TRANSFORM = new CircleTransform(TAG + ".multi");
 
     private final Picasso mPicasso;
-    /*
-        Picasso keeps a weak reference to the target when you load into a target,
-        hence we need to keep a strong reference to the targets to prevent Garbage Collector from
-        getting rid of the Targets.
-     */
-    private Set<Target> mTargets;
 
     public PicassoImageCacheWrapper(Picasso picasso) {
         mPicasso = picasso;
-        mTargets = new HashSet<>();
     }
 
     @Override
@@ -51,8 +44,6 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
                 .resize(bitmapWrapper.getWidth(), bitmapWrapper.getHeight());
         creator.transform(isMultiTransform ? MULTI_TRANSFORM : SINGLE_TRANSFORM)
                 .into(target);
-
-        mTargets.add(target);
     }
 
     @VisibleForTesting
@@ -63,7 +54,6 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 bitmapWrapper.setBitmap(bitmap);
                 callback.onSuccess();
-                mTargets.remove(this);
             }
 
             @Override
@@ -73,7 +63,6 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
                 }
                 bitmapWrapper.setBitmap(null);
                 callback.onFailure();
-                mTargets.remove(this);
             }
 
             @Override
