@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.popup.ImagePopupActivity;
 
 public class OpenUrlActionHandler extends ActionHandler {
@@ -21,10 +22,10 @@ public class OpenUrlActionHandler extends ActionHandler {
 
     private Intent mBrowserIntent;
 
-    public OpenUrlActionHandler(LayerClient layerClient) {
+    public OpenUrlActionHandler(LayerClient layerClient, ImageCacheWrapper imageCacheWrapper) {
         super(layerClient, "open-url");
         mBrowserIntent = new Intent(Intent.ACTION_VIEW);
-        ImagePopupActivity.init(layerClient);
+        ImagePopupActivity.init(layerClient, imageCacheWrapper);
     }
 
     @Override

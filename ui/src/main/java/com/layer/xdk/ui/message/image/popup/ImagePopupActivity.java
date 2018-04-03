@@ -13,6 +13,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.util.Log;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.io.Serializable;
  */
 public class ImagePopupActivity extends Activity implements LayerProgressListener.BackgroundThread.Weak, SubsamplingScaleImageView.OnImageEventListener {
     private static LayerClient sLayerClient;
+    private static ImageCacheWrapper sImageCacheWrapper;
 
     public static final String EXTRA_PARAMS = "extra_params";
 
@@ -66,44 +68,61 @@ public class ImagePopupActivity extends Activity implements LayerProgressListene
         sLayerClient.unregisterProgressListener(null, this);
     }
 
-    public static void init(LayerClient layerClient) {
+    public static void init(LayerClient layerClient, ImageCacheWrapper imageCacheWrapper) {
         sLayerClient = layerClient;
-        MessagePartDecoder.init(layerClient);
+        MessagePartDecoder.init(layerClient, imageCacheWrapper);
         MessagePartRegionDecoder.init(layerClient);
     }
 
+    @SuppressWarnings("SuspiciousNameCombination")
     private void displayImage(Parameters parameters) {
         mMessagePartId = Uri.parse(parameters.mSourceUri);
         mProgressBar.show();
         int orientation;
         Uri uri = Uri.parse(parameters.mPreviewUri != null ? parameters.mPreviewUri : parameters.mSourceUri);
+        int width;
+        int height;
         switch (parameters.mOrientation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
                 orientation = SubsamplingScaleImageView.ORIENTATION_90;
-                mImageView.setImage(
-                        ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
-                        ImageSource.uri(uri));
+                width = parameters.mWidth;
+                height = parameters.mHeight;
                 break;
             case ExifInterface.ORIENTATION_ROTATE_180:
                 orientation = SubsamplingScaleImageView.ORIENTATION_180;
-                mImageView.setImage(
-                        ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
-                        ImageSource.uri(uri));
+                width = parameters.mHeight;
+                height = parameters.mWidth;
                 break;
             case ExifInterface.ORIENTATION_ROTATE_270:
                 orientation = SubsamplingScaleImageView.ORIENTATION_270;
-                mImageView.setImage(
-                        ImageSource.uri(mMessagePartId).dimensions(parameters.mHeight, parameters.mWidth),
-                        ImageSource.uri(uri));
+                width = parameters.mHeight;
+                height = parameters.mWidth;
                 break;
             case ExifInterface.ORIENTATION_NORMAL:
             default:
                 orientation = SubsamplingScaleImageView.ORIENTATION_0;
-                mImageView.setImage(
-                        ImageSource.uri(mMessagePartId).dimensions(parameters.mWidth, parameters.mHeight),
-                        ImageSource.uri(uri));
+                width = parameters.mWidth;
+                height = parameters.mHeight;
                 break;
         }
+
+        ImageSource preview;
+        ImageSource source;
+        if (width == 0 || height == 0) {
+            preview = null;
+            source = ImageSource.uri(uri);
+        } else {
+            preview = ImageSource.uri(uri);
+            source = ImageSource.uri(mMessagePartId).dimensions(width, height);
+        }
+        if (!"layer".equals(uri.getScheme())) {
+            // Not a Layer MessagePart. Disable tiling as we don't know the size
+            if (preview != null) {
+                preview.tilingDisabled();
+            }
+            source.tilingDisabled();
+        }
+        mImageView.setImage(source, preview);
 
         mImageView.setOrientation(orientation);
         mImageView.setOnImageEventListener(this);

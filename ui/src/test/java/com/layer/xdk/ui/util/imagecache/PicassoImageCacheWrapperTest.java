@@ -68,8 +68,7 @@ public class PicassoImageCacheWrapperTest {
 
     @Test
     public void testFetchBitmapSuccess() throws Exception {
-        boolean isMultiTransform = false;
-        BitmapWrapper bitmapWrapper = new BitmapWrapper("myUrl", 20,40, isMultiTransform);
+        BitmapWrapper bitmapWrapper = new BitmapWrapper("myUrl", 20,40, true);
         when(mMockRequestCreator.resize(bitmapWrapper.getWidth(), bitmapWrapper.getHeight())).thenReturn(mMockRequestCreator);
         when(mMockRequestCreator.transform(any(Transformation.class))).thenReturn(mMockRequestCreator);
         Target target = mPicassoImageCacheWrapper.createTarget(bitmapWrapper, mMockCallback);
@@ -94,8 +93,7 @@ public class PicassoImageCacheWrapperTest {
 
     @Test
     public void testFetchBitmapFailure() throws Exception {
-        boolean isMultiTransform = false;
-        BitmapWrapper bitmapWrapper = new BitmapWrapper("myUrl", 20,40, isMultiTransform);
+        BitmapWrapper bitmapWrapper = new BitmapWrapper("myUrl", 20,40, true);
         when(mMockRequestCreator.resize(bitmapWrapper.getWidth(), bitmapWrapper.getHeight())).thenReturn(mMockRequestCreator);
         when(mMockRequestCreator.transform(any(Transformation.class))).thenReturn(mMockRequestCreator);
         Target target = mPicassoImageCacheWrapper.createTarget(bitmapWrapper, mMockCallback);

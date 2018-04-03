@@ -18,14 +18,14 @@ public class BitmapWrapper {
     private Bitmap mBitmap;
     private String mUrl;
     private int mWidth, mHeight;
-    private boolean mIsMultiTransform;
+    private boolean mCircleTransformation;
 
-    public BitmapWrapper(@NonNull String url, int width, int height, boolean isMultiTransform) {
+    public BitmapWrapper(@NonNull String url, int width, int height, boolean useCircleTransformation) {
         mId = UUID.randomUUID();
         mUrl = url;
         mWidth = width;
         mHeight = height;
-        mIsMultiTransform = isMultiTransform;
+        mCircleTransformation = useCircleTransformation;
     }
 
     public String getUrl() {
@@ -65,13 +65,11 @@ public class BitmapWrapper {
         return mId;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public boolean hasMultiTransform() {
-        return mIsMultiTransform;
+    public boolean useCircleTransformation() {
+        return mCircleTransformation;
     }
 
-    public void setMultiTransform(boolean multiTransform) {
-        mIsMultiTransform = multiTransform;
+    public void setCircleTransformation(boolean circleTransformation) {
+        mCircleTransformation = circleTransformation;
     }
-
 }

@@ -6,19 +6,33 @@ import android.widget.ImageView;
 public interface ImageCacheWrapper {
 
     /**
-     * Fetch Bitmap from any Image Caching Library
-     * Set the Bitmap on the BitmapWrapper in your implementation
-     * @see BitmapWrapper#setBitmap(Bitmap)
-     * Pass the BitmapWrapper to the onSuccess of Callback
+     * Asynchronously fetches a bitmap from any Image Caching Library. Sets the bitmap on the
+     * {@link BitmapWrapper} in your implementation via {@link BitmapWrapper#setBitmap(Bitmap)}.
+     *
      * @see PicassoImageCacheWrapper for sample implementation
+     *
      * @param bitmapWrapper a {@link BitmapWrapper} instance to store the fetched Bitmap in
+     * @param callback callback to monitor result
      */
     void fetchBitmap(BitmapWrapper bitmapWrapper, Callback callback);
 
     /**
-     * Makes call to cancel BitMap request
+     * Synchronously fetches a bitmap from any Image Caching Library. Sets the bitmap on the
+     * {@link BitmapWrapper} in your implementation via {@link BitmapWrapper#setBitmap(Bitmap)}.
+     * A null bitmap will be set on a failure.
+     *
      * @see PicassoImageCacheWrapper for sample implementation
-     * @param bitmapWrapper {@link BitmapWrapper} instance used to make the fetchBitmap request
+     *
+     * @param bitmapWrapper a {@link BitmapWrapper} instance to store the fetched Bitmap in
+     */
+    void fetchBitmap(BitmapWrapper bitmapWrapper);
+
+    /**
+     * Cancels a bitmap request.
+     *
+     * @see PicassoImageCacheWrapper for sample implementation
+     *
+     * @param bitmapWrapper {@link BitmapWrapper} instance used to make the fetch request
      */
     void cancelBitmap(BitmapWrapper bitmapWrapper);
 

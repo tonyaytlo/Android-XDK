@@ -216,7 +216,7 @@ public class AvatarView extends View {
 
             final BitmapWrapper bitmapWrapper;
             if (recyclableBitmapWrappers.isEmpty()) {
-                bitmapWrapper = new BitmapWrapper(added.getAvatarImageUrl(), 0, 0, false);
+                bitmapWrapper = new BitmapWrapper(added.getAvatarImageUrl(), 0, 0, true);
             } else {
                 bitmapWrapper = recyclableBitmapWrappers.remove(0);
             }
@@ -295,7 +295,7 @@ public class AvatarView extends View {
                     if (url != null) {
                         bitmapWrapper.setWidth(size);
                         bitmapWrapper.setHeight(size);
-                        bitmapWrapper.setMultiTransform(avatarCount > 1);
+                        bitmapWrapper.setCircleTransformation(avatarCount > 1);
                         getImageCacheWrapper().fetchBitmap(bitmapWrapper,
                                 new ImageCacheWrapper.Callback() {
                                     @Override

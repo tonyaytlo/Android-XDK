@@ -14,15 +14,14 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import static com.layer.xdk.ui.util.Log.ERROR;
 import static com.layer.xdk.ui.util.Log.TAG;
 import static com.layer.xdk.ui.util.Log.VERBOSE;
 
+import java.io.IOException;
+
 public class PicassoImageCacheWrapper implements ImageCacheWrapper {
-    private final static CircleTransform SINGLE_TRANSFORM = new CircleTransform(TAG + ".single");
-    private final static CircleTransform MULTI_TRANSFORM = new CircleTransform(TAG + ".multi");
+    private final static CircleTransform CIRCLE_TRANSFORMATION = new CircleTransform(TAG + ".circle");
 
     private final Picasso mPicasso;
 
@@ -32,18 +31,38 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
 
     @Override
     public void fetchBitmap(final BitmapWrapper bitmapWrapper, final Callback callback) {
-
         Target target = createTarget(bitmapWrapper, callback);
-        boolean isMultiTransform = bitmapWrapper.hasMultiTransform();
+        createBitmapFetchRequestCreator(bitmapWrapper)
+                .into(target);
+    }
 
+    @Override
+    public void fetchBitmap(final BitmapWrapper bitmapWrapper) {
+        try {
+            Bitmap bitmap = createBitmapFetchRequestCreator(bitmapWrapper)
+                    .get();
+            bitmapWrapper.setBitmap(bitmap);
+        } catch (IOException e) {
+            if (Log.isLoggable(ERROR)) {
+                Log.e("Failed to fetch bitmap for: " + bitmapWrapper.getUrl());
+            }
+        }
+    }
+
+    private RequestCreator createBitmapFetchRequestCreator(BitmapWrapper bitmapWrapper) {
         RequestCreator creator = mPicasso.load(bitmapWrapper.getUrl())
                 .tag(bitmapWrapper.getId())
                 .noPlaceholder()
-                .noFade()
-                .centerCrop()
-                .resize(bitmapWrapper.getWidth(), bitmapWrapper.getHeight());
-        creator.transform(isMultiTransform ? MULTI_TRANSFORM : SINGLE_TRANSFORM)
-                .into(target);
+                .noFade();
+        if (bitmapWrapper.useCircleTransformation()) {
+            creator.transform(CIRCLE_TRANSFORMATION);
+        }
+        if (bitmapWrapper.getWidth() > 0 && bitmapWrapper.getHeight() > 0) {
+            creator.resize(bitmapWrapper.getWidth(), bitmapWrapper.getHeight())
+                .centerCrop();
+        }
+
+        return creator;
     }
 
     @VisibleForTesting

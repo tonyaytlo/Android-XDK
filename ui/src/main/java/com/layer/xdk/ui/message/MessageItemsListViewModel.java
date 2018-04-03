@@ -20,6 +20,7 @@ import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.adapter.MessageModelDataSourceFactory;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 
@@ -43,14 +44,15 @@ public class MessageItemsListViewModel extends BaseObservable {
 
     @Inject
     public MessageItemsListViewModel(@NonNull LayerClient layerClient,
-                                     @NonNull MessageModelAdapter messageModelAdapter,
-                                     @NonNull MessageModelDataSourceFactory dataSourceFactory,
-                                     @NonNull IdentityFormatter identityFormatter) {
+            @NonNull MessageModelAdapter messageModelAdapter,
+            @NonNull MessageModelDataSourceFactory dataSourceFactory,
+            @NonNull IdentityFormatter identityFormatter,
+            @NonNull ImageCacheWrapper imageCacheWrapper) {
         mAdapter = messageModelAdapter;
         mDataSourceFactory = dataSourceFactory;
         mIdentityFormatter = identityFormatter;
 
-        ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient, imageCacheWrapper));
         ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
     }
