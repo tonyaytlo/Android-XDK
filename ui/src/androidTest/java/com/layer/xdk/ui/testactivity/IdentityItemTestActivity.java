@@ -10,7 +10,6 @@ import com.layer.xdk.ui.DaggerXdkUiTestComponent;
 import com.layer.xdk.ui.FakeXdkUiModule;
 import com.layer.xdk.ui.XdkUiTestComponent;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.databinding.TestActivityFourPartItemBinding;
 import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
@@ -35,9 +34,8 @@ public class IdentityItemTestActivity extends Activity {
         IdentityItemModel itemModel = new IdentityItemModel(identity);
         viewHolderModel.setItem(itemModel);
 
-        AvatarViewModel avatarViewModel = component.avatarViewModel();
-
-        binding.testFourPartItem.avatar.init(avatarViewModel);
+        binding.testFourPartItem.avatar.setIdentityFormatter(viewHolderModel.getIdentityFormatter());
+        binding.testFourPartItem.avatar.setImageCacheWrapper(viewHolderModel.getImageCacheWrapper());
         binding.testFourPartItem.avatar.setParticipants(identity);
         binding.testFourPartItem.setStyle(style);
         binding.testFourPartItem.setViewHolderModel(viewHolderModel);

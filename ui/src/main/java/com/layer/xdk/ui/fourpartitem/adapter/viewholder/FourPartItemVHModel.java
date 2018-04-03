@@ -88,10 +88,12 @@ public abstract class FourPartItemVHModel<ITEM> extends BaseObservable {
         return mOnLongClickListener;
     }
 
+    @Bindable
     public IdentityFormatter getIdentityFormatter() {
         return mIdentityFormatter;
     }
 
+    @Bindable
     public ImageCacheWrapper getImageCacheWrapper() {
         return mImageCacheWrapper;
     }

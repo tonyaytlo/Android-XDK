@@ -12,7 +12,6 @@ import com.layer.xdk.ui.DaggerXdkUiTestComponent;
 import com.layer.xdk.ui.FakeXdkUiModule;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.XdkUiTestComponent;
-import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
 import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
@@ -44,9 +43,8 @@ public class ConversationItemTestActivity extends Activity {
         ConversationItemModel itemModel = new ConversationItemModel(conversation, null, authenticatedUser);
         viewHolderModel.setItem(itemModel);
 
-        AvatarViewModel avatarViewModel = component.avatarViewModel();
-        binding.testFourPartItem.avatar.init(avatarViewModel);
-
+        binding.testFourPartItem.avatar.setImageCacheWrapper(viewHolderModel.getImageCacheWrapper());
+        binding.testFourPartItem.avatar.setIdentityFormatter(viewHolderModel.getIdentityFormatter());
         binding.testFourPartItem.avatar.setParticipants(conversation.getParticipants());
         binding.testFourPartItem.setStyle(style);
         binding.testFourPartItem.setViewHolderModel(viewHolderModel);

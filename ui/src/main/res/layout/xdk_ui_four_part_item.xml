@@ -49,6 +49,8 @@
             android:layout_width="@{style.avatarStyle.width, default=wrap_content}"
             android:layout_height="@{style.avatarStyle.height, default=wrap_content}"
             android:visibility="@{style.avatarVisibility}"
+            app:identityFormatter="@{viewHolderModel.identityFormatter}"
+            app:imageCacheWrapper="@{viewHolderModel.imageCacheWrapper}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"

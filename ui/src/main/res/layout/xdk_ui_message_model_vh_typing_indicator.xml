@@ -42,6 +42,8 @@
             android:layout_width="@dimen/xdk_ui_avatar_width"
             android:layout_height="@dimen/xdk_ui_avatar_height"
             android:visibility="@{viewHolderModel.avatarViewVisible ? View.VISIBLE : View.GONE}"
+            app:identityFormatter="@{viewHolderModel.identityFormatter}"
+            app:imageCacheWrapper="@{viewHolderModel.imageCacheWrapper}"
             app:participants="@{viewHolderModel.participants}"/>
 
         <FrameLayout

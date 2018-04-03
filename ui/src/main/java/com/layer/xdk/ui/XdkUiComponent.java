@@ -1,7 +1,6 @@
 package com.layer.xdk.ui;
 
 
-import com.layer.xdk.ui.avatar.AvatarViewModel;
 import com.layer.xdk.ui.conversation.ConversationItemsListViewModel;
 import com.layer.xdk.ui.conversation.ConversationViewModel;
 import com.layer.xdk.ui.identity.IdentityItemsListViewModel;
@@ -16,5 +15,4 @@ public interface XdkUiComponent {
     ConversationItemsListViewModel conversationItemsListViewModel();
     ConversationViewModel conversationViewModel();
     IdentityItemsListViewModel identityItemsListViewModel();
-    AvatarViewModel avatarViewModel();
 }

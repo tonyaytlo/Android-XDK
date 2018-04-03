@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageModelVhTypingIndicatorBinding;
 
 import java.util.Set;
@@ -22,9 +21,6 @@ public class TypingIndicatorVH extends
     public TypingIndicatorVH(ViewGroup parent, TypingIndicatorVHModel model) {
         super(parent, R.layout.xdk_ui_message_model_vh_typing_indicator, model);
         getBinding().setViewHolderModel(model);
-
-        getBinding().avatar.init(new AvatarViewModelImpl(model.getImageCacheWrapper(), model.getIdentityFormatter()));
-
         getBinding().executePendingBindings();
     }
 

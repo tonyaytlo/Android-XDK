@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiMessageModelVhDefaultBinding;
 import com.layer.xdk.ui.message.container.MessageContainer;
 
@@ -20,11 +19,6 @@ public class DefaultMessageModelVH extends
 
     public DefaultMessageModelVH(ViewGroup parent, final DefaultMessageModelVHModel viewModel) {
         super(parent, R.layout.xdk_ui_message_model_vh_default, viewModel);
-
-        getBinding().avatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper(),
-                viewModel.getIdentityFormatter()));
-        getBinding().currentUserAvatar.init(new AvatarViewModelImpl(viewModel.getImageCacheWrapper(),
-                viewModel.getIdentityFormatter()));
 
         getBinding().setViewHolderModel(viewModel);
 

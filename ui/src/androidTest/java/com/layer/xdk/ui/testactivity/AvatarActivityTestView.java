@@ -10,13 +10,12 @@ import android.widget.Spinner;
 import com.layer.sdk.messaging.Presence;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.avatar.AvatarView;
-import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.mock.MockIdentity;
 import com.layer.xdk.ui.mock.MockLayerClient;
 import com.layer.xdk.ui.presence.PresenceView;
-import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
-import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,9 +43,9 @@ public class AvatarActivityTestView extends Activity implements AdapterView.OnIt
         mPresenceView = (PresenceView) findViewById(R.id.test_presence);
         mPresenceView.setParticipants(mMockIdentity);
         ImageCacheWrapper imageCacheWrapper = new PicassoImageCacheWrapper(Picasso.with(this));
-        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper, new DefaultIdentityFormatter(getApplicationContext())));
+        mAvatarView.setImageCacheWrapper(imageCacheWrapper);
+        mAvatarView.setIdentityFormatter(new DefaultIdentityFormatter(getApplicationContext()));
         mAvatarView.setParticipants(mMockIdentity);
-        mAvatarView.init(new AvatarViewModelImpl(imageCacheWrapper, new DefaultIdentityFormatter(getApplicationContext())));
         setUp();
     }
 

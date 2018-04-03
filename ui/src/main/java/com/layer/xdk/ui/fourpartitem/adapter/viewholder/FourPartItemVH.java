@@ -3,7 +3,6 @@ package com.layer.xdk.ui.fourpartitem.adapter.viewholder;
 import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 
-import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.databinding.XdkUiFourPartItemBinding;
 import com.layer.xdk.ui.fourpartitem.FourPartItemStyle;
 
@@ -23,8 +22,6 @@ public class FourPartItemVH<ITEM, VIEW_HOLDER_MODEL extends FourPartItemVHModel<
 
         binding.setViewHolderModel(viewHolderModel);
         binding.setStyle(itemStyle);
-        binding.avatar.init(new AvatarViewModelImpl(viewHolderModel.getImageCacheWrapper(),
-                viewHolderModel.getIdentityFormatter()));
         binding.getRoot().setOnClickListener(viewHolderModel.getOnClickListener());
         binding.getRoot().setOnLongClickListener(viewHolderModel.getOnLongClickListener());
     }

@@ -2,8 +2,6 @@ package com.layer.xdk.ui;
 
 import android.support.annotation.NonNull;
 
-import com.layer.xdk.ui.avatar.AvatarViewModel;
-import com.layer.xdk.ui.avatar.AvatarViewModelImpl;
 import com.layer.xdk.ui.conversation.adapter.viewholder.ConversationItemVHModel;
 import com.layer.xdk.ui.identity.adapter.viewholder.IdentityItemVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
@@ -19,27 +17,13 @@ import dagger.internal.Factory;
 
 /**
  * Internal module to use with the XDK UI. This mostly provides factories to create models for
- * recycler view view holder classes. It also provides a default implementation of an
- * {@link AvatarViewModel}. Normally this class will not be overridden unless further customization
- * is required. Ensure this module or a module that provides equivalent objects is included in any
- * custom component/module setup.
+ * recycler view view holder classes. Normally this class will not be overridden unless further
+ * customization is required. Ensure this module or a module that provides equivalent objects is
+ * included in any custom component/module setup.
  */
 @SuppressWarnings("WeakerAccess")
 @Module
 public class XdkUiInternalModule {
-
-    /**
-     * Create a concrete implementation of {@link AvatarViewModel} using a
-     * {@link AvatarViewModelImpl}.
-     *
-     * @param provider A provider that creates new instances of {@link AvatarViewModelImpl}
-     * @return a {@link AvatarViewModelImpl} instance
-     */
-    @Provides
-    @NonNull
-    public AvatarViewModel provideAvatarViewModel(Provider<AvatarViewModelImpl> provider) {
-        return provider.get();
-    }
 
     /**
      * Create a {@link Factory} that creates {@link ConversationItemVHModel} instances. These

@@ -18,8 +18,11 @@ import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
+import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.image.cache.BitmapWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
+import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,8 +79,9 @@ public class AvatarView extends View {
     private Rect mRect = new Rect();
     private Rect mImageRect = new Rect();
     private RectF mContentRect = new RectF();
-    private AvatarViewModel mViewModel;
     private int mParticipantsInitialSize;
+    private IdentityFormatter mIdentityFormatter;
+    private ImageCacheWrapper mImageCacheWrapper;
 
     public AvatarView(Context context) {
         this(context, null);
@@ -93,10 +97,6 @@ public class AvatarView extends View {
         mParticipants = new LinkedHashSet<>();
 
         mAvatarPlaceholder = AppCompatResources.getDrawable(getContext(), R.drawable.xdk_ui_avatar_placeholder);
-    }
-
-    public AvatarView init(@NonNull AvatarViewModel avatarViewModel) {
-        mViewModel = avatarViewModel;
 
         mParticipants = new LinkedHashSet<>();
 
@@ -108,7 +108,41 @@ public class AvatarView extends View {
         mPaintBackground.setColor(getResources().getColor(R.color.xdk_ui_avatar_background));
         mPaintBorder.setColor(getResources().getColor(R.color.xdk_ui_avatar_border));
         mPaintInitials.setColor(getResources().getColor(R.color.xdk_ui_avatar_text));
-        return this;
+    }
+
+    @NonNull
+    private IdentityFormatter getIdentityFormatter() {
+        if (mIdentityFormatter == null) {
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("No identity formatter set on this AvatarView. Creating a default instance. "
+                        + "For better performance, supply an identity formatter "
+                        + "via setIdentityFormatter()");
+            }
+            mIdentityFormatter = new DefaultIdentityFormatter(getContext());
+        }
+        return mIdentityFormatter;
+    }
+
+    public void setIdentityFormatter(IdentityFormatter identityFormatter) {
+        mIdentityFormatter = identityFormatter;
+    }
+
+    @NonNull
+    private ImageCacheWrapper getImageCacheWrapper() {
+        if (mImageCacheWrapper == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("No image cache wrapper is set on this AvatarView. Please supply one via "
+                        + "setImageCacheWrapper()");
+            }
+            throw new IllegalStateException("No image cache wrapper is set on this AvatarView. "
+                    + "Please supply one via setImageCacheWrapper()");
+        }
+        return mImageCacheWrapper;
+    }
+
+    public void setImageCacheWrapper(
+            ImageCacheWrapper imageCacheWrapper) {
+        mImageCacheWrapper = imageCacheWrapper;
     }
 
     public void setStyle(AvatarStyle avatarStyle) {
@@ -171,14 +205,14 @@ public class AvatarView extends View {
             mInitials.remove(removed);
             BitmapWrapper bitmapWrapper = mIdentityBitmapWrapperMap.remove(removed);
             if (bitmapWrapper != null && removed.getAvatarImageUrl() != null) {
-                mViewModel.getImageCacheWrapper().cancelBitmap(bitmapWrapper);
+                getImageCacheWrapper().cancelBitmap(bitmapWrapper);
                 recyclableBitmapWrappers.add(bitmapWrapper);
             }
         }
 
         for (Identity added : diff.added) {
             if (added == null) return;
-            mInitials.put(added, mViewModel.getInitialsForAvatarView(added));
+            mInitials.put(added, getIdentityFormatter().getInitials(added));
 
             final BitmapWrapper bitmapWrapper;
             if (recyclableBitmapWrappers.isEmpty()) {
@@ -195,17 +229,17 @@ public class AvatarView extends View {
         // TODO: make caching intelligent wrt sizing
         for (Identity existing : diff.existing) {
             if (existing == null) continue;
-            mInitials.put(existing, mViewModel.getInitialsForAvatarView(existing));
+            mInitials.put(existing, getIdentityFormatter().getInitials(existing));
             String url = existing.getAvatarImageUrl() != null ? existing.getAvatarImageUrl() : "";
             if (!url.isEmpty()) {
                 BitmapWrapper existingBitmapWrapper = mIdentityBitmapWrapperMap.get(existing);
-                mViewModel.getImageCacheWrapper().cancelBitmap(existingBitmapWrapper);
+                getImageCacheWrapper().cancelBitmap(existingBitmapWrapper);
                 toLoad.add(existingBitmapWrapper);
             }
 
         }
         for (BitmapWrapper bitmapWrapper : mPendingLoads) {
-            mViewModel.getImageCacheWrapper().cancelBitmap(bitmapWrapper);
+            getImageCacheWrapper().cancelBitmap(bitmapWrapper);
         }
         mPendingLoads.clear();
         mPendingLoads.addAll(toLoad);
@@ -262,7 +296,7 @@ public class AvatarView extends View {
                         bitmapWrapper.setWidth(size);
                         bitmapWrapper.setHeight(size);
                         bitmapWrapper.setMultiTransform(avatarCount > 1);
-                        mViewModel.getImageCacheWrapper().fetchBitmap(bitmapWrapper,
+                        getImageCacheWrapper().fetchBitmap(bitmapWrapper,
                                 new ImageCacheWrapper.Callback() {
                                     @Override
                                     public void onSuccess() {
