@@ -1,14 +1,11 @@
 # Android XDK
 
-## 1.0.0-pre3
+## 4.0
+
+Initial XDK stable release
 
 ### Migration Guide
-  * Some POJOs that held JSON data were renamed. 
-    - `.message.button.ButtonModel` -> `.message.button.ButtonMetadata`
-    - `.message.button.ButtonModel.ChoiceData` -> `.message.button.ButtonMetadata.ButtonChoiceMetadata`
-    - `.message.carousel.CarouselModelMetadata` -> `.message.carousel.CarouselMessageMetadata`
-    - `.message.receipt.Discount` -> `.message.receipt.DiscountMetadata`
-    - `.message.receipt.Summary` -> `.message.receipt.SummaryMetadata`
+  * Please refer to the Migration Guide from Atlas to the XDK on https://docs.layer.com
 
 ## 1.0.0-pre2
 

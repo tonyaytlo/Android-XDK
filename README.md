@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.layer.xdk:xdk:1.0.0-pre1.0'
+    compile 'com.layer.xdk:xdk:4.0.0'
 }
 ```
 
