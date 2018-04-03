@@ -11,13 +11,9 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
-import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
-import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
-import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,7 +29,6 @@ public class LocationMessageModel extends MessageModel {
 
     private static final String ACTION_EVENT_OPEN_MAP = "open-map";
     private static final double GOLDEN_RATIO = (1.0 + Math.sqrt(5.0)) / 2.0;
-    private static ImageCacheWrapper sImageCacheWrapper;
 
     private LocationMessageMetadata mMetadata;
     private boolean mLegacy;
@@ -188,19 +183,6 @@ public class LocationMessageModel extends MessageModel {
     @Nullable
     public String getFormattedAddress() {
         return mMetadata != null ? mMetadata.getFormattedAddress() : null;
-    }
-
-    public ImageCacheWrapper getImageCacheWrapper() {
-        if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
-                    .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
-                    .build());
-        }
-        return sImageCacheWrapper;
-    }
-
-    public static void setImageCacheWrapper(ImageCacheWrapper imageCacheWrapper) {
-        sImageCacheWrapper = imageCacheWrapper;
     }
 
     @Nullable

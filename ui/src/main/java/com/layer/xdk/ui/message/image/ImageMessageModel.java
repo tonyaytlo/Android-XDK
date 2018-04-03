@@ -12,14 +12,10 @@ import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.LegacyMimeTypes;
 import com.layer.xdk.ui.message.MessagePartUtils;
+import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.model.Action;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
-import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
-import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
-import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
-import com.layer.xdk.ui.message.image.cache.requesthandlers.MessagePartRequestHandler;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,8 +32,6 @@ public class ImageMessageModel extends MessageModel {
     public static final String ACTION_EVENT_OPEN_URL = "open-url";
 
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.image+json";
-
-    private static ImageCacheWrapper sImageCacheWrapper;
 
     private ImageMessageMetadata mMetadata;
 
@@ -170,7 +164,7 @@ public class ImageMessageModel extends MessageModel {
             } else {
                 if (mSourceRequestParameters != null && mSourceRequestParameters.getUri() != null) {
                     url = mSourceRequestParameters.getUri().toString();
-                } else if (mPreviewRequestParameters != null && mPreviewRequestParameters.getUri() != null){
+                } else if (mPreviewRequestParameters != null && mPreviewRequestParameters.getUri() != null) {
                     url = mPreviewRequestParameters.getUri().toString();
                 }
                 width = mMetadata.getWidth();
@@ -194,8 +188,8 @@ public class ImageMessageModel extends MessageModel {
     }
 
     /*
-    * Private methods
-    */
+     * Private methods
+     */
 
     private void parseRootMessagePart(MessagePart messagePart) {
         JsonReader reader = new JsonReader(new InputStreamReader(messagePart.getDataStream()));
@@ -282,21 +276,8 @@ public class ImageMessageModel extends MessageModel {
     }
 
     /*
-    * Setters, getters, bindings
-    */
-
-    public ImageCacheWrapper getImageCacheWrapper() {
-        if (sImageCacheWrapper == null) {
-            sImageCacheWrapper = new PicassoImageCacheWrapper(new Picasso.Builder(getAppContext())
-                    .addRequestHandler(new MessagePartRequestHandler(getLayerClient()))
-                    .build());
-        }
-        return sImageCacheWrapper;
-    }
-
-    public static void setImageCacheWrapper(ImageCacheWrapper imageCacheWrapper) {
-        sImageCacheWrapper = imageCacheWrapper;
-    }
+     * Setters, getters, bindings
+     */
 
     public ImageRequestParameters getPreviewRequestParameters() {
         return mPreviewRequestParameters;

@@ -24,6 +24,7 @@ import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.response.ResponseSummaryMetadataV2;
 import com.layer.xdk.ui.repository.MessageSenderRepository;
 import com.layer.xdk.ui.util.DateFormatter;
@@ -73,6 +74,7 @@ public abstract class MessageModel extends BaseObservable {
     private MessageModelManager mMessageModelManager;
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
+    private ImageCacheWrapper mImageCacheWrapper;
     private Gson mGson;
 
     private final Message mMessage;
@@ -743,6 +745,20 @@ public abstract class MessageModel extends BaseObservable {
      */
     public final void setDateFormatter(DateFormatter dateFormatter) {
         mDateFormatter = dateFormatter;
+    }
+
+    /**
+     * @return an {@link ImageCacheWrapper} instance used to display images
+     */
+    public ImageCacheWrapper getImageCacheWrapper() {
+        return mImageCacheWrapper;
+    }
+
+    /**
+     * @param imageCacheWrapper an {@link ImageCacheWrapper} used to display images
+     */
+    public void setImageCacheWrapper(ImageCacheWrapper imageCacheWrapper) {
+        mImageCacheWrapper = imageCacheWrapper;
     }
 
     /**

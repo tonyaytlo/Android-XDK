@@ -14,6 +14,7 @@ import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
@@ -43,13 +44,16 @@ public class MessageModelManagerTest {
     @Mock
     DateFormatter mDateFormatter;
 
+    @Mock
+    ImageCacheWrapper mImageCacheWrapper;
+
     MessageModelManager mManager;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
         mManager = new MessageModelManager(mContext, mLayerClient, mIdentityFormatter,
-                mDateFormatter);
+                mDateFormatter, mImageCacheWrapper);
     }
 
     @Test

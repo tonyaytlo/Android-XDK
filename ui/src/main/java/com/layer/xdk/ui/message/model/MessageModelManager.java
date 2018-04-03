@@ -16,6 +16,7 @@ import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.generic.UnhandledMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
+import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.link.LinkMessageModel;
 import com.layer.xdk.ui.message.location.LocationMessageModel;
 import com.layer.xdk.ui.message.product.ProductMessageModel;
@@ -49,6 +50,7 @@ public class MessageModelManager {
     private final LayerClient mLayerClient;
     private final IdentityFormatter mIdentityFormatter;
     private final DateFormatter mDateFormatter;
+    private final ImageCacheWrapper mImageCacheWrapper;
     private final Gson mGson;
 
     /**
@@ -74,16 +76,19 @@ public class MessageModelManager {
      * @param identityFormatter  an {@link IdentityFormatter} instance used to format
      *                           {@link com.layer.sdk.messaging.Identity}s for display
      * @param dateFormatter      a {@link DateFormatter} instance used to format dates for display
+     * @param imageCacheWrapper  an {@link ImageCacheWrapper} instance used to display images
      */
     @Inject
     public MessageModelManager(@NonNull Context applicationContext, @NonNull LayerClient layerClient,
                                @NonNull IdentityFormatter identityFormatter,
-                               @NonNull DateFormatter dateFormatter) {
+                               @NonNull DateFormatter dateFormatter,
+                               @NonNull ImageCacheWrapper imageCacheWrapper) {
         mIdentifierToConstructorMap = new HashMap<>();
         mApplicationContext = applicationContext;
         mLayerClient = layerClient;
         mIdentityFormatter = identityFormatter;
         mDateFormatter = dateFormatter;
+        mImageCacheWrapper = imageCacheWrapper;
         mGson = new GsonBuilder()
                 .registerTypeAdapter(ORSet.class, new ORSetDeserializer())
                 .setFieldNamingStrategy(new AndroidFieldNamingStrategy()).create();
@@ -199,6 +204,7 @@ public class MessageModelManager {
                 model.setMessageModelManager(this);
                 model.setIdentityFormatter(mIdentityFormatter);
                 model.setDateFormatter(mDateFormatter);
+                model.setImageCacheWrapper(mImageCacheWrapper);
                 model.setGson(mGson);
                 return model;
             }
