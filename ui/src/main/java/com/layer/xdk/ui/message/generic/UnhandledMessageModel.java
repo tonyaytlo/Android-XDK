@@ -20,7 +20,7 @@ public class UnhandledMessageModel extends TextMessageModel {
 
     private String mText;
 
-    public UnhandledMessageModel(Context context, LayerClient layerClient,
+    public UnhandledMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
             @NonNull Message message) {
         super(context, layerClient, message);
     }

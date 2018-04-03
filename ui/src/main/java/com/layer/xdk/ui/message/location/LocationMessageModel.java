@@ -38,7 +38,8 @@ public class LocationMessageModel extends MessageModel {
     private LocationMessageMetadata mMetadata;
     private boolean mLegacy;
 
-    public LocationMessageModel(Context context, LayerClient layerClient, Message message) {
+    public LocationMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                                @NonNull Message message) {
         super(context, layerClient, message);
     }
 

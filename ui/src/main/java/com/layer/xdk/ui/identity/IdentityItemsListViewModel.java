@@ -6,6 +6,7 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.messaging.Identity;
@@ -21,19 +22,22 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * A ViewModel to drive a list of {@link Identity} objects
+ */
 public class IdentityItemsListViewModel extends BaseObservable {
     private static final int DEFAULT_PAGE_SIZE = 50;
     private static final int DEFAULT_PREFETCH_DISTANCE = 150;
 
-    protected final IdentityItemsAdapter mAdapter;
+    private final IdentityItemsAdapter mAdapter;
     private final IdentityDataSourceFactory mDataSourceFactory;
     private LiveData<PagedList<IdentityItemModel>> mIdentityItemModelList;
     private Observer<PagedList<IdentityItemModel>> mIdentityItemModelListObserver;
     private boolean mInitialLoadComplete;
 
     @Inject
-    public IdentityItemsListViewModel(IdentityItemsAdapter adapter,
-            IdentityDataSourceFactory dataSourceFactory) {
+    public IdentityItemsListViewModel(@NonNull IdentityItemsAdapter adapter,
+                                      @NonNull IdentityDataSourceFactory dataSourceFactory) {
         mAdapter = adapter;
         mDataSourceFactory = dataSourceFactory;
     }
@@ -51,19 +55,31 @@ public class IdentityItemsListViewModel extends BaseObservable {
     /**
      * Specify query arguments to use for the identity query when populating the adapter.
      *
-     * @param predicate An identity predicate to apply to the query
+     * @param predicate      An identity predicate to apply to the query
      * @param sortDescriptor An identity sort descriptor to apply to the query
      */
+    @SuppressWarnings("unused")
     public void useQuery(Predicate predicate, SortDescriptor sortDescriptor) {
         mDataSourceFactory.useQuery(predicate, sortDescriptor);
         createAndObserveConversationItemModelList();
     }
 
+    /**
+     * Set an {@link OnItemClickListener} to be fired when items in the identity list are
+     * clicked
+     *
+     * @param itemClickListener the {@link OnItemClickListener} to be used
+     */
     public void setItemClickListener(OnItemClickListener<IdentityItemModel> itemClickListener) {
         mAdapter.setItemClickListener(itemClickListener);
         notifyChange();
     }
 
+    /**
+     * Gets the {@link IdentityItemsAdapter} instance set on this object
+     *
+     * @return the {@link IdentityItemsAdapter} instance set on this object
+     */
     @Bindable
     public IdentityItemsAdapter getAdapter() {
         return mAdapter;
@@ -100,6 +116,9 @@ public class IdentityItemsListViewModel extends BaseObservable {
         mIdentityItemModelList.observeForever(mIdentityItemModelListObserver);
     }
 
+    /**
+     * @return true if the initial loading is complete
+     */
     @Bindable
     public boolean isInitialLoadComplete() {
         return mInitialLoadComplete;

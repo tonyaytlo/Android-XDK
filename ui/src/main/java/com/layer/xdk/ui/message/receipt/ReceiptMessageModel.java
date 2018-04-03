@@ -27,7 +27,8 @@ public class ReceiptMessageModel extends MessageModel {
 
     private ReceiptMessageMetadata mMetadata;
 
-    public ReceiptMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ReceiptMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                               @NonNull Message message) {
         super(context, layerClient, message);
     }
 

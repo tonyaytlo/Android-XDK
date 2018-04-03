@@ -49,7 +49,7 @@ public class DefaultIdentityFormatter implements IdentityFormatter {
     }
 
     @Override
-    public String getMetaData(Identity identity) {
+    public String getSecondaryInfo(Identity identity) {
         return null;
     }
 

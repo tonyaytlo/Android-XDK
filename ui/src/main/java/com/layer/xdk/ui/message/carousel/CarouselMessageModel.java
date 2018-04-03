@@ -21,7 +21,8 @@ public class CarouselMessageModel extends MessageModel {
 
     private CarouselMessageMetadata mMetadata;
 
-    public CarouselMessageModel(Context context, LayerClient layerClient, Message message) {
+    public CarouselMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                                @NonNull Message message) {
         super(context, layerClient, message);
     }
 
@@ -113,7 +114,7 @@ public class CarouselMessageModel extends MessageModel {
         List<MessageModel> childMessageModels = getChildMessageModelsWithRole(ROLE_CAROUSEL_ITEM);
         return getAppContext().getResources().getQuantityString(R.plurals.xdk_ui_carousel_message_preview_text, 0, childMessageModels.size());
     }
-    
+
     @Override
     public boolean getHasContent() {
         return getChildMessageModels() != null && !getChildMessageModels().isEmpty();

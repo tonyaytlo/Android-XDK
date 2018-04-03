@@ -33,7 +33,8 @@ public class ButtonMessageModel extends MessageModel {
     private ChoiceOrSetHelper mChoiceOrSetHelper;
     private ChoiceClickDelegate mChoiceClickDelegate;
 
-    public ButtonMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ButtonMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                              @NonNull Message message) {
         super(context, layerClient, message);
     }
 

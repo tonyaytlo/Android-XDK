@@ -12,14 +12,12 @@ import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 public interface AvatarViewModel {
 
     /**
-     * getter for ImageCacherWrapper so that the view can cancel Bitmap Load request
+     * @return the ImageCacheWrapper to be used to load images
      */
     ImageCacheWrapper getImageCacheWrapper();
 
     /**
-     * Returns the initial base on the
-     *
-     * @see IdentityFormatter passed into the ViewModel
+     * @return an {@link IdentityFormatter} for formatting the {@link Identity} objects
      */
     String getInitialsForAvatarView(Identity identity);
 }

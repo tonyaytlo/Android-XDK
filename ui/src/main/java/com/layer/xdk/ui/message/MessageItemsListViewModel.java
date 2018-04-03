@@ -6,6 +6,7 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
@@ -24,6 +25,9 @@ import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 
 import javax.inject.Inject;
 
+/**
+ * A ViewModel to drive a list of {@link com.layer.sdk.messaging.Message} objects
+ */
 public class MessageItemsListViewModel extends BaseObservable {
     private static final int DEFAULT_PAGE_SIZE = 30;
     private static final int DEFAULT_PREFETCH_DISTANCE = 60;
@@ -38,9 +42,10 @@ public class MessageItemsListViewModel extends BaseObservable {
     private boolean mInitialLoadComplete;
 
     @Inject
-    public MessageItemsListViewModel(LayerClient layerClient,
-            MessageModelAdapter messageModelAdapter,
-            MessageModelDataSourceFactory dataSourceFactory, IdentityFormatter identityFormatter) {
+    public MessageItemsListViewModel(@NonNull LayerClient layerClient,
+                                     @NonNull MessageModelAdapter messageModelAdapter,
+                                     @NonNull MessageModelDataSourceFactory dataSourceFactory,
+                                     @NonNull IdentityFormatter identityFormatter) {
         mAdapter = messageModelAdapter;
         mDataSourceFactory = dataSourceFactory;
         mIdentityFormatter = identityFormatter;
@@ -50,6 +55,12 @@ public class MessageItemsListViewModel extends BaseObservable {
         ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
     }
 
+    /**
+     * Sets the {@link Conversation} from which {@link com.layer.sdk.messaging.Message}s are
+     * displayed
+     *
+     * @param conversation a {@link Conversation} instance to drive this list
+     */
     public void setConversation(Conversation conversation) {
         mConversation = conversation;
         if (conversation != null) {
@@ -60,6 +71,11 @@ public class MessageItemsListViewModel extends BaseObservable {
         notifyChange();
     }
 
+    /**
+     * Gets the {@link MessageModelAdapter} instance set on this object
+     *
+     * @return the {@link MessageModelAdapter} instance set on this object
+     */
     @Bindable
     public MessageModelAdapter getAdapter() {
         return mAdapter;
@@ -70,6 +86,12 @@ public class MessageItemsListViewModel extends BaseObservable {
         return mIdentityFormatter;
     }
 
+    /**
+     * Set an {@link OnItemLongClickListener} to be fired when items in the conversation list are
+     * long clicked
+     *
+     * @param listener the {@link OnItemLongClickListener} instance to be used
+     */
     public void setItemLongClickListener(OnItemLongClickListener<MessageModel> listener) {
         mAdapter.setItemLongClickListener(listener);
     }
@@ -122,6 +144,9 @@ public class MessageItemsListViewModel extends BaseObservable {
         mMessageModelList.observeForever(mMessageModelListObserver);
     }
 
+    /**
+     * @return true if the initial loading is complete
+     */
     @Bindable
     public boolean isInitialLoadComplete() {
         return mInitialLoadComplete;

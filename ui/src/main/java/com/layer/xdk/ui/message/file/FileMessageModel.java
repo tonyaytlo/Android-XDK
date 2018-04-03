@@ -55,7 +55,8 @@ public class FileMessageModel extends MessageModel {
 
     private String mFileProviderAuthority;
 
-    public FileMessageModel(Context context, LayerClient layerClient, Message message) {
+    public FileMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                            @NonNull Message message) {
         super(context, layerClient, message);
         mFileProviderAuthority = context.getPackageName() + ".file_provider";
     }

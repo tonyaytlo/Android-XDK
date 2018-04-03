@@ -32,6 +32,7 @@ public class ImageMessageModel extends MessageModel {
     private static final String ROLE_PREVIEW = "preview";
     private static final int PLACEHOLDER = R.drawable.xdk_ui_image_message_model_placeholder;
 
+    @SuppressWarnings("WeakerAccess")
     public static final String ACTION_EVENT_OPEN_URL = "open-url";
 
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.image+json";
@@ -43,7 +44,8 @@ public class ImageMessageModel extends MessageModel {
     private ImageRequestParameters mPreviewRequestParameters;
     private ImageRequestParameters mSourceRequestParameters;
 
-    public ImageMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ImageMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                             @NonNull Message message) {
         super(context, layerClient, message);
     }
 

@@ -41,7 +41,8 @@ public class ProductMessageModel extends MessageModel {
 
     private ProductMessageMetadata mMetadata;
 
-    public ProductMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ProductMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                               @NonNull Message message) {
         super(context, layerClient, message);
         mOptions = new ArrayList<>();
     }

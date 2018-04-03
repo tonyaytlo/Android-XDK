@@ -41,6 +41,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A class that converts a {@link Message} and its {@link MessagePart}s into a tree of
+ * MessageModels and supplies data suitable for display.
+ * <p>
+ * Key concepts:
+ * <ul>
+ * <li><b>Node id</b> : A unique identifier specified on the {@link MessagePart}'s mime type
+ * arguments as <i>node-id</i></li>
+ * <li><b>Root {@link MessagePart}</b> : the {@link MessagePart} of the backing {@link Message}
+ * that has the mime type argument of <i>role = root</i></li>
+ * <li><b>Child {@link MessagePart}</b> : a {@link MessagePart} that specifies another
+ * {@link MessagePart} as its parent by using a <i>parent-node-id</i> equal to another part's
+ * <i>node-id</i> in its mime type arguments</li>
+ * <li><b>Root {@link MessageModel}</b> : the {@link MessageModel} that acts as the root in a given
+ * sub-tree. In case of the root {@link MessagePart}, this is the root model of the entire tree</li>
+ * <li><b>Child {@link MessageModel}</b> : a {@link MessageModel} whose <i>parent-node-id</i>
+ * corresponds to the <i>node-id</i> of a given sub tree root</li>
+ * <li><b>Legacy {@link Message}</b> : a {@link Message} that contains no {@link MessagePart} with
+ * a mime type argument of <i>role = root</i></li>
+ * <li><b>Legacy {@link MessagePart}</b> : a {@link MessagePart} belonging to a Legacy
+ * {@link Message}</li>
+ * </ul>
+ * </p>
+ */
 public abstract class MessageModel extends BaseObservable {
 
     private final Context mContext;
@@ -81,7 +105,8 @@ public abstract class MessageModel extends BaseObservable {
     private byte[] mMessageLocalData;
     private IdentityItemModel mCachedSender;
 
-    public MessageModel(Context context, LayerClient layerClient, @NonNull Message message) {
+    public MessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                        @NonNull Message message) {
         mContext = context.getApplicationContext();
         mLayerClient = layerClient;
 
@@ -97,6 +122,11 @@ public abstract class MessageModel extends BaseObservable {
         cacheMessageDataForDeepEquals();
     }
 
+    /**
+     * Parse the supplied {@link MessagePart}
+     *
+     * @param messagePart a {@link MessagePart} to be parsed
+     */
     protected abstract void parse(@NonNull MessagePart messagePart);
 
     /**
@@ -118,27 +148,68 @@ public abstract class MessageModel extends BaseObservable {
     @LayoutRes
     public abstract int getContainerViewLayoutId();
 
+    /**
+     * Allows for the optional automatic downloading of large {@link MessagePart}s, if not already
+     * downloaded
+     *
+     * @param messagePart to be downloaded if not ready
+     * @return true if the messagePart should be downloaded, false if not
+     */
     protected abstract boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart);
 
+    /**
+     * Return true if the model has content to display
+     *
+     * @return true if the model has content available for display
+     */
     @Bindable
     public abstract boolean getHasContent();
 
+    /**
+     * Provides a {@link String} that is suitable for display as a preview for the root
+     * {@link MessagePart} this model represents
+     *
+     * @return a {@link String} suitable for display as preview
+     */
     @Bindable
     @Nullable
     public abstract String getPreviewText();
 
+    /**
+     * Provides a {@link String} that can be used as a title by a
+     * {@link com.layer.xdk.ui.message.container.MessageContainer} displaying this model
+     *
+     * @return a {@link String} suitable for display as a title, or null if no title should be shown
+     */
     @Nullable
     @Bindable
     public abstract String getTitle();
 
+    /**
+     * Provides a {@link String} that can be used as a description by a
+     * {@link com.layer.xdk.ui.message.container.MessageContainer} displaying this model
+     *
+     * @return a {@link String} suitable for display as a description, or null if no description
+     * should be shown
+     */
     @Nullable
     @Bindable
     public abstract String getDescription();
 
+    /**
+     * Provides a {@link String} that can be used as a footer by a
+     * {@link com.layer.xdk.ui.message.container.MessageContainer} displaying this model
+     *
+     * @return a {@link String} suitable for display as a footer, of null if no footer should be
+     * shown
+     */
     @Nullable
     @Bindable
     public abstract String getFooter();
 
+    /**
+     * Process the {@link MessagePart}s starting from the root message part of this sub-tree
+     */
     public final void processPartsFromTreeRoot() {
         MessagePart rootMessagePart = MessagePartUtils.getMessagePartWithRoleRoot(getMessage());
         if (rootMessagePart == null) {
@@ -154,6 +225,9 @@ public abstract class MessageModel extends BaseObservable {
         }
     }
 
+    /**
+     * Handle legacy {@link MessagePart}s
+     */
     protected void processLegacyParts() {
         if (Log.isLoggable(Log.ERROR)) {
             Log.e("Message has no message part with role = root and no legacy part handling");
@@ -162,7 +236,12 @@ public abstract class MessageModel extends BaseObservable {
                 + " legacy part handling");
     }
 
-
+    /**
+     * Process the {@link MessagePart}s of the sub-tree with the supplied message part acting
+     * as the root of that tree. If overriding, ensure you call the super class implementation
+     *
+     * @param rootMessagePart the root {@link MessagePart} of the sub-tree
+     */
     @CallSuper
     protected void processParts(@NonNull MessagePart rootMessagePart) {
         mRootMessagePart = rootMessagePart;
@@ -178,6 +257,9 @@ public abstract class MessageModel extends BaseObservable {
         mMimeTypeTree = createMimeTypeTree();
     }
 
+    /**
+     * Process the child {@link MessagePart}s of this model's root MessagePart
+     */
     protected void processChildParts() {
         mChildMessageParts = MessagePartUtils.getChildParts(getMessage(), mRootMessagePart);
 
@@ -256,11 +338,11 @@ public abstract class MessageModel extends BaseObservable {
 
     /**
      * <p>
-     *     Override this method to optionally consume the supplied MessagePart without having the
-     *     framework attempt to generate a model from it.
-     *
-     *     The method defaults to returning false, upon which the framework will attempt to
-     *     generate a MessageModel instance from the currently registered MessageModel types.
+     * Override this method to optionally consume the supplied MessagePart without having the
+     * framework attempt to generate a model from it.
+     * <p>
+     * The method defaults to returning false, upon which the framework will attempt to
+     * generate a MessageModel instance from the currently registered MessageModel types.
      * </p>
      *
      * @param childMessagePart a MessagePart that has declared this MessageModel as its parent
@@ -292,6 +374,13 @@ public abstract class MessageModel extends BaseObservable {
         return sb.toString();
     }
 
+    /**
+     * Provide a tree of mime types that correspond to legacy message parts. Usually this should
+     * not be overridden. If it is then build the tree by putting the mime types of all message
+     * parts in a comma separated string, enclosed by square brackets
+     *
+     * @return A string representing the mime type tree of all legacy message parts
+     */
     protected String createLegacyMimeTypeTree() {
         StringBuilder sb = new StringBuilder();
         boolean prependComma = false;
@@ -309,9 +398,9 @@ public abstract class MessageModel extends BaseObservable {
     /**
      * Provide a tree of mime types that correspond to all the message parts. Usually
      * this should not be overridden. If it is then build the tree as follows
-     *  1. The root level parts should be comma separated
-     *  2. If a part has children, those mime types should be comma separated and enclosed in
-     *  square brackets (i.e. []).
+     * 1. The root level parts should be comma separated
+     * 2. If a part has children, those mime types should be comma separated and enclosed in
+     * square brackets (i.e. []).
      *
      * @return A string representing the mime type tree of all message parts
      */
@@ -389,36 +478,82 @@ public abstract class MessageModel extends BaseObservable {
         mParentMessageModel = parent;
     }
 
+    /**
+     * Provides the {@link MessagePart}s that are children of this model's root message part
+     *
+     * @return a {@link List<MessagePart>} containing the child message parts
+     */
+    @SuppressWarnings("unused")
     @Nullable
     protected List<MessagePart> getChildMessageParts() {
         return mChildMessageParts;
     }
 
+    /**
+     * Provides the {@link MessageModel}s that correspond to the models generated from the
+     * children of this model's root message part
+     *
+     * @return a {@link List<MessageModel>} containing the child models
+     */
     @Nullable
     protected List<MessageModel> getChildMessageModels() {
         return mChildMessageModels;
     }
 
+    /**
+     * Add a {@link MessageModel} to the child models of this model
+     *
+     * @param messageModel a {@link MessageModel} to be added
+     */
+    @SuppressWarnings("unused")
     protected void addChildMessageModel(MessageModel messageModel) {
         mChildMessageModels.add(messageModel);
     }
 
+    /**
+     * Set an {@link Action} that can be launched from this model.
+     *
+     * @param action an {@link Action} that this model can launch
+     * @see Action
+     */
     public void setAction(Action action) {
         mAction = action;
     }
 
+    /**
+     * Provides an {@link Action} event that this model can launch
+     *
+     * @return a {@link String} representing the action event
+     * @see Action#getEvent()
+     */
     @CallSuper
     @Nullable
     public String getActionEvent() {
         return mAction != null ? mAction.getEvent() : null;
     }
 
+    /**
+     * Provides data to go along with the {@link Action} event returned from
+     * {@link MessageModel#getActionEvent()}
+     * <p>
+     * If there is no data to be supplied, return an empty {@link JsonObject}
+     *
+     * @return a {@link JsonObject} containing the data to be used for the {@link Action}
+     * @see Action#getData()
+     */
     @NonNull
     @CallSuper
     public JsonObject getActionData() {
         return mAction != null ? mAction.getData() : new JsonObject();
     }
 
+    /**
+     * Provides information on whether a {@link com.layer.xdk.ui.message.container.MessageContainer}
+     * can display metadata or not, depending on whether {@link MessageModel#getTitle()},
+     * {@link MessageModel#getDescription()} or {@link MessageModel#getFooter()} are available
+     *
+     * @return true if there is metadata available to display
+     */
     @Bindable
     public boolean getHasMetadata() {
         return (!TextUtils.isEmpty(getTitle()))
@@ -426,17 +561,36 @@ public abstract class MessageModel extends BaseObservable {
                 || !TextUtils.isEmpty(getFooter());
     }
 
+    /**
+     * Provides the role corresponding to the <b>role</b> mime type attribute present on the
+     * {@link MessagePart} backing this model
+     *
+     * @return a {@link String} representing the role
+     */
     @SuppressWarnings("WeakerAccess")
     @Nullable
     protected String getRole() {
         return mRole;
     }
 
+    /**
+     * Set a <b>role</b> on this model
+     *
+     * @param role a {@link String} representing the role of this model
+     */
     @SuppressWarnings("WeakerAccess")
     protected void setRole(@Nullable String role) {
         mRole = role;
     }
 
+    /**
+     * Provides the child {@link MessageModel}s of this model that have the specified <b>role</b>
+     * as returned by their {@link MessageModel#getRole()}
+     *
+     * @param role a {@link String} specifying the role for which to get child models
+     * @return a {@link List<MessageModel>} containing the child models of this model corresponding
+     * to the specified <b>role</b>
+     */
     @SuppressWarnings("WeakerAccess")
     @NonNull
     protected List<MessageModel> getChildMessageModelsWithRole(@NonNull String role) {
@@ -456,12 +610,26 @@ public abstract class MessageModel extends BaseObservable {
         return models;
     }
 
+    /**
+     * Provides the background color that the
+     * {@link com.layer.xdk.ui.message.container.MessageContainer} should use when rendering the
+     * view corresponding to this model
+     * <p>
+     * Default is {@link android.R.color#transparent}
+     *
+     * @return a color resource Id to use as the background for the display of this model
+     */
     @Bindable
     @ColorRes
     public int getBackgroundColor() {
         return android.R.color.transparent;
     }
 
+    /**
+     * Is the {@link Message} backing this model from the currently authenticated user
+     *
+     * @return true if the {@link Message} from the currently authenticated user
+     */
     @Bindable
     public final boolean isMessageFromMe() {
         if (mAuthenticatedUserId != null) {
@@ -475,38 +643,68 @@ public abstract class MessageModel extends BaseObservable {
                 + "user is null Message: " + getMessage());
     }
 
+    /**
+     * The {@link MessageModelManager} instance to be used with this model to generate child
+     * {@link MessageModel}s
+     *
+     * @param messageModelManager a {@link MessageModelManager} instance
+     */
     public final void setMessageModelManager(@NonNull MessageModelManager messageModelManager) {
         mMessageModelManager = messageModelManager;
     }
 
+    /**
+     * @return the {@link Context} supplied at instantiation
+     */
     protected Context getAppContext() {
         return mContext;
     }
 
+    /**
+     * @return the {@link LayerClient} supplied at instantiation
+     */
     protected LayerClient getLayerClient() {
         return mLayerClient;
     }
 
+    /**
+     * @return the {@link Message} backing the model tree
+     */
     @NonNull
     public final Message getMessage() {
         return mMessage;
     }
 
+    /**
+     * @return the {@link Uri} representing the user id of the currently authenticated user,
+     */
     @SuppressWarnings("WeakerAccess")
     @Nullable
     protected final Uri getAuthenticatedUserId() {
         return mAuthenticatedUserId;
     }
 
+    /**
+     * @return the {@link Uri} representing the user id of the sender of the {@link Message} backing
+     * this model tree
+     */
     @Nullable
     public final Uri getSenderId() {
         return mSenderId;
     }
 
+    /**
+     * @return the number of participants in the {@link com.layer.sdk.messaging.Conversation} that
+     * the backing {@link Message} belongs to
+     */
     public final int getParticipantCount() {
         return mParticipantCount;
     }
 
+    /**
+     * @return a {@link MessageSenderRepository} instance used to send {@link Message}s
+     * corresponding to this model type
+     */
     // TODO AND-1287 Inject this
     @NonNull
     protected MessageSenderRepository getMessageSenderRepository() {
@@ -516,18 +714,33 @@ public abstract class MessageModel extends BaseObservable {
         return mMessageSenderRepository;
     }
 
+    /**
+     * @return an {@link IdentityFormatter} instance used to format {@link Identity} objects for
+     * display
+     */
     protected IdentityFormatter getIdentityFormatter() {
         return mIdentityFormatter;
     }
 
+    /**
+     * @param identityFormatter an {@link IdentityFormatter} instance to use for formatting
+     *                          {@link Identity} objects for display
+     */
     public final void setIdentityFormatter(IdentityFormatter identityFormatter) {
         mIdentityFormatter = identityFormatter;
     }
 
+    /**
+     * @return a {@link DateFormatter} instance used to format dates and times
+     */
+    @SuppressWarnings("unused")
     protected DateFormatter getDateFormatter() {
         return mDateFormatter;
     }
 
+    /**
+     * @param dateFormatter a {@link DateFormatter} instance used to format dates and times
+     */
     public final void setDateFormatter(DateFormatter dateFormatter) {
         mDateFormatter = dateFormatter;
     }
@@ -555,10 +768,21 @@ public abstract class MessageModel extends BaseObservable {
         mGrouping = grouping;
     }
 
+    /**
+     * @return true if the {@link Message} backing this model is the newest message sent by the
+     * currently authenticated user
+     */
     public boolean isMyNewestMessage() {
         return mMyNewestMessage;
     }
 
+    /**
+     * Set whether the {@link Message} backing this model is the newest message sent by the
+     * currently authenticated user.
+     *
+     * @param myNewestMessage true if the {@link Message} backing this model is the newest message
+     *                        sent by the currently authenticated user
+     */
     public void setMyNewestMessage(boolean myNewestMessage) {
         mMyNewestMessage = myNewestMessage;
     }
@@ -582,7 +806,7 @@ public abstract class MessageModel extends BaseObservable {
     /**
      * Perform an equals check on most properties. Child model equality is checked but parent
      * models are skipped as this will produce infinite recursion.
-     *
+     * <p>
      * This is primarily used for calculations with {@link android.support.v7.util.DiffUtil}.
      *
      * @param other model to compare to

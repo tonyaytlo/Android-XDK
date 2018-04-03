@@ -31,7 +31,8 @@ public class ChoiceMessageModel extends MessageModel {
 
     private ChoiceOrSetHelper mChoiceOrSetHelper;
 
-    public ChoiceMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ChoiceMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                              @NonNull Message message) {
         super(context, layerClient, message);
     }
 

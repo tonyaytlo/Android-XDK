@@ -31,7 +31,8 @@ public class TextMessageModel extends MessageModel {
     private String mActionEvent;
     private JsonObject mCustomData;
 
-    public TextMessageModel(Context context, LayerClient layerClient, Message message) {
+    public TextMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                            @NonNull Message message) {
         super(context, layerClient, message);
         mJsonParser = new JsonParser();
     }

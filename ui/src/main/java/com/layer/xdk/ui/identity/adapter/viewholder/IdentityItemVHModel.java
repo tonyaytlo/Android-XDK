@@ -32,7 +32,7 @@ public class IdentityItemVHModel extends FourPartItemVHModel<IdentityItemModel> 
 
     @Override
     public String getSubtitle() {
-        return getIdentityFormatter().getMetaData(getItem().getIdentity());
+        return getIdentityFormatter().getSecondaryInfo(getItem().getIdentity());
     }
 
     @Override

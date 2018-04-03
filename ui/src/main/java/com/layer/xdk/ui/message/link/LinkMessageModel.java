@@ -30,7 +30,8 @@ public class LinkMessageModel extends MessageModel {
 
     private LinkMessageMetadata mMetadata;
 
-    public LinkMessageModel(Context context, LayerClient layerClient, Message message) {
+    public LinkMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                            @NonNull Message message) {
         super(context, layerClient, message);
     }
 

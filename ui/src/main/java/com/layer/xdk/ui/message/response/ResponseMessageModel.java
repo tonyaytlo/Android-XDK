@@ -16,7 +16,8 @@ public class ResponseMessageModel extends MessageModel {
     public static final String MIME_TYPE = "application/vnd.layer.response+json";
     public static final String MIME_TYPE_V2 = "application/vnd.layer.response-v2+json";
 
-    public ResponseMessageModel(Context context, LayerClient layerClient, Message message) {
+    public ResponseMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                                @NonNull Message message) {
         super(context, layerClient, message);
     }
 

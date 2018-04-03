@@ -6,19 +6,23 @@ import android.arch.paging.LivePagedListBuilder;
 import android.arch.paging.PagedList;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.SortDescriptor;
 import com.layer.xdk.ui.BR;
+import com.layer.xdk.ui.conversation.adapter.ConversationDataSourceFactory;
 import com.layer.xdk.ui.conversation.adapter.ConversationItemModel;
 import com.layer.xdk.ui.conversation.adapter.ConversationItemsAdapter;
-import com.layer.xdk.ui.conversation.adapter.ConversationDataSourceFactory;
 import com.layer.xdk.ui.recyclerview.OnItemClickListener;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
 
 import javax.inject.Inject;
 
+/**
+ * A ViewModel to drive a list of {@link com.layer.sdk.messaging.Conversation} objects
+ */
 public class ConversationItemsListViewModel extends BaseObservable {
     private static final int DEFAULT_PAGE_SIZE = 50;
     private static final int DEFAULT_PREFETCH_DISTANCE = 150;
@@ -34,8 +38,8 @@ public class ConversationItemsListViewModel extends BaseObservable {
     private boolean mInitialLoadComplete;
 
     @Inject
-    public ConversationItemsListViewModel(ConversationItemsAdapter adapter,
-            ConversationDataSourceFactory dataSourceFactory) {
+    public ConversationItemsListViewModel(@NonNull ConversationItemsAdapter adapter,
+                                          @NonNull ConversationDataSourceFactory dataSourceFactory) {
         mAdapter = adapter;
         mDataSourceFactory = dataSourceFactory;
         setInitialHistoricMessagesToFetch(INITIAL_HISTORIC_MESSAGES_TO_SYNC);
@@ -52,7 +56,7 @@ public class ConversationItemsListViewModel extends BaseObservable {
     /**
      * Specify query arguments to use for the conversation query.
      *
-     * @param predicate A conversation predicate to apply to the query
+     * @param predicate      A conversation predicate to apply to the query
      * @param sortDescriptor A conversation sort descriptor to apply to the query
      */
     @SuppressWarnings({"SameParameterValue", "WeakerAccess"})
@@ -62,20 +66,43 @@ public class ConversationItemsListViewModel extends BaseObservable {
         createAndObserveConversationItemModelList();
     }
 
+    /**
+     * Sets number of messages to fetch for the initial history
+     *
+     * @param numberOfMessagesToFetch number of messages to fetch for the initial history
+     */
     @SuppressWarnings("WeakerAccess")
     public void setInitialHistoricMessagesToFetch(int numberOfMessagesToFetch) {
         mDataSourceFactory.setInitialHistoricMessagesToFetch(numberOfMessagesToFetch);
     }
 
+    /**
+     * Gets the {@link ConversationItemsAdapter} instance set on this object
+     *
+     * @return the {@link ConversationItemsAdapter} instance set on this object
+     */
+    @NonNull
     @Bindable
     public ConversationItemsAdapter getConversationItemsAdapter() {
         return mAdapter;
     }
 
+    /**
+     * Set an {@link OnItemClickListener} to be fired when items in the conversation list are
+     * clicked
+     *
+     * @param listener the {@link OnItemClickListener} to be used
+     */
     public void setItemClickListener(OnItemClickListener<ConversationItemModel> listener) {
         mAdapter.setItemClickListener(listener);
     }
 
+    /**
+     * Set an {@link OnItemLongClickListener} to be fired when items in the conversation list are
+     * long clicked
+     *
+     * @param listener the {@link OnItemLongClickListener} instance to be used
+     */
     public void setItemLongClickListener(OnItemLongClickListener<ConversationItemModel> listener) {
         mAdapter.setItemLongClickListener(listener);
     }
@@ -112,6 +139,9 @@ public class ConversationItemsListViewModel extends BaseObservable {
         mConversationItemModelList.observeForever(mConversationItemModelListObserver);
     }
 
+    /**
+     * @return true if the initial loading is complete
+     */
     @Bindable
     public boolean isInitialLoadComplete() {
         return mInitialLoadComplete;

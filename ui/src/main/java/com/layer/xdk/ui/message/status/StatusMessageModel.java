@@ -26,7 +26,8 @@ public class StatusMessageModel extends MessageModel {
     private StatusMessageMetadata mMetadata;
     private SpannableString mText;
 
-    public StatusMessageModel(Context context, LayerClient layerClient, Message message) {
+    public StatusMessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
+                              @NonNull Message message) {
         super(context, layerClient, message);
     }
 
