@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class ConversationItemViewModelTest {
+public class ConversationItemVHModelTest {
     private static final String CONVERSATION_TITLE = "P2, P3";
     private static final String CONVERSATION_SUBTITLE = "The last message";
     private static final String CONVERSATION_TIMESTAMP = "3 hours ago";

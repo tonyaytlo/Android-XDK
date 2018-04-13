@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * A class responsible for registering {@link MessageModel} classes against unique identifiers
@@ -43,6 +44,7 @@ import javax.inject.Inject;
  *
  * @see MessageModel for key concepts related Root {@link com.layer.sdk.messaging.MessagePart}s
  */
+@Singleton
 public class MessageModelManager {
     private final Map<String, Constructor<?>> mIdentifierToConstructorMap;
 

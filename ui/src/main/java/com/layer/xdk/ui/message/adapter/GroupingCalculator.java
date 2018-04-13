@@ -24,6 +24,13 @@ public class GroupingCalculator {
     public GroupingCalculator() {
     }
 
+    /**
+     * Determine the {@link MessageGrouping} for the ordered list of models. This list should be
+     * in order of oldest to newest. This will call {@link MessageModel#setGrouping(EnumSet)} on
+     * each of the models. These set {@link MessageGrouping}s will be non-null.
+     *
+     * @param models Ordered list of {@link MessageModel}s in order of oldest to newest
+     */
     @SuppressWarnings("WeakerAccess")
     public void calculateGrouping(List<MessageModel> models) {
         MessageModel previousModel = null;
