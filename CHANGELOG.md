@@ -1,6 +1,16 @@
 # Android XDK
 
-## 4.0
+## 4.0.1
+
+### Features
+  * Improved unit test foundations (AND-1418)
+  * Updated to use 4.0.1 version of the SDK
+  * Removed TestButler as it was going unused
+
+### Bug Fixes
+  * Added a default push notification payload to the rich text sender (AND-1430) 
+
+## 4.0.0
 
 Initial XDK stable release
 
