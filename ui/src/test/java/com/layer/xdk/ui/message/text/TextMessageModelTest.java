@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 import android.content.Context;
 
-import com.layer.xdk.ui.stub.ConversationStub;
-import com.layer.xdk.ui.stub.IdentityStub;
-import com.layer.xdk.ui.stub.LayerClientStub;
-import com.layer.xdk.ui.stub.MessagePartStub;
-import com.layer.xdk.ui.stub.MessageStub;
+import com.layer.xdk.test.common.stub.ConversationStub;
+import com.layer.xdk.test.common.stub.IdentityStub;
+import com.layer.xdk.test.common.stub.LayerClientStub;
+import com.layer.xdk.test.common.stub.MessagePartStub;
+import com.layer.xdk.test.common.stub.MessageStub;
 
 import org.junit.Before;
 import org.junit.BeforeClass;

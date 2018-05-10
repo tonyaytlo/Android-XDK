@@ -7,12 +7,12 @@ import android.test.mock.MockContext;
 
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Message;
+import com.layer.xdk.test.common.stub.ConversationStub;
+import com.layer.xdk.test.common.stub.IdentityStub;
+import com.layer.xdk.test.common.stub.LayerClientStub;
+import com.layer.xdk.test.common.stub.MessageStub;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
-import com.layer.xdk.ui.stub.ConversationStub;
-import com.layer.xdk.ui.stub.IdentityStub;
-import com.layer.xdk.ui.stub.LayerClientStub;
-import com.layer.xdk.ui.stub.MessageStub;
 
 import org.junit.Before;
 import org.junit.BeforeClass;

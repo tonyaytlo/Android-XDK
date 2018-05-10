@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.is;
 
 import android.graphics.Color;
 import android.support.test.espresso.matcher.BoundedMatcher;
+import android.support.test.filters.MediumTest;
 import android.support.test.internal.util.Checks;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -34,6 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
+@MediumTest
 public class AvatarViewTest {
 
     private int mAwayColor = Color.rgb(0xF7, 0xCA, 0x40);

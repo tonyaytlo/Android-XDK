@@ -1,6 +1,10 @@
 package com.layer.xdk.ui.formatter;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
 import android.support.test.InstrumentationRegistry;
+import android.support.test.filters.MediumTest;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.layer.sdk.messaging.Identity;
@@ -11,10 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-
 @RunWith(AndroidJUnit4.class)
+@MediumTest
 public class DefaultIdentityFormatterTest {
 
     private DefaultIdentityFormatter mIdentityFormatter;

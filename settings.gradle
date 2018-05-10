@@ -1,2 +1,4 @@
-include ':xdk-ui'
+include ':xdk-ui', ':xdk-test-common', ':xdk-test-performance'
 project(':xdk-ui').projectDir = new File(rootDir, 'ui')
+project(':xdk-test-common').projectDir = new File(rootDir, 'test-common')
+project(':xdk-test-performance').projectDir = new File(rootDir, 'test-performance')

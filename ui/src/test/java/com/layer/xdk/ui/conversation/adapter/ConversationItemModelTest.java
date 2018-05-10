@@ -3,8 +3,8 @@ package com.layer.xdk.ui.conversation.adapter;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.stub.ConversationStub;
-import com.layer.xdk.ui.stub.IdentityStub;
+import com.layer.xdk.test.common.stub.ConversationStub;
+import com.layer.xdk.test.common.stub.IdentityStub;
 
 import org.junit.Test;
 

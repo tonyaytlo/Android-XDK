@@ -9,3 +9,4 @@ ui/src/main/bin
 ui/build
 *.iml
 tools/github-release
+gradle.properties

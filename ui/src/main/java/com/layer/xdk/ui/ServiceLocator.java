@@ -32,21 +32,7 @@ public class ServiceLocator {
     private DateFormatter mDateFormatter;
     private ConversationItemFormatter mConversationItemFormatter;
 
-    private enum LayerXdkComponentManager {
-        INSTANCE;
-
-        private DefaultXdkUiComponent mLayerXdkComponent;
-
-        private DefaultXdkUiComponent getInstance(ServiceLocator serviceLocator) {
-            if (mLayerXdkComponent == null) {
-                DefaultXdkUiModule module = new DefaultXdkUiModule(serviceLocator);
-                mLayerXdkComponent = DaggerDefaultXdkUiComponent.builder()
-                        .defaultXdkUiModule(module)
-                        .build();
-            }
-            return mLayerXdkComponent;
-        }
-    }
+    private DefaultXdkUiComponent mLayerXdkComponent;
 
     /**
      * @return the context set on this locator
@@ -192,7 +178,13 @@ public class ServiceLocator {
      * @return a component used to instantiate Layer XDK objects.
      */
     @NonNull
-    public DefaultXdkUiComponent getXdkUiComponent() {
-        return LayerXdkComponentManager.INSTANCE.getInstance(this);
+    public synchronized DefaultXdkUiComponent getXdkUiComponent() {
+        if (mLayerXdkComponent == null) {
+            DefaultXdkUiModule module = new DefaultXdkUiModule(this);
+            mLayerXdkComponent = DaggerDefaultXdkUiComponent.builder()
+                    .defaultXdkUiModule(module)
+                    .build();
+        }
+        return mLayerXdkComponent;
     }
 }

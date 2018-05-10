@@ -1,0 +1,20 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.layer.xdk.test.performance">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.DUMP"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:name="android.support.multidex.MultiDexApplication"
+        android:allowBackup="false"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+
+        <activity android:name=".ConversationItemsAdapterPerformanceActivity" />
+
+        <activity android:name=".benchmark.activity.ConversationBenchmarkActivity" />
+        <activity android:name=".benchmark.activity.ConversationListBenchmarkActivity" />
+    </application>
+</manifest>

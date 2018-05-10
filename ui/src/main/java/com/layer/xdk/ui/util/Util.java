@@ -65,7 +65,7 @@ public class Util {
      */
     public static void deauthenticate(LayerClient layerClient, final DeauthenticationCallback callback) {
         final AtomicBoolean alerted = new AtomicBoolean(false);
-        final LayerAuthenticationListener listener = new LayerAuthenticationListener.BackgroundThread.Weak() {
+        final LayerAuthenticationListener listener = new LayerAuthenticationListener.BackgroundThread() {
             @Override
             public void onAuthenticated(LayerClient layerClient, String s) {
 

@@ -50,7 +50,6 @@
             android:layout_marginStart="@dimen/xdk_ui_margin_tiny"
             android:layout_marginRight="@dimen/xdk_ui_margin_tiny"
             android:layout_marginEnd="@dimen/xdk_ui_margin_tiny"
-            style="@style/Widget.AppCompat.EditText"
             android:minHeight="@dimen/xdk_ui_input_height"
             android:textCursorDrawable="@drawable/xdk_ui_edit_text_cursor"
             android:textSize="@dimen/xdk_ui_text_size_input"

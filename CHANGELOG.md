@@ -1,5 +1,16 @@
 # Android XDK
 
+## 
+
+### Important Changes
+  * Added performance test module
+  * SDK pre-release URL is now set via a variable in `gradle.properties`
+  * Common dependency versions have moved to the root `build.gradle` file
+  
+### Bug Fixes
+  * Properly handling the `DefaultXdkUiComponent` singleton inside the `ServiceLocator`
+  * No longer using a weak `LayerAuthenticationListener` during deauthentication as it would usually be GC'd and the specified `DeauthenticationCallback` would not be called.
+  
 ## 4.0.2
 
 ### Features

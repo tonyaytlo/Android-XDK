@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.layer.xdk.test.performance"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField("String", "TEST_BENCHMARK_APP_ID", "\"" + findProperty("benchmarkAppId") + "\"")
+            buildConfigField("String", "TEST_BENCHMARK_EMAIL", "\"" + findProperty("benchmarkEmail") + "\"")
+            buildConfigField("String", "TEST_BENCHMARK_PASSWORD", "\"" + findProperty("benchmarkPassword") + "\"")
+            buildConfigField("String", "TEST_BENCHMARK_IDENTITY_PROVIDER_URL", "\"" + findProperty("benchmarkIdentityProviderUrl") + "\"")
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        // Seems to be a conflict between Espresso 3.0.1 and Firebase 11.8.0
+        pickFirst 'protobuf.meta'
+    }
+
+    // Data binding is still trying to use 25.2.0 for some reason
+    configurations.all {
+        resolutionStrategy.force 'com.android.support:support-v4:' + rootProject.ext.supportLibVersion
+    }
+}
+
+dependencies {
+    implementation project(':xdk-ui')
+    implementation 'com.android.support.test:rules:' + rootProject.ext.rulesVersion
+    implementation 'com.android.support.test.espresso:espresso-core:' + rootProject.ext.espressoVersion
+    implementation 'com.android.support:multidex:' + rootProject.ext.multidexVersion
+
+    androidTestImplementation project(':xdk-test-common')
+    androidTestImplementation 'com.android.support.test:runner:' + rootProject.ext.runnerVersion
+    androidTestImplementation 'com.android.support.test:rules:' + rootProject.ext.rulesVersion
+    androidTestImplementation 'org.mockito:mockito-core:' + rootProject.ext.mockitoVersion
+
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:' + rootProject.ext.espressoVersion
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:' + rootProject.ext.espressoVersion, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    androidTestImplementation 'com.google.truth:truth:' + rootProject.ext.truthVersion
+
+    androidTestImplementation 'com.google.dagger:dagger-android:' + rootProject.ext.daggerVersion
+    androidTestAnnotationProcessor 'com.google.dagger:dagger-compiler:' + rootProject.ext.daggerVersion
+}

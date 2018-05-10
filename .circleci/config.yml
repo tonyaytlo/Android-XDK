@@ -2,11 +2,11 @@ version: 2
 
 references:
 
-  # Add defined pre-release repo URL to use when looking for dependencies
-  add_prerelease_env_vars: &add_prerelease_env_vars
+  # Create gradle.properties from env var
+  create_debug_gradle_properties: &create_debug_gradle_properties
     run:
-      name: Exporting pre-release environment variables
-      command: echo 'export LAYER_PRERELEASE_REPO_URL=$PRERELEASE_REPO_URL' >> $BASH_ENV
+      name: Creating debug version of gradle.properties
+      command: echo $DEBUG_GRADLE_PROPERTIES | base64 -di > ~/workspace/gradle.properties
 
   # Standard configuration to use when building android artifacts
   android_config: &android_config
@@ -69,31 +69,48 @@ references:
       root: ~/workspace
       paths:
         - ui/build/outputs/apk
+        - test-performance/build/outputs/apk
         - tools/dummy.apk
 
 jobs:
   build_debug:
     <<: *android_config
     steps:
-      - *add_prerelease_env_vars
       - checkout
+      - *create_debug_gradle_properties
       - *restore_cache
       - *download_dependencies
       - *save_cache
       - run:
           name: Building debug AAR
-          command: ./gradlew assembleDebug
+          command: ./gradlew xdk-ui:assembleDebug
       - run:
           name: Building test APK
-          command: ./gradlew assembleAndroidTest
+          command: ./gradlew xdk-ui:assembleAndroidTest
       - run:
           name: Running lint
-          command: ./gradlew lint
+          command: ./gradlew xdk-ui:lint
       - run:
           name: Running unit tests
-          command: ./gradlew test
+          command: ./gradlew xdk-ui:test
       - *store_reports
       - *store_test_results
+      - *persist_debug_workspace
+
+  build_performance_tests:
+    <<: *android_config
+    steps:
+      - checkout
+      - *create_debug_gradle_properties
+      - *restore_cache
+      - *download_dependencies
+      - *save_cache
+      - run:
+          name: Building debug APK
+          command: ./gradlew xdk-test-performance:assembleDebug
+      - run:
+          name: Building test APK
+          command: ./gradlew xdk-test-performance:assembleAndroidTest
       - *persist_debug_workspace
 
   build_release:
@@ -105,7 +122,7 @@ jobs:
       - *save_cache
       - run:
           name: Building release AAR
-          command: ./gradlew assembleRelease
+          command: ./gradlew xdk-ui:assembleRelease
       - *store_aar
 
   run_instrumented_tests:
@@ -140,11 +157,48 @@ jobs:
           path: firebase
           destination: firebase
 
+  run_performance_tests:
+    <<: *gcloud_config
+    steps:
+      - attach_workspace:
+          at: ~/workspace
+      - *setup_gcloud_creds
+      - run:
+          name: Setting up Google Cloud project
+          command: gcloud config set project layer-build
+      - run:
+          name: Authenticating with Google Cloud
+          command: gcloud auth activate-service-account firebase-adminsdk-3boog@layer-build.iam.gserviceaccount.com --key-file ${HOME}/client-secret.json
+      - run:
+          name: Running instrumented test on Firebase Test Lab
+          command: >-
+            gcloud firebase test android run
+            --app test-performance/build/outputs/apk/debug/xdk-test-performance-debug.apk
+            --test test-performance/build/outputs/apk/androidTest/debug/xdk-test-performance-debug-androidTest.apk
+            --device model=hammerhead,version=23,locale=en,orientation=portrait
+            --directories-to-pull /sdcard/layer-test-data
+            --timeout 1m
+      - run:
+          name: Creating directory to store test results
+          command: mkdir firebase
+      - run:
+          name: Downloading results
+          command: gsutil -m cp -r -U "`gsutil ls gs://test-lab-ibyywiy6hy2yc-hmfv66tu8vwya | tail -1`*" ~/workspace/firebase/
+      - store_artifacts:
+          path: firebase
+          destination: firebase
+
 workflows:
   version: 2
   build_debug_and_test:
     jobs:
       - build_debug
+      - build_performance_tests
       - run_instrumented_tests:
           requires:
             - build_debug
+
+# TODO - Restore these when we know how to grant dump permissions on Firebase Test Lab (AND-1444)
+#      - run_performance_tests:
+#          requires:
+#            - build_performance_tests

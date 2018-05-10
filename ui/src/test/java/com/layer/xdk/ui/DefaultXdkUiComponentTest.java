@@ -4,11 +4,11 @@ import static com.google.common.truth.Truth.assertThat;
 
 import static org.mockito.Mockito.mock;
 
+import com.layer.xdk.test.common.stub.LayerClientStub;
 import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.model.MessageModelManager;
-import com.layer.xdk.ui.stub.LayerClientStub;
 import com.layer.xdk.ui.util.DateFormatter;
 
 import org.junit.Before;

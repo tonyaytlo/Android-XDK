@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.stub;
+package com.layer.xdk.test.common.stub;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -18,6 +18,7 @@ import java.util.Set;
 public class ConversationStub extends Conversation {
     public HistoricSyncStatus mHistoricSyncStatus;
     public Set<Identity> mParticipants;
+    public Message mLastMessage;
 
     @Override
     public void addParticipantsByIds(@NonNull Set<String> set) {
@@ -101,7 +102,7 @@ public class ConversationStub extends Conversation {
 
     @Override
     public Message getLastMessage() {
-        return null;
+        return mLastMessage;
     }
 
     @Override

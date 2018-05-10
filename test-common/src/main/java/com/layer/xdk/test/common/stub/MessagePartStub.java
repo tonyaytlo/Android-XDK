@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.stub;
+package com.layer.xdk.test.common.stub;
 
 import android.net.Uri;
 import android.support.annotation.Nullable;

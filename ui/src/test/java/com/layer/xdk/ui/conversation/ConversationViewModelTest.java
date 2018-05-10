@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 
 import android.databinding.Observable;
 
+import com.layer.xdk.test.common.stub.ConversationStub;
+import com.layer.xdk.test.common.stub.LayerClientStub;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
-import com.layer.xdk.ui.stub.ConversationStub;
-import com.layer.xdk.ui.stub.LayerClientStub;
 
 import org.junit.Test;
 
