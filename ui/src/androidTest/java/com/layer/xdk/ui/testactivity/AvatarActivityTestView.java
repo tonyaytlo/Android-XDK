@@ -2,9 +2,12 @@ package com.layer.xdk.ui.testactivity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.layer.sdk.messaging.Presence;
@@ -14,7 +17,6 @@ import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
 import com.layer.xdk.ui.mock.MockIdentity;
-import com.layer.xdk.ui.mock.MockLayerClient;
 import com.layer.xdk.ui.presence.PresenceView;
 import com.squareup.picasso.Picasso;
 
@@ -23,29 +25,48 @@ import java.util.List;
 
 public class AvatarActivityTestView extends Activity implements AdapterView.OnItemSelectedListener {
 
-    private AvatarView mAvatarView;
+    public static final int VIEW_ID_SPINNER = 1;
+
     private Spinner mPresenceSpinner;
-    private ArrayAdapter<String> mPresenceSpinnerDataAdapter;
-    private MockLayerClient mLayerClient;
     private PresenceView mPresenceView;
     private MockIdentity mMockIdentity;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_avatar_test);
-        mLayerClient = new MockLayerClient();
+
+        mPresenceView = new PresenceView(this);
+        mPresenceView.setLayoutParams(new LinearLayout.LayoutParams(
+                getResources().getDimensionPixelSize(R.dimen.xdk_ui_avatar_presence_height),
+                getResources().getDimensionPixelSize(R.dimen.xdk_ui_avatar_presence_height))
+        );
+        AvatarView avatarView = new AvatarView(this);
+        avatarView.setLayoutParams(new LinearLayout.LayoutParams(
+                getResources().getDimensionPixelSize(R.dimen.xdk_ui_avatar_width),
+                getResources().getDimensionPixelSize(R.dimen.xdk_ui_avatar_height))
+        );
+        mPresenceSpinner = new Spinner(this);
+        mPresenceSpinner.setId(VIEW_ID_SPINNER);
+        LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        spinnerLayoutParams.gravity = Gravity.CENTER_VERTICAL;
+        mPresenceSpinner.setLayoutParams(spinnerLayoutParams);
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.addView(mPresenceView);
+        linearLayout.addView(avatarView);
+        linearLayout.addView(mPresenceSpinner);
+        setContentView(linearLayout);
+
         mMockIdentity = new MockIdentity();
-        mAvatarView = (AvatarView) findViewById(R.id.test_avatar);
-        mPresenceSpinner = (Spinner) findViewById(R.id.test_spinner);
-        mPresenceView = (PresenceView) findViewById(R.id.test_presence);
+
         mPresenceView.setParticipants(mMockIdentity);
         ImageCacheWrapper imageCacheWrapper = new PicassoImageCacheWrapper(Picasso.with(this));
-        mAvatarView.setImageCacheWrapper(imageCacheWrapper);
-        mAvatarView.setIdentityFormatter(new DefaultIdentityFormatter(getApplicationContext()));
-        mAvatarView.setParticipants(mMockIdentity);
+        avatarView.setImageCacheWrapper(imageCacheWrapper);
+        avatarView.setIdentityFormatter(new DefaultIdentityFormatter(getApplicationContext()));
+        avatarView.setParticipants(mMockIdentity);
         setUp();
     }
 
@@ -57,9 +78,10 @@ public class AvatarActivityTestView extends Activity implements AdapterView.OnIt
                 presenceStates.add(status.toString());
             }
         }
-        mPresenceSpinnerDataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, presenceStates);
-        mPresenceSpinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mPresenceSpinner.setAdapter(mPresenceSpinnerDataAdapter);
+        ArrayAdapter<String> presenceSpinnerDataAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, presenceStates);
+        presenceSpinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mPresenceSpinner.setAdapter(presenceSpinnerDataAdapter);
     }
 
     @Override

@@ -23,7 +23,6 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.presence.PresenceView;
 import com.layer.xdk.ui.testactivity.AvatarActivityTestView;
 
@@ -61,9 +60,9 @@ public class AvatarViewTest {
     public void testThatAvatarColorChangeWhenSpinnerIsChanged() {
         String selectionText = "AWAY";
 
-        onView(withId(R.id.test_spinner)).perform(click());
+        onView(withId(AvatarActivityTestView.VIEW_ID_SPINNER)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(selectionText))).perform(click());
-        onView(withId(R.id.test_spinner)).check(matches(withSpinnerText(containsString(selectionText))));
+        onView(withId(AvatarActivityTestView.VIEW_ID_SPINNER)).check(matches(withSpinnerText(containsString(selectionText))));
         onView(withText(selectionText)).perform(click());
     }
 
