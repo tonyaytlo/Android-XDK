@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.layer.xdk.ui.message.audio.AudioMessageModel"/>
+
+        <variable
+            name="messageModel"
+            type="AudioMessageModel"/>
+    </data>
+
+    <com.layer.xdk.ui.message.audio.AudioMessageLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:messageModel="@{messageModel}">
+
+        <ImageView
+            android:id="@+id/preview"
+            android:layout_width="@dimen/xdk_ui_file_message_image_width"
+            android:layout_height="@dimen/xdk_ui_file_message_image_height"
+            android:adjustViewBounds="true"
+            android:scaleType="center"
+            app:loadFrom="@{messageModel.previewRequestParameters}"
+            app:usingImageLoader="@{messageModel.imageCacheWrapper}"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:minHeight="0dp"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.layer.xdk.ui.message.audio.AudioMessageLayout>
+
+</layout>

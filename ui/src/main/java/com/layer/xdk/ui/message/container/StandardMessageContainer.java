@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.container;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
+import android.databinding.ViewStubProxy;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.LayoutRes;
@@ -78,6 +79,11 @@ public class StandardMessageContainer extends MessageContainer {
             background.setColor(ContextCompat.getColor(getContext(), model.getBackgroundColor()));
         }
         getBinding().xdkUiStandardMessageContainerContentView.getRoot().setBackgroundDrawable(background);
+    }
+
+    @NonNull
+    public ViewStubProxy getRightMetadataView() {
+        return getBinding().xdkUiStandardMessageContainerRightMetadataView;
     }
 
     private XdkUiStandardMessageContainerBinding getBinding() {

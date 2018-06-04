@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
@@ -108,7 +109,7 @@ public class FileMessageModel extends MessageModel {
     @Override
     public String getFooter() {
         if (mMetadata != null && mMetadata.mSize > 0) {
-            return "" + (mMetadata.mSize / 1024) + " KB";
+            return Formatter.formatShortFileSize(getAppContext(), mMetadata.mSize);
         }
         return null;
     }
