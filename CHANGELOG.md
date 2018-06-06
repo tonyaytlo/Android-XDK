@@ -1,5 +1,11 @@
 # Android XDK
 
+##
+
+### Bug Fixes
+  * Removed the constrained height on the compose bar so it will expand to the maximum specified lines (AND-1453)
+  * Compose bar's `EditText` now auto capitalize sentences
+
 ## 4.0.3
 
 ### Important Changes

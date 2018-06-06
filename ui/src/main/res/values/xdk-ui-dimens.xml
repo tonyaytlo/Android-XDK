@@ -180,8 +180,8 @@
     <dimen name="xdk_ui_compose_bar_height">48dp</dimen>
     <dimen name="xdk_ui_compose_bar_padding_side">@dimen/xdk_ui_margin_tiny</dimen>
     <dimen name="xdk_ui_compose_bar_button_side_margin">@dimen/xdk_ui_margin_small</dimen>
-    <dimen name="xdk_ui_compose_bar_image_button_height">@dimen/xdk_ui_primary_icon_size</dimen>
-    <dimen name="xdk_ui_compose_bar_image_button_width">@dimen/xdk_ui_primary_icon_size</dimen>
+    <dimen name="xdk_ui_compose_bar_image_button_height">@dimen/xdk_ui_icon_button_size</dimen>
+    <dimen name="xdk_ui_compose_bar_image_button_width">@dimen/xdk_ui_icon_button_size</dimen>
     <dimen name="xdk_ui_compose_bar_text_size">@dimen/xdk_ui_text_size_input</dimen>
 
     <!-- ####################################################################################### -->
