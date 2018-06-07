@@ -1,7 +1,6 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.layer.xdk.ui"
-    android:theme="@style/Theme.AppCompat.Light">
+    package="com.layer.xdk.ui">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -9,6 +8,7 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
 
     <application
+        android:theme="@style/Theme.XdkUi.Base.Light"
         android:name="android.support.multidex.MultiDexApplication">
 
         <activity
@@ -17,6 +17,7 @@
 
         <activity android:name=".testactivity.IdentityItemTestActivity"/>
         <activity android:name=".testactivity.ConversationItemTestActivity"/>
+        <activity android:name=".testactivity.ComposeBarTestActivity"/>
 
     </application>
 

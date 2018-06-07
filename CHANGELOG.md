@@ -5,6 +5,7 @@
 ### Bug Fixes
   * Removed the constrained height on the compose bar so it will expand to the maximum specified lines (AND-1453)
   * Compose bar's `EditText` now auto capitalize sentences
+  * Dismissing the attachment menu after a selection was made (AND-1454)
 
 ## 4.0.3
 

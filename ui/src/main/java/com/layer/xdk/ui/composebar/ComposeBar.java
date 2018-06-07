@@ -138,6 +138,7 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
             mAttachmentMenu = new PopupWindow(context, attrs, defStyleAttr);
         }
         mAttachmentMenu.setContentView(LayoutInflater.from(context).inflate(R.layout.xdk_ui_compose_bar_attachment_menu, null));
+        mAttachmentMenu.getContentView().setId(R.id.xdk_ui_attachment_menu);
         mAttachmentMenu.setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mAttachmentMenu.setOutsideTouchable(true);
 
@@ -280,12 +281,19 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         if (!mAttachmentSenders.isEmpty()) mDefaultAttachButton.setVisibility(View.VISIBLE);
     }
 
-    protected void addAttachmentMenuItem(AttachmentSender sender) {
+    protected void addAttachmentMenuItem(final AttachmentSender sender) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         LinearLayout menuLayout = (LinearLayout) mAttachmentMenu.getContentView();
 
         XdkUiComposeBarAttachmentMenuItemBinding binding = XdkUiComposeBarAttachmentMenuItemBinding.inflate(inflater, menuLayout, false);
         binding.setSender(sender);
+        binding.getRoot().setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAttachmentMenu.dismiss();
+                sender.requestSend();
+            }
+        });
         binding.executePendingBindings();
 
         if (sender.getIcon() != null) {
