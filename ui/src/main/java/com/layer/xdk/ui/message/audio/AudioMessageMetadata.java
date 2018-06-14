@@ -3,6 +3,7 @@ package com.layer.xdk.ui.message.audio;
 import android.support.annotation.Dimension;
 
 import com.google.gson.annotations.SerializedName;
+import com.layer.xdk.ui.util.DisplayUtils;
 
 public class AudioMessageMetadata {
     
@@ -40,4 +41,13 @@ public class AudioMessageMetadata {
 
     @SerializedName("duration")
     public double mDuration;
+
+    public int getPreviewWidth() {
+        return DisplayUtils.dpToPx(mPreviewWidth);
+    }
+
+    @Dimension
+    public int getPreviewHeight() {
+        return DisplayUtils.dpToPx(mPreviewHeight);
+    }
 }

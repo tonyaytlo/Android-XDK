@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
+import com.layer.xdk.ui.message.MessageItemsListViewModel;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
@@ -21,8 +21,10 @@ import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.view.MediaPlayerMessageView;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
+import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.Set;
@@ -51,6 +53,8 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private Factory<DefaultMessageModelVHModel> mDefaultVHModelFactory;
     private Factory<StatusMessageModelVHModel> mStatusVHModelFactory;
     private Factory<TypingIndicatorVHModel> mTypingIndicatorVHModelFactory;
+
+    private MessageItemsListViewModel.MediaControllerProvider mMediaControllerProvider;
 
     @Inject
     public MessageModelAdapter(Factory<DefaultMessageModelVHModel> defaultVHModelFactory,
@@ -178,6 +182,11 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         messageView.setOnLongClickListener(viewHolder.getLongClickListener());
         if (messageView instanceof ParentMessageView) {
             ((ParentMessageView) messageView).inflateChildLayouts(model, viewHolder.getLongClickListener());
+        }
+
+        // Set a media controller if the message view requires it
+        if (messageView instanceof MediaPlayerMessageView) {
+            ((MediaPlayerMessageView) messageView).setMediaControllerProvider(mMediaControllerProvider);
         }
     }
 
@@ -335,6 +344,15 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private int getTypingIndicatorPosition() {
         if (mShowTypingIndicator && mTypingIndicatorLayout != null) return 0;
         return -1;
+    }
+
+    /**
+     * Sets the provider that supplies the media controller used in certain message types
+     *
+     * @param provider the provider that supplies a media controller
+     */
+    public void setMediaControllerProvider(MessageItemsListViewModel.MediaControllerProvider provider) {
+        mMediaControllerProvider = provider;
     }
 
     /**

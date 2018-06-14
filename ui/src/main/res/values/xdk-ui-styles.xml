@@ -81,4 +81,9 @@
         <item name="android:padding">@dimen/xdk_ui_message_button_padding</item>
     </style>
     <style name="Message.Button.Choice"/>
+
+    <style name="Message.ProgressBar.CircularDeterminate" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminate">false</item>
+        <item name="android:indeterminateOnly">false</item>
+    </style>
 </resources>

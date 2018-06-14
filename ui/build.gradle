@@ -103,6 +103,8 @@ dependencies {
     // Include only for debug builds (namely for tests)
     debugImplementation 'com.android.support:multidex:' + rootProject.ext.multidexVersion
 
+    implementation 'com.android.support:support-media-compat:' + rootProject.ext.supportLibVersion
+
     // Testing
     testImplementation project(':xdk-test-common')
     testImplementation 'junit:junit:4.12'

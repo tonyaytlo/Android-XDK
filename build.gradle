@@ -37,6 +37,6 @@ ext {
     truthVersion = "0.39"
     multidexVersion = "1.0.3"
     daggerVersion = "2.15"
-    layerSdkVersion = "4.0.2"
+    layerSdkVersion = "4.0.3-pre"
     mockitoVersion = "2.8.47"
 }

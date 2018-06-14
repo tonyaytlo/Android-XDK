@@ -4,9 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Formatter;
+import android.util.Base64;
 
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Message model to encapsulate audio.
+ */
 public class AudioMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.audio+json";
     private static final String ROLE_SOURCE = "source";
@@ -31,15 +34,13 @@ public class AudioMessageModel extends MessageModel {
     private static final String ROLE_PREVIEW = "preview";
 
     private AudioMessageMetadata mMetadata;
-    // TODO not sure if we need this flag
-    private boolean mUsesSourceData;
     private ImageRequestParameters mPreviewRequestParameters;
 
     private String mTitle;
     private String mDescription;
     private String mFooter;
-    private List<String> mDisplaySlots;
-
+    private Uri mSourceUri;
+    private boolean mDownloadingSourcePart;
 
     public AudioMessageModel(@NonNull Context context,
             @NonNull LayerClient layerClient,
@@ -49,24 +50,51 @@ public class AudioMessageModel extends MessageModel {
 
     @Override
     protected void parse(@NonNull MessagePart messagePart) {
-        parseRootMessagePart(messagePart);
+        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
+        JsonReader reader = new JsonReader(inputStreamReader);
+        mMetadata = getGson().fromJson(reader, AudioMessageMetadata.class);
+        if (mMetadata.mSourceUrl != null) {
+            mSourceUri = Uri.parse(mMetadata.mSourceUrl);
+        }
+        computeSlots(mMetadata);
+        createPreviewRequest(null, mMetadata.mPreviewUrl);
     }
 
     @Override
     protected boolean parseChildPart(@NonNull MessagePart childMessagePart) {
-        if (MessagePartUtils.isRole(childMessagePart, ROLE_SOURCE)) {
-            // TODO Consume the source part
-            mUsesSourceData = true;
-            Log.w("TODO Received message part with source audio, need to process");
-
-            return true;
+        String role = MessagePartUtils.getRole(childMessagePart);
+        if (role != null) {
+            switch (role) {
+                case ROLE_SOURCE:
+                    if (childMessagePart.getTransferStatus() == MessagePart.TransferStatus.COMPLETE) {
+                        mSourceUri = childMessagePart.getFileUri(getAppContext());
+                        // If there is no file then it must be inline. Create a data URI
+                        if (mSourceUri == null) {
+                            mSourceUri = createDataUri(childMessagePart);
+                        }
+                        if (mSourceUri == null) {
+                            if (Log.isLoggable(Log.ERROR)) {
+                                Log.e("Source part has neither inline nor external content");
+                            }
+                            throw new IllegalStateException(
+                                    "Source part has neither inline nor external content");
+                        }
+                    }
+                    mDownloadingSourcePart = false;
+                    return true;
+                case ROLE_PREVIEW:
+                    createPreviewRequest(childMessagePart.getId(), null);
+                    return true;
+            }
         }
         return false;
     }
 
+
+
     @Override
     public int getViewLayoutId() {
-        return R.layout.xdk_ui_audio_message_layout;
+        return R.layout.xdk_ui_audio_message_view;
     }
 
     @Override
@@ -76,13 +104,15 @@ public class AudioMessageModel extends MessageModel {
 
     @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
-        // TODO should we download this?
-        return false;
+        if (MessagePartUtils.isRole(messagePart, ROLE_SOURCE) && !messagePart.isContentReady()) {
+            mDownloadingSourcePart = true;
+        }
+        return true;
     }
 
     @Override
     public boolean getHasContent() {
-        return mMetadata != null || mUsesSourceData;
+        return mMetadata != null;
     }
 
     @Nullable
@@ -95,6 +125,9 @@ public class AudioMessageModel extends MessageModel {
     @Nullable
     @Override
     public String getTitle() {
+        if (mDownloadingSourcePart) {
+            return getAppContext().getString(R.string.xdk_ui_audio_message_model_downloading_title);
+        }
         if (mTitle != null) {
             return mTitle;
         }
@@ -123,29 +156,62 @@ public class AudioMessageModel extends MessageModel {
         return mPreviewRequestParameters;
     }
 
-    private void parseRootMessagePart(MessagePart messagePart) {
-        InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
-        JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = getGson().fromJson(reader, AudioMessageMetadata.class);
-        computeSlots(mMetadata);
-
-        ImageRequestParameters.Builder previewBuilder = new ImageRequestParameters.Builder()
-                .placeHolder(R.drawable.xdk_ui_file_audio);
-
-        if (TextUtils.isEmpty(mMetadata.mPreviewUrl)) {
-            previewBuilder.resourceId(R.drawable.xdk_ui_file_audio);
-        } else {
-            previewBuilder.url(mMetadata.mPreviewUrl);
-        }
-
-        mPreviewRequestParameters = previewBuilder.build();
+    @Nullable
+    public Uri getSourceUri() {
+        return mSourceUri;
     }
 
+    public boolean isDownloadingSourcePart() {
+        return mDownloadingSourcePart;
+    }
+
+    /**
+     * Creates a data Uri so inline content can be played in a media player
+     *
+     * @param sourceMessagePart message part that contains the audio data
+     * @return a Uri that has the data base 64 encoded and the mime type for the part
+     */
+    @Nullable
+    private Uri createDataUri(@NonNull MessagePart sourceMessagePart) {
+        byte[] data = sourceMessagePart.getData();
+        if (data != null) {
+            String uri = String.format("data:%s;base64,%s",
+                    MessagePartUtils.getMimeType(sourceMessagePart),
+                    Base64.encodeToString(data, Base64.DEFAULT));
+            return Uri.parse(uri);
+        }
+        return null;
+    }
+
+    private void createPreviewRequest(@Nullable Uri partId, @Nullable String url) {
+        ImageRequestParameters.Builder builder = new ImageRequestParameters.Builder();
+        if (partId != null) {
+            builder.uri(partId);
+        } else if (url != null) {
+            builder.url(mMetadata.mPreviewUrl);
+        } else {
+            builder.resourceId(R.drawable.xdk_ui_file_audio);
+        }
+
+        builder.placeHolder(R.drawable.xdk_ui_file_audio);
+
+        if (mMetadata.getPreviewWidth() > 0 && mMetadata.getPreviewHeight() > 0) {
+            builder.resize(mMetadata.getPreviewWidth(), mMetadata.getPreviewHeight());
+        }
+        mPreviewRequestParameters = builder.build();
+    }
+
+    /**
+     * Determine what data should go in the title, description and footer locations based on
+     * available metadata.
+     *
+     * @param metadata metadata for this model
+     */
     private void computeSlots(@NonNull AudioMessageMetadata metadata) {
-        mDisplaySlots = new ArrayList<>();
-        Queue<String> slotB = createSlotBQueue(metadata, mDisplaySlots);
-        Queue<String> slotC = createSlotCQueue(metadata, mDisplaySlots);
-        Queue<String> slotD = createSlotDQueue(metadata, mDisplaySlots);
+        List<String> displaySlots = new ArrayList<>();
+        Queue<String> slotB = createSlotBQueue(metadata, displaySlots);
+        Queue<String> slotC = createSlotCQueue(metadata, displaySlots);
+        Queue<String> slotD = createSlotDQueue(metadata, displaySlots);
 
         mTitle = slotB.isEmpty() ? null : slotB.remove();
 

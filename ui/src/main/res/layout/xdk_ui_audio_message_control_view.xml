@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageButton
+
+<com.layer.xdk.ui.message.audio.AudioProgressControlView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="28dp"
-    android:layout_height="28dp"
-    android:background="@null"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
-    app:srcCompat="@drawable/xdk_ui_audio_play"/>
+    android:layout_width="@dimen/xdk_ui_audio_message_control_size"
+    android:layout_height="@dimen/xdk_ui_audio_message_control_size"/>

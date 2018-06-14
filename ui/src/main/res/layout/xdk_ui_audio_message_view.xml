@@ -19,8 +19,9 @@
 
         <ImageView
             android:id="@+id/preview"
-            android:layout_width="@dimen/xdk_ui_file_message_image_width"
-            android:layout_height="@dimen/xdk_ui_file_message_image_height"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="center"
             app:loadFrom="@{messageModel.previewRequestParameters}"
@@ -32,7 +33,7 @@
             android:minHeight="0dp"
             android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/xdk_ui_audio_message_progress_bar_height"/>
 
     </com.layer.xdk.ui.message.audio.AudioMessageLayout>
 

@@ -130,5 +130,6 @@
 
     <string name="xdk_ui_audio_message_preview_text">Audio</string>
     <string name="xdk_ui_audio_message_model_default_title">Audio Message</string>
+    <string name="xdk_ui_audio_message_model_downloading_title">Downloading…</string>
 
 </resources>
