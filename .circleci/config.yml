@@ -144,7 +144,7 @@ jobs:
             --app tools/dummy.apk
             --test ui/build/outputs/apk/androidTest/debug/xdk-ui-debug-androidTest.apk
             --device model=Nexus5X,version=26,locale=en,orientation=portrait
-            --device model=serranolte,version=19,locale=en,orientation=portrait
+            --device model=victara,version=19,locale=en,orientation=portrait
             --device model=sailfish,version=25,locale=en,orientation=portrait
             --timeout 1m
       - run:
