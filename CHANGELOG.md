@@ -1,10 +1,13 @@
 # Android XDK
 
-##
+## 4.0.4
+
+### Features
+  * Updated Layer SDK to `4.0.4`
 
 ### Bug Fixes
   * Removed the constrained height on the compose bar so it will expand to the maximum specified lines (AND-1453)
-  * Compose bar's `EditText` now auto capitalize sentences
+  * Compose bar's `EditText` now auto capitalizes sentences
   * Dismissing the attachment menu after a selection was made (AND-1454)
 
 ## 4.0.3
