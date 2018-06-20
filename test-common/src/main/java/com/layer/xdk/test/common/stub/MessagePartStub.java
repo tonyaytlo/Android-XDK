@@ -1,5 +1,6 @@
 package com.layer.xdk.test.common.stub;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -71,6 +72,12 @@ public class MessagePartStub extends MessagePart {
     @Nullable
     @Override
     public Date getUpdatedAt() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Uri getFileUri(Context context) {
         return null;
     }
 }

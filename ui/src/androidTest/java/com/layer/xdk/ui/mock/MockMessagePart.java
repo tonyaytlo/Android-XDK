@@ -1,5 +1,6 @@
 package com.layer.xdk.ui.mock;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
@@ -77,6 +78,12 @@ public class MockMessagePart extends MessagePart {
     @Nullable
     @Override
     public Date getUpdatedAt() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public Uri getFileUri(Context context) {
         return null;
     }
 }
