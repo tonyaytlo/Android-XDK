@@ -42,6 +42,8 @@ public class AudioMessageModel extends MessageModel {
     private Uri mSourceUri;
     private boolean mDownloadingSourcePart;
 
+    private Uri mAudioPartId;
+
     public AudioMessageModel(@NonNull Context context,
             @NonNull LayerClient layerClient,
             @NonNull Message message) {
@@ -55,6 +57,7 @@ public class AudioMessageModel extends MessageModel {
         mMetadata = getGson().fromJson(reader, AudioMessageMetadata.class);
         if (mMetadata.mSourceUrl != null) {
             mSourceUri = Uri.parse(mMetadata.mSourceUrl);
+            mAudioPartId = messagePart.getId();
         }
         computeSlots(mMetadata);
         createPreviewRequest(null, mMetadata.mPreviewUrl);
@@ -66,6 +69,7 @@ public class AudioMessageModel extends MessageModel {
         if (role != null) {
             switch (role) {
                 case ROLE_SOURCE:
+                    mAudioPartId = childMessagePart.getId();
                     if (childMessagePart.getTransferStatus() == MessagePart.TransferStatus.COMPLETE) {
                         mSourceUri = childMessagePart.getFileUri(getAppContext());
                         // If there is no file then it must be inline. Create a data URI
@@ -105,6 +109,8 @@ public class AudioMessageModel extends MessageModel {
     @Override
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         if (MessagePartUtils.isRole(messagePart, ROLE_SOURCE) && !messagePart.isContentReady()) {
+            // Set the part ID here since the content is not ready
+            mAudioPartId = messagePart.getId();
             mDownloadingSourcePart = true;
         }
         return true;
@@ -161,8 +167,18 @@ public class AudioMessageModel extends MessageModel {
         return mSourceUri;
     }
 
+    /**
+     * @return true if currently downloading the external content audio file, false otherwise
+     */
     public boolean isDownloadingSourcePart() {
         return mDownloadingSourcePart;
+    }
+
+    /**
+     * @return The ID of the {@link MessagePart} that contains the audio URL or data
+     */
+    public Uri getAudioPartId() {
+        return mAudioPartId;
     }
 
     /**

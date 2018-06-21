@@ -94,7 +94,7 @@ dependencies {
     api 'com.android.support:appcompat-v7:' + rootProject.ext.supportLibVersion
     implementation 'com.android.support:design:' + rootProject.ext.supportLibVersion
     // Keep as api for views that expose this layout
-    api 'com.android.support.constraint:constraint-layout:1.1.0'
+    api 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:exifinterface:' + rootProject.ext.supportLibVersion
 
     // Keep as api so MessageItemsListViewModel can be used

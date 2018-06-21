@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiAudioMessageViewBinding;
-import com.layer.xdk.ui.message.MessageItemsListViewModel;
+import com.layer.xdk.ui.message.MediaControllerProvider;
 import com.layer.xdk.ui.message.MultiPlaybackCallback;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
@@ -35,10 +35,10 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
     private XdkUiAudioMessageViewBinding mBinding;
 
     private AudioMessageModel mModel;
-    private String mMessageId;
+    private String mAudioPartId;
     private Observable.OnPropertyChangedCallback mProgressCallback;
 
-    private MessageItemsListViewModel.MediaControllerProvider mMediaControllerProvider;
+    private MediaControllerProvider mMediaControllerProvider;
     private MediaControllerCompat.Callback mControllerCallback;
 
     public AudioMessageLayout(Context context) {
@@ -89,7 +89,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
 
         mMessageViewHelper.setMessageModel(model);
         if (model != null) {
-            mMessageId = model.getMessage().getId().toString();
+            mAudioPartId = model.getAudioPartId().toString();
 
             refreshDownloadingState();
 
@@ -113,7 +113,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
                     refreshState(state);
                 }
             };
-            mMediaControllerProvider.getMediaController(getContext()).registerCallback(mControllerCallback);
+            mMediaControllerProvider.getMediaController().registerCallback(mControllerCallback);
         }
     }
 
@@ -128,8 +128,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
      * Refresh the state of the controls (play/pause/progress).
      */
     private void refreshState() {
-        final MediaControllerCompat mediaController = mMediaControllerProvider.getMediaController(
-                getContext());
+        final MediaControllerCompat mediaController = mMediaControllerProvider.getMediaController();
 
         PlaybackStateCompat playbackState = mediaController.getPlaybackState();
         refreshState(playbackState);
@@ -150,7 +149,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
         MultiPlaybackCallback.PlaybackSavedState state = null;
         // Pull the state for this message in the bundle
         if (playbackState != null && playbackState.getExtras() != null) {
-            state = playbackState.getExtras().getParcelable(mMessageId);
+            state = playbackState.getExtras().getParcelable(mAudioPartId);
         }
 
         if (state == null) {
@@ -238,15 +237,14 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
             mControlView.setButtonOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MediaControllerCompat mediaController = mMediaControllerProvider.getMediaController(
-                            v.getContext());
+                    MediaControllerCompat mediaController = mMediaControllerProvider.getMediaController();
                     PlaybackStateCompat state = mediaController.getPlaybackState();
                     switch (state.getState()) {
                         case PlaybackStateCompat.STATE_PLAYING:
                         case PlaybackStateCompat.STATE_BUFFERING:
                             mediaController.getTransportControls().pause();
 
-                            if (state.getExtras() != null && mMessageId.equals(state.getExtras().getString(MultiPlaybackCallback.EXTRA_KEY_ACTIVE_MESSAGE_ID))) {
+                            if (state.getExtras() != null && mAudioPartId.equals(state.getExtras().getString(MultiPlaybackCallback.EXTRA_KEY_ACTIVE_MESSAGE_PART_ID))) {
                                 // This was a pause for the current media so don't call play()
                                 return;
                             }
@@ -254,8 +252,8 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
                     }
 
                         Bundle extras = new Bundle(1);
-                        extras.putString(MultiPlaybackCallback.EXTRA_KEY_ACTIVE_MESSAGE_ID,
-                                mMessageId);
+                        extras.putString(MultiPlaybackCallback.EXTRA_KEY_ACTIVE_MESSAGE_PART_ID,
+                                mAudioPartId);
                         mediaController.getTransportControls().prepareFromUri(mModel.getSourceUri(),
                                 extras);
                         mediaController.getTransportControls().play();
@@ -265,8 +263,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
     }
 
     @Override
-    public void setMediaControllerProvider(
-            MessageItemsListViewModel.MediaControllerProvider provider) {
+    public void setMediaControllerProvider(MediaControllerProvider provider) {
         mMediaControllerProvider = provider;
     }
 

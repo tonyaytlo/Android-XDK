@@ -21,10 +21,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A callback for a media session that shares a player with multiple messages. This will keep track
- * of states (playback state/position/duration) for the lifetime of an instance.
+ * of states (playback state/position/duration) for the lifetime of this instance. When playing
+ * media from another message part, the part that is playing, if any, will be paused and the
+ * new part will be played. The progress for part that was playing prior to the new part will be
+ * saved in the extras on the {@link PlaybackStateCompat}.
  */
 public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
-    public static final String EXTRA_KEY_ACTIVE_MESSAGE_ID = "com.layer.xdk.ui.ACTIVE_MESSAGE_ID";
+    public static final String EXTRA_KEY_ACTIVE_MESSAGE_PART_ID = "com.layer.xdk.ui.ACTIVE_MESSAGE_PART_ID";
     private static final String CONTENT_URI_SCHEME = "content";
 
     private static final float PLAYBACK_SPEED = 1.0f;
@@ -42,7 +45,7 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
 
     private Bundle mStateExtras;
     private boolean mPreparationRequired = true;
-    private String mActiveMessageId;
+    private String mActiveMessagePartId;
 
     private PlaybackSavedState mCurrentPlaybackSavedState;
 
@@ -63,9 +66,9 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
 
     @Override
     public void onPrepareFromUri(Uri uri, Bundle extras) {
-        String messageId = extras.getString(EXTRA_KEY_ACTIVE_MESSAGE_ID);
+        String messagePartId = extras.getString(EXTRA_KEY_ACTIVE_MESSAGE_PART_ID);
 
-        if (messageId != null && messageId.equals(mActiveMessageId)) {
+        if (messagePartId != null && messagePartId.equals(mActiveMessagePartId)) {
             // No need to prepare, we're already playing this
             mPreparationRequired = false;
             return;
@@ -82,14 +85,14 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         }
 
         // See if there is a saved state for the new message or create a new one
-        mCurrentPlaybackSavedState = mStateExtras.getParcelable(messageId);
+        mCurrentPlaybackSavedState = mStateExtras.getParcelable(messagePartId);
         if (mCurrentPlaybackSavedState == null) {
             mCurrentPlaybackSavedState = new PlaybackSavedState();
         }
 
         // Set new active message
-        mActiveMessageId = messageId;
-        mStateExtras.putString(EXTRA_KEY_ACTIVE_MESSAGE_ID, messageId);
+        mActiveMessagePartId = messagePartId;
+        mStateExtras.putString(EXTRA_KEY_ACTIVE_MESSAGE_PART_ID, messagePartId);
 
         // Set new data source
         try {
@@ -201,7 +204,7 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         }
         mCurrentPlaybackSavedState.mPlaybackPosition = position;
         mCurrentPlaybackSavedState.mDuration = duration;
-        mStateExtras.putParcelable(mActiveMessageId, mCurrentPlaybackSavedState);
+        mStateExtras.putParcelable(mActiveMessagePartId, mCurrentPlaybackSavedState);
         notifyNewPlaybackState();
     }
 
