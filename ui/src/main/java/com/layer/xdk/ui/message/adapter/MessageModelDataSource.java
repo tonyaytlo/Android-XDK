@@ -9,6 +9,7 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
 import com.layer.sdk.changes.LayerChangeEvent;
 import com.layer.sdk.listeners.LayerChangeEventListener;
+import com.layer.sdk.messaging.Announcement;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
@@ -91,7 +92,11 @@ public class MessageModelDataSource extends PositionalDataSource<MessageModel> {
                             break;
                         case MESSAGE_PART:
                             MessagePart part = (MessagePart) change.getObject();
-                            if (part.getMessage().getConversation().equals(conversation)) {
+                            if (part.getMessage() instanceof Announcement) {
+                                // Announcements are not associated  with conversations and are
+                                // not supported in this data source. Thus, ignore the change.
+                                continue;
+                            } else if (part.getMessage().getConversation().equals(conversation)) {
                                 needsInvalidation = true;
                             }
                             break;

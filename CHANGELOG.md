@@ -1,5 +1,10 @@
 # Android XDK
 
+## 
+
+### Bug Fixes
+  * Fixing crash when an announcement is synced and the `ConversationView` is displayed (AND-1452)
+
 ## 4.0.4
 
 ### Features
