@@ -4,6 +4,7 @@
 
 ### Bug Fixes
   * Fixing crash when an announcement is synced and the `ConversationView` is displayed (AND-1452)
+  * Ensuring intents can be resolved before starting activities in the built-in action handlers (AND-1472)
 
 ## 4.0.4
 

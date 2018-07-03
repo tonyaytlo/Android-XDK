@@ -53,6 +53,8 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
 
             if (openMapsIntent.resolveActivity(context.getPackageManager()) != null) {
                 context.startActivity(openMapsIntent);
+            } else {
+                notifyUnresolvedIntent(context, openMapsIntent);
             }
         }
     }

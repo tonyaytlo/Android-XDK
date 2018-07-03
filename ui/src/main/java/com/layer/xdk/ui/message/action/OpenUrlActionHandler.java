@@ -42,9 +42,13 @@ public class OpenUrlActionHandler extends ActionHandler {
         }
     }
 
-    private void openUrl(Context context, String url) {
+    private void openUrl(final Context context, String url) {
         mBrowserIntent.setData(Uri.parse(url));
-        context.startActivity(mBrowserIntent);
+        if (mBrowserIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mBrowserIntent);
+        } else {
+            notifyUnresolvedIntent(context, mBrowserIntent);
+        }
     }
 
     private void openPopupImage(Context context, JsonObject data) {
