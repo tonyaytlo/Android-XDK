@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message;
+package com.layer.xdk.ui.media;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -61,7 +59,9 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         mSession = session;
 
         mStateExtras = new Bundle();
-        mPlaybackStateBuilder.setExtras(mStateExtras);
+        mPlaybackStateBuilder.setExtras(mStateExtras)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE
+                        | PlaybackStateCompat.ACTION_SEEK_TO);
     }
 
     @Override
@@ -152,6 +152,12 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         updateCurrentPlaybackState(PlaybackStateCompat.STATE_STOPPED, mPlayer.getCurrentPosition());
     }
 
+    @Override
+    public void onSeekTo(long pos) {
+        mPlayer.seekTo((int) pos);
+        updateCurrentPlaybackState(mCurrentPlaybackSavedState.mPlaybackState, ((int) pos));
+    }
+
     private void stopProgressUpdating() {
         if (mScheduledFuture != null) {
             mScheduledFuture.cancel(true);
@@ -216,60 +222,5 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
                         PLAYBACK_SPEED)
                 .build();
         mSession.setPlaybackState(state);
-    }
-
-    /**
-     * Container class to add relevant playback details to a Bundle.
-     */
-    public static class PlaybackSavedState implements Parcelable {
-        /**
-         * Duration of the audio
-         */
-        public int mDuration;
-
-        /**
-         * Current playback position
-         */
-        public int mPlaybackPosition;
-
-        /**
-         * Current playback state
-         */
-        @PlaybackStateCompat.State
-        public int mPlaybackState = PlaybackStateCompat.STATE_NONE;
-
-        private PlaybackSavedState() {
-        }
-
-        private PlaybackSavedState(Parcel in) {
-            mDuration = in.readInt();
-            mPlaybackPosition = in.readInt();
-            mPlaybackState = in.readInt();
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(mDuration);
-            dest.writeInt(mPlaybackPosition);
-            dest.writeInt(mPlaybackState);
-        }
-
-        @SuppressWarnings("unused")
-        public static final Parcelable.Creator<PlaybackSavedState> CREATOR = new Parcelable.Creator<PlaybackSavedState>() {
-            @Override
-            public PlaybackSavedState createFromParcel(Parcel in) {
-                return new PlaybackSavedState(in);
-            }
-
-            @Override
-            public PlaybackSavedState[] newArray(int size) {
-                return new PlaybackSavedState[size];
-            }
-        };
     }
 }

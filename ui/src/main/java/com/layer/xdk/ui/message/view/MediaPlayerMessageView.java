@@ -1,6 +1,6 @@
 package com.layer.xdk.ui.message.view;
 
-import com.layer.xdk.ui.message.MediaControllerProvider;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 
 /**
  * Allows a message view to use a provided media controller for audio/video playback when used

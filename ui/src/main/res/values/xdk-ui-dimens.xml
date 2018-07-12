@@ -304,4 +304,14 @@
     <dimen name="xdk_ui_audio_message_default_image_width">@dimen/xdk_ui_file_message_image_width</dimen>
     <dimen name="xdk_ui_audio_message_control_size">28dp</dimen>
     <dimen name="xdk_ui_audio_message_progress_bar_height">4dp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Large Audio Message View                                                                   # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="xdk_ui_large_audio_message_metadata_horizontal_margin">32dp</dimen>
+    <dimen name="xdk_ui_large_audio_message_control_height">40dp</dimen>
+    <dimen name="xdk_ui_large_audio_message_control_elevation">4dp</dimen>
+    <dimen name="xdk_ui_large_audio_message_primary_metadata_text_size">17sp</dimen>
+    <dimen name="xdk_ui_large_audio_message_secondary_metadata_text_size">14sp</dimen>
 </resources>

@@ -13,13 +13,23 @@
      See the License for the specific language governing permissions and
      limitations under the License.    
 -->
-<manifest
-    package="com.layer.xdk.ui"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.layer.xdk.ui">
 
     <application>
-        <activity android:name="com.layer.xdk.ui.message.image.popup.ImagePopupActivity"/>
+        <activity android:name=".message.image.popup.ImagePopupActivity"/>
+        <activity android:name=".message.large.LargeMessageActivity"/>
 
+        <service
+            android:name=".media.MediaPlaybackService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.message.MediaControllerProvider;
-import com.layer.xdk.ui.message.MultiPlaybackMediaControllerProvider;
+import com.layer.xdk.ui.media.MediaControllerProvider;
+import com.layer.xdk.ui.media.MultiPlaybackMediaControllerProvider;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
@@ -59,6 +59,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private Factory<TypingIndicatorVHModel> mTypingIndicatorVHModelFactory;
 
     private MediaControllerProvider mMediaControllerProvider;
+    private boolean mLifecycleObserverAdded;
 
     @Inject
     public MessageModelAdapter(Factory<DefaultMessageModelVHModel> defaultVHModelFactory,
@@ -181,6 +182,7 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     }
 
     private void inflateDefaultViewHolder(DefaultMessageModelVH viewHolder, MessageModel model) {
+        checkIfLifecycleObserverRegistered();
         MessageContainer rootMessageContainer = viewHolder.inflateViewContainer(
                 model.getContainerViewLayoutId());
 
@@ -353,8 +355,19 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
         return -1;
     }
 
+    /**
+     * Log a warning if the this has not been registered with a lifecycle observer.
+     */
+    private void checkIfLifecycleObserverRegistered() {
+        if (!mLifecycleObserverAdded && Log.isLoggable(Log.WARN)) {
+            Log.w("MessageModelAdapter has not registered with a lifecycle observer. Please"
+                    + " register the containing view model.");
+        }
+    }
+
     @Override
     public void addLifecycleObservers(LifecycleOwner lifecycleOwner) {
+        mLifecycleObserverAdded = true;
         mMediaControllerProvider.addLifecycleObserver(lifecycleOwner);
     }
 

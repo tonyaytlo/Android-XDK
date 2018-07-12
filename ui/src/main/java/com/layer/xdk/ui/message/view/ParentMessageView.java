@@ -4,7 +4,7 @@ package com.layer.xdk.ui.message.view;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.layer.xdk.ui.message.MediaControllerProvider;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.model.MessageModel;
 

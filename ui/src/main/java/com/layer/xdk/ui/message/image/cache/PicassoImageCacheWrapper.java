@@ -1,5 +1,9 @@
 package com.layer.xdk.ui.message.image.cache;
 
+import static com.layer.xdk.ui.util.Log.ERROR;
+import static com.layer.xdk.ui.util.Log.TAG;
+import static com.layer.xdk.ui.util.Log.VERBOSE;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -7,16 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
-import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.message.image.cache.transformations.CircleTransform;
 import com.layer.xdk.ui.message.image.cache.transformations.RoundedTransform;
+import com.layer.xdk.ui.util.Log;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
-
-import static com.layer.xdk.ui.util.Log.ERROR;
-import static com.layer.xdk.ui.util.Log.TAG;
-import static com.layer.xdk.ui.util.Log.VERBOSE;
 
 import java.io.IOException;
 
@@ -114,8 +114,14 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
             requestCreator = mPicasso.load(imageRequestParameters.getUri());
         } else if (imageRequestParameters.getUrl() != null) {
             requestCreator = mPicasso.load(imageRequestParameters.getUrl());
-        } else {
+        } else if (imageRequestParameters.getResourceId() != 0) {
             requestCreator = mPicasso.load(imageRequestParameters.getResourceId());
+        } else if (imageRequestParameters.getPlaceholder() != 0) {
+            // Load a null String so the placeholder will load
+            requestCreator = mPicasso.load((String) null);
+        } else {
+            // Nothing do to as a source is not set
+            return;
         }
 
         requestCreator.config(Bitmap.Config.RGB_565);
@@ -128,7 +134,7 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
             requestCreator.tag(imageRequestParameters.getTag());
         }
 
-        if (imageRequestParameters.getPlaceholder() > 0) {
+        if (imageRequestParameters.getPlaceholder() != 0) {
             requestCreator.placeholder(imageRequestParameters.getPlaceholder());
         }
 

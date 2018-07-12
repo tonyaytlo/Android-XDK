@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.popup.ImagePopupActivity;
+import com.layer.xdk.ui.message.model.MessageModel;
 
 public class OpenUrlActionHandler extends ActionHandler {
 
@@ -29,8 +29,9 @@ public class OpenUrlActionHandler extends ActionHandler {
     }
 
     @Override
-    public void performAction(@NonNull Context context, @Nullable JsonObject data) {
-        if (data == null || !data.has(KEY_URL)) {
+    public void performAction(@NonNull Context context, @NonNull MessageModel model) {
+        JsonObject data = model.getActionData();
+        if (!data.has(KEY_URL)) {
             throw new IllegalStateException("Incorrect data. No url to open");
         }
 

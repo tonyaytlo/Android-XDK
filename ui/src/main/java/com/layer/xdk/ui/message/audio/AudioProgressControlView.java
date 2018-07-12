@@ -2,14 +2,19 @@ package com.layer.xdk.ui.message.audio;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -26,6 +31,11 @@ public class AudioProgressControlView extends FrameLayout {
     private final AppCompatImageButton mButton;
     private final ProgressBar mProgressBar;
 
+    private @DrawableRes int mPlayButtonResId = R.drawable.xdk_ui_audio_play;
+    private @DrawableRes int mBrokenButtonResId = R.drawable.xdk_ui_audio_broken;
+    private @DrawableRes int mPauseButtonResId = R.drawable.xdk_ui_audio_pause;
+    private @ColorRes int mButtonTintResId;
+
     public AudioProgressControlView(
             @NonNull Context context) {
         this(context, null);
@@ -40,11 +50,9 @@ public class AudioProgressControlView extends FrameLayout {
             int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        int controlSize = getResources().getDimensionPixelSize(
-                R.dimen.xdk_ui_audio_message_control_size);
 
         mButton = new AppCompatImageButton(context, attrs, defStyleAttr);
-        LayoutParams buttonParams = new LayoutParams(controlSize, controlSize);
+        LayoutParams buttonParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         TypedValue foregroundValue = new TypedValue();
         context.getTheme()
                 .resolveAttribute(R.attr.selectableItemBackgroundBorderless, foregroundValue, true);
@@ -55,41 +63,60 @@ public class AudioProgressControlView extends FrameLayout {
 
         mProgressBar = new CircularProgressBar(
                 new ContextThemeWrapper(context, R.style.Message_ProgressBar_CircularDeterminate));
-        LayoutParams progressBarParams = new LayoutParams(controlSize, controlSize);
+        LayoutParams progressBarParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         addView(mProgressBar, progressBarParams);
+    }
+
+    public void setPlayButton(@DrawableRes int resId) {
+        mPlayButtonResId = resId;
+    }
+
+    public void setPauseButton(@DrawableRes int resId) {
+        mPauseButtonResId = resId;
+    }
+
+    public void setBrokenButton(@DrawableRes int resId) {
+        mBrokenButtonResId = resId;
+    }
+
+    public void setButtonTint(@ColorRes int resId) {
+        mButtonTintResId = resId;
     }
 
     /**
      * Show a play button and hide the progress bar.
      */
-    void showPlayButton() {
+    public void showPlayButton() {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
-        mButton.setImageResource(R.drawable.xdk_ui_audio_play);
+        mButton.setImageResource(mPlayButtonResId);
+        tintButton();
     }
 
     /**
      * Show a pause button and hide the progress bar.
      */
-    void showPauseButton() {
+    public void showPauseButton() {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
-        mButton.setImageResource(R.drawable.xdk_ui_audio_pause);
+        mButton.setImageResource(mPauseButtonResId);
+        tintButton();
     }
 
     /**
      * Show a broken play button (to signal an error) and hide the progress bar.
      */
-    void showBrokenPlayButton() {
+    public void showBrokenPlayButton() {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
-        mButton.setImageResource(R.drawable.xdk_ui_audio_broken);
+        mButton.setImageResource(mBrokenButtonResId);
+        tintButton();
     }
 
     /**
      * Show the progress bar with the give progress [0-100] and hide the button.
      */
-    void showProgressBar(int progress) {
+    public void showProgressBar(int progress) {
         mButton.setVisibility(GONE);
         mProgressBar.setVisibility(VISIBLE);
         mProgressBar.setProgress(progress);
@@ -100,7 +127,36 @@ public class AudioProgressControlView extends FrameLayout {
      *
      * @param listener listener to use for the button clicks
      */
-    void setButtonOnClickListener(OnClickListener listener) {
+    public void setButtonOnClickListener(OnClickListener listener) {
         mButton.setOnClickListener(listener);
+    }
+
+    /**
+     * Update the view based on the playback state.
+     *
+     * @param state playback state of the media session
+     */
+    public void update(@PlaybackStateCompat.State int state) {
+        switch (state) {
+            case PlaybackStateCompat.STATE_PAUSED:
+            case PlaybackStateCompat.STATE_STOPPED:
+                showPlayButton();
+                break;
+            case PlaybackStateCompat.STATE_PLAYING:
+                showPauseButton();
+                break;
+            case PlaybackStateCompat.STATE_BUFFERING:
+                showPlayButton();
+                break;
+            case PlaybackStateCompat.STATE_ERROR:
+                showBrokenPlayButton();
+                break;
+        }
+    }
+
+    private void tintButton() {
+        if (mButtonTintResId != 0) {
+            DrawableCompat.setTint(mButton.getDrawable(), ContextCompat.getColor(getContext(), mButtonTintResId));
+        }
     }
 }

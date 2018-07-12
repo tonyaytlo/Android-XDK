@@ -17,6 +17,7 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
+import com.layer.xdk.ui.message.action.ShowLargeMessageActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
@@ -58,6 +59,7 @@ public class MessageItemsListViewModel extends BaseObservable implements
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient, imageCacheWrapper));
         ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new ShowLargeMessageActionHandler());
     }
 
     /**

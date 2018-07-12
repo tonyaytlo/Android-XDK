@@ -54,7 +54,7 @@ android {
 
     // Data binding is still trying to use 25.2.0 for some reason
     configurations.all {
-        resolutionStrategy.force 'com.android.support:support-v4:27.1.0'
+        resolutionStrategy.force 'com.android.support:support-v4:' + rootProject.ext.supportLibVersion
     }
 }
 
@@ -100,6 +100,7 @@ dependencies {
     // Keep as api so MessageItemsListViewModel can be used
     api "android.arch.paging:runtime:1.0.0-alpha6"
     implementation "android.arch.lifecycle:livedata:1.1.0"
+    implementation "android.arch.lifecycle:extensions:1.1.0"
     // Include only for debug builds (namely for tests)
     debugImplementation 'com.android.support:multidex:' + rootProject.ext.multidexVersion
 

@@ -14,7 +14,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
-import com.layer.xdk.ui.message.MediaControllerProvider;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.MediaPlayerMessageView;

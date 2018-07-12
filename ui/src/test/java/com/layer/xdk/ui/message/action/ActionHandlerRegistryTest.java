@@ -12,7 +12,7 @@ import static org.mockito.Mockito.when;
 import android.content.Context;
 import android.test.mock.MockContext;
 
-import com.google.gson.JsonObject;
+import com.layer.xdk.ui.message.model.MessageModel;
 
 import org.junit.Test;
 
@@ -24,10 +24,10 @@ public class ActionHandlerRegistryTest {
         when(mockHandler.getEvent()).thenReturn("event");
         ActionHandlerRegistry.registerHandler(mockHandler);
         Context context = new MockContext();
-        JsonObject customData = new JsonObject();
-        ActionHandlerRegistry.dispatchEvent(context, "event", customData);
+        MessageModel mockModel = mock(MessageModel.class);
+        ActionHandlerRegistry.dispatchEvent(context, "event", mockModel);
 
-        verify(mockHandler).performAction(eq(context), eq(customData));
+        verify(mockHandler).performAction(eq(context), eq(mockModel));
     }
 
     @Test
@@ -36,15 +36,15 @@ public class ActionHandlerRegistryTest {
         when(mockHandler.getEvent()).thenReturn("event");
         ActionHandlerRegistry.registerHandler(mockHandler);
         Context context = new MockContext();
-        JsonObject customData = new JsonObject();
+        MessageModel mockModel = mock(MessageModel.class);
         try {
-            ActionHandlerRegistry.dispatchEvent(context, "Other event", customData);
+            ActionHandlerRegistry.dispatchEvent(context, "Other event", mockModel);
             fail("Expecting UnsupportedOperationException");
         } catch (UnsupportedOperationException e) {
             // Ignored
         }
 
-        verify(mockHandler, times(0)).performAction(any(Context.class), any(JsonObject.class));
+        verify(mockHandler, times(0)).performAction(any(Context.class), any(MessageModel.class));
     }
 
     @Test
@@ -58,11 +58,12 @@ public class ActionHandlerRegistryTest {
         ActionHandlerRegistry.registerHandler(mockHandlerOther);
 
         Context context = new MockContext();
-        JsonObject customData = new JsonObject();
-        ActionHandlerRegistry.dispatchEvent(context, "event-other", customData);
 
-        verify(mockHandler, times(0)).performAction(any(Context.class), any(JsonObject.class));
-        verify(mockHandlerOther).performAction(eq(context), eq(customData));
+        MessageModel mockModel = mock(MessageModel.class);
+        ActionHandlerRegistry.dispatchEvent(context, "event-other", mockModel);
+
+        verify(mockHandler, times(0)).performAction(any(Context.class), any(MessageModel.class));
+        verify(mockHandlerOther).performAction(eq(context), eq(mockModel));
 
     }
 }

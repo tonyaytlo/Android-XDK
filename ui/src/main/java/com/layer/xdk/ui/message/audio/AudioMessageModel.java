@@ -8,6 +8,7 @@ import android.text.format.DateUtils;
 import android.text.format.Formatter;
 import android.util.Base64;
 
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
@@ -30,8 +31,8 @@ import java.util.Queue;
 public class AudioMessageModel extends MessageModel {
     public static final String ROOT_MIME_TYPE = "application/vnd.layer.audio+json";
     private static final String ROLE_SOURCE = "source";
-    private static final String ROLE_TRANSCRIPT = "transcript";
     private static final String ROLE_PREVIEW = "preview";
+    private static final String DEFAULT_ACTION_EVENT = "layer-show-large-message";
 
     private AudioMessageMetadata mMetadata;
     private ImageRequestParameters mPreviewRequestParameters;
@@ -41,6 +42,7 @@ public class AudioMessageModel extends MessageModel {
     private String mFooter;
     private Uri mSourceUri;
     private boolean mDownloadingSourcePart;
+    private ArrayList<String> mOrderedMetadata;
 
     private Uri mAudioPartId;
 
@@ -93,8 +95,6 @@ public class AudioMessageModel extends MessageModel {
         }
         return false;
     }
-
-
 
     @Override
     public int getViewLayoutId() {
@@ -158,10 +158,44 @@ public class AudioMessageModel extends MessageModel {
         return R.color.xdk_ui_color_primary_gray;
     }
 
+    @Override
+    public String getActionEvent() {
+        if (super.getActionEvent() != null) {
+            return super.getActionEvent();
+        }
+
+        if (mMetadata.mAction != null) {
+            return mMetadata.mAction.getEvent();
+        } else {
+            return DEFAULT_ACTION_EVENT;
+        }
+    }
+
+    @NonNull
+    @Override
+    public JsonObject getActionData() {
+        if (super.getActionData().size() > 0) {
+            return super.getActionData();
+        }
+
+        if (mMetadata != null && mMetadata.mAction != null) {
+            return mMetadata.mAction.getData();
+        }
+
+        return new JsonObject();
+    }
+
+    /**
+     * @return request parameters for the associated preview image
+     */
     public ImageRequestParameters getPreviewRequestParameters() {
         return mPreviewRequestParameters;
     }
 
+    /**
+     * @return the audio source URI if is remote or if it has been downloaded locally, false
+     * otherwise
+     */
     @Nullable
     public Uri getSourceUri() {
         return mSourceUri;
@@ -179,6 +213,13 @@ public class AudioMessageModel extends MessageModel {
      */
     public Uri getAudioPartId() {
         return mAudioPartId;
+    }
+
+    /**
+     * @return metadata fields ordered for display
+     */
+    public ArrayList<String> getOrderedMetadata() {
+        return mOrderedMetadata;
     }
 
     /**
@@ -205,11 +246,7 @@ public class AudioMessageModel extends MessageModel {
             builder.uri(partId);
         } else if (url != null) {
             builder.url(mMetadata.mPreviewUrl);
-        } else {
-            builder.resourceId(R.drawable.xdk_ui_file_audio);
         }
-
-        builder.placeHolder(R.drawable.xdk_ui_file_audio);
 
         if (mMetadata.getPreviewWidth() > 0 && mMetadata.getPreviewHeight() > 0) {
             builder.resize(mMetadata.getPreviewWidth(), mMetadata.getPreviewHeight());
@@ -224,10 +261,10 @@ public class AudioMessageModel extends MessageModel {
      * @param metadata metadata for this model
      */
     private void computeSlots(@NonNull AudioMessageMetadata metadata) {
-        List<String> displaySlots = new ArrayList<>();
-        Queue<String> slotB = createSlotBQueue(metadata, displaySlots);
-        Queue<String> slotC = createSlotCQueue(metadata, displaySlots);
-        Queue<String> slotD = createSlotDQueue(metadata, displaySlots);
+        mOrderedMetadata = new ArrayList<>();
+        Queue<String> slotB = createSlotBQueue(metadata, mOrderedMetadata);
+        Queue<String> slotC = createSlotCQueue(metadata, mOrderedMetadata);
+        Queue<String> slotD = createSlotDQueue(metadata, mOrderedMetadata);
 
         mTitle = slotB.isEmpty() ? null : slotB.remove();
 

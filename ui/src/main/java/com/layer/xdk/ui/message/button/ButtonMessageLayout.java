@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
-import com.layer.xdk.ui.message.MediaControllerProvider;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;

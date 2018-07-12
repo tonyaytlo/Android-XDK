@@ -3,7 +3,6 @@ package com.layer.xdk.ui.message.action;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.google.gson.JsonObject;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.model.MessageModel;
 
@@ -18,9 +17,10 @@ public class ActionHandlerRegistry {
         sActionHandlers.put(handler.getEvent(), handler);
     }
 
-    public static void dispatchEvent(Context context, String event, JsonObject customData) throws UnsupportedOperationException {
+    public static void dispatchEvent(Context context, @NonNull String event, @NonNull MessageModel model)
+            throws UnsupportedOperationException {
         if (sActionHandlers.containsKey(event)) {
-            sActionHandlers.get(event).performAction(context, customData);
+            sActionHandlers.get(event).performAction(context, model);
         } else {
             throw new UnsupportedOperationException("No registered action handler for event: " + event);
         }
