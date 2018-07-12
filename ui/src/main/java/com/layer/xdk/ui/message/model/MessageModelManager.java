@@ -10,6 +10,7 @@ import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.LegacyMimeTypes;
 import com.layer.xdk.ui.message.MessagePartUtils;
+import com.layer.xdk.ui.message.audio.AudioMessageModel;
 import com.layer.xdk.ui.message.button.ButtonMessageModel;
 import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
@@ -115,6 +116,9 @@ public class MessageModelManager {
         registerModel(ReceiptMessageModel.MIME_TYPE, ReceiptMessageModel.class);
         registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
         registerModel(ResponseMessageModel.MIME_TYPE_V2, ResponseMessageModel.class);
+
+        // TODO - AND-1436 - Should this be in a library?
+        registerModel(AudioMessageModel.ROOT_MIME_TYPE, AudioMessageModel.class);
     }
 
     /**

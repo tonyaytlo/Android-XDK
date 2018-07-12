@@ -1,5 +1,6 @@
 package com.layer.xdk.ui.message;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.paging.LivePagedListBuilder;
@@ -16,6 +17,7 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.action.ActionHandlerRegistry;
 import com.layer.xdk.ui.message.action.GoogleMapsOpenMapActionHandler;
+import com.layer.xdk.ui.message.action.ShowLargeMessageActionHandler;
 import com.layer.xdk.ui.message.action.OpenFileActionHandler;
 import com.layer.xdk.ui.message.action.OpenUrlActionHandler;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
@@ -23,13 +25,15 @@ import com.layer.xdk.ui.message.adapter.MessageModelDataSourceFactory;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
+import com.layer.xdk.ui.util.LifecycleObserverContainer;
 
 import javax.inject.Inject;
 
 /**
  * A ViewModel to drive a list of {@link com.layer.sdk.messaging.Message} objects
  */
-public class MessageItemsListViewModel extends BaseObservable {
+public class MessageItemsListViewModel extends BaseObservable implements
+        LifecycleObserverContainer {
     private static final int DEFAULT_PAGE_SIZE = 30;
     private static final int DEFAULT_PREFETCH_DISTANCE = 60;
 
@@ -55,6 +59,7 @@ public class MessageItemsListViewModel extends BaseObservable {
         ActionHandlerRegistry.registerHandler(new OpenUrlActionHandler(layerClient, imageCacheWrapper));
         ActionHandlerRegistry.registerHandler(new GoogleMapsOpenMapActionHandler(layerClient));
         ActionHandlerRegistry.registerHandler(new OpenFileActionHandler(layerClient));
+        ActionHandlerRegistry.registerHandler(new ShowLargeMessageActionHandler());
     }
 
     /**
@@ -86,6 +91,11 @@ public class MessageItemsListViewModel extends BaseObservable {
     @Bindable
     public IdentityFormatter getIdentityFormatter() {
         return mIdentityFormatter;
+    }
+
+    @Override
+    public void addLifecycleObservers(LifecycleOwner lifecycleOwner) {
+        mAdapter.addLifecycleObservers(lifecycleOwner);
     }
 
     /**

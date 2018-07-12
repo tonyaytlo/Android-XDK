@@ -5,13 +5,12 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.BuildConfig;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.util.Log;
 
 public abstract class ActionHandler {
@@ -32,7 +31,7 @@ public abstract class ActionHandler {
         return mLayerClient;
     }
 
-    public abstract void performAction(@NonNull Context context, @Nullable JsonObject data);
+    public abstract void performAction(@NonNull Context context, @NonNull MessageModel model);
 
     protected void notifyUnresolvedIntent(@NonNull final Context context, final Intent intent) {
         if (Log.isLoggable(Log.WARN)) {

@@ -15,11 +15,13 @@ import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiButtonMessageViewBinding;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.choice.ChoiceButtonSet;
 import com.layer.xdk.ui.message.choice.ChoiceConfigMetadata;
 import com.layer.xdk.ui.message.choice.ChoiceMetadata;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.view.MediaPlayerMessageView;
 import com.layer.xdk.ui.message.view.MessageViewHelper;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.util.Log;
@@ -49,7 +51,8 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
 
     @Override
     public <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
-            @NonNull OnLongClickListener longClickListener) {
+            @NonNull OnLongClickListener longClickListener,
+            MediaControllerProvider mediaControllerProvider) {
         if (!(model instanceof ButtonMessageModel)) {
             // Nothing to do with a non button model
             return;
@@ -67,8 +70,15 @@ public class ButtonMessageLayout extends ConstraintLayout implements ParentMessa
         container.setDrawBorder(false);
         View contentView = container.inflateMessageView(contentModel.getViewLayoutId());
         contentView.setOnLongClickListener(longClickListener);
+
+        // Set a media controller if the message view requires it
+        if (contentView instanceof MediaPlayerMessageView) {
+            ((MediaPlayerMessageView) contentView).setMediaControllerProvider(mediaControllerProvider);
+        }
+
         if (contentView instanceof ParentMessageView) {
-            ((ParentMessageView) contentView).inflateChildLayouts(contentModel, longClickListener);
+            ((ParentMessageView) contentView).inflateChildLayouts(contentModel, longClickListener,
+                    mediaControllerProvider);
         }
     }
 

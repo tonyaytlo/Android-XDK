@@ -1,6 +1,7 @@
 package com.layer.xdk.ui.message.adapter;
 
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.paging.PagedListAdapter;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -9,7 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.layer.sdk.messaging.Identity;
-import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
+import com.layer.xdk.ui.media.MediaControllerProvider;
+import com.layer.xdk.ui.media.MultiPlaybackMediaControllerProvider;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVH;
 import com.layer.xdk.ui.message.adapter.viewholder.DefaultMessageModelVHModel;
 import com.layer.xdk.ui.message.adapter.viewholder.MessageModelVH;
@@ -21,8 +23,11 @@ import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.response.ResponseMessageModel;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
+import com.layer.xdk.ui.message.view.MediaPlayerMessageView;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 import com.layer.xdk.ui.recyclerview.OnItemLongClickListener;
+import com.layer.xdk.ui.typingindicator.TypingIndicatorLayout;
+import com.layer.xdk.ui.util.LifecycleObserverContainer;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.Set;
@@ -31,7 +36,8 @@ import javax.inject.Inject;
 
 import dagger.internal.Factory;
 
-public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageModelVH> {
+public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageModelVH> implements
+        LifecycleObserverContainer {
 
     private static final int VIEW_TYPE_TYPING_INDICATOR = "TypingIndicator".hashCode();
 
@@ -52,14 +58,19 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private Factory<StatusMessageModelVHModel> mStatusVHModelFactory;
     private Factory<TypingIndicatorVHModel> mTypingIndicatorVHModelFactory;
 
+    private MediaControllerProvider mMediaControllerProvider;
+    private boolean mLifecycleObserverAdded;
+
     @Inject
     public MessageModelAdapter(Factory<DefaultMessageModelVHModel> defaultVHModelFactory,
             Factory<StatusMessageModelVHModel> statusVHModelFactory,
-            Factory<TypingIndicatorVHModel> typingIndicatorVHModelFactory) {
+            Factory<TypingIndicatorVHModel> typingIndicatorVHModelFactory,
+            MultiPlaybackMediaControllerProvider mediaControllerProvider) {
         super(new MessageModelDiffUtil());
         mDefaultVHModelFactory = defaultVHModelFactory;
         mStatusVHModelFactory = statusVHModelFactory;
         mTypingIndicatorVHModelFactory = typingIndicatorVHModelFactory;
+        mMediaControllerProvider = mediaControllerProvider;
     }
 
     @NonNull
@@ -171,13 +182,20 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     }
 
     private void inflateDefaultViewHolder(DefaultMessageModelVH viewHolder, MessageModel model) {
+        checkIfLifecycleObserverRegistered();
         MessageContainer rootMessageContainer = viewHolder.inflateViewContainer(
                 model.getContainerViewLayoutId());
 
         View messageView = rootMessageContainer.inflateMessageView(model.getViewLayoutId());
         messageView.setOnLongClickListener(viewHolder.getLongClickListener());
+
+        // Set a media controller if the message view requires it
+        if (messageView instanceof MediaPlayerMessageView) {
+            ((MediaPlayerMessageView) messageView).setMediaControllerProvider(mMediaControllerProvider);
+        }
+
         if (messageView instanceof ParentMessageView) {
-            ((ParentMessageView) messageView).inflateChildLayouts(model, viewHolder.getLongClickListener());
+            ((ParentMessageView) messageView).inflateChildLayouts(model, viewHolder.getLongClickListener(), mMediaControllerProvider);
         }
     }
 
@@ -335,6 +353,22 @@ public class MessageModelAdapter extends PagedListAdapter<MessageModel, MessageM
     private int getTypingIndicatorPosition() {
         if (mShowTypingIndicator && mTypingIndicatorLayout != null) return 0;
         return -1;
+    }
+
+    /**
+     * Log a warning if the this has not been registered with a lifecycle observer.
+     */
+    private void checkIfLifecycleObserverRegistered() {
+        if (!mLifecycleObserverAdded && Log.isLoggable(Log.WARN)) {
+            Log.w("MessageModelAdapter has not registered with a lifecycle observer. Please"
+                    + " register the containing view model.");
+        }
+    }
+
+    @Override
+    public void addLifecycleObservers(LifecycleOwner lifecycleOwner) {
+        mLifecycleObserverAdded = true;
+        mMediaControllerProvider.addLifecycleObserver(lifecycleOwner);
     }
 
     /**

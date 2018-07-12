@@ -128,4 +128,9 @@
     <string name="xdk_ui_messages_list_header_conversation_start_time">Conversation began %s, %s</string>
 
     <string name="xdk_ui_unresolved_intent_error">Intent cannot be resolved. See the logs for more details.</string>
+
+    <string name="xdk_ui_audio_message_preview_text">Audio</string>
+    <string name="xdk_ui_audio_message_model_default_title">Audio Message</string>
+    <string name="xdk_ui_audio_message_model_downloading_title">Downloading…</string>
+
 </resources>

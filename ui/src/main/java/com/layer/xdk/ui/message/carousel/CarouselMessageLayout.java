@@ -14,8 +14,10 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.view.MediaPlayerMessageView;
 import com.layer.xdk.ui.message.view.ParentMessageView;
 
 import java.util.List;
@@ -55,7 +57,8 @@ public class CarouselMessageLayout extends FrameLayout implements ParentMessageV
 
     @Override
     public <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
-            @NonNull OnLongClickListener longClickListener) {
+            @NonNull OnLongClickListener longClickListener,
+            MediaControllerProvider mediaControllerProvider) {
         if (!(model instanceof CarouselMessageModel)) {
             // Nothing to do with a non carousel model
             return;
@@ -93,8 +96,13 @@ public class CarouselMessageLayout extends FrameLayout implements ParentMessageV
 
             View contentView = container.inflateMessageView(itemModel.getViewLayoutId());
             contentView.setOnLongClickListener(longClickListener);
+            // Set a media controller if the message view requires it
+            if (contentView instanceof MediaPlayerMessageView) {
+                ((MediaPlayerMessageView) contentView).setMediaControllerProvider(mediaControllerProvider);
+            }
+
             if (contentView instanceof ParentMessageView) {
-                ((ParentMessageView) contentView).inflateChildLayouts(itemModel, longClickListener);
+                ((ParentMessageView) contentView).inflateChildLayouts(itemModel, longClickListener, mediaControllerProvider);
             }
         }
     }

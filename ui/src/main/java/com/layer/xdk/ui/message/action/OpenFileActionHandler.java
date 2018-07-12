@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.message.model.MessageModel;
 
 public class OpenFileActionHandler extends ActionHandler {
     private static final String ACTION_EVENT_OPEN_FILE = "open-file";
@@ -20,8 +20,10 @@ public class OpenFileActionHandler extends ActionHandler {
     }
 
     @Override
-    public void performAction(@NonNull Context context, @Nullable JsonObject data) {
-        if (data == null || data.size() == 0) return;
+    public void performAction(@NonNull Context context, @NonNull MessageModel model) {
+        JsonObject data = model.getActionData();
+
+        if (data.size() == 0) return;
 
         if (data.has(ACTION_DATA_URI)) {
             Uri uri = Uri.parse(data.get(ACTION_DATA_URI).getAsString());

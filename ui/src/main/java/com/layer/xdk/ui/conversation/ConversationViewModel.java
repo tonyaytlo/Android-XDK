@@ -1,5 +1,6 @@
 package com.layer.xdk.ui.conversation;
 
+import android.arch.lifecycle.LifecycleOwner;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.support.annotation.NonNull;
@@ -7,13 +8,14 @@ import android.support.annotation.NonNull;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.xdk.ui.message.MessageItemsListViewModel;
+import com.layer.xdk.ui.util.LifecycleObserverContainer;
 
 import javax.inject.Inject;
 
 /**
  * A ViewModel to drive the display of a {@link Conversation}
  */
-public class ConversationViewModel extends BaseObservable {
+public class ConversationViewModel extends BaseObservable implements LifecycleObserverContainer {
     private Conversation mConversation;
     private MessageItemsListViewModel mMessageItemsListViewModel;
     private LayerClient mLayerClient;
@@ -75,5 +77,10 @@ public class ConversationViewModel extends BaseObservable {
     @NonNull
     public MessageItemsListViewModel getMessageItemsListViewModel() {
         return mMessageItemsListViewModel;
+    }
+
+    @Override
+    public void addLifecycleObservers(LifecycleOwner lifecycleOwner) {
+        mMessageItemsListViewModel.addLifecycleObservers(lifecycleOwner);
     }
 }

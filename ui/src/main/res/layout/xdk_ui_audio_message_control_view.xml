@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.layer.xdk.ui.message.audio.AudioProgressControlView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/xdk_ui_audio_message_control_size"
+    android:layout_height="@dimen/xdk_ui_audio_message_control_size"/>

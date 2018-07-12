@@ -20,6 +20,7 @@
     <color name="xdk_ui_color_primary_gray">#F2F2F2</color>
     <color name="xdk_ui_color_athens_gray">#E9EBEF</color>
     <color name="xdk_ui_color_pale_sky">#6E727A</color>
+    <color name="xdk_ui_color_black">#1B1C1D</color>
 
     <color name="xdk_ui_color_primary_gray_1">#FFF3F3F3</color>
     <color name="xdk_ui_color_primary_gray_2">#FFDBDEE4</color>
@@ -30,7 +31,7 @@
 
     <color name="xdk_ui_status_bar_background">@color/xdk_ui_color_primary_blue</color>
 
-    <color name="xdk_ui_text_black">@android:color/black</color>
+    <color name="xdk_ui_text_black">@color/xdk_ui_color_black</color>
     <color name="xdk_ui_text_gray">#FF757575</color>
     <color name="xdk_ui_text_light_gray">#FFA3A8B2</color>
     <color name="xdk_ui_text_white">@android:color/white</color>
@@ -158,4 +159,14 @@
 
     <color name="xdk_ui_receipt_message_view_detail_title_text">@color/xdk_ui_text_gray</color>
     <color name="xdk_ui_receipt_message_view_detail_value_text">@color/xdk_ui_text_black</color>
+
+    <!-- ########## -->
+    <!-- Large Audio Message View -->
+    <!-- ########## -->
+
+    <color name="xdk_ui_large_audio_message_control_color">@color/xdk_ui_text_gray</color>
+    <color name="xdk_ui_large_audio_message_control_background_color">@android:color/white</color>
+    <color name="xdk_ui_large_audio_message_primary_metadata_text_color">@color/xdk_ui_text_black</color>
+    <color name="xdk_ui_large_audio_message_secondary_metadata_text_color">@color/xdk_ui_color_pale_sky</color>
+
 </resources>

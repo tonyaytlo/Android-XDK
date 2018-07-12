@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.google.gson.JsonObject;
 import com.layer.sdk.LayerClient;
+import com.layer.xdk.ui.message.model.MessageModel;
 
 import java.util.Locale;
 
@@ -26,8 +27,10 @@ public class GoogleMapsOpenMapActionHandler extends ActionHandler {
     }
 
     @Override
-    public void performAction(@NonNull Context context, @Nullable JsonObject data) {
-        if (data != null && data.size() > 0) {
+    public void performAction(@NonNull Context context, @NonNull MessageModel model) {
+        JsonObject data = model.getActionData();
+
+        if (data.size() > 0) {
             Uri googleMapsUri;
 
             double latitude = 0.0f;

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <import type="android.text.format.DateUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.layer.xdk.ui.media.LargeAudioViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".message.large.LargeAudioMessageFragment">
+
+        <View
+            android:id="@+id/control_background"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xdk_ui_large_audio_message_control_height"
+            android:background="@color/xdk_ui_large_audio_message_control_background_color"
+            android:elevation="@dimen/xdk_ui_large_audio_message_control_elevation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/control_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="@dimen/xdk_ui_large_audio_message_metadata_horizontal_margin"
+                android:layout_marginLeft="@dimen/xdk_ui_large_audio_message_metadata_horizontal_margin"
+                android:layout_marginRight="@dimen/xdk_ui_large_audio_message_metadata_horizontal_margin"
+                android:layout_marginStart="@dimen/xdk_ui_large_audio_message_metadata_horizontal_margin"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/xdk_ui_margin_large"
+                android:paddingTop="@dimen/xdk_ui_margin_large">
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/xdk_ui_margin_large"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerInside"
+                    app:loadFrom="@{viewModel.mImageRequestParameters}"
+                    app:srcCompat="@drawable/xdk_ui_file_audio"
+                    app:usingImageLoader="@{viewModel.imageCacheWrapper}" />
+
+                <TextView
+                    android:id="@+id/primary_metadata"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/xdk_ui_margin_large"
+                    android:text="@{viewModel.mPrimaryMetadata}"
+                    android:textColor="@color/xdk_ui_large_audio_message_primary_metadata_text_color"
+                    android:textSize="@dimen/xdk_ui_large_audio_message_primary_metadata_text_size"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.mPrimaryMetadata) ? View.GONE : View.VISIBLE}" />
+
+                <TextView
+                    android:id="@+id/secondary_metadata"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/xdk_ui_margin_miniscule"
+                    android:gravity="center"
+                    android:lineSpacingExtra="@dimen/xdk_ui_margin_tiny"
+                    android:text="@{viewModel.mSecondaryMetadata}"
+                    android:textColor="@color/xdk_ui_large_audio_message_secondary_metadata_text_color"
+                    android:textSize="@dimen/xdk_ui_large_audio_message_secondary_metadata_text_size"
+                    android:visibility="@{TextUtils.isEmpty(viewModel.mSecondaryMetadata) ? View.GONE : View.VISIBLE}" />
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <com.layer.xdk.ui.message.audio.AudioProgressControlView
+            android:id="@+id/control_button"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginBottom="@dimen/xdk_ui_margin_small"
+            android:layout_marginLeft="@dimen/xdk_ui_margin_x_large"
+            android:layout_marginStart="@dimen/xdk_ui_margin_x_large"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:elevation="@dimen/xdk_ui_large_audio_message_control_elevation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:layout_editor_absoluteY="467dp" />
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/xdk_ui_large_audio_message_control_elevation"
+            android:max="@{viewModel.mTotalSeconds}"
+            app:layout_constraintBottom_toBottomOf="@id/control_button"
+            app:layout_constraintEnd_toStartOf="@+id/total_time"
+            app:layout_constraintStart_toEndOf="@+id/elapsed_time"
+            app:layout_constraintTop_toTopOf="@id/control_button"
+            tools:layout_editor_absoluteY="475dp" />
+
+        <TextView
+            android:id="@+id/elapsed_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/xdk_ui_margin_large"
+            android:layout_marginStart="@dimen/xdk_ui_margin_large"
+            android:elevation="@dimen/xdk_ui_large_audio_message_control_elevation"
+            android:textColor="@color/xdk_ui_large_audio_message_control_color"
+            app:layout_constraintBottom_toBottomOf="@id/control_button"
+            app:layout_constraintStart_toEndOf="@+id/control_button"
+            app:layout_constraintTop_toTopOf="@id/control_button"
+            tools:layout_editor_absoluteY="476dp" />
+
+        <TextView
+            android:id="@+id/total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/xdk_ui_margin_small"
+            android:layout_marginRight="@dimen/xdk_ui_margin_small"
+            android:elevation="@dimen/xdk_ui_large_audio_message_control_elevation"
+            android:text="@{DateUtils.formatElapsedTime(viewModel.mTotalSeconds)}"
+            android:textColor="@color/xdk_ui_large_audio_message_control_color"
+            app:layout_constraintBottom_toBottomOf="@id/control_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/control_button"
+            tools:layout_editor_absoluteY="475dp" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

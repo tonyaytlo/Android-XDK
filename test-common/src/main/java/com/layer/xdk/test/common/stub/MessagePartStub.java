@@ -16,6 +16,7 @@ public class MessagePartStub extends MessagePart {
 
     public Uri mId = Uri.parse("layer:///messages/" + UUID.randomUUID() + "/parts/" + UUID.randomUUID());
     public byte[] mData;
+    public InputStream mDataStream;
     public String mMimeType;
     public boolean mContentReady = true;
     public Message mMessage;
@@ -42,7 +43,7 @@ public class MessagePartStub extends MessagePart {
 
     @Override
     public InputStream getDataStream() {
-        return null;
+        return mDataStream;
     }
 
     @Override

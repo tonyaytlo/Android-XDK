@@ -16,9 +16,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
+import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.identity.adapter.IdentityItemModel;
 import com.layer.xdk.ui.message.MessagePartUtils;
@@ -106,6 +108,11 @@ public abstract class MessageModel extends BaseObservable {
     private Set<Date> mMessagePartUpdatedAt;
     private byte[] mMessageLocalData;
     private IdentityItemModel mCachedSender;
+
+    // Keep a member reference to this so we can use it as a weak reference. This allows
+    // it to be GC'd should this model go out of scope
+    private PartDownloadListener mPartDownloadListener;
+    private int mDownloadProgress;
 
     public MessageModel(@NonNull Context context, @NonNull LayerClient layerClient,
                         @NonNull Message message) {
@@ -271,7 +278,8 @@ public abstract class MessageModel extends BaseObservable {
                     continue;
                 }
             } else if (shouldDownloadContentIfNotReady(childMessagePart)) {
-                childMessagePart.download(null);
+                mPartDownloadListener = new PartDownloadListener();
+                childMessagePart.download(mPartDownloadListener);
             }
 
             if (MessagePartUtils.isResponseSummaryPart(childMessagePart)) {
@@ -820,6 +828,17 @@ public abstract class MessageModel extends BaseObservable {
     }
 
     /**
+     * Get the download progress of the part that is being downloaded. This should only be used when
+     * there is one part with external content represented by this model.
+     *
+     * @return the progress [0-100] of the relevant part download
+     */
+    @Bindable
+    public int getDownloadProgress() {
+        return mDownloadProgress;
+    }
+
+    /**
      * Perform an equals check on most properties. Child model equality is checked but parent
      * models are skipped as this will produce infinite recursion.
      * <p>
@@ -941,5 +960,47 @@ public abstract class MessageModel extends BaseObservable {
 
         // Don't bother checking parent model as that will infinitely recurse
         return true;
+    }
+
+    /**
+     * Updates the observable progress variable when downloading a message part.
+     */
+    private class PartDownloadListener implements LayerProgressListener.Weak {
+        @Override
+        public void onProgressStart(MessagePart messagePart,
+                Operation operation) {
+            if (Log.isLoggable(Log.VERBOSE)) {
+                Log.v("Starting download for " + messagePart.getId());
+            }
+        }
+
+        @Override
+        public void onProgressUpdate(MessagePart messagePart, Operation operation,
+                long transferredBytes) {
+            if (Log.isLoggable(Log.VERBOSE)) {
+                Log.v("Download update for " + messagePart.getId() + ": "
+                        + transferredBytes + "/" + messagePart.getSize() + "B");
+            }
+            mDownloadProgress = (int) Math.round((double) transferredBytes / messagePart.getSize() * 100);
+            notifyPropertyChanged(BR.downloadProgress);
+        }
+
+        @Override
+        public void onProgressComplete(MessagePart messagePart,
+                Operation operation) {
+            if (Log.isLoggable(Log.VERBOSE)) {
+                Log.v("Finished download for " + messagePart.getId());
+            }
+            mDownloadProgress = 100;
+            notifyPropertyChanged(BR.downloadProgress);
+        }
+
+        @Override
+        public void onProgressError(MessagePart messagePart, Operation operation,
+                Throwable throwable) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Error during download for " + messagePart.getId(), throwable);
+            }
+        }
     }
 }

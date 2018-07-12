@@ -4,6 +4,7 @@ package com.layer.xdk.ui.message.view;
 import android.support.annotation.NonNull;
 import android.view.View;
 
+import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.adapter.MessageModelAdapter;
 import com.layer.xdk.ui.message.model.MessageModel;
 
@@ -24,5 +25,6 @@ public interface ParentMessageView {
      *                          item long click in the adapter
      */
     <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
-            @NonNull View.OnLongClickListener longClickListener);
+            @NonNull View.OnLongClickListener longClickListener,
+            MediaControllerProvider mediaControllerProvider);
 }

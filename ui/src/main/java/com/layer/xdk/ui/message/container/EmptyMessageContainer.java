@@ -39,6 +39,7 @@ public class EmptyMessageContainer extends MessageContainer {
                 true);
         View messageView = binding.getRoot();
         ConstraintSet set = new ConstraintSet();
+        set.clone(this);
         set.connect(messageView.getId(), ConstraintSet.START, getId(), ConstraintSet.START);
         set.connect(messageView.getId(), ConstraintSet.END, getId(), ConstraintSet.END);
         set.connect(messageView.getId(), ConstraintSet.TOP, getId(), ConstraintSet.TOP);
