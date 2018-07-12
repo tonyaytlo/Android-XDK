@@ -57,10 +57,6 @@
     </style>
 
     <style name="ComposeBarImageButton" parent="@style/Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_marginLeft">@dimen/xdk_ui_compose_bar_button_side_margin</item>
-        <item name="android:layout_marginRight">@dimen/xdk_ui_compose_bar_button_side_margin</item>
-        <item name="android:layout_width">@dimen/xdk_ui_compose_bar_image_button_height</item>
-        <item name="android:layout_height">0dp</item>
         <item name="tint">@drawable/xdk_ui_compose_bar_image_button_selector</item>
         <item name="android:visibility">gone</item>
     </style>

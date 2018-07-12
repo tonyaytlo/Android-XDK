@@ -19,6 +19,7 @@ public class MessagePartStub extends MessagePart {
     public InputStream mDataStream;
     public String mMimeType;
     public boolean mContentReady = true;
+    public Message mMessage;
 
     @Override
     public Uri getId() {
@@ -27,7 +28,7 @@ public class MessagePartStub extends MessagePart {
 
     @Override
     public Message getMessage() {
-        return null;
+        return mMessage;
     }
 
     @Override

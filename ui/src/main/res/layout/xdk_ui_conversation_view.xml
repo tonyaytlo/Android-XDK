@@ -30,7 +30,7 @@
         <com.layer.xdk.ui.composebar.ComposeBar
             android:id="@+id/compose_bar"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:hint="@string/xdk_ui_messages_compose_bar_hint"
             android:minHeight="48dp"
             android:visibility="gone"

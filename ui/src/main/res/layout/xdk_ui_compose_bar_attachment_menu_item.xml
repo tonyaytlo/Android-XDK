@@ -24,26 +24,19 @@
             type="AttachmentSender"/>
     </data>
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/xdk_ui_dropdown_item_height"
+        android:gravity="center_vertical"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
+        android:drawablePadding="@dimen/xdk_ui_padding_normal"
         android:paddingEnd="@dimen/xdk_ui_padding_normal"
         android:paddingLeft="@dimen/xdk_ui_padding_normal"
         android:paddingRight="@dimen/xdk_ui_padding_normal"
         android:paddingStart="@dimen/xdk_ui_padding_normal"
-        android:onClick="@{() -> sender.requestSend()}">
+        android:text="@{sender.title}"
+        android:textColor="@color/xdk_ui_text_black"
+        android:textSize="@dimen/xdk_ui_text_size_dropdown_item" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@{sender.title}"
-            android:textColor="@color/xdk_ui_text_black"
-            android:textSize="@dimen/xdk_ui_text_size_dropdown_item"
-            android:drawablePadding="@dimen/xdk_ui_padding_normal"/>
-
-    </FrameLayout>
 </layout>

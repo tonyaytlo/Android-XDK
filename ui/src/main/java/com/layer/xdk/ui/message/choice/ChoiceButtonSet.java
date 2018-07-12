@@ -100,9 +100,9 @@ public class ChoiceButtonSet extends LinearLayout {
             addButton();
         }
 
-        // Remove extra views
+        // Remove extra views in reverse order
         int childCount = getChildCount();
-        for (int i = metadata.size(); i < childCount; i++) {
+        for (int i = childCount - 1; i >= metadata.size(); i--) {
             removeViewAt(i);
         }
 

@@ -1,6 +1,22 @@
 # Android XDK
 
-## 
+## 4.0.5
+
+### Bug Fixes
+  * Fixing crash when an announcement is synced and the `ConversationView` is displayed (AND-1452)
+  * Ensuring intents can be resolved before starting activities in the built-in action handlers (AND-1472)
+
+## 4.0.4
+
+### Features
+  * Updated Layer SDK to `4.0.4`
+
+### Bug Fixes
+  * Removed the constrained height on the compose bar so it will expand to the maximum specified lines (AND-1453)
+  * Compose bar's `EditText` now auto capitalizes sentences
+  * Dismissing the attachment menu after a selection was made (AND-1454)
+
+## 4.0.3
 
 ### Important Changes
   * Added performance test module
@@ -10,6 +26,7 @@
 ### Bug Fixes
   * Properly handling the `DefaultXdkUiComponent` singleton inside the `ServiceLocator`
   * No longer using a weak `LayerAuthenticationListener` during deauthentication as it would usually be GC'd and the specified `DeauthenticationCallback` would not be called.
+  * Fixed crash when selecting choice buttons with different button count (AND-1451)
   
 ## 4.0.2
 
