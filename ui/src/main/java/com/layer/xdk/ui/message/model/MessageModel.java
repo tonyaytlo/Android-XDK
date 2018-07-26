@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.analytics.LayerAnalyticsEvent;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
@@ -836,6 +837,10 @@ public abstract class MessageModel extends BaseObservable {
     @Bindable
     public int getDownloadProgress() {
         return mDownloadProgress;
+    }
+
+    public void postAnalyticsEvent(LayerAnalyticsEvent event) {
+        mLayerClient.postAnalyticsEvent(event);
     }
 
     /**

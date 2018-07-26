@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.layer.sdk.LayerClient;
+import com.layer.sdk.analytics.LayerAnalyticsEvent;
+import com.layer.sdk.listeners.LayerAnalyticsEventListener;
 import com.layer.sdk.listeners.LayerAuthenticationListener;
 import com.layer.sdk.listeners.LayerChangeEventListener;
 import com.layer.sdk.listeners.LayerConnectionListener;
@@ -382,6 +384,23 @@ public class MockLayerClient extends LayerClient {
 
     @Override
     public void waitForContent(@NonNull Uri uri, long l, @NonNull ContentAvailableCallback contentAvailableCallback) {
+
+    }
+
+    @Override
+    public LayerClient registerAnalyticsEventListener(
+            LayerAnalyticsEventListener layerAnalyticsEventListener) {
+        return null;
+    }
+
+    @Override
+    public LayerClient unregisterAnalyticsEventListener(
+            LayerAnalyticsEventListener layerAnalyticsEventListener) {
+        return null;
+    }
+
+    @Override
+    public void postAnalyticsEvent(LayerAnalyticsEvent layerAnalyticsEvent) {
 
     }
 }

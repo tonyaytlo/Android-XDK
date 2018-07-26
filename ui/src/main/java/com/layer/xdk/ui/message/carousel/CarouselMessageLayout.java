@@ -5,27 +5,36 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.analytics.CarouselScrolledEvent;
 import com.layer.xdk.ui.media.MediaControllerProvider;
 import com.layer.xdk.ui.message.container.MessageContainer;
 import com.layer.xdk.ui.message.model.MessageModel;
 import com.layer.xdk.ui.message.view.MediaPlayerMessageView;
 import com.layer.xdk.ui.message.view.ParentMessageView;
+import com.layer.xdk.ui.util.Log;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
+
+import static com.layer.xdk.ui.util.Log.VERBOSE;
+import static com.layer.xdk.ui.util.Log.e;
 
 public class CarouselMessageLayout extends FrameLayout implements ParentMessageView {
     private HorizontalScrollView mScrollView;
     private LinearLayout mLinearLayout;
     private LayoutInflater mInflater;
+    WeakReference<CarouselMessageModel> mCarouselMessageModelWeakReference;
 
     private int mItemVerticalMargins;
     private int mItemHorizontalMargins;
@@ -53,7 +62,30 @@ public class CarouselMessageLayout extends FrameLayout implements ParentMessageV
 
         mScrollView.addView(mLinearLayout);
         addView(mScrollView);
+
+        mScrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+            @Override
+            public void onScrollChanged() {
+                if (mCarouselMessageModelWeakReference == null) {
+                    return;
+                }
+
+                CarouselMessageModel model = mCarouselMessageModelWeakReference.get();
+                if (model == null) {
+                    return;
+                }
+                
+                int scrollX = mScrollView.getScrollX(); // For HorizontalScrollView
+                int scrollY = mScrollView.getScrollY(); // For  any ScrollView (like Message List)
+                if (scrollX != 0 && scrollY == 0) {
+                    // Horizontal Scroll. Raise analytics event.
+                    CarouselScrolledEvent event = new CarouselScrolledEvent(model.getMessage(), scrollX);
+                    model.postAnalyticsEvent(event);
+                }
+            }
+        });
     }
+
 
     @Override
     public <T extends MessageModel> void inflateChildLayouts(@NonNull T model,
@@ -67,6 +99,7 @@ public class CarouselMessageLayout extends FrameLayout implements ParentMessageV
         ((MessageContainer) getParent()).setDrawBorder(false);
 
         CarouselMessageModel carouselModel = (CarouselMessageModel) model;
+        mCarouselMessageModelWeakReference = new WeakReference<>(carouselModel);
 
         mLinearLayout.removeAllViews();
         List<MessageModel> models = carouselModel.getCarouselItemModels();

@@ -12,6 +12,7 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 import com.layer.xdk.ui.R;
+import com.layer.xdk.ui.analytics.MessageViewedEvent;
 import com.layer.xdk.ui.identity.IdentityFormatter;
 import com.layer.xdk.ui.message.adapter.MessageGrouping;
 import com.layer.xdk.ui.message.model.MessageModel;
@@ -145,6 +146,10 @@ public class DefaultMessageModelVHModel extends MessageModelVHModel {
             if (mEnableReadReceipts) {
                 message.markAsRead();
             }
+
+            // Send Analytics event when user views message that is not their own.
+            MessageViewedEvent event = new MessageViewedEvent(message);
+            getLayerClient().postAnalyticsEvent(event);
 
             // Sender name, only for first message in sub group
             if (!isInAOneOnOneConversation() && grouping != null &&
