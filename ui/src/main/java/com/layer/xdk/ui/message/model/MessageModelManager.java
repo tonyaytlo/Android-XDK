@@ -27,6 +27,7 @@ import com.layer.xdk.ui.message.response.crdt.ORSet;
 import com.layer.xdk.ui.message.response.crdt.ORSetDeserializer;
 import com.layer.xdk.ui.message.status.StatusMessageModel;
 import com.layer.xdk.ui.message.text.TextMessageModel;
+import com.layer.xdk.ui.message.video.VideoMessageModel;
 import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.util.Log;
@@ -117,8 +118,8 @@ public class MessageModelManager {
         registerModel(ResponseMessageModel.MIME_TYPE, ResponseMessageModel.class);
         registerModel(ResponseMessageModel.MIME_TYPE_V2, ResponseMessageModel.class);
 
-        // TODO - AND-1436 - Should this be in a library?
         registerModel(AudioMessageModel.ROOT_MIME_TYPE, AudioMessageModel.class);
+        registerModel(VideoMessageModel.ROOT_MIME_TYPE, VideoMessageModel.class);
     }
 
     /**

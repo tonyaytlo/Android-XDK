@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.audio;
+package com.layer.xdk.ui.message.video;
 
 import android.content.Context;
 import android.net.Uri;
@@ -21,25 +21,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-/**
- * Message model to encapsulate audio.
- */
-public class AudioMessageModel extends MessageModel {
-    public static final String ROOT_MIME_TYPE = "application/vnd.layer.audio+json";
+public class VideoMessageModel extends MessageModel {
+    public static final String ROOT_MIME_TYPE = "application/vnd.layer.video+json";
     private static final String ROLE_SOURCE = "source";
     private static final String ROLE_PREVIEW = "preview";
     private static final String DEFAULT_ACTION_EVENT = "layer-show-large-message";
 
-    private AudioMessageMetadata mMetadata;
-    private ImageRequestParameters mPreviewRequestParameters;
-
+    private VideoMessageMetadata mMetadata;
     private Uri mSourceUri;
-    private boolean mDownloadingSourcePart;
-    private AudioMetadataSlots mMetadataSlots;
+    private Uri mVideoPartId;
+    private ImageRequestParameters mPreviewRequestParameters;
+    private VideoMetadataSlots mMetadataSlots;
 
-    private Uri mAudioPartId;
-
-    public AudioMessageModel(@NonNull Context context,
+    public VideoMessageModel(@NonNull Context context,
             @NonNull LayerClient layerClient,
             @NonNull Message message) {
         super(context, layerClient, message);
@@ -49,19 +43,19 @@ public class AudioMessageModel extends MessageModel {
     protected void parse(@NonNull MessagePart messagePart) {
         InputStreamReader inputStreamReader = new InputStreamReader(messagePart.getDataStream());
         JsonReader reader = new JsonReader(inputStreamReader);
-        mMetadata = getGson().fromJson(reader, AudioMessageMetadata.class);
+        mMetadata = getGson().fromJson(reader, VideoMessageMetadata.class);
         if (mMetadata.mSourceUrl != null) {
             mSourceUri = Uri.parse(mMetadata.mSourceUrl);
-            mAudioPartId = messagePart.getId();
+            mVideoPartId = messagePart.getId();
         }
-        mMetadataSlots = new AudioMetadataSlots(getAppContext());
+        mMetadataSlots = new VideoMetadataSlots(getAppContext());
         mMetadataSlots.compute(mMetadata);
         createPreviewRequest(null, mMetadata.mPreviewUrl);
         try {
             inputStreamReader.close();
         } catch (IOException e) {
             if (Log.isLoggable(Log.ERROR)) {
-                Log.e("Failed to close input stream while parsing audio message", e);
+                Log.e("Failed to close input stream while parsing video message", e);
             }
         }
     }
@@ -72,8 +66,9 @@ public class AudioMessageModel extends MessageModel {
         if (role != null) {
             switch (role) {
                 case ROLE_SOURCE:
-                    mAudioPartId = childMessagePart.getId();
-                    if (childMessagePart.getTransferStatus() == MessagePart.TransferStatus.COMPLETE) {
+                    mVideoPartId = childMessagePart.getId();
+                    if (childMessagePart.getTransferStatus()
+                            == MessagePart.TransferStatus.COMPLETE) {
                         mSourceUri = childMessagePart.getFileUri(getAppContext());
                         // If there is no file then it must be inline. Create a data URI
                         if (mSourceUri == null) {
@@ -87,7 +82,6 @@ public class AudioMessageModel extends MessageModel {
                                     "Source part has neither inline nor external content");
                         }
                     }
-                    mDownloadingSourcePart = false;
                     return true;
                 case ROLE_PREVIEW:
                     createPreviewRequest(childMessagePart.getId(), null);
@@ -99,7 +93,7 @@ public class AudioMessageModel extends MessageModel {
 
     @Override
     public int getViewLayoutId() {
-        return R.layout.xdk_ui_audio_message_view;
+        return R.layout.xdk_ui_video_message_view;
     }
 
     @Override
@@ -111,8 +105,7 @@ public class AudioMessageModel extends MessageModel {
     protected boolean shouldDownloadContentIfNotReady(@NonNull MessagePart messagePart) {
         if (MessagePartUtils.isRole(messagePart, ROLE_SOURCE) && !messagePart.isContentReady()) {
             // Set the part ID here since the content is not ready
-            mAudioPartId = messagePart.getId();
-            mDownloadingSourcePart = true;
+            mVideoPartId = messagePart.getId();
         }
         return true;
     }
@@ -126,21 +119,23 @@ public class AudioMessageModel extends MessageModel {
     @Override
     public String getPreviewText() {
         String title = mMetadataSlots == null ? null : mMetadataSlots.getSlotB();
-        return title != null ? title : getAppContext().getString(R.string.xdk_ui_audio_message_preview_text);
+        return title != null ? title : getAppContext().getString(
+                R.string.xdk_ui_video_message_preview_text);
     }
 
     @Nullable
     @Override
     public String getTitle() {
-        if (mDownloadingSourcePart) {
-            return getAppContext().getString(R.string.xdk_ui_audio_message_model_downloading_title);
-        }
         String title = mMetadataSlots == null ? null : mMetadataSlots.getSlotB();
         if (title != null) {
+            if (mMetadataSlots.getOrderedMetadata().size() == 1 && mMetadataSlots.hasOnlyDefaultData()) {
+                // Don't display the only default metadata
+                return null;
+            }
             return title;
         }
 
-        return getAppContext().getString(R.string.xdk_ui_audio_message_model_default_title);
+        return null;
     }
 
     @Nullable
@@ -157,7 +152,7 @@ public class AudioMessageModel extends MessageModel {
 
     @Override
     public int getBackgroundColor() {
-        return R.color.xdk_ui_color_primary_gray;
+        return R.color.xdk_ui_color_black;
     }
 
     @Override
@@ -195,7 +190,7 @@ public class AudioMessageModel extends MessageModel {
     }
 
     /**
-     * @return the audio source URI if is remote or if it has been downloaded locally, false
+     * @return the video source URI if is remote or if it has been downloaded locally, false
      * otherwise
      */
     @Nullable
@@ -204,17 +199,10 @@ public class AudioMessageModel extends MessageModel {
     }
 
     /**
-     * @return true if currently downloading the external content audio file, false otherwise
+     * @return The ID of the {@link MessagePart} that contains the video URL or data
      */
-    public boolean isDownloadingSourcePart() {
-        return mDownloadingSourcePart;
-    }
-
-    /**
-     * @return The ID of the {@link MessagePart} that contains the audio URL or data
-     */
-    public Uri getAudioPartId() {
-        return mAudioPartId;
+    public Uri getVideoPartId() {
+        return mVideoPartId;
     }
 
     /**
@@ -226,9 +214,25 @@ public class AudioMessageModel extends MessageModel {
     }
 
     /**
+     * @return true if the ordered metadata has a field supplied by the metadata, false if the
+     * only field is hardcoded
+     */
+    public boolean hasNonDefaultOrderedMetadata() {
+        return mMetadataSlots != null && !mMetadataSlots.hasOnlyDefaultData();
+    }
+
+    /**
+     * @return the metadata of this model, null if the message has not been parsed yet
+     */
+    @Nullable
+    public VideoMessageMetadata getMetadata() {
+        return mMetadata;
+    }
+
+    /**
      * Creates a data Uri so inline content can be played in a media player
      *
-     * @param sourceMessagePart message part that contains the audio data
+     * @param sourceMessagePart message part that contains the video data
      * @return a Uri that has the data base 64 encoded and the mime type for the part
      */
     @Nullable
@@ -249,11 +253,48 @@ public class AudioMessageModel extends MessageModel {
             builder.uri(partId);
         } else if (url != null) {
             builder.url(mMetadata.mPreviewUrl);
+        } else {
+            mPreviewRequestParameters = null;
+            return;
         }
 
+        int width = 0;
+        int height = 0;
         if (mMetadata.getPreviewWidth() > 0 && mMetadata.getPreviewHeight() > 0) {
-            builder.resize(mMetadata.getPreviewWidth(), mMetadata.getPreviewHeight());
+            // Resize based on preview width/height
+            width = mMetadata.getPreviewWidth();
+            height = mMetadata.getPreviewHeight();
+        } else if (mMetadata.getPreviewWidth() > 0) {
+            // Resize based on preview width and calculate the height based on the aspect ratio
+            if (mMetadata.getAspectRatio() == 0) {
+                if (Log.isLoggable(Log.INFO)) {
+                    Log.i("Cannot calculate video preview size with no aspect ratio");
+                }
+            } else {
+                width = mMetadata.getPreviewWidth();
+                height = (int) (mMetadata.getPreviewWidth() / mMetadata.getAspectRatio());
+            }
+        } else if (mMetadata.getPreviewHeight() > 0) {
+            // Resize based on preview height and calculate the width based on the aspect ratio
+            width = (int) (mMetadata.getPreviewHeight() * mMetadata.getAspectRatio());
+            height = mMetadata.getPreviewHeight();
+        } else if (mMetadata.getAspectRatio() > 0) {
+            if (mMetadata.getWidth() > 0) {
+                // Resize based on video width and calculate the height based on the aspect ratio
+                width = mMetadata.getWidth();
+                height = (int) (mMetadata.getWidth() / mMetadata.getAspectRatio());
+            } else if (mMetadata.getHeight() > 0) {
+                // Resize based on video height and calculate the width based on the aspect ratio
+                width = (int) (mMetadata.getHeight() * mMetadata.getAspectRatio());
+                height = mMetadata.getHeight();
+            }
         }
+        if (width > 0 && height > 0) {
+            builder.resize(width, height);
+            // Maintain image's aspect ratio
+            builder.centerInside(true);
+        }
+
         mPreviewRequestParameters = builder.build();
     }
 }

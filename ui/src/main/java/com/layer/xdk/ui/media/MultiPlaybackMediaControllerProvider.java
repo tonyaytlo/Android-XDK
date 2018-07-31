@@ -34,9 +34,9 @@ public class MultiPlaybackMediaControllerProvider implements MediaControllerProv
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             mServiceBound = true;
-            MediaPlaybackService playbackService =
-                    ((MediaPlaybackService.MediaPlaybackBinder) service).getService();
-            if (playbackService.getSessionToken() == null) {
+            MediaPlaybackService.MediaPlaybackBinder binder =
+                    (MediaPlaybackService.MediaPlaybackBinder) service;
+            if (binder.getSessionToken() == null) {
                 if (Log.isLoggable(Log.ERROR)) {
                     Log.e("Session token should be non-null when the service is started");
                 }
@@ -44,7 +44,7 @@ public class MultiPlaybackMediaControllerProvider implements MediaControllerProv
                         + "is started");
             }
             try {
-                mMediaController.postValue(new MediaControllerCompat(mAppContext, playbackService.getSessionToken()));
+                mMediaController.postValue(new MediaControllerCompat(mAppContext, binder.getSessionToken()));
             } catch (RemoteException e) {
                 if (Log.isLoggable(Log.ERROR)) {
                     Log.e("Cannot obtain media controller", e);

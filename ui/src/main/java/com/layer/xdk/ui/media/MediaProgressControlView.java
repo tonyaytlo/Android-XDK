@@ -1,4 +1,4 @@
-package com.layer.xdk.ui.message.audio;
+package com.layer.xdk.ui.media;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -26,27 +26,27 @@ import com.layer.xdk.ui.util.CircularProgressBar;
  * the other will be shown at a time based on the calls made. The button can be either a play, pause
  * or broken play button.
  */
-public class AudioProgressControlView extends FrameLayout {
+public class MediaProgressControlView extends FrameLayout {
 
     private final AppCompatImageButton mButton;
     private final ProgressBar mProgressBar;
 
-    private @DrawableRes int mPlayButtonResId = R.drawable.xdk_ui_audio_play;
-    private @DrawableRes int mBrokenButtonResId = R.drawable.xdk_ui_audio_broken;
-    private @DrawableRes int mPauseButtonResId = R.drawable.xdk_ui_audio_pause;
+    private @DrawableRes int mPlayButtonResId = R.drawable.xdk_ui_ic_media_play;
+    private @DrawableRes int mBrokenButtonResId = R.drawable.xdk_ui_ic_media_broken;
+    private @DrawableRes int mPauseButtonResId = R.drawable.xdk_ui_ic_media_pause;
     private @ColorRes int mButtonTintResId;
 
-    public AudioProgressControlView(
+    public MediaProgressControlView(
             @NonNull Context context) {
         this(context, null);
     }
 
-    public AudioProgressControlView(@NonNull Context context,
+    public MediaProgressControlView(@NonNull Context context,
             @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AudioProgressControlView(@NonNull Context context, @Nullable AttributeSet attrs,
+    public MediaProgressControlView(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
@@ -75,6 +75,7 @@ public class AudioProgressControlView extends FrameLayout {
         mPauseButtonResId = resId;
     }
 
+    @SuppressWarnings("unused")
     public void setBrokenButton(@DrawableRes int resId) {
         mBrokenButtonResId = resId;
     }
@@ -119,7 +120,17 @@ public class AudioProgressControlView extends FrameLayout {
     public void showProgressBar(int progress) {
         mButton.setVisibility(GONE);
         mProgressBar.setVisibility(VISIBLE);
+        mProgressBar.setIndeterminate(false);
         mProgressBar.setProgress(progress);
+    }
+
+    /**
+     * Show the progress bar with an indeterminate state and hide the button.
+     */
+    public void showIndeterminateProgressBar() {
+        mButton.setVisibility(GONE);
+        mProgressBar.setVisibility(VISIBLE);
+        mProgressBar.setIndeterminate(true);
     }
 
     /**
@@ -146,7 +157,7 @@ public class AudioProgressControlView extends FrameLayout {
                 showPauseButton();
                 break;
             case PlaybackStateCompat.STATE_BUFFERING:
-                showPlayButton();
+                showIndeterminateProgressBar();
                 break;
             case PlaybackStateCompat.STATE_ERROR:
                 showBrokenPlayButton();

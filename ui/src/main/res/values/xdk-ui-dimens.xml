@@ -54,6 +54,8 @@
     <dimen name="xdk_ui_cursor_width">1dp</dimen>
     <dimen name="xdk_ui_divider_thickness">0.5dp</dimen>
 
+    <dimen name="xdk_ui_zero_size">0dp</dimen>
+
 
     <!-- ####################################################################################### -->
     <!-- # Message Model ViewHolders and Cells                                                 # -->
@@ -78,6 +80,8 @@
     
     <dimen name="xdk_ui_group_start_item_decoration_height">8dp</dimen>
     <dimen name="xdk_ui_sub_group_start_item_decoration_height">8dp</dimen>
+    
+    <dimen name="xdk_ui_message_default_max_width">256dp</dimen>
 
 
     <!-- ####################################################################################### -->
@@ -188,7 +192,7 @@
     <!-- # Text Message View                                                                   # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_text_message_view_max_width">250dp</dimen>
+    <dimen name="xdk_ui_text_message_view_max_width">@dimen/xdk_ui_message_default_max_width</dimen>
     <dimen name="xdk_ui_text_message_view_text_size">14sp</dimen>
 
     <!-- ####################################################################################### -->
@@ -285,7 +289,7 @@
 
     <dimen name="xdk_ui_receipt_message_view_detail_title_size">12sp</dimen>
     <dimen name="xdk_ui_receipt_message_view_detail_value_size">14sp</dimen>
-    <dimen name="xdk_ui_receipt_message_view_max_width">250dp</dimen>
+    <dimen name="xdk_ui_receipt_message_view_max_width">@dimen/xdk_ui_message_default_max_width</dimen>
     <dimen name="xdk_ui_receipt_message_view_min_width">230dp</dimen>
     <dimen name="xdk_ui_receipt_message_view_total_title_size">14sp</dimen>
     <dimen name="xdk_ui_receipt_message_view_total_value_size">14sp</dimen>
@@ -297,7 +301,7 @@
     <dimen name="xdk_ui_receipt_message_product_quantity_text_size">11sp</dimen>
 
     <!-- ####################################################################################### -->
-    <!-- # Audio Message View                                                                   # -->
+    <!-- # Audio Message View                                                                  # -->
     <!-- ####################################################################################### -->
 
     <dimen name="xdk_ui_audio_message_default_image_height">@dimen/xdk_ui_file_message_image_height</dimen>
@@ -306,12 +310,23 @@
     <dimen name="xdk_ui_audio_message_progress_bar_height">4dp</dimen>
 
     <!-- ####################################################################################### -->
-    <!-- # Large Audio Message View                                                                   # -->
+    <!-- # Large Media Message View                                                            # -->
     <!-- ####################################################################################### -->
 
-    <dimen name="xdk_ui_large_audio_message_metadata_horizontal_margin">32dp</dimen>
-    <dimen name="xdk_ui_large_audio_message_control_height">40dp</dimen>
-    <dimen name="xdk_ui_large_audio_message_control_elevation">4dp</dimen>
-    <dimen name="xdk_ui_large_audio_message_primary_metadata_text_size">17sp</dimen>
-    <dimen name="xdk_ui_large_audio_message_secondary_metadata_text_size">14sp</dimen>
+    <dimen name="xdk_ui_large_media_message_metadata_horizontal_margin">32dp</dimen>
+    <dimen name="xdk_ui_large_media_message_control_height">40dp</dimen>
+    <dimen name="xdk_ui_large_media_message_control_elevation">4dp</dimen>
+    <dimen name="xdk_ui_large_media_message_primary_metadata_text_size">17sp</dimen>
+    <dimen name="xdk_ui_large_media_message_secondary_metadata_text_size">14sp</dimen>
+
+    <!-- ####################################################################################### -->
+    <!-- # Video Message View                                                                  # -->
+    <!-- ####################################################################################### -->
+
+    <dimen name="xdk_ui_video_message_overlay_size">28dp</dimen>
+    <dimen name="xdk_ui_video_message_minimum_width">48dp</dimen>
+    <dimen name="xdk_ui_video_message_minimum_height">48dp</dimen>
+    <dimen name="xdk_ui_video_message_maximum_height">400dp</dimen>
+    <dimen name="xdk_ui_video_message_default_width">192dp</dimen>
+    <dimen name="xdk_ui_video_message_default_height">108dp</dimen>
 </resources>

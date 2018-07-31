@@ -7,9 +7,10 @@ import android.support.annotation.NonNull;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.audio.AudioMessageModel;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
-import com.layer.xdk.ui.message.large.LargeAudioMessageFragment;
+import com.layer.xdk.ui.message.large.LargeMediaMessageFragment;
 import com.layer.xdk.ui.message.large.LargeMessageActivity;
 import com.layer.xdk.ui.message.model.MessageModel;
+import com.layer.xdk.ui.message.video.VideoMessageModel;
 import com.layer.xdk.ui.util.Log;
 
 /**
@@ -27,7 +28,9 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
     public void performAction(@NonNull Context context, @NonNull MessageModel model) {
         Intent intent;
         if (model instanceof AudioMessageModel) {
-            intent = createAudioIntent(context, model);
+            intent = createAudioIntent(context, (AudioMessageModel) model);
+        } else if (model instanceof VideoMessageModel) {
+            intent = createVideoIntent(context, (VideoMessageModel) model);
         } else {
             if (Log.isLoggable(Log.INFO)) {
                 Log.i(ShowLargeMessageActionHandler.class.getSimpleName() +
@@ -39,30 +42,51 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
         context.startActivity(intent);
     }
 
-    @NonNull
-    private Intent createAudioIntent(@NonNull Context context, @NonNull MessageModel model) {
+    private Intent createVideoIntent(@NonNull Context context, @NonNull VideoMessageModel model) {
         Intent intent = new Intent(context, LargeMessageActivity.class);
 
-        AudioMessageModel audioModel = (AudioMessageModel) model;
-
-        intent.putExtra(LargeAudioMessageFragment.ARG_MESSAGE_PART_ID, audioModel.getAudioPartId().toString());
-        if (audioModel.getSourceUri() != null) {
-            intent.putExtra(LargeAudioMessageFragment.ARG_SOURCE_URI,
-                    audioModel.getSourceUri().toString());
+        intent.putExtra(LargeMediaMessageFragment.ARG_MESSAGE_PART_ID, model.getVideoPartId().toString());
+        if (model.getSourceUri() != null) {
+            intent.putExtra(LargeMediaMessageFragment.ARG_SOURCE_URI,
+                    model.getSourceUri().toString());
         }
-        intent.putExtra(LargeAudioMessageFragment.ARG_ORDERED_METADATA, audioModel.getOrderedMetadata());
-        ImageRequestParameters imageParams = audioModel.getPreviewRequestParameters();
+        if (model.hasNonDefaultOrderedMetadata()) {
+            intent.putExtra(LargeMediaMessageFragment.ARG_ORDERED_METADATA, model.getOrderedMetadata());
+        }
+        intent.putExtra(LargeMediaMessageFragment.ARG_IS_VIDEO, true);
+        if (model.getMetadata() != null) {
+            intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_WIDTH, model.getMetadata().getWidth());
+            intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT, model.getMetadata().getHeight());
+            intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_ASPECT_RATIO, model.getMetadata().getAspectRatio());
+        }
+
+        intent.putExtra(LargeMessageActivity.ARG_TITLE, R.string.xdk_ui_video_message_model_default_title);
+        return intent;
+    }
+
+    @NonNull
+    private Intent createAudioIntent(@NonNull Context context, @NonNull AudioMessageModel model) {
+        Intent intent = new Intent(context, LargeMessageActivity.class);
+
+
+        intent.putExtra(LargeMediaMessageFragment.ARG_MESSAGE_PART_ID, model.getAudioPartId().toString());
+        if (model.getSourceUri() != null) {
+            intent.putExtra(LargeMediaMessageFragment.ARG_SOURCE_URI,
+                    model.getSourceUri().toString());
+        }
+        intent.putExtra(LargeMediaMessageFragment.ARG_ORDERED_METADATA, model.getOrderedMetadata());
+        ImageRequestParameters imageParams = model.getPreviewRequestParameters();
         if (imageParams.getUri() != null) {
-            intent.putExtra(LargeAudioMessageFragment.ARG_PREVIEW_URL, imageParams.getUri().toString());
+            intent.putExtra(LargeMediaMessageFragment.ARG_PREVIEW_URL, imageParams.getUri().toString());
         }
         if (imageParams.getUrl() != null) {
-            intent.putExtra(LargeAudioMessageFragment.ARG_PREVIEW_URL, imageParams.getUrl());
+            intent.putExtra(LargeMediaMessageFragment.ARG_PREVIEW_URL, imageParams.getUrl());
         }
         if (imageParams.getTargetWidth() > 0) {
-            intent.putExtra(LargeAudioMessageFragment.ARG_IMAGE_WIDTH, imageParams.getTargetWidth());
+            intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_WIDTH, imageParams.getTargetWidth());
         }
         if (imageParams.getTargetHeight() > 0) {
-            intent.putExtra(LargeAudioMessageFragment.ARG_IMAGE_HEIGHT, imageParams.getTargetHeight());
+            intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT, imageParams.getTargetHeight());
         }
 
         intent.putExtra(LargeMessageActivity.ARG_TITLE, R.string.xdk_ui_audio_message_model_default_title);

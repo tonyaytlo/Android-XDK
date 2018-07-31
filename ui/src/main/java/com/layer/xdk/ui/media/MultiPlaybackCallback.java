@@ -3,6 +3,7 @@ package com.layer.xdk.ui.media;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -57,6 +58,15 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         mContext = context;
         mPlayer = player;
         mSession = session;
+
+        mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                mCurrentPlaybackSavedState.mBufferedPercent =
+                        (int) (mp.getDuration() * ((double) percent / 100));
+                notifyNewPlaybackState();
+            }
+        });
 
         mStateExtras = new Bundle();
         mPlaybackStateBuilder.setExtras(mStateExtras)

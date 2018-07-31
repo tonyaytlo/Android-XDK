@@ -19,6 +19,7 @@ import com.layer.xdk.ui.BR;
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.databinding.XdkUiAudioMessageViewBinding;
 import com.layer.xdk.ui.media.MediaControllerProvider;
+import com.layer.xdk.ui.media.MediaProgressControlView;
 import com.layer.xdk.ui.media.MultiPlaybackCallback;
 import com.layer.xdk.ui.media.PlaybackSavedState;
 import com.layer.xdk.ui.message.container.StandardMessageContainer;
@@ -33,7 +34,7 @@ import com.layer.xdk.ui.util.Log;
 public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessageView {
 
     private MessageViewHelper mMessageViewHelper;
-    private AudioProgressControlView mControlView;
+    private MediaProgressControlView mControlView;
     private XdkUiAudioMessageViewBinding mBinding;
 
     private AudioMessageModel mModel;
@@ -253,7 +254,7 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
                         R.layout.xdk_ui_audio_message_control_view);
                 controlButtonHolder.getViewStub().inflate();
             }
-            mControlView = ((AudioProgressControlView) controlButtonHolder.getRoot());
+            mControlView = ((MediaProgressControlView) controlButtonHolder.getRoot());
 
             mControlView.setButtonOnClickListener(new OnClickListener() {
                 @Override

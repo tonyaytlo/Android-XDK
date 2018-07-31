@@ -161,12 +161,12 @@
     <color name="xdk_ui_receipt_message_view_detail_value_text">@color/xdk_ui_text_black</color>
 
     <!-- ########## -->
-    <!-- Large Audio Message View -->
+    <!-- Large Media Message View -->
     <!-- ########## -->
 
-    <color name="xdk_ui_large_audio_message_control_color">@color/xdk_ui_text_gray</color>
-    <color name="xdk_ui_large_audio_message_control_background_color">@android:color/white</color>
-    <color name="xdk_ui_large_audio_message_primary_metadata_text_color">@color/xdk_ui_text_black</color>
-    <color name="xdk_ui_large_audio_message_secondary_metadata_text_color">@color/xdk_ui_color_pale_sky</color>
+    <color name="xdk_ui_large_media_message_control_color">@color/xdk_ui_text_gray</color>
+    <color name="xdk_ui_large_media_message_control_background_color">@android:color/white</color>
+    <color name="xdk_ui_large_media_message_primary_metadata_text_color">@color/xdk_ui_text_black</color>
+    <color name="xdk_ui_large_media_message_secondary_metadata_text_color">@color/xdk_ui_color_pale_sky</color>
 
 </resources>

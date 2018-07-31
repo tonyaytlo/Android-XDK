@@ -46,6 +46,7 @@ public class AudioMessageMetadata {
     @SerializedName("action")
     public Action mAction;
 
+    @Dimension
     public int getPreviewWidth() {
         return DisplayUtils.dpToPx(mPreviewWidth);
     }

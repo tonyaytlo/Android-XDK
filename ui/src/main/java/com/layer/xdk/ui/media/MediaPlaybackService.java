@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.view.SurfaceHolder;
 
 import com.layer.xdk.ui.util.Log;
 
@@ -45,6 +45,7 @@ public class MediaPlaybackService extends Service {
             if (Log.isLoggable(Log.VERBOSE)) {
                 Log.v("Releasing media player");
             }
+            mMediaPlayer.setDisplay(null);
             mMediaPlayer.release();
         }
         if (mMediaSession != null) {
@@ -89,20 +90,40 @@ public class MediaPlaybackService extends Service {
      * @return the token for the session or null if the session hasn't been created yet
      */
     @Nullable
-    public MediaSessionCompat.Token getSessionToken() {
+    private MediaSessionCompat.Token getSessionToken() {
         if (mMediaSession != null) {
             return mMediaSession.getSessionToken();
         }
         return null;
     }
 
+    private void setSurfaceHolder(SurfaceHolder holder) {
+        mMediaPlayer.setDisplay(holder);
+    }
+
     /**
-     * Return the instance of this service so clients can interact with it.
+     * Return a binder that clients can use to interact with this service.
      */
     public class MediaPlaybackBinder extends Binder {
-        @NonNull
-        MediaPlaybackService getService() {
-            return MediaPlaybackService.this;
+
+        /**
+         * Set a surface holder to display video with the media player provided by this service.
+         *
+         * @param holder SurfaceHolder to use for displaying video
+         */
+        public void setSurfaceHolder(SurfaceHolder holder) {
+            MediaPlaybackService.this.setSurfaceHolder(holder);
+        }
+
+        /**
+         * Return the token associated with the {@link MediaSessionCompat} so controllers can interact
+         * with it.
+         *
+         * @return the token for the session or null if the session hasn't been created yet
+         */
+        @Nullable
+        public MediaSessionCompat.Token getSessionToken() {
+            return MediaPlaybackService.this.getSessionToken();
         }
     }
 }

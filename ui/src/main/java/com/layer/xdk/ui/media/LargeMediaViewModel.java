@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.content.Intent;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.net.Uri;
@@ -24,7 +25,7 @@ import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.XdkUiDependencyManager;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
-import com.layer.xdk.ui.message.large.LargeAudioMessageFragment;
+import com.layer.xdk.ui.message.large.LargeMediaMessageFragment;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
@@ -34,9 +35,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 /**
- * ViewModel that handles a large audio message and playback.
+ * ViewModel that handles a large audio/video message and playback.
  */
-public class LargeAudioViewModel extends AndroidViewModel {
+public class LargeMediaViewModel extends AndroidViewModel {
 
     @Inject
     ImageCacheWrapper mImageCacheWrapper;
@@ -56,6 +57,9 @@ public class LargeAudioViewModel extends AndroidViewModel {
     public final ObservableInt mElapsedSeconds = new ObservableInt();
     public final ObservableField<String> mPrimaryMetadata = new ObservableField<>();
     public final ObservableField<String> mSecondaryMetadata = new ObservableField<>();
+    public int mVideoWidth;
+    public int mVideoHeight;
+    public Double mVideoAspectRatio;
 
     private MediaControllerCompat mMediaController;
     private final MutableLiveData<PlaybackSavedState> mPlaybackState = new MutableLiveData<>();
@@ -63,6 +67,7 @@ public class LargeAudioViewModel extends AndroidViewModel {
     private LayerProgressListener mProgressListener;
 
     private boolean mShouldResume;
+    private boolean mUsingVideo;
 
     private final Observer<MediaControllerCompat> mControllerObserver =
             new Observer<MediaControllerCompat>() {
@@ -137,7 +142,7 @@ public class LargeAudioViewModel extends AndroidViewModel {
         }
     };
 
-    public LargeAudioViewModel(@NonNull Application application) {
+    public LargeMediaViewModel(@NonNull Application application) {
         super(application);
         XdkUiDependencyManager.INSTANCE.getXdkUiComponent().inject(this);
         // Normally this view model should not observe LiveData but this is a one-time observation
@@ -229,14 +234,21 @@ public class LargeAudioViewModel extends AndroidViewModel {
     }
 
     /**
+     * @return true if the media represented by this view model is a video, false otherwise
+     */
+    public boolean isUsingVideo() {
+        return mUsingVideo;
+    }
+
+    /**
      * Set the extras passed in the activity/fragment creation to initialize member variables.
      *
      * @param extras bundle that was passed in the intent/arguments for starting the activity or
      *               fragment
      */
     public void setExtras(@NonNull Bundle extras) {
-        mMessagePartId = extras.getString(LargeAudioMessageFragment.ARG_MESSAGE_PART_ID);
-        String rawSourceUri = extras.getString(LargeAudioMessageFragment.ARG_SOURCE_URI);
+        mMessagePartId = extras.getString(LargeMediaMessageFragment.ARG_MESSAGE_PART_ID);
+        String rawSourceUri = extras.getString(LargeMediaMessageFragment.ARG_SOURCE_URI);
         if (rawSourceUri != null) {
             mSourceUri = Uri.parse(rawSourceUri);
             mDownloadProgress.setValue(100);
@@ -247,6 +259,7 @@ public class LargeAudioViewModel extends AndroidViewModel {
 
         setImageFromExtras(extras);
         setMetadataFromExtras(extras);
+        setVideoDataFromExtras(extras);
     }
 
     /**
@@ -258,6 +271,33 @@ public class LargeAudioViewModel extends AndroidViewModel {
         if (mMediaController != null && canPlay()) {
             mMediaController.getTransportControls().seekTo(
                     TimeUnit.SECONDS.toMillis(positionSeconds));
+        }
+    }
+
+    /**
+     * Start an activity to handle video playback. If no activity can be resolved then log a message
+     * saying as such.
+     */
+    public void launchExternalVideoActivity() {
+        if (mSourceUri == null) {
+            if (Log.isLoggable(Log.INFO)) {
+                Log.i("No URI available for video click event. Ignoring.");
+            }
+            return;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(mSourceUri);
+        if (mSourceUri.getScheme().equals("content")) {
+            // Set to a generic video type since the internal file name does not have the
+            // correct type extension.
+            intent.setType("video/*");
+        }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (intent.resolveActivity(getApplication().getPackageManager()) != null) {
+            getApplication().startActivity(intent);
+        } else if (Log.isLoggable(Log.INFO)) {
+            Log.i("Cannot resolve intent for external video playback. Intent: " + intent);
         }
     }
 
@@ -278,9 +318,9 @@ public class LargeAudioViewModel extends AndroidViewModel {
     }
 
     private void setImageFromExtras(@NonNull Bundle extras) {
-        String previewUrl = extras.getString(LargeAudioMessageFragment.ARG_PREVIEW_URL);
-        int width = extras.getInt(LargeAudioMessageFragment.ARG_IMAGE_WIDTH);
-        int height = extras.getInt(LargeAudioMessageFragment.ARG_IMAGE_HEIGHT);
+        String previewUrl = extras.getString(LargeMediaMessageFragment.ARG_PREVIEW_URL);
+        int width = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_WIDTH);
+        int height = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT);
         ImageRequestParameters.Builder builder = new ImageRequestParameters.Builder();
         if (previewUrl != null) {
             builder.uri(Uri.parse(previewUrl));
@@ -293,7 +333,7 @@ public class LargeAudioViewModel extends AndroidViewModel {
 
     private void setMetadataFromExtras(@NonNull Bundle extras) {
         ArrayList<String> metadata = extras.getStringArrayList(
-                LargeAudioMessageFragment.ARG_ORDERED_METADATA);
+                LargeMediaMessageFragment.ARG_ORDERED_METADATA);
         StringBuilder secondaryBuilder = new StringBuilder();
         if (metadata != null) {
             for (String s : metadata) {
@@ -308,6 +348,13 @@ public class LargeAudioViewModel extends AndroidViewModel {
             }
             mSecondaryMetadata.set(secondaryBuilder.toString());
         }
+    }
+
+    private void setVideoDataFromExtras(Bundle extras) {
+        mUsingVideo = extras.getBoolean(LargeMediaMessageFragment.ARG_IS_VIDEO);
+        mVideoHeight = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT);
+        mVideoWidth = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_WIDTH);
+        mVideoAspectRatio = extras.getDouble(LargeMediaMessageFragment.ARG_MEDIA_ASPECT_RATIO);
     }
 
     /**

@@ -12,7 +12,7 @@ import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.util.Log;
 
 /**
- * Activity that displays large versions of messages. Currently only supports large audio messages.
+ * Activity that displays large versions of messages. Currently only supports large media messages.
  */
 public class LargeMessageActivity extends AppCompatActivity {
 
@@ -43,7 +43,7 @@ public class LargeMessageActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         if (fragmentManager.findFragmentByTag(TAG_LARGE_MESSAGE_FRAGMENT) == null) {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            LargeAudioMessageFragment fragment = new LargeAudioMessageFragment();
+            LargeMediaMessageFragment fragment = new LargeMediaMessageFragment();
             fragment.setArguments(extras);
             fragmentTransaction.add(R.id.xdk_ui_large_message_fragment_container, fragment, TAG_LARGE_MESSAGE_FRAGMENT);
             fragmentTransaction.commit();
