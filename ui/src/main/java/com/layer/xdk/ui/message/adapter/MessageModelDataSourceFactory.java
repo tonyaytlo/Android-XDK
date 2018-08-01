@@ -17,7 +17,7 @@ import javax.inject.Inject;
  * Factory that handles creations of {@link MessageModelDataSource}. This contains the variables
  * used to create new instances of the DataSource when old ones become invalid.
  */
-public class MessageModelDataSourceFactory implements DataSource.Factory<Integer, MessageModel> {
+public class MessageModelDataSourceFactory extends DataSource.Factory<Integer, MessageModel> {
 
     private final LayerClient mLayerClient;
     private final MessageModelManager mMessageModelManager;

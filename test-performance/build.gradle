@@ -34,11 +34,11 @@ android {
         pickFirst 'protobuf.meta'
     }
 
-    // Data binding is still trying to use 25.2.0 for some reason
+    // Resolve mismatch of dependencies due to data binding/espresso/etc
     configurations.all {
         resolutionStrategy.force 'com.android.support:support-v4:' + rootProject.ext.supportLibVersion
-        // Alpha paging is forcing 27.1.0. Remove with AND-1461
         resolutionStrategy.force 'com.android.support:recyclerview-v7:' + rootProject.ext.supportLibVersion
+        resolutionStrategy.force 'android.arch.lifecycle:viewmodel:' + rootProject.ext.archLifecycleVersion
     }
 }
 
@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.android.support.test:rules:' + rootProject.ext.rulesVersion
     implementation 'com.android.support.test.espresso:espresso-core:' + rootProject.ext.espressoVersion
     implementation 'com.android.support:multidex:' + rootProject.ext.multidexVersion
-
+    
     androidTestImplementation project(':xdk-test-common')
     androidTestImplementation 'com.android.support.test:runner:' + rootProject.ext.runnerVersion
     androidTestImplementation 'com.android.support.test:rules:' + rootProject.ext.rulesVersion

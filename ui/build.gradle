@@ -98,9 +98,9 @@ dependencies {
     implementation 'com.android.support:exifinterface:' + rootProject.ext.supportLibVersion
 
     // Keep as api so MessageItemsListViewModel can be used
-    api "android.arch.paging:runtime:1.0.0-alpha6"
-    implementation "android.arch.lifecycle:livedata:1.1.0"
-    implementation "android.arch.lifecycle:extensions:1.1.0"
+    api "android.arch.paging:runtime:1.0.1"
+    implementation "android.arch.lifecycle:livedata:" + rootProject.ext.archLifecycleVersion
+    implementation "android.arch.lifecycle:extensions:" + rootProject.ext.archLifecycleVersion
     // Include only for debug builds (namely for tests)
     debugImplementation 'com.android.support:multidex:' + rootProject.ext.multidexVersion
 

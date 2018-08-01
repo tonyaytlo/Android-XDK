@@ -89,8 +89,8 @@ public class ConversationItemsAdapterPerformanceTest {
         int totalSize = 1000;
 
         PagedList<ConversationItemModel> list = new PagedList.Builder<>(new JankDataSource(totalSize), 90)
-                .setMainThreadExecutor(ArchTaskExecutor.getMainThreadExecutor())
-                .setBackgroundThreadExecutor(ArchTaskExecutor.getIOThreadExecutor())
+                .setNotifyExecutor(ArchTaskExecutor.getMainThreadExecutor())
+                .setFetchExecutor(ArchTaskExecutor.getIOThreadExecutor())
                 .build();
         adapter.submitList(list);
         mActivityRule.runOnUiThread(new Runnable() {
