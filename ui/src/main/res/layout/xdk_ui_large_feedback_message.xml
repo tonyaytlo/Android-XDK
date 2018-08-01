@@ -1,46 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="android.view.View"/>
 
         <variable
             name="viewModel"
-            type="com.layer.xdk.ui.message.feedback.LargeFeedbackViewModel" />
+            type="com.layer.xdk.ui.message.feedback.LargeFeedbackViewModel"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/xdk_ui_margin_x_large"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/xdk_ui_margin_x_large">
 
         <TextView
             android:id="@+id/prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@{viewModel.mMessageModel.getSummary()}" />
+            android:text="@{viewModel.mMessageModel.getSummary()}"/>
 
         <com.layer.xdk.ui.message.feedback.FeedbackButton
             android:id="@+id/feedback_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:messageModel="@{viewModel.mMessageModel}" />
+            app:messageModel="@{viewModel.mMessageModel}"/>
 
-        <EditText
-            android:id="@+id/comment"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="@{viewModel.mEditable}"
-            android:gravity="top"
-            android:hint="@{viewModel.mMessageModel.getCommentHint()}"
-            android:minLines="3"
-            android:text="@{viewModel.mComment}"
-            android:visibility="@{(viewModel.mEditable || viewModel.mMessageModel.getComment() != null) ? View.VISIBLE : View.GONE}" />
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="@{viewModel.mEditable}"
+                android:gravity="top"
+                android:hint="@{viewModel.mMessageModel.getCommentHint()}"
+                android:inputType="textLongMessage|textMultiLine|textCapSentences"
+                android:maxLength="400"
+                android:minLines="3"
+                android:text="@{viewModel.mComment}"
+                android:visibility="@{(viewModel.mEditable || viewModel.mMessageModel.getComment() != null) ? View.VISIBLE : View.GONE}"/>
+
+        </ScrollView>
 
         <Button
             android:id="@+id/send"
@@ -48,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/xdk_ui_feedback_message_send_button"
-            android:visibility="@{viewModel.mEditable ? View.VISIBLE : View.GONE}" />
+            android:visibility="@{viewModel.mEditable ? View.VISIBLE : View.GONE}"/>
 
     </LinearLayout>
 
