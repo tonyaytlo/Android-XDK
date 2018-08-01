@@ -61,6 +61,14 @@ public class ChoiceMessageModel extends MessageModel {
 
         mMetadata.setEnabledForMe(getAuthenticatedUserId());
 
+        if (getRootMessagePart() == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Root part needs to be set before parsing this choice model");
+            }
+            throw new IllegalStateException(
+                    "Root part needs to be set before parsing this choice model");
+        }
+
         mChoiceOrSetHelper = new ChoiceOrSetHelper(getGson(), getRootMessagePart(),
                 Collections.<ChoiceConfigMetadata>singleton(mMetadata));
 
@@ -163,6 +171,14 @@ public class ChoiceMessageModel extends MessageModel {
 
     private ChoiceClickDelegate getChoiceClickDelegate() {
         if (mChoiceClickDelegate == null) {
+            if (getRootMessagePart() == null) {
+                if (Log.isLoggable(Log.ERROR)) {
+                    Log.e("Unable to process choice when message hasn't been parsed");
+                }
+                throw new IllegalStateException(
+                        "Unable to process choice when message hasn't been parsed");
+            }
+
             String userName = getIdentityFormatter().getDisplayName(
                     getLayerClient().getAuthenticatedUser());
             mChoiceClickDelegate = new ChoiceClickDelegate(userName, getAppContext(),

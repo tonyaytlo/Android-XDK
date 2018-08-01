@@ -14,6 +14,7 @@ import com.layer.xdk.ui.message.audio.AudioMessageModel;
 import com.layer.xdk.ui.message.button.ButtonMessageModel;
 import com.layer.xdk.ui.message.carousel.CarouselMessageModel;
 import com.layer.xdk.ui.message.choice.ChoiceMessageModel;
+import com.layer.xdk.ui.message.feedback.FeedbackMessageModel;
 import com.layer.xdk.ui.message.file.FileMessageModel;
 import com.layer.xdk.ui.message.generic.UnhandledMessageModel;
 import com.layer.xdk.ui.message.image.ImageMessageModel;
@@ -120,6 +121,7 @@ public class MessageModelManager {
 
         registerModel(AudioMessageModel.ROOT_MIME_TYPE, AudioMessageModel.class);
         registerModel(VideoMessageModel.ROOT_MIME_TYPE, VideoMessageModel.class);
+        registerModel(FeedbackMessageModel.ROOT_MIME_TYPE, FeedbackMessageModel.class);
     }
 
     /**

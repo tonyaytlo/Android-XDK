@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.databinding.ObservableField;
 import android.databinding.ObservableInt;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,17 +18,14 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.MessagePart;
-import com.layer.sdk.query.Predicate;
-import com.layer.sdk.query.Query;
-import com.layer.sdk.query.Queryable;
 import com.layer.xdk.ui.XdkUiDependencyManager;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.large.LargeMediaMessageFragment;
+import com.layer.xdk.ui.repository.FetchMessagePartTask;
 import com.layer.xdk.ui.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -254,7 +250,7 @@ public class LargeMediaViewModel extends AndroidViewModel {
             mDownloadProgress.setValue(100);
         } else {
             mDownloadProgress.setValue(0);
-            new FetchMessagePartTask(mLayerClient, mMessagePartId, mMessagePart).execute();
+            new FetchMessagePartTask(mLayerClient, Uri.parse(mMessagePartId), mMessagePart).execute();
         }
 
         setImageFromExtras(extras);
@@ -355,38 +351,5 @@ public class LargeMediaViewModel extends AndroidViewModel {
         mVideoHeight = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT);
         mVideoWidth = extras.getInt(LargeMediaMessageFragment.ARG_MEDIA_WIDTH);
         mVideoAspectRatio = extras.getDouble(LargeMediaMessageFragment.ARG_MEDIA_ASPECT_RATIO);
-    }
-
-    /**
-     * Fetch the message part from the LayerClient and post it to the live data object.
-     */
-    private static class FetchMessagePartTask extends AsyncTask<Void, Void, Void> {
-
-        private final MutableLiveData<MessagePart> mMessagePart;
-        private final LayerClient mLayerClient;
-        private final String mMessagePartId;
-
-        FetchMessagePartTask(LayerClient layerClient, String messagePartId,
-                MutableLiveData<MessagePart> messagePart) {
-            mLayerClient = layerClient;
-            mMessagePartId = messagePartId;
-            mMessagePart = messagePart;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            List<? extends Queryable> parts = mLayerClient.executeQueryForObjects(
-                    Query.builder(MessagePart.class)
-                            .predicate(new Predicate(MessagePart.Property.ID,
-                                    Predicate.Operator.EQUAL_TO,
-                                    mMessagePartId))
-                            .build());
-            if (parts.size() == 1) {
-                mMessagePart.postValue(((MessagePart) parts.get(0)));
-            } else if (Log.isLoggable(Log.ERROR)) {
-                Log.e("Failed to find part ID: " + mMessagePartId);
-            }
-            return null;
-        }
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Metadata for a choice response message.
+ * Metadata for a choice and feedback response message.
  */
 @SuppressWarnings("WeakerAccess")
 public class ChoiceResponseMetadata extends ResponseMetadata {

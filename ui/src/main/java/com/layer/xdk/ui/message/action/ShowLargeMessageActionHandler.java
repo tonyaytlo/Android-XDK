@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import com.layer.xdk.ui.R;
 import com.layer.xdk.ui.message.audio.AudioMessageModel;
+import com.layer.xdk.ui.message.feedback.FeedbackMessageModel;
+import com.layer.xdk.ui.message.feedback.LargeFeedbackMessageFragment;
 import com.layer.xdk.ui.message.image.cache.ImageRequestParameters;
 import com.layer.xdk.ui.message.large.LargeMediaMessageFragment;
 import com.layer.xdk.ui.message.large.LargeMessageActivity;
@@ -31,6 +33,8 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
             intent = createAudioIntent(context, (AudioMessageModel) model);
         } else if (model instanceof VideoMessageModel) {
             intent = createVideoIntent(context, (VideoMessageModel) model);
+        } else if (model instanceof FeedbackMessageModel) {
+            intent = createFeedbackIntent(context, (FeedbackMessageModel) model);
         } else {
             if (Log.isLoggable(Log.INFO)) {
                 Log.i(ShowLargeMessageActionHandler.class.getSimpleName() +
@@ -42,8 +46,24 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
         context.startActivity(intent);
     }
 
+    private Intent createFeedbackIntent(Context context, @NonNull FeedbackMessageModel model) {
+        Intent intent = new Intent(context, LargeMessageActivity.class);
+        intent.putExtra(LargeMessageActivity.ARG_FRAGMENT_TYPE, LargeMessageActivity.FRAGMENT_TYPE_FEEDBACK);
+        intent.putExtra(LargeMessageActivity.ARG_TITLE, model.getTitle());
+        intent.putExtra(LargeFeedbackMessageFragment.ARG_MESSAGE_PART_ID, model.getRootPartId().toString());
+
+        if (model.getRequestedRating() != null) {
+            intent.putExtra(LargeFeedbackMessageFragment.ARG_REQUESTED_RATING,
+                    (int) model.getRequestedRating());
+        }
+
+        return intent;
+    }
+
     private Intent createVideoIntent(@NonNull Context context, @NonNull VideoMessageModel model) {
         Intent intent = new Intent(context, LargeMessageActivity.class);
+        intent.putExtra(LargeMessageActivity.ARG_FRAGMENT_TYPE, LargeMessageActivity.FRAGMENT_TYPE_MEDIA);
+        intent.putExtra(LargeMessageActivity.ARG_TITLE, context.getString(R.string.xdk_ui_video_message_model_default_title));
 
         intent.putExtra(LargeMediaMessageFragment.ARG_MESSAGE_PART_ID, model.getVideoPartId().toString());
         if (model.getSourceUri() != null) {
@@ -60,14 +80,14 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
             intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_ASPECT_RATIO, model.getMetadata().getAspectRatio());
         }
 
-        intent.putExtra(LargeMessageActivity.ARG_TITLE, R.string.xdk_ui_video_message_model_default_title);
         return intent;
     }
 
     @NonNull
     private Intent createAudioIntent(@NonNull Context context, @NonNull AudioMessageModel model) {
         Intent intent = new Intent(context, LargeMessageActivity.class);
-
+        intent.putExtra(LargeMessageActivity.ARG_FRAGMENT_TYPE, LargeMessageActivity.FRAGMENT_TYPE_MEDIA);
+        intent.putExtra(LargeMessageActivity.ARG_TITLE, context.getString(R.string.xdk_ui_audio_message_model_default_title));
 
         intent.putExtra(LargeMediaMessageFragment.ARG_MESSAGE_PART_ID, model.getAudioPartId().toString());
         if (model.getSourceUri() != null) {
@@ -89,7 +109,6 @@ public class ShowLargeMessageActionHandler extends ActionHandler {
             intent.putExtra(LargeMediaMessageFragment.ARG_MEDIA_HEIGHT, imageParams.getTargetHeight());
         }
 
-        intent.putExtra(LargeMessageActivity.ARG_TITLE, R.string.xdk_ui_audio_message_model_default_title);
         return intent;
     }
 }

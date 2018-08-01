@@ -136,4 +136,12 @@
     <string name="xdk_ui_video_message_preview_text">Video</string>
     <string name="xdk_ui_video_message_model_default_title">Video Message</string>
 
+    <string name="xdk_ui_feedback_message_default_title">Experience Rating</string>
+    <string name="xdk_ui_feedback_message_default_prompt">Rate your experience 1–5 stars</string>
+    <string name="xdk_ui_feedback_message_summary_time">%s, %s</string>
+    <string name="xdk_ui_feedback_message_default_prompt_wait">Waiting for Feedback</string>
+    <string name="xdk_ui_feedback_message_default_comment_hint">Add a comment…</string>
+    <string name="xdk_ui_feedback_message_send_button">Send</string>
+    <string name="xdk_ui_feedback_message_status_text">Rating submitted</string>
+
 </resources>

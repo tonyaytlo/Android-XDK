@@ -169,4 +169,11 @@
     <color name="xdk_ui_large_media_message_primary_metadata_text_color">@color/xdk_ui_text_black</color>
     <color name="xdk_ui_large_media_message_secondary_metadata_text_color">@color/xdk_ui_color_pale_sky</color>
 
+    <!-- ########## -->
+    <!-- Feedback Button -->
+    <!-- ########## -->
+
+    <color name="xdk_ui_feedback_button_enabled">@color/xdk_ui_color_primary_blue</color>
+    <color name="xdk_ui_feedback_button_disabled">@color/xdk_ui_color_primary_gray_5</color>
+
 </resources>

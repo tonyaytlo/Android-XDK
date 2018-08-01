@@ -253,7 +253,7 @@ public abstract class MessageModel extends BaseObservable {
      * @param rootMessagePart the root {@link MessagePart} of the sub-tree
      */
     @CallSuper
-    protected void processParts(@NonNull MessagePart rootMessagePart) {
+    public void processParts(@NonNull MessagePart rootMessagePart) {
         mRootMessagePart = rootMessagePart;
         setRole(MessagePartUtils.getRole(rootMessagePart));
         if (mRootMessagePart.isContentReady()) {
@@ -449,7 +449,7 @@ public abstract class MessageModel extends BaseObservable {
      *
      * @return message part corresponding to the root node of this model's subtree
      */
-    @NonNull
+    @Nullable
     protected MessagePart getRootMessagePart() {
         return mRootMessagePart;
     }

@@ -5,6 +5,7 @@ import com.layer.xdk.ui.conversation.ConversationItemsListViewModel;
 import com.layer.xdk.ui.conversation.ConversationViewModel;
 import com.layer.xdk.ui.identity.IdentityItemsListViewModel;
 import com.layer.xdk.ui.media.LargeMediaViewModel;
+import com.layer.xdk.ui.message.feedback.LargeFeedbackViewModel;
 
 /**
  * Component interface that Dagger components should extend from. Extend from this class if
@@ -18,4 +19,5 @@ public interface XdkUiComponent {
     IdentityItemsListViewModel identityItemsListViewModel();
 
     void inject(LargeMediaViewModel viewModel);
+    void inject(LargeFeedbackViewModel viewModel);
 }

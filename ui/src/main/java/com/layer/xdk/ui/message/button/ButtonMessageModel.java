@@ -68,6 +68,15 @@ public class ButtonMessageModel extends MessageModel {
             }
 
         }
+
+        if (getRootMessagePart() == null) {
+            if (Log.isLoggable(Log.ERROR)) {
+                Log.e("Root part needs to be set before parsing this button model");
+            }
+            throw new IllegalStateException(
+                    "Root part needs to be set before parsing this button model");
+        }
+
         mChoiceOrSetHelper = new ChoiceOrSetHelper(getGson(), getRootMessagePart(), choiceConfigs);
         notifyChange();
     }
@@ -157,7 +166,7 @@ public class ButtonMessageModel extends MessageModel {
 
     @Override
     public boolean getHasContent() {
-        return getRootMessagePart().isContentReady();
+        return getRootMessagePart() != null && getRootMessagePart().isContentReady();
     }
 
     @Nullable
@@ -196,6 +205,14 @@ public class ButtonMessageModel extends MessageModel {
 
     private ChoiceClickDelegate getChoiceClickDelegate() {
         if (mChoiceClickDelegate == null) {
+            if (getRootMessagePart() == null) {
+                if (Log.isLoggable(Log.ERROR)) {
+                    Log.e("Unable to process choice when message hasn't been parsed");
+                }
+                throw new IllegalStateException(
+                        "Unable to process choice when message hasn't been parsed");
+            }
+
             String userName = getIdentityFormatter().getDisplayName(
                     getLayerClient().getAuthenticatedUser());
             mChoiceClickDelegate = new ChoiceClickDelegate(userName, getAppContext(),

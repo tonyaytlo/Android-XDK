@@ -31,7 +31,7 @@ public class UnhandledMessageModel extends TextMessageModel {
     }
 
     @Override
-    protected void processParts(@NonNull MessagePart rootMessagePart) {
+    public void processParts(@NonNull MessagePart rootMessagePart) {
         super.processParts(rootMessagePart);
         mText = generateNormalMimeTypeText(rootMessagePart);
     }
