@@ -255,6 +255,10 @@ public class AudioMessageLayout extends LinearLayout implements MediaPlayerMessa
                 controlButtonHolder.getViewStub().inflate();
             }
             mControlView = ((MediaProgressControlView) controlButtonHolder.getRoot());
+            ViewGroup.LayoutParams layoutParams = mControlView.getLayoutParams();
+            layoutParams.width = getResources().getDimensionPixelSize(R.dimen.xdk_ui_audio_message_control_size);
+            layoutParams.height = getResources().getDimensionPixelSize(R.dimen.xdk_ui_audio_message_control_size);
+            mControlView.setLayoutParams(layoutParams);
 
             mControlView.setButtonOnClickListener(new OnClickListener() {
                 @Override

@@ -91,6 +91,7 @@ public class MediaProgressControlView extends FrameLayout {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
         mButton.setImageResource(mPlayButtonResId);
+        mButton.setEnabled(true);
         tintButton();
     }
 
@@ -101,6 +102,7 @@ public class MediaProgressControlView extends FrameLayout {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
         mButton.setImageResource(mPauseButtonResId);
+        mButton.setEnabled(true);
         tintButton();
     }
 
@@ -111,7 +113,8 @@ public class MediaProgressControlView extends FrameLayout {
         mButton.setVisibility(VISIBLE);
         mProgressBar.setVisibility(GONE);
         mButton.setImageResource(mBrokenButtonResId);
-        tintButton();
+        mButton.setEnabled(false);
+        // No need to tint this button since the asset is already tinted
     }
 
     /**

@@ -3,7 +3,6 @@ package com.layer.xdk.ui.media;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -65,6 +64,18 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
                 mCurrentPlaybackSavedState.mBufferedPercent =
                         (int) (mp.getDuration() * ((double) percent / 100));
                 notifyNewPlaybackState();
+            }
+        });
+
+        mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                if (Log.isLoggable(Log.ERROR)) {
+                    Log.e("Media playback failed. Error type: " + what + ". Extra code: " + extra);
+                }
+
+                updateCurrentPlaybackState(PlaybackStateCompat.STATE_ERROR, 0);
+                return true;
             }
         });
 
