@@ -226,6 +226,14 @@ public class AudioMessageModel extends MessageModel {
     }
 
     /**
+     * @return the metadata of this model, null if the message has not been parsed yet
+     */
+    @Nullable
+    public AudioMessageMetadata getMetadata() {
+        return mMetadata;
+    }
+
+    /**
      * Creates a data Uri so inline content can be played in a media player
      *
      * @param sourceMessagePart message part that contains the audio data

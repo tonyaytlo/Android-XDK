@@ -228,9 +228,14 @@ public class FeedbackMessageModel extends MessageModel {
     public String getSummary() {
         if (mMetadata != null) {
 
-            if (!mMetadata.mEnabledForMe && getRating() == INVALID_RATING) {
-                return mMetadata.mPromptWait != null ? mMetadata.mPromptWait : getAppContext()
-                        .getString(R.string.xdk_ui_feedback_message_default_prompt_wait);
+            if (getRating() == INVALID_RATING) {
+                if (mMetadata.mEnabledForMe) {
+                    return mMetadata.mPrompt != null ? mMetadata.mPrompt : getAppContext()
+                            .getString(R.string.xdk_ui_feedback_message_default_prompt);
+                } else {
+                    return mMetadata.mPromptWait != null ? mMetadata.mPromptWait : getAppContext()
+                            .getString(R.string.xdk_ui_feedback_message_default_prompt_wait);
+                }
             } else if (getRating() != INVALID_RATING && mResponseDate != null) {
                 return String.format("%s %s", getDateFormatter().formatTimeDay(mResponseDate),
                         getDateFormatter().formatTime(mResponseDate));
@@ -248,6 +253,14 @@ public class FeedbackMessageModel extends MessageModel {
             hint = getAppContext().getString(R.string.xdk_ui_feedback_message_default_comment_hint);
         }
         return hint;
+    }
+
+    /**
+     * @return the metadata of this model, null if the message has not been parsed yet
+     */
+    @Nullable
+    public FeedbackMessageMetadata getMetadata() {
+        return mMetadata;
     }
 
     /**
