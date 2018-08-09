@@ -31,7 +31,7 @@ public class CarouselScrolledEvent extends LayerAnalyticsEvent {
      * Get access to the horizontal scroll distance. This is the value of @ScrollView.getScrollX
      * @return int value of ScrollX
      */
-    public int getmScrollX() {
+    public int getScrollX() {
         return mScrollX;
     }
 
