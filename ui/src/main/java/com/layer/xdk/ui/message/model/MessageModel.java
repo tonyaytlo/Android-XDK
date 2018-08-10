@@ -839,6 +839,11 @@ public abstract class MessageModel extends BaseObservable {
         return mDownloadProgress;
     }
 
+    /**
+     * Convenience method to post an analytics event to the `LayerClient`.
+     *
+     * @param event the event to post to the `LayerClient`
+     */
     public void postAnalyticsEvent(LayerAnalyticsEvent event) {
         mLayerClient.postAnalyticsEvent(event);
     }

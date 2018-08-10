@@ -81,6 +81,9 @@ public class StandardMessageContainer extends MessageContainer {
         getBinding().xdkUiStandardMessageContainerContentView.getRoot().setBackgroundDrawable(background);
     }
 
+    /**
+     * @return the view stub to inflate a view to the right of the metadata
+     */
     @NonNull
     public ViewStubProxy getRightMetadataView() {
         return getBinding().xdkUiStandardMessageContainerRightMetadataView;

@@ -1,5 +1,39 @@
 # Android XDK
 
+## 4.1.0-pre1
+
+### Features
+  * Audio Message support (AND-1436)
+  * Video Message support (AND-1441)
+  * Feedback Message support (AND-1442)
+  * Analytics event support (AND-1460)
+  * Updated Layer SDK to `4.1.0-pre1`
+  * Added dependency management singleton for dependency injection. See `XdkUiDependencyManager`. (AND-1468)
+  * Sending the full `MessageModel` when performing message actions (AND-1471)
+  * Added default support for the `layer-show-large-message` message action
+
+### Bug fixes
+  * Only loading a resource ID in `PicassoImageCacheWrapper` if one is set. If not, fall back to the placeholder.
+  * Using correct black color for `xdk_ui_text_black`
+
+### API Changes
+  * `XDKUiComponent` added two `inject()` methods for large message `ViewModel` injection
+  * `ConversationViewModel` should now register with a `LifecycleOwner` via `addLifecycleObservers(LifecycleOwner)`
+  * `ActionHandler`'s `performAction()` method now sends the `MessageModel` instead of a `JsonObject`. Custom `ActionHandler`s will need to be updated. Use `MessageModel.getActionData()` to retrieve the `JsonObject` that used to be passed through.
+  * `MessageModelAdapter` now takes an additional constructor parameter for media playback support
+  * `ChoiceOrSetHelper` now extends the abstract `ORSetHelper`, which holds the common functionality for working with OR-sets.
+  * `MessageModel`'s `processParts(MessagePart)` method is now public instead of protected
+  * `ParentMessageView` will now pass a `MediaControllerProivder` when inflating views. The signature of `inflateChildLayouts()` for any custom `ParentMessageView` will need to be updated.
+  * `MessageModel.getRootMessagePart()` is now nullable. This can be null if the model has not been parsed yet or if it is a legacy MIME type.
+
+### New APIs
+  * A message view can implement `MediaMessageView`... (see MessageModelAdapater)
+  * Added a `ViewStub` to the right of the metadata in the `StandardMessageContainer`. See `getRightMetadataView()`.
+  * Added a download progress accessor to `MessageModel`. See `getDownloadProgress()`.
+  * Added a convenience method to send analytics events from a `MessageModel`. See `postAnalyticsEvent(LayerAnalyticsEvent)`.
+  * Added a `MediaPlayerMessageView` interface that message views can implement. This allows an adapter to set a media controller on the view to support media playback.
+  * Added a `MessagePartFetcher` that will fetch a `MessagePart` from the `LayerClient` and observe changes.
+
 ## 4.0.6
 
 ### Features

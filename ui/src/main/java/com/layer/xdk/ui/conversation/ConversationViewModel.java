@@ -79,6 +79,12 @@ public class ConversationViewModel extends BaseObservable implements LifecycleOb
         return mMessageItemsListViewModel;
     }
 
+    /**
+     * Registers the lifecycle owner with the {@link MessageItemsListViewModel} to support pausing
+     * media playback on lifecycle changes.
+     *
+     * @param lifecycleOwner owner of the lifecycle to register the observers with
+     */
     @Override
     public void addLifecycleObservers(LifecycleOwner lifecycleOwner) {
         mMessageItemsListViewModel.addLifecycleObservers(lifecycleOwner);
