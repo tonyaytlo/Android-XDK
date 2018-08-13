@@ -1,5 +1,10 @@
 # Android XDK
 
+## 
+
+### Bug Fixes
+  * Fixed crash when no size is found for an image when sending an image message (AND-1485)
+
 ## 4.0.6
 
 ### Features
