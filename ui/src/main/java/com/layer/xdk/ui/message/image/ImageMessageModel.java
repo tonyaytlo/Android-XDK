@@ -263,10 +263,12 @@ public class ImageMessageModel extends MessageModel {
         }
 
         builder.placeHolder(PLACEHOLDER)
-                .resize(mMetadata.getWidth(), mMetadata.getHeight())
                 .exifOrientation(mMetadata.mOrientation)
                 .tag(getClass().getSimpleName());
 
+        if (mMetadata.getWidth() > 0 && mMetadata.getHeight() > 0) {
+            builder.resize(mMetadata.getWidth(), mMetadata.getHeight());
+        }
         mSourceRequestParameters = builder.build();
     }
 
