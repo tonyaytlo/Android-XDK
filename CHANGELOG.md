@@ -2,6 +2,9 @@
 
 ## 
 
+### Features
+  * Adding a mutator for the `MessageModelManger` singleton to the `ServiceLocator` (AND-1474)
+  
 ### Bug Fixes
   * Fixed crash when no size is found for an image when sending an image message (AND-1485)
 

@@ -10,6 +10,7 @@ import com.layer.xdk.ui.conversation.ConversationItemFormatter;
 import com.layer.xdk.ui.conversation.DefaultConversationItemFormatter;
 import com.layer.xdk.ui.identity.DefaultIdentityFormatter;
 import com.layer.xdk.ui.identity.IdentityFormatter;
+import com.layer.xdk.ui.message.model.MessageModelManager;
 import com.layer.xdk.ui.util.DateFormatter;
 import com.layer.xdk.ui.message.image.cache.ImageCacheWrapper;
 import com.layer.xdk.ui.message.image.cache.PicassoImageCacheWrapper;
@@ -31,6 +32,7 @@ public class ServiceLocator {
     private IdentityFormatter mIdentityFormatter;
     private DateFormatter mDateFormatter;
     private ConversationItemFormatter mConversationItemFormatter;
+    private MessageModelManager mMessageModelManager;
 
     private DefaultXdkUiComponent mLayerXdkComponent;
 
@@ -168,6 +170,30 @@ public class ServiceLocator {
     @SuppressWarnings("unused")
     public void setDateFormatter(@Nullable DateFormatter formatter) {
         mDateFormatter = formatter;
+    }
+
+    /**
+     * Get an explicitly defined {@link MessageModelManager}. If access is required outside this
+     * package, retrieve via the {@link DefaultXdkUiComponent} by calling
+     * {@link #getXdkUiComponent()}.
+     *
+     * @return an explicitly defined {@link MessageModelManager} or null if not defined
+     */
+    @Nullable
+    MessageModelManager getMessageModelManager() {
+        return mMessageModelManager;
+    }
+
+    /**
+     * Sets a custom {@link MessageModelManager} to use for model generation throughout the
+     * application. This is used as a singleton object so the first instance used internally will
+     * be used for all future model generations.
+     *
+     * @param messageModelManager the custom {@link MessageModelManager} the XDK UI should use
+     */
+    @SuppressWarnings("unused")
+    public void setMessageModelManager(@Nullable MessageModelManager messageModelManager) {
+        mMessageModelManager = messageModelManager;
     }
 
     /**

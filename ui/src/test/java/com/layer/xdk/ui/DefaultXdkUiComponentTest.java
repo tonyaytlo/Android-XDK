@@ -92,4 +92,23 @@ public class DefaultXdkUiComponentTest {
     public void testCanCreateDefaultConversationItemFormatter() {
         assertThat(mComponent.defaultConversationItemFormatter()).isNotNull();
     }
+
+    @Test
+    public void testMessageModelManagerOverride() {
+        MessageModelManager mockManager = mock(MessageModelManager.class);
+        mServiceLocator.setMessageModelManager(mockManager);
+
+        assertThat(mServiceLocator.getMessageModelManager()).isSameAs(mockManager);
+        assertThat(mComponent.messageModelManager()).isSameAs(mockManager);
+
+        // Since the model manager is a singleton, dagger should still be using the original manager
+        MessageModelManager newMockManager = mock(MessageModelManager.class);
+        mServiceLocator.setMessageModelManager(newMockManager);
+
+        // The service locator will still return the new manager
+        assertThat(mServiceLocator.getMessageModelManager()).isSameAs(newMockManager);
+        // But the component should still return the old one
+        assertThat(mComponent.messageModelManager()).isSameAs(mockManager);
+        assertThat(mComponent.messageModelManager()).isNotSameAs(newMockManager);
+    }
 }
