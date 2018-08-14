@@ -66,9 +66,6 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
 
     private PopupWindow mAttachmentMenu;
 
-    // style
-    protected Drawable mAttachmentSendersBackground;
-
     public ComposeBar(Context context) {
         this(context, null);
     }
@@ -166,9 +163,10 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         EditTextUtil.setCursorDrawableColor(mEditText, cursorColor);
         EditTextUtil.setUnderlineColor(mEditText, underlineColor);
 
-        Drawable attachmentSendersBackground = ta.getDrawable(R.styleable.ComposeBar_attachmentSendersBackground);
-        if (mAttachmentSendersBackground == null) {
-            mAttachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.xdk_ui_popup_background);
+        Drawable attachmentSendersBackground = ta.getDrawable(
+                R.styleable.ComposeBar_attachmentSendersBackground);
+        if (attachmentSendersBackground == null) {
+            attachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.xdk_ui_popup_background);
         }
 
         mAttachmentMenu.setBackgroundDrawable(attachmentSendersBackground);
