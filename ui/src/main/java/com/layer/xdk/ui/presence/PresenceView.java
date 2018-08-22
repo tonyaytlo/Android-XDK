@@ -2,15 +2,14 @@ package com.layer.xdk.ui.presence;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -23,7 +22,6 @@ import java.util.Collection;
 import java.util.Set;
 
 public class PresenceView extends View {
-    private Identity mIdentity;
     private int mAvailableColor;
     private int mBusyColor;
     private int mAwayColor;
@@ -74,12 +72,6 @@ public class PresenceView extends View {
         mInnerDrawable.setShape(GradientDrawable.OVAL);
 
         mPresenceDrawable = new LayerDrawable(new Drawable[]{mOuterDrawable, mInnerDrawable});
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            setBackground(mPresenceDrawable);
-        } else {
-            setBackgroundDrawable(mPresenceDrawable);
-        }
     }
 
     public void setParticipants(Set<Identity> participants) {
@@ -92,9 +84,9 @@ public class PresenceView extends View {
 
     private void processSetParticipants(Collection<Identity> participants) {
         if (participants.size() == 1) {
-            mIdentity = participants.iterator().next();
-            setVisibility(VISIBLE);
-            Presence.PresenceStatus currentStatus = mIdentity != null ? mIdentity.getPresenceStatus() : null;
+            Identity identity = participants.iterator().next();
+            ViewCompat.setBackground(this, mPresenceDrawable);
+            Presence.PresenceStatus currentStatus = identity != null ? identity.getPresenceStatus() : null;
             if (currentStatus == null) {
                 return;
             }
@@ -117,7 +109,7 @@ public class PresenceView extends View {
                     break;
             }
         } else {
-            setVisibility(INVISIBLE);
+            ViewCompat.setBackground(this, null);
         }
     }
 
@@ -129,11 +121,6 @@ public class PresenceView extends View {
 
         mOuterDrawable.setSize(width, height);
         mInnerDrawable.setSize(width, height);
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
     }
 
     private void setupPresenceColors(@ColorInt int presenceColor, boolean makeHollow) {

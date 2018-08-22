@@ -13,8 +13,8 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.xdk.ui.message.MessagePartUtils;
-import com.layer.xdk.ui.util.Log;
 import com.layer.xdk.ui.util.AndroidFieldNamingStrategy;
+import com.layer.xdk.ui.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,8 +62,17 @@ public class RichImageMessageComposer extends ImageMessageComposer {
             Log.v("Creating Source part from " + imageUri.toString());
         }
         inputStream = getContext().getContentResolver().openInputStream(imageUri);
+        Long fileSizeFromUri = getFileSizeFromUri(getContext(), imageUri);
+        if (fileSizeFromUri == null) {
+            fileSizeFromUri = 0L;
+            if (Log.isLoggable(Log.WARN)) {
+                Log.w("Couldn't determine the file size from the Uri, using 0 as size. Uri: "
+                        + imageUri);
+            }
+        }
+
         MessagePart source = buildSourceMessagePart(inputStream, bounds,
-                getFileSizeFromUri(getContext(), imageUri), rootPartId);
+                fileSizeFromUri, rootPartId);
 
         if (Log.isLoggable(Log.VERBOSE)) {
             Log.v(String.format(Locale.US, "Source image bytes: %d, preview bytes: %d, root bytes: %d",

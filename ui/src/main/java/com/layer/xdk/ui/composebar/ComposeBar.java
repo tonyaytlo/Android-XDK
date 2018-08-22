@@ -41,6 +41,23 @@ import com.layer.xdk.ui.util.EditTextUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>
+ * A widget that contains buttons and text entry for use when composing a message. This widget
+ * contains the following configurable widgets in a horizontal layout:
+ * <br/>
+ * L1 L2 L3 L4 EditText R1 R2 R3 R4 Button
+ * <br/>
+ * where L1-L4 are {@link ImageButton}s to the left of the {@link EditText} and R1-R4 are
+ * {@link ImageButton}s to the right of the {@link EditText}. The rightmost {@link Button} is used
+ * as the Send button (see {@link #getSendButton()}).
+ * </p>
+ * <p>
+ * By default, the {@link ImageButton} in position L4 is used to add attachments (see
+ * {@link #getDefaultAttachButton()}. The {@link EditText} in the middle is used for text entry for
+ * the message contents. All of the widgets can be customized by calling the appropriate accessors.
+ * </p>
+ */
 public class ComposeBar extends FrameLayout implements TextWatcher {
 
     private EditText mEditText;
@@ -65,9 +82,6 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
     private MessageSender.Callback mMessageSenderCallback;
 
     private PopupWindow mAttachmentMenu;
-
-    // style
-    protected Drawable mAttachmentSendersBackground;
 
     public ComposeBar(Context context) {
         this(context, null);
@@ -166,9 +180,10 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         EditTextUtil.setCursorDrawableColor(mEditText, cursorColor);
         EditTextUtil.setUnderlineColor(mEditText, underlineColor);
 
-        Drawable attachmentSendersBackground = ta.getDrawable(R.styleable.ComposeBar_attachmentSendersBackground);
-        if (mAttachmentSendersBackground == null) {
-            mAttachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.xdk_ui_popup_background);
+        Drawable attachmentSendersBackground = ta.getDrawable(
+                R.styleable.ComposeBar_attachmentSendersBackground);
+        if (attachmentSendersBackground == null) {
+            attachmentSendersBackground = ContextCompat.getDrawable(context, R.drawable.xdk_ui_popup_background);
         }
 
         mAttachmentMenu.setBackgroundDrawable(attachmentSendersBackground);
@@ -383,46 +398,107 @@ public class ComposeBar extends FrameLayout implements TextWatcher {
         }
     }
 
+    /**
+     * @return the {@link EditText} used for text entry for the message content
+     */
     public EditText getEditText() {
         return mEditText;
     }
 
+    /**
+     * @return the {@link Button} used for sending the message
+     */
     public Button getSendButton() {
         return mSendButton;
     }
 
+    /**
+     * Given positions incrementing from left to right (1 2 3 4 EditText), returns the button in
+     * position 1.
+     *
+     * @return the {@link ImageButton} in the 1st and leftmost position to the left of the
+     * {@link EditText}
+     */
     public ImageButton getLeftButton1() {
         return mLeftButton1;
     }
 
+    /**
+     * Given positions incrementing from left to right (1 2 3 4 EditText), returns the button in
+     * position 2.
+     *
+     * @return the {@link ImageButton} in the 2nd position to the left of the {@link EditText}
+     */
     public ImageButton getLeftButton2() {
         return mLeftButton2;
     }
 
+    /**
+     * Given positions incrementing from left to right (1 2 3 4 EditText), returns the button in
+     * position 3.
+     *
+     * @return the {@link ImageButton} in the 3rd position to the left of the {@link EditText}
+     */
     public ImageButton getLeftButton3() {
         return mLeftButton3;
     }
 
+    /**
+     * Given positions incrementing from left to right (1 2 3 4 EditText), returns the button in
+     * position 4. This is also the location of the default attachment button.
+     *
+     * @return the {@link ImageButton} in the 4th and rightmost position to the left of the
+     * {@link EditText}
+     */
     public ImageButton getDefaultAttachButton() {
         return mDefaultAttachButton;
     }
 
+    /**
+     * Given positions incrementing from left to right (EditText 1 2 3 4), returns the button in
+     * position 1.
+     *
+     * @return the {@link ImageButton} in the 1st and leftmost position to the right of the
+     * {@link EditText}
+     */
     public ImageButton getRightButton1() {
         return mRightButton1;
     }
 
+    /**
+     * Given positions incrementing from left to right (EditText 1 2 3 4), returns the button in
+     * position 2.
+     *
+     * @return the {@link ImageButton} in the 2nd position to the right of the {@link EditText}
+     */
     public ImageButton getRightButton2() {
         return mRightButton2;
     }
 
+    /**
+     * Given positions incrementing from left to right (EditText 1 2 3 4), returns the button in
+     * position 3.
+     *
+     * @return the {@link ImageButton} in the 3rd position to the right of the {@link EditText}
+     */
     public ImageButton getRightButton3() {
         return mRightButton3;
     }
 
+    /**
+     * Given positions incrementing from left to right (EditText 1 2 3 4), returns the button in
+     * position 4.
+     *
+     * @return the {@link ImageButton} in the 4th and rightmost position to the right of the
+     * {@link EditText}
+     */
     public ImageButton getRightButton4() {
         return mRightButton4;
     }
 
+    /**
+     * @return the Conversation this ComposeBar is associated with
+     */
     public Conversation getConversation() {
         return mConversation;
     }

@@ -18,6 +18,7 @@
         <activity android:name=".testactivity.IdentityItemTestActivity"/>
         <activity android:name=".testactivity.ConversationItemTestActivity"/>
         <activity android:name=".testactivity.ComposeBarTestActivity"/>
+        <activity android:name=".testactivity.PresenceViewStubActivity"/>
 
     </application>
 

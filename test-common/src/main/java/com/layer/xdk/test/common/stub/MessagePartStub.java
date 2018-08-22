@@ -8,6 +8,7 @@ import com.layer.sdk.listeners.LayerProgressListener;
 import com.layer.sdk.messaging.Message;
 import com.layer.sdk.messaging.MessagePart;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -43,6 +44,9 @@ public class MessagePartStub extends MessagePart {
 
     @Override
     public InputStream getDataStream() {
+        if (mData != null) {
+            return new ByteArrayInputStream(mData);
+        }
         return mDataStream;
     }
 

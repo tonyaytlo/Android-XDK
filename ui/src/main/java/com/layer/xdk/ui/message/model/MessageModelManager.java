@@ -44,6 +44,8 @@ import javax.inject.Singleton;
 /**
  * A class responsible for registering {@link MessageModel} classes against unique identifiers
  * and generating instances of {@link MessageModel}s when required.
+ * <br/><br/>
+ * If overriding this class ensure the subclass is annotated with the {@link Singleton} annotation.
  *
  * @see MessageModel for key concepts related Root {@link com.layer.sdk.messaging.MessagePart}s
  */
