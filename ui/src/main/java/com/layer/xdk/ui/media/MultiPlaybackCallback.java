@@ -58,15 +58,6 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
         mPlayer = player;
         mSession = session;
 
-        mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-            @Override
-            public void onBufferingUpdate(MediaPlayer mp, int percent) {
-                mCurrentPlaybackSavedState.mBufferedPercent =
-                        (int) (mp.getDuration() * ((double) percent / 100));
-                notifyNewPlaybackState();
-            }
-        });
-
         mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -111,6 +102,9 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
             mCurrentPlaybackSavedState = new PlaybackSavedState();
         }
 
+        // Clear the buffering listener it requires the media to already be prepared
+        mPlayer.setOnBufferingUpdateListener(null);
+
         // Set new active message
         mActiveMessagePartId = messagePartId;
         mStateExtras.putString(EXTRA_KEY_ACTIVE_MESSAGE_PART_ID, messagePartId);
@@ -137,6 +131,7 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
+                    mPlayer.setOnBufferingUpdateListener(new BufferingListener());
                     updateCurrentPlaybackState(PlaybackStateCompat.STATE_BUFFERING, mCurrentPlaybackSavedState.mPlaybackPosition, mp.getDuration());
                     mPreparationRequired = false;
                     mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -243,5 +238,14 @@ public class MultiPlaybackCallback extends MediaSessionCompat.Callback {
                         PLAYBACK_SPEED)
                 .build();
         mSession.setPlaybackState(state);
+    }
+
+    private class BufferingListener implements MediaPlayer.OnBufferingUpdateListener {
+        @Override
+        public void onBufferingUpdate(MediaPlayer mp, int percent) {
+            mCurrentPlaybackSavedState.mBufferedPosition =
+                    (int) (mp.getDuration() * ((double) percent / 100));
+            notifyNewPlaybackState();
+        }
     }
 }

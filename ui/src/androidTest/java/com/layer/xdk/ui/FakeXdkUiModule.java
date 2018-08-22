@@ -52,7 +52,7 @@ public class FakeXdkUiModule implements XdkUiModule {
     @NonNull
     @Override
     public ImageCacheWrapper provideImageCacheWrapper() {
-        return new PicassoImageCacheWrapper(Picasso.with(mContext));
+        return new PicassoImageCacheWrapper(Picasso.get());
     }
 
     @Provides

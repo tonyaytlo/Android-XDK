@@ -27,6 +27,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.io.IOException;
 import java.util.UUID;
 
 
@@ -103,7 +104,7 @@ public class PicassoImageCacheWrapperTest {
             public Void answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 Target target = (Target) args[0];
-                target.onBitmapFailed(null);
+                target.onBitmapFailed(new IOException(), null);
                 return null;
             }
         }).when(mMockRequestCreator).into(target);

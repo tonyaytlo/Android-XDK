@@ -6,8 +6,6 @@ import static com.layer.xdk.ui.util.Log.VERBOSE;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.widget.ImageView;
 
@@ -76,9 +74,9 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
             }
 
             @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
                 if (errorDrawable != null && Log.isLoggable(VERBOSE)) {
-                    Log.v("onBitMapFailed :" + errorDrawable);
+                    Log.v("onBitMapFailed :" + errorDrawable, e);
                 }
                 bitmapWrapper.setBitmap(null);
                 callback.onFailure();
@@ -179,7 +177,7 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
                 }
 
                 @Override
-                public void onError() {
+                public void onError(Exception e) {
                     callback.onFailure();
                 }
             });
@@ -190,11 +188,6 @@ public class PicassoImageCacheWrapper implements ImageCacheWrapper {
 
     @Override
     public void loadDefaultPlaceholder(ImageView imageView) {
-        String path = null;
-        mPicasso.load(path).into(imageView);
-    }
-
-    private boolean isLocalContent(@NonNull Uri uri) {
-        return uri != null && (uri.getScheme().equals("file") || uri.getScheme().equals("content"));
+        mPicasso.load((String) null).into(imageView);
     }
 }

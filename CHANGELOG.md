@@ -33,6 +33,9 @@
   * Added a convenience method to send analytics events from a `MessageModel`. See `postAnalyticsEvent(LayerAnalyticsEvent)`.
   * Added a `MediaPlayerMessageView` interface that message views can implement. This allows an adapter to set a media controller on the view to support media playback.
   * Added a `MessagePartFetcher` that will fetch a `MessagePart` from the `LayerClient` and observe changes.
+  
+### Known issues
+  * Video playback does not work on Android 9 when targeting API 28. See https://issuetracker.google.com/issues/112933221
 
 ## 4.0.6
 

@@ -79,7 +79,7 @@ dependencies {
     // Google Location
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     // Image cache and loading
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.71828'
     // Image popup
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.9.0'
     // Dependency injection

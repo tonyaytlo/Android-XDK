@@ -14,7 +14,7 @@ public class PlaybackSavedState implements Parcelable {
     public int mDuration;
 
     /**
-     * Current playback position
+     * Current playback position (ms)
      */
     public int mPlaybackPosition;
 
@@ -25,9 +25,9 @@ public class PlaybackSavedState implements Parcelable {
     public int mPlaybackState = PlaybackStateCompat.STATE_NONE;
     
     /**
-     * Current percent of file that is buffered
+     * Current buffered position (ms)
      */
-    public int mBufferedPercent;
+    public int mBufferedPosition;
 
     PlaybackSavedState() {
     }
@@ -36,7 +36,7 @@ public class PlaybackSavedState implements Parcelable {
         mDuration = in.readInt();
         mPlaybackPosition = in.readInt();
         mPlaybackState = in.readInt();
-        mBufferedPercent = in.readInt();
+        mBufferedPosition = in.readInt();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class PlaybackSavedState implements Parcelable {
         dest.writeInt(mDuration);
         dest.writeInt(mPlaybackPosition);
         dest.writeInt(mPlaybackState);
-        dest.writeInt(mBufferedPercent);
+        dest.writeInt(mBufferedPosition);
     }
 
     @SuppressWarnings("unused")

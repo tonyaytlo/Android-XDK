@@ -1,18 +1,19 @@
 package com.layer.xdk.ui.message.image.cache.requesthandlers;
 
+import static com.squareup.picasso.Picasso.LoadedFrom;
+
 import android.net.Uri;
 
-import com.layer.xdk.ui.message.MessagePartUtils;
 import com.layer.sdk.LayerClient;
 import com.layer.sdk.messaging.MessagePart;
 import com.layer.sdk.query.Queryable;
+import com.layer.xdk.ui.message.MessagePartUtils;
 import com.squareup.picasso.Request;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.squareup.picasso.Picasso.LoadedFrom;
+import okio.Okio;
 
 /**
  * Handles Picasso load requests for Layer MessagePart content.  If the content is not ready
@@ -37,12 +38,12 @@ public class MessagePartRequestHandler extends com.squareup.picasso.RequestHandl
     }
 
     @Override
-    public Result load(Request request, int networkPolicy) throws IOException {
+    public Result load(Request request, int networkPolicy) {
         Queryable queryable = mLayerClient.get(request.uri);
         if (!(queryable instanceof MessagePart)) return null;
         MessagePart part = (MessagePart) queryable;
-        if (part.isContentReady()) return new Result(part.getDataStream(), LoadedFrom.DISK);
+        if (part.isContentReady()) return new Result(Okio.source(part.getDataStream()), LoadedFrom.DISK);
         if (!MessagePartUtils.downloadMessagePart(part, 3, TimeUnit.MINUTES)) return null;
-        return new Result(part.getDataStream(), LoadedFrom.NETWORK);
+        return new Result(Okio.source(part.getDataStream()), LoadedFrom.NETWORK);
     }
 }

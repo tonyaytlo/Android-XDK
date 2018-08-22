@@ -171,7 +171,7 @@ public class LargeMediaMessageFragment extends Fragment {
                         } else {
                             mBinding.controlButton.update(state.mPlaybackState);
                             mBinding.seekBar.setSecondaryProgress(
-                                    (int) TimeUnit.MILLISECONDS.toSeconds(state.mBufferedPercent));
+                                    (int) TimeUnit.MILLISECONDS.toSeconds(state.mBufferedPosition));
                         }
                     }
                 });
