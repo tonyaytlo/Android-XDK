@@ -4,12 +4,12 @@
 
 ### Features
   * Adding a mutator for the `MessageModelManger` singleton to the `ServiceLocator` (AND-1474)
-  * Guard against no width/height when parsing an image message with a source part (AND-1501)
-  * Fixing default attachment sender popup menu background (AND-1478)
   * Updated Layer SDK to `4.0.7`
 
 ### Bug Fixes
   * Fixed crash when no size is found for an image when sending an image message (AND-1485)
+  * Guard against no width/height when parsing an image message with a source part (AND-1501)
+  * Fixing default attachment sender popup menu background (AND-1478)
 
 ## 4.0.6
 
