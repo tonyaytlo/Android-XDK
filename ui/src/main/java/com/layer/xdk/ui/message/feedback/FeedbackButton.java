@@ -1,11 +1,13 @@
 package com.layer.xdk.ui.message.feedback;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.widget.ImageViewCompat;
 import android.support.v7.content.res.AppCompatResources;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
@@ -24,15 +26,15 @@ public class FeedbackButton extends LinearLayout implements IconProvider, View.O
     private static final int MAX_RATING = 5;
 
     private MessageViewHelper mMessageViewHelper;
-    private final ImageButton[] mButtons;
+    private final AppCompatImageButton[] mButtons;
     private int mRating;
     private boolean mEnabled = true;
     private boolean mUpdateStateOnClick;
     private boolean mPerformActionOnClick = true;
     private boolean mAllowClicksWhileDisabled = true;
 
-    private final int mEnabledColor;
-    private final int mDisabledColor;
+    private final ColorStateList mEnabledColor;
+    private final ColorStateList mDisabledColor;
 
     private FeedbackMessageModel mMessageModel;
 
@@ -50,18 +52,18 @@ public class FeedbackButton extends LinearLayout implements IconProvider, View.O
 
         mMessageViewHelper = new MessageViewHelper(context);
 
-        mEnabledColor = ContextCompat.getColor(getContext(),
+        mEnabledColor = ContextCompat.getColorStateList(getContext(),
                 R.color.xdk_ui_feedback_button_enabled);
-        mDisabledColor = ContextCompat.getColor(getContext(),
+        mDisabledColor = ContextCompat.getColorStateList(getContext(),
                 R.color.xdk_ui_feedback_button_disabled);
 
-        mButtons = new ImageButton[MAX_RATING];
+        mButtons = new AppCompatImageButton[MAX_RATING];
         int padding = getResources().getDimensionPixelSize(R.dimen.xdk_ui_margin_large);
         TypedValue backgroundValue = new TypedValue();
         context.getTheme()
                 .resolveAttribute(R.attr.selectableItemBackgroundBorderless, backgroundValue, true);
         for (int i = 0; i < mButtons.length; i++) {
-            ImageButton button = new ImageButton(context, attrs, defStyleAttr);
+            AppCompatImageButton button = new AppCompatImageButton(context, attrs, defStyleAttr);
             mButtons[i] = button;
             button.setPadding(padding, padding, padding, padding);
             button.setBackgroundResource(backgroundValue.resourceId);
@@ -180,8 +182,7 @@ public class FeedbackButton extends LinearLayout implements IconProvider, View.O
             } else {
                 button.setImageResource(R.drawable.xdk_ui_ic_feedback_hollow);
             }
-            DrawableCompat.setTint(button.getDrawable().mutate(),
-                    mEnabled ? mEnabledColor : mDisabledColor);
+            ImageViewCompat.setImageTintList(button, mEnabled ? mEnabledColor : mDisabledColor);
             if (!mAllowClicksWhileDisabled) {
                 button.setEnabled(mEnabled);
             }
