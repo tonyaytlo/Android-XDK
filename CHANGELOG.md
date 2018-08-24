@@ -27,7 +27,7 @@
   * `MessageModel.getRootMessagePart()` is now nullable. This can be null if the model has not been parsed yet or if it is a legacy MIME type.
 
 ### New APIs
-  * A message view can implement `MediaMessageView`... (see MessageModelAdapater)
+  * A message view can implement `MediaPlayerMessageView` to obtain a media controller for media playback
   * Added a `ViewStub` to the right of the metadata in the `StandardMessageContainer`. See `getRightMetadataView()`.
   * Added a download progress accessor to `MessageModel`. See `getDownloadProgress()`.
   * Added a convenience method to send analytics events from a `MessageModel`. See `postAnalyticsEvent(LayerAnalyticsEvent)`.
