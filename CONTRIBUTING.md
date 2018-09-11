@@ -1,6 +1,6 @@
 # How to contribute
 
-We welcome contributions of all kinds to the Android XDK. If you have questions about anything in 
+We welcome contributions of all kinds to this project. If you have questions about anything in 
 this guide, or would like to suggest improvements, please send an email to <support@layer.com>.
 
 ## Pull Requests
