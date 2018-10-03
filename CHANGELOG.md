@@ -1,5 +1,10 @@
 # Android XDK
 
+## 4.0.9
+
+### Features
+  * Updated Layer SDK to `4.0.9`
+
 ## 4.0.8
 
 ### Features
