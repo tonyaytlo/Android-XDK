@@ -60,6 +60,9 @@ public abstract class MessageContainer extends ConstraintLayout {
             setClipToOutline(true);
             setOutlineProvider(new ClipOutlineProvider(mCornerRadius));
         } else {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                setLayerType(LAYER_TYPE_SOFTWARE, null);// clip to path support > 18 api
+            }
             mUsingOutline = false;
         }
     }
